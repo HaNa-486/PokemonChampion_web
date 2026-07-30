@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { items, moves, pokemonById } from "../lib/catalog";
+import { abilities, items, moves, pokemon, pokemonById } from "../lib/catalog";
 import { calculateFinalStats, formatPriority, modifiedSpeed, priorityMatches, validateAp, validateTeam, ZERO_STATS } from "../lib/domain";
 import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
@@ -39,9 +39,9 @@ describe("priority", () => {
 describe("team legality", () => {
   const member = (id: string, pokemonId: string, itemId: string | null): TeamMember => ({ id, pokemonId, itemId, abilityId: null, moveIds: [], ap: { ...ZERO_STATS }, nature: { name: "Serious", up: null, down: null } });
   it("rejects duplicate species and items but permits distinct Mega species", () => {
-    const issues = validateTeam([member("a", "charizard", "life-orb"), member("b", "mega-charizard-x", "life-orb")], pokemonById, new Set(items.map((item) => item.id)));
+    const issues = validateTeam([member("a", "charizard", "life-orb"), member("b", "charizard", "life-orb")], pokemonById, new Set(items.map((item) => item.id)));
     expect(issues.map((issue) => issue.code)).toEqual(expect.arrayContaining(["DUPLICATE_POKEMON", "DUPLICATE_ITEM"]));
-    const legal = validateTeam([member("a", "garchomp", "life-orb"), member("b", "mega-charizard-x", "charizardite-x")], pokemonById, new Set(items.map((item) => item.id)));
+    const legal = validateTeam([member("a", "mega-charizard-x", "life-orb"), member("b", "mega-charizard-y", "charizardite-x")], pokemonById, new Set(items.map((item) => item.id)));
     expect(legal).toEqual([]);
   });
 });
@@ -58,5 +58,15 @@ describe("admin allowlist", () => {
     expect([...parseAdminEmails(" Owner@Example.com,ops@example.com ")]).toEqual(["owner@example.com", "ops@example.com"]);
     expect(isAdminEmail("OWNER@example.com", "owner@example.com")).toBe(true);
     expect(isAdminEmail("owner@example.com", undefined)).toBe(false);
+  });
+});
+
+describe("normalized current-regulation catalog", () => {
+  it("includes expanded forms, mapped abilities, and observed held items", () => {
+    expect(pokemon.length).toBeGreaterThanOrEqual(300);
+    expect(abilities.length).toBeGreaterThanOrEqual(190);
+    expect(items.length).toBeGreaterThanOrEqual(60);
+    expect(pokemonById.get("garchomp")?.abilityIds).toEqual(expect.arrayContaining(["rough-skin", "sand-veil"]));
+    expect(pokemonById.get("mega-charizard-y")?.abilityIds).toContain("drought");
   });
 });

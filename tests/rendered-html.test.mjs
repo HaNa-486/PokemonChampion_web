@@ -31,11 +31,11 @@ test("filters move priority through the built API", async () => {
   assert.equal(body.meta.ruleset, "champions-m4-current");
 });
 
-test("serves the current 236-form Champions snapshot", async () => {
+test("serves the expanded current Champions form snapshot", async () => {
   const response = await render("/api/v1/pokemon", { headers: { accept: "application/json" } });
   assert.equal(response.status, 200);
   const body = await response.json();
-  assert.equal(body.data.length, 236);
+  assert.ok(body.data.length >= 300);
   assert.ok(body.data.some((entry) => entry.id === "garchomp"));
   assert.ok(body.data.some((entry) => entry.id === "mega-charizard-x"));
 });
@@ -56,7 +56,7 @@ test("calculates the golden Mega Charizard X build through the built API", async
 
 test("rejects duplicate species and held items through the built API", async () => {
   const shared = { moveIds: [], abilityId: null, ap: { hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0 }, nature: { name: "Serious", up: null, down: null } };
-  const response = await render("/api/v1/team/validate", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ members: [{ ...shared, id: "one", pokemonId: "charizard", itemId: "life-orb" }, { ...shared, id: "two", pokemonId: "mega-charizard-x", itemId: "life-orb" }] }) });
+  const response = await render("/api/v1/team/validate", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ members: [{ ...shared, id: "one", pokemonId: "charizard", itemId: "life-orb" }, { ...shared, id: "two", pokemonId: "charizard", itemId: "life-orb" }] }) });
   assert.equal(response.status, 200);
   const body = await response.json();
   assert.equal(body.data.legal, false);

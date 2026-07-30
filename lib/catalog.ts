@@ -4,7 +4,7 @@ import snapshot from "../data/generated/champions-snapshot.json";
 const asset = (name: string) => `https://championsbattledata.com/pokemon_champions_assets/pokemon/${encodeURIComponent(name)}.png`;
 const targetById: Record<number, string> = { 3: "Ally", 4: "Ally side", 6: "Opposing side", 7: "Self", 8: "Random foe", 9: "All adjacent", 10: "1 target", 11: "All foes", 12: "Whole field", 13: "User and allies", 14: "All Pokémon", 15: "All allies" };
 
-export const abilities: Ability[] = [
+const curatedAbilities: Ability[] = [
   { id: "rough-skin", name: "Rough Skin", nameZh: "粗糙皮膚", description: "Damages an attacker that makes contact.", descriptionZh: "受到接觸類招式攻擊時，會使攻擊者受傷。" },
   { id: "sand-veil", name: "Sand Veil", nameZh: "沙隱", description: "Raises evasiveness during a sandstorm.", descriptionZh: "沙暴天氣時提高閃避率。" },
   { id: "drought", name: "Drought", nameZh: "日照", description: "Creates harsh sunlight when entering battle.", descriptionZh: "出場時會讓天氣變為大晴天。" },
@@ -15,7 +15,14 @@ export const abilities: Ability[] = [
   { id: "multiscale", name: "Multiscale", nameZh: "多重鱗片", description: "Reduces damage while at full HP.", descriptionZh: "HP 全滿時，受到的傷害會減少。" },
 ];
 
-export const items: HeldItem[] = [
+const curatedAbilityById = new Map(curatedAbilities.map((entry) => [entry.id, entry]));
+export const abilities: Ability[] = snapshot.abilities.map((entry) => curatedAbilityById.get(entry.id) ?? {
+  id: entry.id, name: entry.name, nameZh: entry.nameZh || entry.name,
+  description: entry.description || "No ability description is available.",
+  descriptionZh: entry.descriptionZh || entry.description || "目前沒有特性說明。",
+});
+
+const curatedItems: HeldItem[] = [
   { id: "life-orb", name: "Life Orb", nameZh: "生命寶珠", category: "Item", description: "Boosts move damage by 30%, but costs 1/10 max HP after a successful attack.", descriptionZh: "招式威力提高 30%，但命中後會失去最大 HP 的 1/10。" },
   { id: "choice-scarf", name: "Choice Scarf", nameZh: "講究圍巾", category: "Item", description: "Boosts Speed by 50%, but locks the holder into its first selected move.", descriptionZh: "速度提高 50%，但只能使出首次選擇的招式。" },
   { id: "focus-sash", name: "Focus Sash", nameZh: "氣勢披帶", category: "Item", description: "At full HP, survives a knockout with 1 HP once.", descriptionZh: "HP 全滿時，受到致命傷害會以 1 HP 撐住一次。" },
@@ -23,6 +30,15 @@ export const items: HeldItem[] = [
   { id: "leftovers", name: "Leftovers", nameZh: "吃剩的東西", category: "Item", description: "Restores 1/16 max HP at the end of every turn.", descriptionZh: "每回合結束時回復最大 HP 的 1/16。" },
   { id: "charizardite-x", name: "Charizardite X", nameZh: "噴火龍進化石Ｘ", category: "Mega Stone", description: "Enables Mega Evolution into Mega Charizard X.", descriptionZh: "讓噴火龍超級進化為超級噴火龍Ｘ。" },
 ];
+
+const generatedItemById = new Map(snapshot.items.map((entry) => [entry.id, entry]));
+for (const entry of curatedItems) generatedItemById.set(entry.id, entry);
+export const items: HeldItem[] = [...generatedItemById.values()].map((entry) => ({
+  id: entry.id, name: entry.name, nameZh: entry.nameZh || entry.name,
+  category: entry.category || "Held item",
+  description: entry.description || "No held item description is available.",
+  descriptionZh: entry.descriptionZh || entry.description || "目前沒有持有物說明。",
+}));
 
 const curatedMoves: Move[] = [
   { id: "dragon-claw", name: "Dragon Claw", nameZh: "龍爪", type: "Dragon", category: "Physical", power: 80, accuracy: 100, pp: 16, priority: 0, target: "1 Foe", flags: ["Contact"], description: "An ordinary physical attack.", descriptionZh: "用尖銳的巨爪劈開對手。" },
@@ -85,7 +101,7 @@ const generatedPokemon: Pokemon[] = snapshot.pokemon.map((entry, index) => {
     types: entry.types as Pokemon["types"],
     baseStats: entry.baseStats,
     imageUrl: entry.imageUrl,
-    abilityIds: curated?.abilityIds ?? [],
+    abilityIds: entry.abilityIds.length ? entry.abilityIds : curated?.abilityIds ?? [],
     moveIds: entry.moveNames.map((name) => generatedMoveIdByName.get(name)).filter((id): id is string => Boolean(id)),
     usageSingles: curated?.usageSingles ?? index + 1,
     usageDoubles: curated?.usageDoubles ?? index + 1,

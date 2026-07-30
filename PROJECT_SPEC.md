@@ -33,7 +33,7 @@ GameWith may inspire interaction patterns only. **Do not copy** its CSS, layout,
 | Formats | Singles and Doubles |
 | Languages | English (`en`) and Traditional Chinese (`zh-Hant`) |
 | Team size | Maximum 6 Pokémon |
-| Duplicate Pokémon | Not allowed under the active Regulation's species identity rule |
+| Duplicate Pokémon | The same selectable Pokémon form cannot repeat; distinct Mega forms may coexist |
 | Duplicate items | Non-null held items cannot repeat; empty item slots may repeat |
 | Mega Pokémon | Different Mega Pokémon may coexist on one team |
 | Moves | Maximum 4 unique legal moves per Pokémon |
@@ -243,7 +243,7 @@ ruleset_pokemon_availability(
 )
 ```
 
-Exactly one public default ruleset. Historical values remain queryable and are never overwritten. `species_clause_key` defines duplicate-Pokémon identity; distinct Mega Pokémon may coexist when keys differ.
+Exactly one public default ruleset. Historical values remain queryable and are never overwritten. `species_clause_key` is the selectable form identity for duplicate checks; distinct Mega Pokémon have different keys and may coexist.
 
 ### 6.4 Moves
 
@@ -411,7 +411,7 @@ Golden fixture: Mega Charizard X with base `78-130-111-130-85-100`, AP `2-32-0-0
 The structured validator MUST enforce:
 
 - Maximum six members.
-- No duplicate `species_clause_key`.
+- No duplicate selectable-form `species_clause_key`; distinct Mega forms are legal together.
 - Distinct legal Mega Pokémon allowed.
 - No duplicate non-null item.
 - At most four unique moves per member.

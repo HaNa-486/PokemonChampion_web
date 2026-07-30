@@ -36,6 +36,7 @@ describe("ChampionsApp", () => {
     await user.click(screen.getByRole("button", { name: "繁中" }));
     expect(screen.getByRole("button", { name: "招式資料庫" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
+    await user.type(screen.getByPlaceholderText("搜尋寶可夢或屬性…"), "Garchomp");
     expect(screen.getByText("烈咬陸鯊")).toBeInTheDocument();
   });
 

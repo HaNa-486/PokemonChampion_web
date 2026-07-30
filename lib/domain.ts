@@ -44,13 +44,13 @@ export const formatPriority = (priority: number) => priority > 0 ? `+${priority}
 export function validateTeam(members: TeamMember[], pokemonById: Map<string, Pokemon>, legalItemIds: Set<string>): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   if (members.length > 6) issues.push({ code: "TEAM_FULL", message: "A team can contain at most six Pokémon." });
-  const species = new Set<string>();
+  const pokemonIds = new Set<string>();
   const items = new Set<string>();
   for (const member of members) {
     const pokemon = pokemonById.get(member.pokemonId);
     if (!pokemon) { issues.push({ code: "POKEMON_UNAVAILABLE", message: "This Pokémon is unavailable.", memberId: member.id }); continue; }
-    if (species.has(pokemon.speciesKey)) issues.push({ code: "DUPLICATE_POKEMON", message: `${pokemon.name} duplicates another species.`, memberId: member.id });
-    species.add(pokemon.speciesKey);
+    if (pokemonIds.has(pokemon.id)) issues.push({ code: "DUPLICATE_POKEMON", message: `${pokemon.name} is already on the team.`, memberId: member.id });
+    pokemonIds.add(pokemon.id);
     if (member.itemId) {
       if (!legalItemIds.has(member.itemId)) issues.push({ code: "ITEM_UNAVAILABLE", message: "Selected item is unavailable.", memberId: member.id });
       if (items.has(member.itemId)) issues.push({ code: "DUPLICATE_ITEM", message: "Held items cannot be duplicated.", memberId: member.id });
