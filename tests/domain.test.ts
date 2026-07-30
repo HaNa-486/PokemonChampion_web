@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { abilities, items, moves, pokemon, pokemonById } from "../lib/catalog";
+import { abilities, items, moves, pokemon, pokemonByAbilityId, pokemonById, pokemonByMoveId } from "../lib/catalog";
 import { calculateFinalStats, formatPriority, modifiedSpeed, priorityMatches, validateAp, validateTeam, ZERO_STATS } from "../lib/domain";
 import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
@@ -78,5 +78,11 @@ describe("normalized current-regulation catalog", () => {
   it("derives useful ability and item effect facets without inventing upstream fields", () => {
     expect(abilityCategories(abilities.find((ability) => ability.id === "drought")!)).toContain("Weather");
     expect(itemEffectCategories(items.find((item) => item.id === "leftovers")!)).toContain("HP Recovery");
+  });
+
+  it("builds reverse move and ability indexes from legal forms", () => {
+    expect(pokemonByMoveId.get("dragon-claw")?.map((entry) => entry.id)).toEqual(expect.arrayContaining(["garchomp", "mega-charizard-x"]));
+    expect(pokemonByAbilityId.get("rough-skin")?.map((entry) => entry.id)).toContain("garchomp");
+    expect(pokemonByMoveId.get("dragon-claw")?.length).toBeGreaterThan(1);
   });
 });

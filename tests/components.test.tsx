@@ -47,6 +47,19 @@ describe("Move Database", () => {
     await user.click(priority);
     expect(priority.closest("th")).toHaveAttribute("aria-sort", "descending");
   });
+
+  it("sorts by usable Pokémon count and opens the reverse lookup", async () => {
+    const user = userEvent.setup();
+    render(<MoveDatabaseV2 locale="en" />);
+    const users = screen.getByRole("button", { name: "Usable Pokémon" });
+    await user.click(users);
+    expect(users.closest("th")).toHaveAttribute("aria-sort", "ascending");
+    await user.type(screen.getByRole("textbox", { name: "Search moves" }), "Dragon Claw");
+    await user.click(screen.getByRole("button", { name: "Dragon Claw" }));
+    const dialog = screen.getByRole("dialog", { name: "Dragon Claw" });
+    expect(within(dialog).getByText("Garchomp")).toBeInTheDocument();
+    expect(within(dialog).getByText("Mega Charizard X")).toBeInTheDocument();
+  });
 });
 
 describe("reference filters", () => {
@@ -64,6 +77,18 @@ describe("reference filters", () => {
     await user.click(screen.getByRole("button", { name: "Mega Stone" }));
     expect(screen.getByRole("button", { name: "Charizardite X" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Choice Scarf" })).not.toBeInTheDocument();
+  });
+
+  it("sorts abilities by user count and opens all eligible Pokémon", async () => {
+    const user = userEvent.setup();
+    render(<ResourceDatabaseV2 kind="abilities" locale="en" />);
+    const users = screen.getByRole("button", { name: "Usable Pokémon" });
+    await user.click(users);
+    expect(users.closest("th")).toHaveAttribute("aria-sort", "ascending");
+    await user.type(screen.getByRole("textbox", { name: "Search abilities" }), "Rough Skin");
+    await user.click(screen.getByRole("button", { name: "Rough Skin" }));
+    const dialog = screen.getByRole("dialog", { name: "Rough Skin" });
+    expect(within(dialog).getByText("Garchomp")).toBeInTheDocument();
   });
 });
 

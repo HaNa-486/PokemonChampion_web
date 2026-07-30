@@ -117,3 +117,19 @@ export const moveById = new Map(moves.map((entry) => [entry.id, entry]));
 export const abilityById = new Map(abilities.map((entry) => [entry.id, entry]));
 export const itemById = new Map(items.map((entry) => [entry.id, entry]));
 export const pokemonById = new Map(pokemon.map((entry) => [entry.id, entry]));
+
+function reversePokemonIndex(selectIds: (entry: Pokemon) => string[]) {
+  const index = new Map<string, Pokemon[]>();
+  for (const entry of pokemon) {
+    for (const id of selectIds(entry)) {
+      const users = index.get(id) ?? [];
+      users.push(entry);
+      index.set(id, users);
+    }
+  }
+  for (const users of index.values()) users.sort((left, right) => left.name.localeCompare(right.name));
+  return index;
+}
+
+export const pokemonByMoveId = reversePokemonIndex((entry) => entry.moveIds);
+export const pokemonByAbilityId = reversePokemonIndex((entry) => entry.abilityIds);
