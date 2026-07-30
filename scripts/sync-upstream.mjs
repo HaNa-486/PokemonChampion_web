@@ -80,11 +80,13 @@ function collectCategoryNames(value, category, result) {
 }
 
 export async function buildSnapshot() {
-  const [championsText, moveCsv, moveNamesCsv, effectsCsv, abilityCsv, abilityNamesCsv, abilityProseCsv, itemCsv, itemNamesCsv, itemProseCsv] = await Promise.all([
+  const [championsText, moveCsv, moveNamesCsv, effectsCsv, moveFlagMapCsv, moveFlagsCsv, abilityCsv, abilityNamesCsv, abilityProseCsv, itemCsv, itemNamesCsv, itemProseCsv] = await Promise.all([
     fetchText(CHAMPIONS_INDEX),
     fetchText(`${POKEAPI_CSV}/moves.csv`),
     fetchText(`${POKEAPI_CSV}/move_names.csv`),
     fetchText(`${POKEAPI_CSV}/move_effect_prose.csv`),
+    fetchText(`${POKEAPI_CSV}/move_flag_map.csv`),
+    fetchText(`${POKEAPI_CSV}/move_flags.csv`),
     fetchText(`${POKEAPI_CSV}/abilities.csv`),
     fetchText(`${POKEAPI_CSV}/ability_names.csv`),
     fetchText(`${POKEAPI_CSV}/ability_prose.csv`),
@@ -104,6 +106,16 @@ export async function buildSnapshot() {
   const moveRows = parseCsv(moveCsv);
   const nameRows = parseCsv(moveNamesCsv);
   const effectRows = parseCsv(effectsCsv);
+  const moveFlagRows = parseCsv(moveFlagMapCsv);
+  const moveFlagsById = new Map(parseCsv(moveFlagsCsv).map((row) => [row.id, row.identifier]));
+  const flagsByMoveId = new Map();
+  for (const row of moveFlagRows) {
+    const flag = moveFlagsById.get(row.move_flag_id);
+    if (!flag) continue;
+    const flags = flagsByMoveId.get(row.move_id) ?? [];
+    flags.push(flag.split("-").map((part) => part[0].toUpperCase() + part.slice(1)).join(" "));
+    flagsByMoveId.set(row.move_id, flags);
+  }
   const namesEn = byLanguage(nameRows, "move_id", 9);
   const namesZhHant = byLanguage(nameRows, "move_id", 4);
   const effectsEn = byLanguage(effectRows, "move_effect_id", 9);
@@ -146,6 +158,7 @@ export async function buildSnapshot() {
       category: CLASS_BY_ID[Number(row.damage_class_id)] ?? "Status",
       power: row.power === "" ? null : Number(row.power), accuracy: row.accuracy === "" ? null : Number(row.accuracy),
       pp: row.pp === "" ? null : Number(row.pp), priority: Number(row.priority || 0), targetId: Number(row.target_id || 0),
+      flags: flagsByMoveId.get(row.id) ?? [],
       description: effect.replaceAll("$effect_chance", row.effect_chance || "0"),
       descriptionZh: (effectZhHant.get(row.effect_id)?.short_effect ?? effect).replaceAll("$effect_chance", row.effect_chance || "0"),
     }];
@@ -168,14 +181,15 @@ export async function buildSnapshot() {
   const items = itemRows.flatMap((row) => {
     const name = itemNamesEn.get(row.id)?.name;
     if (!name || !wantedItems.has(name)) return [];
-    return [{ id: row.identifier, name, nameZh: itemNamesZhHant.get(row.id)?.name ?? name, category: "Held item", description: itemProseEn.get(row.id)?.short_effect ?? "", descriptionZh: itemProseZhHant.get(row.id)?.short_effect ?? itemProseEn.get(row.id)?.short_effect ?? "" }];
+    const category = row.identifier.endsWith("-berry") ? "Berry" : /ite(?:-x|-y)?$/.test(row.identifier) ? "Mega Stone" : "Item";
+    return [{ id: row.identifier, name, nameZh: itemNamesZhHant.get(row.id)?.name ?? name, category, description: itemProseEn.get(row.id)?.short_effect ?? "", descriptionZh: itemProseZhHant.get(row.id)?.short_effect ?? itemProseEn.get(row.id)?.short_effect ?? "" }];
   });
   return {
     schemaVersion: 1,
     generatedAt: new Date().toISOString(),
     sources: {
       champions: { url: CHAMPIONS_INDEX, generatedAt: source.generatedAt, dataVersion: source.dataVersion },
-      pokeapi: { repository: "https://github.com/PokeAPI/pokeapi", revision: "master", datasets: ["moves.csv", "move_names.csv", "move_effect_prose.csv", "abilities.csv", "ability_names.csv", "ability_prose.csv", "items.csv", "item_names.csv", "item_prose.csv"] },
+      pokeapi: { repository: "https://github.com/PokeAPI/pokeapi", revision: "master", datasets: ["moves.csv", "move_names.csv", "move_effect_prose.csv", "move_flag_map.csv", "move_flags.csv", "abilities.csv", "ability_names.csv", "ability_prose.csv", "items.csv", "item_names.csv", "item_prose.csv"] },
     },
     ruleset: { defaultSeason: source.defaultSeason, seasons: source.seasons ?? [] },
     counts: { pokemon: pokemon.length, moves: moves.length, abilities: abilities.length, items: items.length },

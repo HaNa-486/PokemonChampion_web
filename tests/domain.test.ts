@@ -3,6 +3,7 @@ import { abilities, items, moves, pokemon, pokemonById } from "../lib/catalog";
 import { calculateFinalStats, formatPriority, modifiedSpeed, priorityMatches, validateAp, validateTeam, ZERO_STATS } from "../lib/domain";
 import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
+import { abilityCategories, itemEffectCategories } from "../lib/filtering";
 
 describe("champions-v1 stat formula golden fixtures", () => {
   it("matches the Mega Charizard X Adamant reference build", () => {
@@ -68,5 +69,14 @@ describe("normalized current-regulation catalog", () => {
     expect(items.length).toBeGreaterThanOrEqual(60);
     expect(pokemonById.get("garchomp")?.abilityIds).toEqual(expect.arrayContaining(["rough-skin", "sand-veil"]));
     expect(pokemonById.get("mega-charizard-y")?.abilityIds).toContain("drought");
+    expect(moves.find((move) => move.id === "fire-punch")?.flags).toContain("Contact");
+    expect(moves.find((move) => move.id === "parting-shot")?.flags).toContain("Sound");
+    expect(moves.find((move) => move.id === "air-slash")?.flags).toContain("Slicing");
+    expect(items.find((item) => item.id === "charizardite-x")?.category).toBe("Mega Stone");
+  });
+
+  it("derives useful ability and item effect facets without inventing upstream fields", () => {
+    expect(abilityCategories(abilities.find((ability) => ability.id === "drought")!)).toContain("Weather");
+    expect(itemEffectCategories(items.find((item) => item.id === "leftovers")!)).toContain("HP Recovery");
   });
 });

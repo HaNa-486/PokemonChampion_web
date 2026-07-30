@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-30T15:29:54.800Z",
+  "generatedAt": "2026-07-30T18:06:14.388Z",
   "sources": {
     "champions": {
       "url": "https://championsbattledata.com/api/index",
@@ -14,6 +14,8 @@
         "moves.csv",
         "move_names.csv",
         "move_effect_prose.csv",
+        "move_flag_map.csv",
+        "move_flags.csv",
         "abilities.csv",
         "ability_names.csv",
         "ability_prose.csv",
@@ -30532,6 +30534,11 @@
       "pp": 35,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -30546,6 +30553,12 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -30560,6 +30573,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Has a chance to burn the target.",
       "descriptionZh": "Has a chance to burn the target."
     },
@@ -30574,6 +30593,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Has a chance to freeze the target.",
       "descriptionZh": "Has a chance to freeze the target."
     },
@@ -30588,6 +30613,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -30602,6 +30633,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Causes a one-hit KO.",
       "descriptionZh": "Causes a one-hit KO."
     },
@@ -30616,6 +30652,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Dance"
+      ],
       "description": "Raises the user’s Attack by two stages.",
       "descriptionZh": "Raises the user’s Attack by two stages."
     },
@@ -30630,6 +30670,12 @@
       "pp": 35,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Distance"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -30644,6 +30690,11 @@
       "pp": 20,
       "priority": -6,
       "targetId": 10,
+      "flags": [
+        "Reflectable",
+        "Mirror",
+        "Authentic"
+      ],
       "description": "Immediately ends wild battles.  Forces trainers to switch Pokémon.",
       "descriptionZh": "Immediately ends wild battles.  Forces trainers to switch Pokémon."
     },
@@ -30658,6 +30709,14 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Charge",
+        "Protect",
+        "Mirror",
+        "Gravity",
+        "Distance"
+      ],
       "description": "User flies high into the air, dodging all attacks, and hits next turn.",
       "descriptionZh": "User flies high into the air, dodging all attacks, and hits next turn."
     },
@@ -30672,6 +30731,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
       "descriptionZh": "Prevents the target from fleeing and inflicts damage for 2-5 turns."
     },
@@ -30686,6 +30750,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -30700,6 +30769,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s accuracy by one stage.",
       "descriptionZh": "Lowers the target’s accuracy by one stage."
     },
@@ -30714,6 +30788,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Causes a one-hit KO.",
       "descriptionZh": "Causes a one-hit KO."
     },
@@ -30728,6 +30807,11 @@
       "pp": 35,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -30742,6 +30826,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -30756,6 +30846,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
       "descriptionZh": "Prevents the target from fleeing and inflicts damage for 2-5 turns."
     },
@@ -30770,6 +30865,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 8,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits every turn for 2-3 turns, then confuses the user.",
       "descriptionZh": "Hits every turn for 2-3 turns, then confuses the user."
     },
@@ -30784,6 +30884,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User receives 1/3 the damage inflicted in recoil.",
       "descriptionZh": "User receives 1/3 the damage inflicted in recoil."
     },
@@ -30798,6 +30903,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits 2-5 times in one turn.",
       "descriptionZh": "Hits 2-5 times in one turn."
     },
@@ -30812,6 +30921,12 @@
       "pp": 25,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Bite"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -30826,6 +30941,12 @@
       "pp": 20,
       "priority": -6,
       "targetId": 10,
+      "flags": [
+        "Reflectable",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Immediately ends wild battles.  Forces trainers to switch Pokémon.",
       "descriptionZh": "Immediately ends wild battles.  Forces trainers to switch Pokémon."
     },
@@ -30840,6 +30961,13 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Puts the target to sleep.",
       "descriptionZh": "Puts the target to sleep."
     },
@@ -30854,6 +30982,13 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Authentic",
+        "Mental"
+      ],
       "description": "Disables the target’s last used move for 1-8 turns.",
       "descriptionZh": "Disables the target’s last used move for 1-8 turns."
     },
@@ -30868,6 +31003,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to burn the target.",
       "descriptionZh": "Has a chance to burn the target."
     },
@@ -30882,6 +31021,9 @@
       "pp": 30,
       "priority": 0,
       "targetId": 4,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Protects the user’s stats from being changed by enemy moves.",
       "descriptionZh": "Protects the user’s stats from being changed by enemy moves."
     },
@@ -30896,6 +31038,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -30910,6 +31056,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Inflicts regular damage and can hit Dive users.",
       "descriptionZh": "Inflicts regular damage and can hit Dive users."
     },
@@ -30924,6 +31075,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to freeze the target.",
       "descriptionZh": "Has a chance to freeze the target."
     },
@@ -30938,6 +31093,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to freeze the target.",
       "descriptionZh": "Has a chance to freeze the target."
     },
@@ -30952,6 +31111,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to confuse the target.",
       "descriptionZh": "Has a chance to confuse the target."
     },
@@ -30966,6 +31129,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Recharge",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User foregoes its next turn to recharge.",
       "descriptionZh": "User foregoes its next turn to recharge."
     },
@@ -30980,6 +31148,12 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Distance"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -30994,6 +31168,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts more damage to heavier targets, with a maximum of 120 power.",
       "descriptionZh": "Inflicts more damage to heavier targets, with a maximum of 120 power."
     },
@@ -31008,6 +31187,10 @@
       "pp": 20,
       "priority": -5,
       "targetId": 1,
+      "flags": [
+        "Contact",
+        "Protect"
+      ],
       "description": "Inflicts twice the damage the user received from the last physical hit it took.",
       "descriptionZh": "Inflicts twice the damage the user received from the last physical hit it took."
     },
@@ -31022,6 +31205,12 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Inflicts damage equal to the user’s level.",
       "descriptionZh": "Inflicts damage equal to the user’s level."
     },
@@ -31036,6 +31225,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Seeds the target, stealing HP from it every turn.",
       "descriptionZh": "Seeds the target, stealing HP from it every turn."
     },
@@ -31050,6 +31244,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Attack and Special Attack by one stage.",
       "descriptionZh": "Raises the user’s Attack and Special Attack by one stage."
     },
@@ -31064,6 +31261,10 @@
       "pp": 25,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -31078,6 +31279,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Charge",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Requires a turn to charge before attacking.",
       "descriptionZh": "Requires a turn to charge before attacking."
     },
@@ -31092,6 +31298,12 @@
       "pp": 35,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Powder"
+      ],
       "description": "Poisons the target.",
       "descriptionZh": "Poisons the target."
     },
@@ -31106,6 +31318,12 @@
       "pp": 30,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Powder"
+      ],
       "description": "Paralyzes the target.",
       "descriptionZh": "Paralyzes the target."
     },
@@ -31120,6 +31338,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Powder"
+      ],
       "description": "Puts the target to sleep.",
       "descriptionZh": "Puts the target to sleep."
     },
@@ -31134,6 +31358,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 8,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Dance"
+      ],
       "description": "Hits every turn for 2-3 turns, then confuses the user.",
       "descriptionZh": "Hits every turn for 2-3 turns, then confuses the user."
     },
@@ -31148,6 +31378,11 @@
       "pp": 40,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Speed by two stages.",
       "descriptionZh": "Lowers the target’s Speed by two stages."
     },
@@ -31162,6 +31397,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
       "descriptionZh": "Prevents the target from fleeing and inflicts damage for 2-5 turns."
     },
@@ -31176,6 +31415,10 @@
       "pp": 30,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -31190,6 +31433,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -31204,6 +31451,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Paralyzes the target.",
       "descriptionZh": "Paralyzes the target."
     },
@@ -31218,6 +31470,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -31232,6 +31488,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Inflicts regular damage and can hit Dig users.",
       "descriptionZh": "Inflicts regular damage and can hit Dig users."
     },
@@ -31246,6 +31507,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Causes a one-hit KO.",
       "descriptionZh": "Causes a one-hit KO."
     },
@@ -31260,6 +31526,13 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Charge",
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "User digs underground, dodging all attacks, and hits next turn.",
       "descriptionZh": "User digs underground, dodging all attacks, and hits next turn."
     },
@@ -31274,6 +31547,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Badly poisons the target, inflicting more damage every turn.",
       "descriptionZh": "Badly poisons the target, inflicting more damage every turn."
     },
@@ -31288,6 +31566,10 @@
       "pp": 25,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to confuse the target.",
       "descriptionZh": "Has a chance to confuse the target."
     },
@@ -31302,6 +31584,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Special Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Defense by one stage."
     },
@@ -31316,6 +31602,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Puts the target to sleep.",
       "descriptionZh": "Puts the target to sleep."
     },
@@ -31330,6 +31621,9 @@
       "pp": 30,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Speed by two stages.",
       "descriptionZh": "Raises the user’s Speed by two stages."
     },
@@ -31344,6 +31638,11 @@
       "pp": 30,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -31358,6 +31657,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts damage equal to the user’s level.",
       "descriptionZh": "Inflicts damage equal to the user’s level."
     },
@@ -31372,6 +31675,13 @@
       "pp": 40,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Lowers the target’s Defense by two stages.",
       "descriptionZh": "Lowers the target’s Defense by two stages."
     },
@@ -31386,6 +31696,9 @@
       "pp": 15,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s evasion by one stage.",
       "descriptionZh": "Raises the user’s evasion by one stage."
     },
@@ -31400,6 +31713,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "Heals the user by half its max HP.",
       "descriptionZh": "Heals the user by half its max HP."
     },
@@ -31414,6 +31731,9 @@
       "pp": 30,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Defense by one stage.",
       "descriptionZh": "Raises the user’s Defense by one stage."
     },
@@ -31428,6 +31748,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s evasion by two stages.",
       "descriptionZh": "Raises the user’s evasion by two stages."
     },
@@ -31442,6 +31765,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s accuracy by one stage.",
       "descriptionZh": "Lowers the target’s accuracy by one stage."
     },
@@ -31456,6 +31784,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Confuses the target.",
       "descriptionZh": "Confuses the target."
     },
@@ -31470,6 +31803,9 @@
       "pp": 40,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Defense by one stage.",
       "descriptionZh": "Raises the user’s Defense by one stage."
     },
@@ -31484,6 +31820,9 @@
       "pp": 30,
       "priority": 0,
       "targetId": 4,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Reduces damage from special attacks by 50% for five turns.",
       "descriptionZh": "Reduces damage from special attacks by 50% for five turns."
     },
@@ -31498,6 +31837,9 @@
       "pp": 30,
       "priority": 0,
       "targetId": 12,
+      "flags": [
+        "Authentic"
+      ],
       "description": "Resets all Pokémon’s stats, accuracy, and evasion.",
       "descriptionZh": "Resets all Pokémon’s stats, accuracy, and evasion."
     },
@@ -31512,6 +31854,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 4,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Reduces damage from physical attacks by half.",
       "descriptionZh": "Reduces damage from physical attacks by half."
     },
@@ -31526,6 +31871,9 @@
       "pp": 30,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Increases the user’s chance to score a critical hit.",
       "descriptionZh": "Increases the user’s chance to score a critical hit."
     },
@@ -31540,6 +31888,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "User faints.",
       "descriptionZh": "User faints."
     },
@@ -31554,6 +31906,11 @@
       "pp": 30,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -31568,6 +31925,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to poison the target.",
       "descriptionZh": "Has a chance to poison the target."
     },
@@ -31582,6 +31943,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to burn the target.",
       "descriptionZh": "Has a chance to burn the target."
     },
@@ -31596,6 +31961,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -31610,6 +31980,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Never misses.",
       "descriptionZh": "Never misses."
     },
@@ -31624,6 +31998,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Special Defense by two stages.",
       "descriptionZh": "Raises the user’s Special Defense by two stages."
     },
@@ -31638,6 +32015,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Gravity"
+      ],
       "description": "If the user misses, it takes half the damage it would have inflicted in recoil.",
       "descriptionZh": "If the user misses, it takes half the damage it would have inflicted in recoil."
     },
@@ -31652,6 +32035,11 @@
       "pp": 30,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Paralyzes the target.",
       "descriptionZh": "Paralyzes the target."
     },
@@ -31666,6 +32054,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Heal"
+      ],
       "description": "Drains half the damage inflicted to heal the user.",
       "descriptionZh": "Drains half the damage inflicted to heal the user."
     },
@@ -31680,6 +32074,12 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Charge",
+        "Protect",
+        "Mirror",
+        "Distance"
+      ],
       "description": "User charges for one turn before attacking.  Has a chance to make the target flinch.",
       "descriptionZh": "User charges for one turn before attacking.  Has a chance to make the target flinch."
     },
@@ -31694,6 +32094,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "User becomes a copy of the target until it leaves battle.",
       "descriptionZh": "User becomes a copy of the target until it leaves battle."
     },
@@ -31708,6 +32109,9 @@
       "pp": 40,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Gravity"
+      ],
       "description": "Does nothing.",
       "descriptionZh": "Does nothing."
     },
@@ -31722,6 +32126,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Defense by two stages.",
       "descriptionZh": "Raises the user’s Defense by two stages."
     },
@@ -31736,6 +32143,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -31750,6 +32162,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "User faints.",
       "descriptionZh": "User faints."
     },
@@ -31764,6 +32180,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits 2-5 times in one turn.",
       "descriptionZh": "Hits 2-5 times in one turn."
     },
@@ -31778,6 +32199,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "User sleeps for two turns, completely healing itself.",
       "descriptionZh": "User sleeps for two turns, completely healing itself."
     },
@@ -31792,6 +32217,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -31806,6 +32235,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to burn, freeze, or paralyze the target.",
       "descriptionZh": "Has a chance to burn, freeze, or paralyze the target."
     },
@@ -31820,6 +32253,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts damage equal to half the target’s HP.",
       "descriptionZh": "Inflicts damage equal to half the target’s HP."
     },
@@ -31834,6 +32272,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Non Sky Battle"
+      ],
       "description": "Transfers 1/4 of the user’s max HP into a doll, protecting the user from further damage or status changes until it breaks.",
       "descriptionZh": "Transfers 1/4 of the user’s max HP into a doll, protecting the user from further damage or status changes until it breaks."
     },
@@ -31848,6 +32290,11 @@
       "pp": 25,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Takes the target’s item.",
       "descriptionZh": "Takes the target’s item."
     },
@@ -31862,6 +32309,12 @@
       "pp": 25,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Defrost"
+      ],
       "description": "Has a chance to burn the target.  Lets frozen Pokémon thaw themselves.",
       "descriptionZh": "Has a chance to burn the target.  Lets frozen Pokémon thaw themselves."
     },
@@ -31876,6 +32329,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Has a chance to make the target flinch.  Only works if the user is sleeping.",
       "descriptionZh": "Has a chance to make the target flinch.  Only works if the user is sleeping."
     },
@@ -31890,6 +32349,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 1,
+      "flags": [
+        "Authentic"
+      ],
       "description": "Ghosts pay half their max HP to hurt the target every turn.  Others decrease Speed but raise Attack and Defense.",
       "descriptionZh": "Ghosts pay half their max HP to hurt the target every turn.  Others decrease Speed but raise Attack and Defense."
     },
@@ -31904,6 +32366,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.",
       "descriptionZh": "Inflicts more damage when the user has less HP remaining, with a maximum of 200 power."
     },
@@ -31918,6 +32385,12 @@
       "pp": 40,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Powder"
+      ],
       "description": "Lowers the target’s Speed by two stages.",
       "descriptionZh": "Lowers the target’s Speed by two stages."
     },
@@ -31932,6 +32405,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts more damage when the user has less HP remaining, with a maximum of 200 power.",
       "descriptionZh": "Inflicts more damage when the user has less HP remaining, with a maximum of 200 power."
     },
@@ -31946,6 +32424,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Authentic"
+      ],
       "description": "Lowers the PP of the target’s last used move by 4.",
       "descriptionZh": "Lowers the PP of the target’s last used move by 4."
     },
@@ -31960,6 +32444,7 @@
       "pp": 10,
       "priority": 4,
       "targetId": 7,
+      "flags": [],
       "description": "Prevents any moves from hitting the user this turn.",
       "descriptionZh": "Prevents any moves from hitting the user this turn."
     },
@@ -31974,6 +32459,12 @@
       "pp": 30,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -31988,6 +32479,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Speed by two stages.",
       "descriptionZh": "Lowers the target’s Speed by two stages."
     },
@@ -32002,6 +32498,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Confuses the target.",
       "descriptionZh": "Confuses the target."
     },
@@ -32016,6 +32517,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "User pays half its max HP to max out its Attack.",
       "descriptionZh": "User pays half its max HP to max out its Attack."
     },
@@ -32030,6 +32534,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Has a chance to poison the target.",
       "descriptionZh": "Has a chance to poison the target."
     },
@@ -32044,6 +32553,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s accuracy by one stage.",
       "descriptionZh": "Has a chance to lower the target’s accuracy by one stage."
     },
@@ -32058,6 +32571,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 6,
+      "flags": [
+        "Reflectable",
+        "Non Sky Battle"
+      ],
       "description": "Scatters Spikes, hurting opposing Pokémon that switch in.",
       "descriptionZh": "Scatters Spikes, hurting opposing Pokémon that switch in."
     },
@@ -32072,6 +32589,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -32086,6 +32608,9 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Authentic"
+      ],
       "description": "If the user faints this turn, the target automatically will, too.",
       "descriptionZh": "If the user faints this turn, the target automatically will, too."
     },
@@ -32100,6 +32625,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 14,
+      "flags": [
+        "Sound",
+        "Distance",
+        "Authentic"
+      ],
       "description": "User and target both faint after three turns.",
       "descriptionZh": "User and target both faint after three turns."
     },
@@ -32114,6 +32644,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Speed by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Speed by one stage."
     },
@@ -32128,6 +32662,7 @@
       "pp": 5,
       "priority": 4,
       "targetId": 7,
+      "flags": [],
       "description": "Prevents any moves from hitting the user this turn.",
       "descriptionZh": "Prevents any moves from hitting the user this turn."
     },
@@ -32142,6 +32677,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits 2-5 times in one turn.",
       "descriptionZh": "Hits 2-5 times in one turn."
     },
@@ -32156,6 +32695,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Ensures that the user’s next move will hit the target.",
       "descriptionZh": "Ensures that the user’s next move will hit the target."
     },
@@ -32170,6 +32713,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 8,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits every turn for 2-3 turns, then confuses the user.",
       "descriptionZh": "Hits every turn for 2-3 turns, then confuses the user."
     },
@@ -32184,6 +32732,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [],
       "description": "Changes the weather to a sandstorm for five turns.",
       "descriptionZh": "Changes the weather to a sandstorm for five turns."
     },
@@ -32198,6 +32747,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Heal"
+      ],
       "description": "Drains half the damage inflicted to heal the user.",
       "descriptionZh": "Drains half the damage inflicted to heal the user."
     },
@@ -32212,6 +32766,7 @@
       "pp": 10,
       "priority": 4,
       "targetId": 7,
+      "flags": [],
       "description": "Prevents the user’s HP from lowering below 1 this turn.",
       "descriptionZh": "Prevents the user’s HP from lowering below 1 this turn."
     },
@@ -32226,6 +32781,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Attack by two stages.",
       "descriptionZh": "Lowers the target’s Attack by two stages."
     },
@@ -32240,6 +32800,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Power doubles every turn this move is used in succession after the first, resetting after five turns.",
       "descriptionZh": "Power doubles every turn this move is used in succession after the first, resetting after five turns."
     },
@@ -32254,6 +32819,11 @@
       "pp": 40,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Cannot lower the target’s HP below 1.",
       "descriptionZh": "Cannot lower the target’s HP below 1."
     },
@@ -32268,6 +32838,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Raises the target’s Attack by two stages and confuses the target.",
       "descriptionZh": "Raises the target’s Attack by two stages and confuses the target."
     },
@@ -32282,6 +32857,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -32296,6 +32876,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Power doubles every turn this move is used in succession after the first, maxing out after five turns.",
       "descriptionZh": "Power doubles every turn this move is used in succession after the first, maxing out after five turns."
     },
@@ -32310,6 +32895,11 @@
       "pp": 25,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to raise the user’s Defense by one stage.",
       "descriptionZh": "Has a chance to raise the user’s Defense by one stage."
     },
@@ -32324,6 +32914,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Prevents the target from leaving battle.",
       "descriptionZh": "Prevents the target from leaving battle."
     },
@@ -32338,6 +32932,13 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Authentic",
+        "Mental"
+      ],
       "description": "Target falls in love if it has the opposite gender, and has a 50% chance to refuse attacking the user.",
       "descriptionZh": "Target falls in love if it has the opposite gender, and has a 50% chance to refuse attacking the user."
     },
@@ -32352,6 +32953,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [],
       "description": "Randomly uses one of the user’s other three moves.  Only works if the user is sleeping.",
       "descriptionZh": "Randomly uses one of the user’s other three moves.  Only works if the user is sleeping."
     },
@@ -32366,6 +32968,12 @@
       "pp": 5,
       "priority": 0,
       "targetId": 13,
+      "flags": [
+        "Snatch",
+        "Sound",
+        "Distance",
+        "Authentic"
+      ],
       "description": "Cures the entire party of major status effects.",
       "descriptionZh": "Cures the entire party of major status effects."
     },
@@ -32380,6 +32988,9 @@
       "pp": 25,
       "priority": 0,
       "targetId": 4,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Protects the user’s field from major status ailments and confusion for five turns.",
       "descriptionZh": "Protects the user’s field from major status ailments and confusion for five turns."
     },
@@ -32394,6 +33005,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Sets the user’s and targets’s HP to the average of their current HP.",
       "descriptionZh": "Sets the user’s and targets’s HP to the average of their current HP."
     },
@@ -32408,6 +33023,12 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Has a chance to confuse the target.",
       "descriptionZh": "Has a chance to confuse the target."
     },
@@ -32422,6 +33043,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -32436,6 +33062,7 @@
       "pp": 40,
       "priority": 0,
       "targetId": 7,
+      "flags": [],
       "description": "Allows the trainer to switch out the user and pass effects along to its replacement.",
       "descriptionZh": "Allows the trainer to switch out the user and pass effects along to its replacement."
     },
@@ -32450,6 +33077,13 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Authentic",
+        "Mental"
+      ],
       "description": "Forces the target to repeat its last used move every turn for 2 to 6 turns.",
       "descriptionZh": "Forces the target to repeat its last used move every turn for 2 to 6 turns."
     },
@@ -32464,6 +33098,11 @@
       "pp": 40,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Frees the user from binding moves, removes Leech Seed, and blows away Spikes.",
       "descriptionZh": "Frees the user from binding moves, removes Leech Seed, and blows away Spikes."
     },
@@ -32478,6 +33117,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s evasion by one stage.",
       "descriptionZh": "Lowers the target’s evasion by one stage."
     },
@@ -32492,6 +33136,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Defense by one stage."
     },
@@ -32506,6 +33155,11 @@
       "pp": 35,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to raise the user’s Attack by one stage.",
       "descriptionZh": "Has a chance to raise the user’s Attack by one stage."
     },
@@ -32520,6 +33174,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "Heals the user by half its max HP.  Affected by weather.",
       "descriptionZh": "Heals the user by half its max HP.  Affected by weather."
     },
@@ -32534,6 +33192,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "Heals the user by half its max HP.  Affected by weather.",
       "descriptionZh": "Heals the user by half its max HP.  Affected by weather."
     },
@@ -32548,6 +33210,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "Heals the user by half its max HP.  Affected by weather.",
       "descriptionZh": "Heals the user by half its max HP.  Affected by weather."
     },
@@ -32562,6 +33228,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -32576,6 +33247,7 @@
       "pp": 5,
       "priority": 0,
       "targetId": 12,
+      "flags": [],
       "description": "Changes the weather to rain for five turns.",
       "descriptionZh": "Changes the weather to rain for five turns."
     },
@@ -32590,6 +33262,7 @@
       "pp": 5,
       "priority": 0,
       "targetId": 12,
+      "flags": [],
       "description": "Changes the weather to sunny for five turns.",
       "descriptionZh": "Changes the weather to sunny for five turns."
     },
@@ -32604,6 +33277,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Bite"
+      ],
       "description": "Has a chance to lower the target’s Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Defense by one stage."
     },
@@ -32618,6 +33297,9 @@
       "pp": 20,
       "priority": -5,
       "targetId": 1,
+      "flags": [
+        "Protect"
+      ],
       "description": "Inflicts twice the damage the user received from the last special hit it took.",
       "descriptionZh": "Inflicts twice the damage the user received from the last special hit it took."
     },
@@ -32632,6 +33314,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Authentic"
+      ],
       "description": "Discards the user’s stat changes and copies the target’s.",
       "descriptionZh": "Discards the user’s stat changes and copies the target’s."
     },
@@ -32646,6 +33331,11 @@
       "pp": 5,
       "priority": 2,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -32660,6 +33350,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to raise all of the user’s stats by one stage.",
       "descriptionZh": "Has a chance to raise all of the user’s stats by one stage."
     },
@@ -32674,6 +33368,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Has a chance to lower the target’s Special Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Defense by one stage."
     },
@@ -32688,6 +33387,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "Hits the target two turns later.",
       "descriptionZh": "Hits the target two turns later."
     },
@@ -32702,6 +33402,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Defense by one stage."
     },
@@ -32716,6 +33421,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Prevents the target from leaving battle and inflicts 1/16 its max HP in damage for 2-5 turns.",
       "descriptionZh": "Prevents the target from leaving battle and inflicts 1/16 its max HP in damage for 2-5 turns."
     },
@@ -32730,6 +33439,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits once for every conscious Pokémon the trainer has.",
       "descriptionZh": "Hits once for every conscious Pokémon the trainer has."
     },
@@ -32744,6 +33457,11 @@
       "pp": 10,
       "priority": 3,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Can only be used as the first move after the user enters battle.  Causes the target to flinch.",
       "descriptionZh": "Can only be used as the first move after the user enters battle.  Causes the target to flinch."
     },
@@ -32758,6 +33476,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 8,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Forced to use this move for several turns.  Pokémon cannot fall asleep in that time.",
       "descriptionZh": "Forced to use this move for several turns.  Pokémon cannot fall asleep in that time."
     },
@@ -32772,6 +33496,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Stores energy up to three times for use with Spit Up and Swallow.",
       "descriptionZh": "Stores energy up to three times for use with Spit Up and Swallow."
     },
@@ -32786,6 +33513,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect"
+      ],
       "description": "Power is 100 times the amount of energy Stockpiled.",
       "descriptionZh": "Power is 100 times the amount of energy Stockpiled."
     },
@@ -32800,6 +33530,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "Recovers 1/4 HP after one Stockpile, 1/2 HP after two Stockpiles, or full HP after three Stockpiles.",
       "descriptionZh": "Recovers 1/4 HP after one Stockpile, 1/2 HP after two Stockpiles, or full HP after three Stockpiles."
     },
@@ -32814,6 +33548,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to burn the target.",
       "descriptionZh": "Has a chance to burn the target."
     },
@@ -32828,6 +33566,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [],
       "description": "Changes the weather to a hailstorm for five turns.",
       "descriptionZh": "Changes the weather to a hailstorm for five turns."
     },
@@ -32842,6 +33581,13 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Authentic",
+        "Mental"
+      ],
       "description": "Prevents the target from using the same move twice in a row.",
       "descriptionZh": "Prevents the target from using the same move twice in a row."
     },
@@ -32856,6 +33602,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Raises the target’s Special Attack by one stage and confuses the target.",
       "descriptionZh": "Raises the target’s Special Attack by one stage and confuses the target."
     },
@@ -32870,6 +33621,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Burns the target.",
       "descriptionZh": "Burns the target."
     },
@@ -32884,6 +33640,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Attack and Special Attack by two stages.  User faints.",
       "descriptionZh": "Lowers the target’s Attack and Special Attack by two stages.  User faints."
     },
@@ -32898,6 +33658,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Power doubles if user is burned, paralyzed, or poisoned.",
       "descriptionZh": "Power doubles if user is burned, paralyzed, or poisoned."
     },
@@ -32912,6 +33677,11 @@
       "pp": 20,
       "priority": -3,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Punch"
+      ],
       "description": "If the user takes damage before attacking, the attack is canceled.",
       "descriptionZh": "If the user takes damage before attacking, the attack is canceled."
     },
@@ -32926,6 +33696,7 @@
       "pp": 20,
       "priority": 2,
       "targetId": 7,
+      "flags": [],
       "description": "Redirects the target’s single-target effects to the user for this turn.",
       "descriptionZh": "Redirects the target’s single-target effects to the user for this turn."
     },
@@ -32940,6 +33711,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Special Defense by one stage.  User’s Electric moves have doubled power next turn.",
       "descriptionZh": "Raises the user’s Special Defense by one stage.  User’s Electric moves have doubled power next turn."
     },
@@ -32954,6 +33728,13 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Authentic",
+        "Mental"
+      ],
       "description": "For the next few turns, the target can only use damaging moves.",
       "descriptionZh": "For the next few turns, the target can only use damaging moves."
     },
@@ -32968,6 +33749,9 @@
       "pp": 20,
       "priority": 5,
       "targetId": 3,
+      "flags": [
+        "Authentic"
+      ],
       "description": "Ally’s next move inflicts half more damage.",
       "descriptionZh": "Ally’s next move inflicts half more damage."
     },
@@ -32982,6 +33766,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "User and target swap items.",
       "descriptionZh": "User and target swap items."
     },
@@ -32996,6 +33784,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Authentic"
+      ],
       "description": "Copies the target’s ability.",
       "descriptionZh": "Copies the target’s ability."
     },
@@ -33010,6 +33801,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "User will recover half its max HP at the end of the next turn.",
       "descriptionZh": "User will recover half its max HP at the end of the next turn."
     },
@@ -33024,6 +33819,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Non Sky Battle"
+      ],
       "description": "Prevents the user from leaving battle.  User regains 1/16 of its max HP every turn.",
       "descriptionZh": "Prevents the user from leaving battle.  User regains 1/16 of its max HP every turn."
     },
@@ -33038,6 +33837,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the user’s Attack and Defense by one stage after inflicting damage.",
       "descriptionZh": "Lowers the user’s Attack and Defense by one stage after inflicting damage."
     },
@@ -33052,6 +33856,7 @@
       "pp": 15,
       "priority": 4,
       "targetId": 7,
+      "flags": [],
       "description": "Reflects back the first effect move used on the user this turn.",
       "descriptionZh": "Reflects back the first effect move used on the user this turn."
     },
@@ -33066,6 +33871,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "User recovers the item it last used up.",
       "descriptionZh": "User recovers the item it last used up."
     },
@@ -33080,6 +33888,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Destroys Reflect and Light Screen.",
       "descriptionZh": "Destroys Reflect and Light Screen."
     },
@@ -33094,6 +33907,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Target sleeps at the end of the next turn.",
       "descriptionZh": "Target sleeps at the end of the next turn."
     },
@@ -33108,6 +33926,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Target drops its held item.",
       "descriptionZh": "Target drops its held item."
     },
@@ -33122,6 +33945,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the target’s HP to equal the user’s.",
       "descriptionZh": "Lowers the target’s HP to equal the user’s."
     },
@@ -33136,6 +33964,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts more damage when the user has more HP remaining, with a maximum of 150 power.",
       "descriptionZh": "Inflicts more damage when the user has more HP remaining, with a maximum of 150 power."
     },
@@ -33150,6 +33982,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Authentic"
+      ],
       "description": "User and target swap abilities.",
       "descriptionZh": "User and target swap abilities."
     },
@@ -33164,6 +34001,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Authentic"
+      ],
       "description": "Prevents the target from using any moves that the user also knows.",
       "descriptionZh": "Prevents the target from using any moves that the user also knows."
     },
@@ -33178,6 +34019,13 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Charge",
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "User dives underwater, dodging all attacks, and hits next turn.",
       "descriptionZh": "User dives underwater, dodging all attacks, and hits next turn."
     },
@@ -33192,6 +34040,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Dance"
+      ],
       "description": "Lowers the target’s Attack by two stages.",
       "descriptionZh": "Lowers the target’s Attack by two stages."
     },
@@ -33206,6 +34060,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Dance"
+      ],
       "description": "Confuses the target.",
       "descriptionZh": "Confuses the target."
     },
@@ -33220,6 +34079,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit and a chance to burn the target.",
       "descriptionZh": "Has an increased chance for a critical hit and a chance to burn the target."
     },
@@ -33234,6 +34098,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "Heals the user by half its max HP.",
       "descriptionZh": "Heals the user by half its max HP."
     },
@@ -33248,6 +34116,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -33262,6 +34136,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Bite"
+      ],
       "description": "Has a chance to badly poison the target.",
       "descriptionZh": "Has a chance to badly poison the target."
     },
@@ -33276,6 +34156,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Defense by one stage."
     },
@@ -33290,6 +34175,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Recharge",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User foregoes its next turn to recharge.",
       "descriptionZh": "User foregoes its next turn to recharge."
     },
@@ -33304,6 +34194,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Recharge",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User foregoes its next turn to recharge.",
       "descriptionZh": "User foregoes its next turn to recharge."
     },
@@ -33318,6 +34213,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Has a chance to raise the user’s Attack by one stage.",
       "descriptionZh": "Has a chance to raise the user’s Attack by one stage."
     },
@@ -33332,6 +34233,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -33346,6 +34252,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "If there be weather, this move has doubled power and the weather’s type.",
       "descriptionZh": "If there be weather, this move has doubled power and the weather’s type."
     },
@@ -33360,6 +34271,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Special Defense by two stages.",
       "descriptionZh": "Lowers the target’s Special Defense by two stages."
     },
@@ -33374,6 +34290,10 @@
       "pp": 25,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -33388,6 +34308,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the user’s Special Attack by two stages after inflicting damage.",
       "descriptionZh": "Lowers the user’s Special Attack by two stages after inflicting damage."
     },
@@ -33402,6 +34326,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Speed by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Speed by one stage."
     },
@@ -33416,6 +34344,13 @@
       "pp": 40,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Lowers the target’s Special Defense by two stages.",
       "descriptionZh": "Lowers the target’s Special Defense by two stages."
     },
@@ -33430,6 +34365,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Attack and Defense by one stage.",
       "descriptionZh": "Lowers the target’s Attack and Defense by one stage."
     },
@@ -33444,6 +34384,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Defense and Special Defense by one stage.",
       "descriptionZh": "Raises the user’s Defense and Special Defense by one stage."
     },
@@ -33458,6 +34401,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts more damage when the user has more HP remaining, with a maximum of 150 power.",
       "descriptionZh": "Inflicts more damage when the user has more HP remaining, with a maximum of 150 power."
     },
@@ -33472,6 +34419,12 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Never misses.",
       "descriptionZh": "Never misses."
     },
@@ -33486,6 +34439,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -33500,6 +34457,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
       "descriptionZh": "Prevents the target from fleeing and inflicts damage for 2-5 turns."
     },
@@ -33514,6 +34475,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Causes a one-hit KO.",
       "descriptionZh": "Causes a one-hit KO."
     },
@@ -33528,6 +34493,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Has a chance to lower the target’s accuracy by one stage.",
       "descriptionZh": "Has a chance to lower the target’s accuracy by one stage."
     },
@@ -33542,6 +34512,11 @@
       "pp": 30,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Hits 2-5 times in one turn.",
       "descriptionZh": "Hits 2-5 times in one turn."
     },
@@ -33556,6 +34531,12 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Distance"
+      ],
       "description": "Never misses.",
       "descriptionZh": "Never misses."
     },
@@ -33570,6 +34551,10 @@
       "pp": 30,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits 2-5 times in one turn.",
       "descriptionZh": "Hits 2-5 times in one turn."
     },
@@ -33584,6 +34569,9 @@
       "pp": 15,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Defense by two stages.",
       "descriptionZh": "Raises the user’s Defense by two stages."
     },
@@ -33598,6 +34586,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Prevents the target from leaving battle.",
       "descriptionZh": "Prevents the target from leaving battle."
     },
@@ -33612,6 +34604,10 @@
       "pp": 40,
       "priority": 0,
       "targetId": 13,
+      "flags": [
+        "Snatch",
+        "Sound"
+      ],
       "description": "Raises the user’s Attack by one stage.",
       "descriptionZh": "Raises the user’s Attack by one stage."
     },
@@ -33626,6 +34622,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -33640,6 +34641,12 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Recharge",
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "User foregoes its next turn to recharge.",
       "descriptionZh": "User foregoes its next turn to recharge."
     },
@@ -33654,6 +34661,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Attack and Defense by one stage.",
       "descriptionZh": "Raises the user’s Attack and Defense by one stage."
     },
@@ -33668,6 +34678,14 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Charge",
+        "Protect",
+        "Mirror",
+        "Gravity",
+        "Distance"
+      ],
       "description": "User bounces high into the air, dodging all attacks, and hits next turn.",
       "descriptionZh": "User bounces high into the air, dodging all attacks, and hits next turn."
     },
@@ -33682,6 +34700,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Speed by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Speed by one stage."
     },
@@ -33696,6 +34718,11 @@
       "pp": 25,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit and a chance to poison the target.",
       "descriptionZh": "Has an increased chance for a critical hit and a chance to poison the target."
     },
@@ -33710,6 +34737,11 @@
       "pp": 25,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Takes the target’s item.",
       "descriptionZh": "Takes the target’s item."
     },
@@ -33724,6 +34756,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User takes 1/3 the damage inflicted in recoil.  Has a chance to paralyze the target.",
       "descriptionZh": "User takes 1/3 the damage inflicted in recoil.  Has a chance to paralyze the target."
     },
@@ -33738,6 +34775,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Never misses.",
       "descriptionZh": "Never misses."
     },
@@ -33752,6 +34793,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Special Attack and Special Defense by one stage.",
       "descriptionZh": "Raises the user’s Special Attack and Special Defense by one stage."
     },
@@ -33766,6 +34810,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -33780,6 +34829,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Dance"
+      ],
       "description": "Raises the user’s Attack and Speed by one stage.",
       "descriptionZh": "Raises the user’s Attack and Speed by one stage."
     },
@@ -33794,6 +34847,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Hits 2-5 times in one turn.",
       "descriptionZh": "Hits 2-5 times in one turn."
     },
@@ -33808,6 +34866,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Never misses.",
       "descriptionZh": "Never misses."
     },
@@ -33822,6 +34884,12 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Distance",
+        "Pulse"
+      ],
       "description": "Has a chance to confuse the target.",
       "descriptionZh": "Has a chance to confuse the target."
     },
@@ -33836,6 +34904,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "Heals the user by half its max HP.",
       "descriptionZh": "Heals the user by half its max HP."
     },
@@ -33850,6 +34922,9 @@
       "pp": 5,
       "priority": 0,
       "targetId": 12,
+      "flags": [
+        "Non Sky Battle"
+      ],
       "description": "Disables moves and immunities that involve flying or levitating for five turns.",
       "descriptionZh": "Disables moves and immunities that involve flying or levitating for five turns."
     },
@@ -33864,6 +34939,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Lowers user’s Speed by one stage.",
       "descriptionZh": "Lowers user’s Speed by one stage."
     },
@@ -33878,6 +34959,12 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Power raises when the user has lower Speed, up to a maximum of 150.",
       "descriptionZh": "Power raises when the user has lower Speed, up to a maximum of 150."
     },
@@ -33892,6 +34979,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Heal"
+      ],
       "description": "User faints.  Its replacement has its HP fully restored and any major status effect removed.",
       "descriptionZh": "User faints.  Its replacement has its HP fully restored and any major status effect removed."
     },
@@ -33906,6 +34997,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has double power against Pokémon that have less than half their max HP remaining.",
       "descriptionZh": "Has double power against Pokémon that have less than half their max HP remaining."
     },
@@ -33920,6 +35015,9 @@
       "pp": 10,
       "priority": 2,
       "targetId": 10,
+      "flags": [
+        "Mirror"
+      ],
       "description": "Hits through Protect and Detect.",
       "descriptionZh": "Hits through Protect and Detect."
     },
@@ -33934,6 +35032,12 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Distance"
+      ],
       "description": "If target has a berry, inflicts double damage and uses the berry.",
       "descriptionZh": "If target has a berry, inflicts double damage and uses the berry."
     },
@@ -33948,6 +35052,9 @@
       "pp": 15,
       "priority": 0,
       "targetId": 4,
+      "flags": [
+        "Snatch"
+      ],
       "description": "For three turns, friendly Pokémon have doubled Speed.",
       "descriptionZh": "For three turns, friendly Pokémon have doubled Speed."
     },
@@ -33962,6 +35069,7 @@
       "pp": 30,
       "priority": 0,
       "targetId": 5,
+      "flags": [],
       "description": "Raises one of a friendly Pokémon’s stats at random by two stages.",
       "descriptionZh": "Raises one of a friendly Pokémon’s stats at random by two stages."
     },
@@ -33976,6 +35084,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 1,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Strikes back at the last Pokémon to hit the user this turn with 1.5× the damage.",
       "descriptionZh": "Strikes back at the last Pokémon to hit the user this turn with 1.5× the damage."
     },
@@ -33990,6 +35102,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User must switch out after attacking.",
       "descriptionZh": "User must switch out after attacking."
     },
@@ -34004,6 +35121,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the user’s Defense and Special Defense by one stage after inflicting damage.",
       "descriptionZh": "Lowers the user’s Defense and Special Defense by one stage after inflicting damage."
     },
@@ -34018,6 +35140,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Power is doubled if the target has already moved this turn.",
       "descriptionZh": "Power is doubled if the target has already moved this turn."
     },
@@ -34032,6 +35159,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Power is doubled if the target has already received damage this turn.",
       "descriptionZh": "Power is doubled if the target has already received damage this turn."
     },
@@ -34046,6 +35178,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Throws held item at the target; power depends on the item.",
       "descriptionZh": "Throws held item at the target; power depends on the item."
     },
@@ -34060,6 +35196,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "User swaps Attack and Defense.",
       "descriptionZh": "User swaps Attack and Defense."
     },
@@ -34074,6 +35213,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Nullifies target’s ability until it leaves battle.",
       "descriptionZh": "Nullifies target’s ability until it leaves battle."
     },
@@ -34088,6 +35232,7 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [],
       "description": "Uses the target’s last used move.",
       "descriptionZh": "Uses the target’s last used move."
     },
@@ -34102,6 +35247,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Authentic"
+      ],
       "description": "User swaps Attack and Special Attack changes with the target.",
       "descriptionZh": "User swaps Attack and Special Attack changes with the target."
     },
@@ -34116,6 +35266,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Authentic"
+      ],
       "description": "User swaps Defense and Special Defense changes with the target.",
       "descriptionZh": "User swaps Defense and Special Defense changes with the target."
     },
@@ -34130,6 +35285,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Can only be used after all of the user’s other moves have been used.",
       "descriptionZh": "Can only be used after all of the user’s other moves have been used."
     },
@@ -34144,6 +35304,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Changes the target’s ability to Insomnia.",
       "descriptionZh": "Changes the target’s ability to Insomnia."
     },
@@ -34158,6 +35323,11 @@
       "pp": 5,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Only works if the target is about to use a damaging move.",
       "descriptionZh": "Only works if the target is about to use a damaging move."
     },
@@ -34172,6 +35342,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 6,
+      "flags": [
+        "Reflectable",
+        "Non Sky Battle"
+      ],
       "description": "Scatters poisoned spikes, poisoning opposing Pokémon that switch in.",
       "descriptionZh": "Scatters poisoned spikes, poisoning opposing Pokémon that switch in."
     },
@@ -34186,6 +35360,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Restores 1/16 of the user’s max HP each turn.",
       "descriptionZh": "Restores 1/16 of the user’s max HP each turn."
     },
@@ -34200,6 +35377,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Gravity"
+      ],
       "description": "User is immune to Ground moves and effects for five turns.",
       "descriptionZh": "User is immune to Ground moves and effects for five turns."
     },
@@ -34214,6 +35395,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Defrost"
+      ],
       "description": "User takes 1/3 the damage inflicted in recoil.  Has a chance to burn the target.",
       "descriptionZh": "User takes 1/3 the damage inflicted in recoil.  Has a chance to burn the target."
     },
@@ -34228,6 +35415,13 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Distance",
+        "Pulse",
+        "Ballistics"
+      ],
       "description": "Never misses.",
       "descriptionZh": "Never misses."
     },
@@ -34242,6 +35436,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Speed by two stages.",
       "descriptionZh": "Raises the user’s Speed by two stages."
     },
@@ -34256,6 +35453,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to poison the target.",
       "descriptionZh": "Has a chance to poison the target."
     },
@@ -34270,6 +35472,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Distance",
+        "Pulse"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -34284,6 +35492,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -34298,6 +35511,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34312,6 +35530,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34326,6 +35549,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Distance"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -34340,6 +35568,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34354,6 +35587,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Has a chance to lower the target’s Special Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Defense by one stage."
     },
@@ -34368,6 +35607,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Distance",
+        "Pulse"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34382,6 +35627,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -34396,6 +35646,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34410,6 +35664,13 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch",
+        "Heal"
+      ],
       "description": "Drains half the damage inflicted to heal the user.",
       "descriptionZh": "Drains half the damage inflicted to heal the user."
     },
@@ -34424,6 +35685,10 @@
       "pp": 30,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34438,6 +35703,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Has a chance to lower the target’s Special Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Defense by one stage."
     },
@@ -34452,6 +35722,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Has a chance to lower the target’s Special Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Defense by one stage."
     },
@@ -34466,6 +35741,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Distance"
+      ],
       "description": "User receives 1/3 the damage inflicted in recoil.",
       "descriptionZh": "User receives 1/3 the damage inflicted in recoil."
     },
@@ -34480,6 +35761,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Has a chance to lower the target’s Special Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Defense by one stage."
     },
@@ -34494,6 +35780,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "User and target swap items.",
       "descriptionZh": "User and target swap items."
     },
@@ -34508,6 +35798,12 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Recharge",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User foregoes its next turn to recharge.",
       "descriptionZh": "User foregoes its next turn to recharge."
     },
@@ -34522,6 +35818,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Special Attack by two stages.",
       "descriptionZh": "Raises the user’s Special Attack by two stages."
     },
@@ -34536,6 +35835,12 @@
       "pp": 30,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34550,6 +35855,11 @@
       "pp": 10,
       "priority": -4,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts double damage if the user takes damage before attacking this turn.",
       "descriptionZh": "Inflicts double damage if the user takes damage before attacking this turn."
     },
@@ -34564,6 +35874,10 @@
       "pp": 30,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34578,6 +35892,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -34592,6 +35911,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Bite"
+      ],
       "description": "Has a chance to paralyze the target and a chance to make the target flinch.",
       "descriptionZh": "Has a chance to paralyze the target and a chance to make the target flinch."
     },
@@ -34606,6 +35931,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Bite"
+      ],
       "description": "Has a chance to freeze the target and a chance to make the target flinch.",
       "descriptionZh": "Has a chance to freeze the target and a chance to make the target flinch."
     },
@@ -34620,6 +35951,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Bite"
+      ],
       "description": "Has a chance to burn the target and a chance to make the target flinch.",
       "descriptionZh": "Has a chance to burn the target and a chance to make the target flinch."
     },
@@ -34634,6 +35971,11 @@
       "pp": 30,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34648,6 +35990,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -34662,6 +36008,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -34676,6 +36027,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Special Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Defense by one stage."
     },
@@ -34690,6 +36045,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Authentic"
+      ],
       "description": "Lowers the target’s evasion by one stage.  Removes field effects from the enemy field.",
       "descriptionZh": "Lowers the target’s evasion by one stage.  Removes field effects from the enemy field."
     },
@@ -34704,6 +36065,9 @@
       "pp": 5,
       "priority": -7,
       "targetId": 12,
+      "flags": [
+        "Mirror"
+      ],
       "description": "For five turns, slower Pokémon will act before faster Pokémon.",
       "descriptionZh": "For five turns, slower Pokémon will act before faster Pokémon."
     },
@@ -34718,6 +36082,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the user’s Special Attack by two stages after inflicting damage.",
       "descriptionZh": "Lowers the user’s Special Attack by two stages after inflicting damage."
     },
@@ -34732,6 +36100,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -34746,6 +36118,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to burn the target.",
       "descriptionZh": "Has a chance to burn the target."
     },
@@ -34760,6 +36136,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the user’s Special Attack by two stages after inflicting damage.",
       "descriptionZh": "Lowers the user’s Special Attack by two stages after inflicting damage."
     },
@@ -34774,6 +36154,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34788,6 +36173,12 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Recharge",
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "User foregoes its next turn to recharge.",
       "descriptionZh": "User foregoes its next turn to recharge."
     },
@@ -34802,6 +36193,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit and a chance to poison the target.",
       "descriptionZh": "Has an increased chance for a critical hit and a chance to poison the target."
     },
@@ -34816,6 +36212,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to poison the target.",
       "descriptionZh": "Has a chance to poison the target."
     },
@@ -34830,6 +36230,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -34844,6 +36249,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -34858,6 +36267,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 6,
+      "flags": [
+        "Reflectable"
+      ],
       "description": "Causes damage when opposing Pokémon switch in.",
       "descriptionZh": "Causes damage when opposing Pokémon switch in."
     },
@@ -34872,6 +36284,12 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Inflicts more damage to heavier targets, with a maximum of 120 power.",
       "descriptionZh": "Inflicts more damage to heavier targets, with a maximum of 120 power."
     },
@@ -34886,6 +36304,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "If target has a berry, inflicts double damage and uses the berry.",
       "descriptionZh": "If target has a berry, inflicts double damage and uses the berry."
     },
@@ -34900,6 +36323,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to raise the user’s Special Attack by one stage.",
       "descriptionZh": "Has a chance to raise the user’s Special Attack by one stage."
     },
@@ -34914,6 +36341,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User receives 1/3 the damage inflicted in recoil.",
       "descriptionZh": "User receives 1/3 the damage inflicted in recoil."
     },
@@ -34928,6 +36360,11 @@
       "pp": 20,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -34942,6 +36379,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User receives 1/2 the damage inflicted in recoil.",
       "descriptionZh": "User receives 1/2 the damage inflicted in recoil."
     },
@@ -34956,6 +36398,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits twice in one turn.",
       "descriptionZh": "Hits twice in one turn."
     },
@@ -34970,6 +36417,9 @@
       "pp": 15,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Attack and accuracy by one stage.",
       "descriptionZh": "Raises the user’s Attack and accuracy by one stage."
     },
@@ -34984,6 +36434,9 @@
       "pp": 10,
       "priority": 3,
       "targetId": 4,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Prevents any multi-target moves from hitting friendly Pokémon this turn.",
       "descriptionZh": "Prevents any multi-target moves from hitting friendly Pokémon this turn."
     },
@@ -34998,6 +36451,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect"
+      ],
       "description": "Averages Defense and Special Defense with the target.",
       "descriptionZh": "Averages Defense and Special Defense with the target."
     },
@@ -35012,6 +36468,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect"
+      ],
       "description": "Averages Attack and Special Attack with the target.",
       "descriptionZh": "Averages Attack and Special Attack with the target."
     },
@@ -35026,6 +36485,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [
+        "Mirror"
+      ],
       "description": "All Pokémon’s Defense and Special Defense are swapped for 5 turns.",
       "descriptionZh": "All Pokémon’s Defense and Special Defense are swapped for 5 turns."
     },
@@ -35040,6 +36502,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts damage based on the target’s Defense, not Special Defense.",
       "descriptionZh": "Inflicts damage based on the target’s Defense, not Special Defense."
     },
@@ -35054,6 +36520,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts double damage if the target is Poisoned.",
       "descriptionZh": "Inflicts double damage if the target is Poisoned."
     },
@@ -35068,6 +36538,9 @@
       "pp": 15,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Speed by two stages and halves the user’s weight.",
       "descriptionZh": "Raises the user’s Speed by two stages and halves the user’s weight."
     },
@@ -35082,6 +36555,9 @@
       "pp": 20,
       "priority": 2,
       "targetId": 7,
+      "flags": [
+        "Powder"
+      ],
       "description": "Redirects the target’s single-target effects to the user for this turn.",
       "descriptionZh": "Redirects the target’s single-target effects to the user for this turn."
     },
@@ -35096,6 +36572,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [
+        "Mirror"
+      ],
       "description": "Negates held items for five turns.",
       "descriptionZh": "Negates held items for five turns."
     },
@@ -35110,6 +36589,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Removes any immunity to Ground damage.",
       "descriptionZh": "Removes any immunity to Ground damage."
     },
@@ -35124,6 +36608,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Always scores a critical hit.",
       "descriptionZh": "Always scores a critical hit."
     },
@@ -35138,6 +36627,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to poison the target.",
       "descriptionZh": "Has a chance to poison the target."
     },
@@ -35152,6 +36645,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Dance"
+      ],
       "description": "Raises the user’s Special Attack, Special Defense, and Speed by one stage each.",
       "descriptionZh": "Raises the user’s Special Attack, Special Defense, and Speed by one stage each."
     },
@@ -35166,6 +36663,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Power is higher when the user weighs more than the target, up to a maximum of 120.",
       "descriptionZh": "Power is higher when the user weighs more than the target, up to a maximum of 120."
     },
@@ -35180,6 +36683,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Power is higher when the user has greater Speed than the target, up to a maximum of 150.",
       "descriptionZh": "Power is higher when the user has greater Speed than the target, up to a maximum of 150."
     },
@@ -35194,6 +36702,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Changes the target’s type to Water.",
       "descriptionZh": "Changes the target’s type to Water."
     },
@@ -35208,6 +36721,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage.  Raises the user’s Speed by one stage.",
       "descriptionZh": "Inflicts regular damage.  Raises the user’s Speed by one stage."
     },
@@ -35222,6 +36740,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Attack, Defense, and accuracy by one stage each.",
       "descriptionZh": "Raises the user’s Attack, Defense, and accuracy by one stage each."
     },
@@ -35236,6 +36757,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Speed by one stage.",
       "descriptionZh": "Lowers the target’s Speed by one stage."
     },
@@ -35250,6 +36776,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Lowers the target’s Special Defense by two stages.",
       "descriptionZh": "Lowers the target’s Special Defense by two stages."
     },
@@ -35264,6 +36795,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Calculates damage with the target’s attacking stat.",
       "descriptionZh": "Calculates damage with the target’s attacking stat."
     },
@@ -35278,6 +36814,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Changes the target’s ability to Simple.",
       "descriptionZh": "Changes the target’s ability to Simple."
     },
@@ -35292,6 +36833,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Copies the user’s ability onto the target.",
       "descriptionZh": "Copies the user’s ability onto the target."
     },
@@ -35306,6 +36852,9 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Authentic"
+      ],
       "description": "Makes the target act next this turn.",
       "descriptionZh": "Makes the target act next this turn."
     },
@@ -35320,6 +36869,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Has double power if it’s used more than once per turn.",
       "descriptionZh": "Has double power if it’s used more than once per turn."
     },
@@ -35334,6 +36889,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Power increases by 100% for each consecutive use by any friendly Pokémon, to a maximum of 200.",
       "descriptionZh": "Power increases by 100% for each consecutive use by any friendly Pokémon, to a maximum of 200."
     },
@@ -35348,6 +36909,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Removes all of the target’s stat modifiers.",
       "descriptionZh": "Removes all of the target’s stat modifiers."
     },
@@ -35362,6 +36927,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Power is higher the more the user’s stats have been raised, to a maximum of 31×.",
       "descriptionZh": "Power is higher the more the user’s stats have been raised, to a maximum of 31×."
     },
@@ -35376,6 +36945,9 @@
       "pp": 15,
       "priority": 3,
       "targetId": 4,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Prevents any priority moves from hitting friendly Pokémon this turn.",
       "descriptionZh": "Prevents any priority moves from hitting friendly Pokémon this turn."
     },
@@ -35390,6 +36962,7 @@
       "pp": 15,
       "priority": 2,
       "targetId": 7,
+      "flags": [],
       "description": "User switches places with the friendly Pokémon opposite it.",
       "descriptionZh": "User switches places with the friendly Pokémon opposite it."
     },
@@ -35404,6 +36977,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Defrost"
+      ],
       "description": "Has a chance to burn the target.",
       "descriptionZh": "Has a chance to burn the target."
     },
@@ -35418,6 +36996,9 @@
       "pp": 15,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises user’s Attack, Special Attack, and Speed by two stages.  Lower user’s Defense and Special Defense by one stage.",
       "descriptionZh": "Raises user’s Attack, Special Attack, and Speed by two stages.  Lower user’s Defense and Special Defense by one stage."
     },
@@ -35432,6 +37013,13 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Distance",
+        "Heal",
+        "Pulse"
+      ],
       "description": "Heals the target for half its max HP.",
       "descriptionZh": "Heals the target for half its max HP."
     },
@@ -35446,6 +37034,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has double power if the target has a major status ailment.",
       "descriptionZh": "Has double power if the target has a major status ailment."
     },
@@ -35460,6 +37052,11 @@
       "pp": 10,
       "priority": -6,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Ends wild battles.  Forces trainers to switch Pokémon.",
       "descriptionZh": "Ends wild battles.  Forces trainers to switch Pokémon."
     },
@@ -35474,6 +37071,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Makes the target act last this turn.",
       "descriptionZh": "Makes the target act last this turn."
     },
@@ -35488,6 +37089,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Distance"
+      ],
       "description": "Has double power if the user has no held item.",
       "descriptionZh": "Has double power if the user has no held item."
     },
@@ -35502,6 +37109,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Authentic"
+      ],
       "description": "User becomes the target’s type.",
       "descriptionZh": "User becomes the target’s type."
     },
@@ -35516,6 +37127,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has double power if a friendly Pokémon fainted last turn.",
       "descriptionZh": "Has double power if a friendly Pokémon fainted last turn."
     },
@@ -35530,6 +37146,9 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect"
+      ],
       "description": "Inflicts damage equal to the user’s remaining HP.  User faints.",
       "descriptionZh": "Inflicts damage equal to the user’s remaining HP.  User faints."
     },
@@ -35544,6 +37163,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to burn the target.",
       "descriptionZh": "Has a chance to burn the target."
     },
@@ -35558,6 +37181,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "With Water Pledge, doubles the effect chance of friendly Pokémon’s moves for four turns.",
       "descriptionZh": "With Water Pledge, doubles the effect chance of friendly Pokémon’s moves for four turns."
     },
@@ -35572,6 +37200,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "User must switch out after attacking.",
       "descriptionZh": "User must switch out after attacking."
     },
@@ -35586,6 +37218,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Special Attack by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Attack by one stage."
     },
@@ -35600,6 +37236,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Has a chance to lower the target’s Speed by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Speed by one stage."
     },
@@ -35614,6 +37255,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Always scores a critical hit.",
       "descriptionZh": "Always scores a critical hit."
     },
@@ -35628,6 +37273,11 @@
       "pp": 10,
       "priority": -6,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Ends wild battles.  Forces trainers to switch Pokémon.",
       "descriptionZh": "Ends wild battles.  Forces trainers to switch Pokémon."
     },
@@ -35642,6 +37292,9 @@
       "pp": 30,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Attack and Special Attack by one stage each.",
       "descriptionZh": "Raises the user’s Attack and Special Attack by one stage each."
     },
@@ -35656,6 +37309,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Speed by one stage.",
       "descriptionZh": "Lowers the target’s Speed by one stage."
     },
@@ -35670,6 +37327,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "User receives 1/4 the damage it inflicts in recoil.",
       "descriptionZh": "User receives 1/4 the damage it inflicts in recoil."
     },
@@ -35684,6 +37346,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has an increased chance for a critical hit.",
       "descriptionZh": "Has an increased chance for a critical hit."
     },
@@ -35698,6 +37365,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Heal"
+      ],
       "description": "Drains half the damage inflicted to heal the user.",
       "descriptionZh": "Drains half the damage inflicted to heal the user."
     },
@@ -35712,6 +37385,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Ignores the target’s stat modifiers.",
       "descriptionZh": "Ignores the target’s stat modifiers."
     },
@@ -35726,6 +37404,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Defense by one stage."
     },
@@ -35740,6 +37423,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Non Sky Battle"
+      ],
       "description": "Power is higher when the user weighs more than the target, up to a maximum of 120.",
       "descriptionZh": "Power is higher when the user weighs more than the target, up to a maximum of 120."
     },
@@ -35754,6 +37443,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Raises the user’s Defense by three stages.",
       "descriptionZh": "Raises the user’s Defense by three stages."
     },
@@ -35768,6 +37460,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s accuracy by one stage.",
       "descriptionZh": "Has a chance to lower the target’s accuracy by one stage."
     },
@@ -35782,6 +37478,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits 2-5 times in one turn.",
       "descriptionZh": "Hits 2-5 times in one turn."
     },
@@ -35796,6 +37497,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Distance"
+      ],
       "description": "Has a chance to confuse the target.",
       "descriptionZh": "Has a chance to confuse the target."
     },
@@ -35810,6 +37516,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Dance"
+      ],
       "description": "Has a chance to raise the user’s Special Attack by one stage.",
       "descriptionZh": "Has a chance to raise the user’s Special Attack by one stage."
     },
@@ -35824,6 +37535,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Has a chance to lower the target’s Special Attack by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Attack by one stage."
     },
@@ -35838,6 +37555,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to make the target flinch.",
       "descriptionZh": "Has a chance to make the target flinch."
     },
@@ -35852,6 +37573,14 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Gravity",
+        "Distance",
+        "Non Sky Battle"
+      ],
       "description": "Deals both Fighting and Flying-type damage.",
       "descriptionZh": "Deals both Fighting and Flying-type damage."
     },
@@ -35866,6 +37595,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect"
+      ],
       "description": "Can only be used after the user has eaten a berry.",
       "descriptionZh": "Can only be used after the user has eaten a berry."
     },
@@ -35880,6 +37612,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 6,
+      "flags": [
+        "Reflectable"
+      ],
       "description": "Covers the opposing field, lowering opponents’ Speed by one stage upon switching in.",
       "descriptionZh": "Covers the opposing field, lowering opponents’ Speed by one stage upon switching in."
     },
@@ -35894,6 +37629,11 @@
       "pp": 25,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Raises the user’s Attack by two stages if it KOs the target.",
       "descriptionZh": "Raises the user’s Attack by two stages if it KOs the target."
     },
@@ -35908,6 +37648,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Charge",
+        "Mirror"
+      ],
       "description": "User vanishes, dodging all attacks, and hits next turn.  Hits through Protect and Detect.",
       "descriptionZh": "User vanishes, dodging all attacks, and hits next turn.  Hits through Protect and Detect."
     },
@@ -35922,6 +37667,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Adds Ghost to the target’s types.",
       "descriptionZh": "Adds Ghost to the target’s types."
     },
@@ -35936,6 +37686,13 @@
       "pp": 30,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Lowers the target’s Attack and Special Attack by one stage.",
       "descriptionZh": "Lowers the target’s Attack and Special Attack by one stage."
     },
@@ -35950,6 +37707,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Heal"
+      ],
       "description": "Heals the user for half the total damage dealt to all targets.",
       "descriptionZh": "Heals the user for half the total damage dealt to all targets."
     },
@@ -35964,6 +37726,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage.",
       "descriptionZh": "Inflicts regular damage."
     },
@@ -35978,6 +37744,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Super-effective against Water.",
       "descriptionZh": "Super-effective against Water."
     },
@@ -35992,6 +37762,12 @@
       "pp": 15,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Never misses.",
       "descriptionZh": "Never misses."
     },
@@ -36006,6 +37782,13 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Lowers all targets’ Attack and Special Attack by one stage.  Makes the user switch out.",
       "descriptionZh": "Lowers all targets’ Attack and Special Attack by one stage.  Makes the user switch out."
     },
@@ -36020,6 +37803,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Inverts the target’s stat modifiers.",
       "descriptionZh": "Inverts the target’s stat modifiers."
     },
@@ -36034,6 +37822,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Heal"
+      ],
       "description": "Drains 75% of the damage inflicted to heal the user.",
       "descriptionZh": "Drains 75% of the damage inflicted to heal the user."
     },
@@ -36048,6 +37842,7 @@
       "pp": 10,
       "priority": 3,
       "targetId": 4,
+      "flags": [],
       "description": "Protects all friendly Pokémon from non-damaging moves.",
       "descriptionZh": "Protects all friendly Pokémon from non-damaging moves."
     },
@@ -36062,6 +37857,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [
+        "Non Sky Battle"
+      ],
       "description": "For five turns, heals all Pokémon on the ground for 1/16 max HP each turn and strengthens their Grass moves to 1.5× their power.",
       "descriptionZh": "For five turns, heals all Pokémon on the ground for 1/16 max HP each turn and strengthens their Grass moves to 1.5× their power."
     },
@@ -36076,6 +37874,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [
+        "Non Sky Battle"
+      ],
       "description": "For five turns, protects all Pokémon on the ground from major status ailments and confusion, and halves the power of incoming Dragon moves.",
       "descriptionZh": "For five turns, protects all Pokémon on the ground from major status ailments and confusion, and halves the power of incoming Dragon moves."
     },
@@ -36090,6 +37891,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Changes the target’s move’s type to Electric if it hasn’t moved yet this turn.",
       "descriptionZh": "Changes the target’s move’s type to Electric if it hasn’t moved yet this turn."
     },
@@ -36104,6 +37909,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Attack by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Attack by one stage."
     },
@@ -36118,6 +37928,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Special Attack by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Attack by one stage."
     },
@@ -36132,6 +37946,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Inflicts regular damage.",
       "descriptionZh": "Inflicts regular damage."
     },
@@ -36146,6 +37966,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [
+        "Mirror",
+        "Authentic"
+      ],
       "description": "Prevents all Pokémon from fleeing or switching out during the next turn.",
       "descriptionZh": "Prevents all Pokémon from fleeing or switching out during the next turn."
     },
@@ -36160,6 +37984,10 @@
       "pp": 20,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Hits 2–5 times.",
       "descriptionZh": "Hits 2–5 times."
     },
@@ -36174,6 +38002,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Special Attack by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Attack by one stage."
     },
@@ -36188,6 +38020,7 @@
       "pp": 10,
       "priority": 4,
       "targetId": 7,
+      "flags": [],
       "description": "Blocks damaging attacks and damages attacking Pokémon for 1/8 their max HP.",
       "descriptionZh": "Blocks damaging attacks and damages attacking Pokémon for 1/8 their max HP."
     },
@@ -36202,6 +38035,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 3,
+      "flags": [
+        "Authentic"
+      ],
       "description": "Raises a selected ally’s Special Defense by one stage.",
       "descriptionZh": "Raises a selected ally’s Special Defense by one stage."
     },
@@ -36216,6 +38052,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Special Attack by two stages.",
       "descriptionZh": "Lowers the target’s Special Attack by two stages."
     },
@@ -36230,6 +38071,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Attack, Special Attack, and Speed by one stage if it is poisoned.",
       "descriptionZh": "Lowers the target’s Attack, Special Attack, and Speed by one stage if it is poisoned."
     },
@@ -36244,6 +38090,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 13,
+      "flags": [
+        "Snatch",
+        "Distance",
+        "Authentic"
+      ],
       "description": "Raises the Defense and Special Defense of all friendly Pokémon with Plus or Minus by one stage.",
       "descriptionZh": "Raises the Defense and Special Defense of all friendly Pokémon with Plus or Minus by one stage."
     },
@@ -36258,6 +38109,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [
+        "Non Sky Battle"
+      ],
       "description": "For five turns, prevents all Pokémon on the ground from sleeping and strengthens their Electric moves to 1.5× their power.",
       "descriptionZh": "For five turns, prevents all Pokémon on the ground from sleeping and strengthens their Electric moves to 1.5× their power."
     },
@@ -36272,6 +38126,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -36286,6 +38144,11 @@
       "pp": 30,
       "priority": 1,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Attack by one stage.",
       "descriptionZh": "Lowers the target’s Attack by one stage."
     },
@@ -36300,6 +38163,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to paralyze the target.",
       "descriptionZh": "Has a chance to paralyze the target."
     },
@@ -36314,6 +38182,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
       "descriptionZh": "Prevents the target from fleeing and inflicts damage for 2-5 turns."
     },
@@ -36328,6 +38201,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "User receives 1/2 the damage inflicted in recoil.",
       "descriptionZh": "User receives 1/2 the damage inflicted in recoil."
     },
@@ -36342,6 +38219,11 @@
       "pp": 10,
       "priority": 2,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Can only be used as the first move after the user enters battle.",
       "descriptionZh": "Can only be used as the first move after the user enters battle."
     },
@@ -36356,6 +38238,7 @@
       "pp": 10,
       "priority": 4,
       "targetId": 7,
+      "flags": [],
       "description": "Grants the user protection for the rest of the turn and poisons any Pokémon that tries to use a contact move on it.",
       "descriptionZh": "Grants the user protection for the rest of the turn and poisons any Pokémon that tries to use a contact move on it."
     },
@@ -36370,6 +38253,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Ignores the target’s stat modifiers.",
       "descriptionZh": "Ignores the target’s stat modifiers."
     },
@@ -36384,6 +38272,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Cures the target of burns.",
       "descriptionZh": "Cures the target of burns."
     },
@@ -36398,6 +38292,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Punch"
+      ],
       "description": "Lowers user’s Speed by one stage.",
       "descriptionZh": "Lowers user’s Speed by one stage."
     },
@@ -36412,6 +38312,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -36426,6 +38331,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Heal"
+      ],
       "description": "Heals the user by the target’s current Attack stat and lowers the target’s Attack by one stage.",
       "descriptionZh": "Heals the user by the target’s current Attack stat and lowers the target’s Attack by one stage."
     },
@@ -36440,6 +38351,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Charge",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Requires a turn to charge before attacking.",
       "descriptionZh": "Requires a turn to charge before attacking."
     },
@@ -36454,6 +38371,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Poisons the target and lowers its Speed by one stage.",
       "descriptionZh": "Poisons the target and lowers its Speed by one stage."
     },
@@ -36468,6 +38390,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Prevents the target from using sound-based moves for two turns.",
       "descriptionZh": "Prevents the target from using sound-based moves for two turns."
     },
@@ -36482,6 +38409,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Ballistics"
+      ],
       "description": "Damages opponents, but heals allies for 50% of their max HP.",
       "descriptionZh": "Damages opponents, but heals allies for 50% of their max HP."
     },
@@ -36496,6 +38428,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [
+        "Non Sky Battle"
+      ],
       "description": "Protects Pokémon on the ground from priority moves and increases the power of their  Psychic moves by 50%.",
       "descriptionZh": "Protects Pokémon on the ground from priority moves and increases the power of their  Psychic moves by 50%."
     },
@@ -36510,6 +38445,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Attack by one stage after inflicting damage.",
       "descriptionZh": "Lowers the target’s Attack by one stage after inflicting damage."
     },
@@ -36524,6 +38464,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Defense by one stage after inflicting damage.",
       "descriptionZh": "Lowers the target’s Defense by one stage after inflicting damage."
     },
@@ -36538,6 +38483,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Power is higher the more the user’s stats have been raised, to a maximum of 31×.",
       "descriptionZh": "Power is higher the more the user’s stats have been raised, to a maximum of 31×."
     },
@@ -36552,6 +38502,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Defrost"
+      ],
       "description": "Removes the user’s Fire type after inflicting damage.",
       "descriptionZh": "Removes the user’s Fire type after inflicting damage."
     },
@@ -36566,6 +38521,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Authentic"
+      ],
       "description": "Exchanges the user’s Speed with the target’s.",
       "descriptionZh": "Exchanges the user’s Speed with the target’s."
     },
@@ -36580,6 +38540,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Never misses.",
       "descriptionZh": "Never misses."
     },
@@ -36594,6 +38559,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Attack by one stage after inflicting damage.",
       "descriptionZh": "Lowers the target’s Attack by one stage after inflicting damage."
     },
@@ -36608,6 +38578,10 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Authentic"
+      ],
       "description": "Forces the target to repeat its last used move.",
       "descriptionZh": "Forces the target to repeat its last used move."
     },
@@ -36622,6 +38596,10 @@
       "pp": 15,
       "priority": -3,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Ballistics"
+      ],
       "description": "Inflicts a burn on any Pokémon that makes contact before the attack.",
       "descriptionZh": "Inflicts a burn on any Pokémon that makes contact before the attack."
     },
@@ -36636,6 +38614,12 @@
       "pp": 5,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
       "description": "Lowers the user’s Defense by one stage after inflicting damage.",
       "descriptionZh": "Lowers the user’s Defense by one stage after inflicting damage."
     },
@@ -36650,6 +38634,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -36664,6 +38653,9 @@
       "pp": 20,
       "priority": 0,
       "targetId": 4,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Reduces damage five turns, but must be used during hail.",
       "descriptionZh": "Reduces damage five turns, but must be used during hail."
     },
@@ -36678,6 +38670,12 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror",
+        "Bite"
+      ],
       "description": "Destroys Reflect and Light Screen.",
       "descriptionZh": "Destroys Reflect and Light Screen."
     },
@@ -36692,6 +38690,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has double power if the user’s last move failed.",
       "descriptionZh": "Has double power if the user’s last move failed."
     },
@@ -36706,6 +38709,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Defense by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Defense by one stage."
     },
@@ -36720,6 +38728,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Attack and Special Attack by one stage.",
       "descriptionZh": "Lowers the target’s Attack and Special Attack by one stage."
     },
@@ -36734,6 +38746,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Cures the entire party of major status effects after inflicting damage.",
       "descriptionZh": "Cures the entire party of major status effects after inflicting damage."
     },
@@ -36748,6 +38763,9 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch"
+      ],
       "description": "Hits twice in one turn, with a chance to make the target flinch.",
       "descriptionZh": "Hits twice in one turn, with a chance to make the target flinch."
     },
@@ -36762,6 +38780,12 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror",
+        "Powder"
+      ],
       "description": "",
       "descriptionZh": ""
     },
@@ -36776,6 +38800,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "",
       "descriptionZh": ""
     },
@@ -36790,6 +38818,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 14,
+      "flags": [
+        "Authentic"
+      ],
       "description": "",
       "descriptionZh": ""
     },
@@ -36804,6 +38835,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 7,
+      "flags": [
+        "Snatch",
+        "Sound",
+        "Dance"
+      ],
       "description": "",
       "descriptionZh": ""
     },
@@ -36818,6 +38854,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "",
       "descriptionZh": ""
     },
@@ -36832,6 +38873,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -36846,6 +38888,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "",
       "descriptionZh": ""
     },
@@ -36860,6 +38906,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Attack by one stage after inflicting damage.",
       "descriptionZh": "Lowers the target’s Attack by one stage after inflicting damage."
     },
@@ -36874,6 +38925,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "",
       "descriptionZh": ""
     },
@@ -36888,6 +38943,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Lowers the target’s Defense by one stage after inflicting damage.",
       "descriptionZh": "Lowers the target’s Defense by one stage after inflicting damage."
     },
@@ -36902,6 +38961,11 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Has a chance to lower the target’s Special Attack by one stage.",
       "descriptionZh": "Has a chance to lower the target’s Special Attack by one stage."
     },
@@ -36916,6 +38980,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 13,
+      "flags": [
+        "Snatch",
+        "Heal",
+        "Authentic"
+      ],
       "description": "",
       "descriptionZh": ""
     },
@@ -36930,6 +38999,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts damage, and the user takes damage equal to half of its max HP, rounded up.",
       "descriptionZh": "Inflicts damage, and the user takes damage equal to half of its max HP, rounded up."
     },
@@ -36944,6 +39017,10 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -36958,6 +39035,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -36972,6 +39054,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Boosts the user’s Speed and lowers their Defense by one stage after inflicting damage two to five times in a row.",
       "descriptionZh": "Boosts the user’s Speed and lowers their Defense by one stage after inflicting damage two to five times in a row."
     },
@@ -36986,6 +39072,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Charge",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37000,6 +39091,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37014,6 +39109,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37028,6 +39128,10 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37042,6 +39146,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Pulse"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37056,6 +39165,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37070,6 +39184,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 11,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37084,6 +39202,11 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37098,6 +39221,10 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37112,6 +39239,11 @@
       "pp": 40,
       "priority": 0,
       "targetId": 9,
+      "flags": [
+        "Protect",
+        "Reflectable",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37126,6 +39258,9 @@
       "pp": 10,
       "priority": 0,
       "targetId": 13,
+      "flags": [
+        "Authentic"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37140,6 +39275,11 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37154,6 +39294,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37168,6 +39313,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
     },
@@ -37182,6 +39332,11 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Defrost"
+      ],
       "description": "Has a chance to burn the target.",
       "descriptionZh": "Has a chance to burn the target."
     },
@@ -37196,6 +39351,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37210,6 +39366,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37224,6 +39381,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37238,6 +39396,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 8,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37252,6 +39411,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37266,6 +39426,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37280,6 +39441,7 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37294,6 +39456,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37308,6 +39471,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37322,6 +39486,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37336,6 +39501,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37350,6 +39516,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37364,6 +39531,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37378,6 +39546,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37392,6 +39561,7 @@
       "pp": 15,
       "priority": 1,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37406,6 +39576,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37420,6 +39591,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37434,6 +39606,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37448,6 +39621,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37462,6 +39636,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 11,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37476,6 +39651,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37490,6 +39666,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37504,6 +39681,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37518,6 +39696,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37532,6 +39711,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37546,6 +39726,7 @@
       "pp": 5,
       "priority": 0,
       "targetId": 11,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37560,6 +39741,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37574,6 +39756,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37588,6 +39771,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 7,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37602,6 +39786,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 12,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37616,6 +39801,7 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37630,6 +39816,7 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37644,6 +39831,7 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37658,6 +39846,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37672,6 +39861,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37686,6 +39876,7 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37700,6 +39891,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37714,6 +39906,7 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37728,6 +39921,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 1,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37742,6 +39936,7 @@
       "pp": 20,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37756,6 +39951,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37770,6 +39966,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37784,6 +39981,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37798,6 +39996,7 @@
       "pp": 5,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37812,6 +40011,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37826,6 +40026,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 15,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37840,6 +40041,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37854,6 +40056,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37868,6 +40071,7 @@
       "pp": 15,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37882,6 +40086,7 @@
       "pp": 10,
       "priority": 0,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     },
@@ -37896,6 +40101,7 @@
       "pp": 15,
       "priority": 3,
       "targetId": 10,
+      "flags": [],
       "description": "",
       "descriptionZh": ""
     }
@@ -39307,7 +41513,7 @@
       "id": "sitrus-berry",
       "name": "Sitrus Berry",
       "nameZh": "文柚果",
-      "category": "Held item",
+      "category": "Berry",
       "description": "Held: Consumed at 1/2 max HP to recover 1/4 max HP.",
       "descriptionZh": "Held: Consumed at 1/2 max HP to recover 1/4 max HP."
     },
@@ -39315,7 +41521,7 @@
       "id": "chople-berry",
       "name": "Chople Berry",
       "nameZh": "蓮蒲果",
-      "category": "Held item",
+      "category": "Berry",
       "description": "Held: Consumed when struck by a super-effective Fighting-type attack to halve the damage.",
       "descriptionZh": "Held: Consumed when struck by a super-effective Fighting-type attack to halve the damage."
     },
@@ -39323,7 +41529,7 @@
       "id": "shuca-berry",
       "name": "Shuca Berry",
       "nameZh": "腰木果",
-      "category": "Held item",
+      "category": "Berry",
       "description": "Held: Consumed when struck by a super-effective Ground-type attack to halve the damage.",
       "descriptionZh": "Held: Consumed when struck by a super-effective Ground-type attack to halve the damage."
     },
@@ -39331,7 +41537,7 @@
       "id": "kasib-berry",
       "name": "Kasib Berry",
       "nameZh": "佛柑果",
-      "category": "Held item",
+      "category": "Berry",
       "description": "Held: Consumed when struck by a super-effective Ghost-type attack to halve the damage.",
       "descriptionZh": "Held: Consumed when struck by a super-effective Ghost-type attack to halve the damage."
     },
@@ -39339,7 +41545,7 @@
       "id": "colbur-berry",
       "name": "Colbur Berry",
       "nameZh": "刺耳果",
-      "category": "Held item",
+      "category": "Berry",
       "description": "Held: Consumed when struck by a super-effective Dark-type attack to halve the damage.",
       "descriptionZh": "Held: Consumed when struck by a super-effective Dark-type attack to halve the damage."
     },
@@ -39347,7 +41553,7 @@
       "id": "bright-powder",
       "name": "Bright Powder",
       "nameZh": "光粉",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Increases the holder’s evasion by 1/9 (11 1/9%).",
       "descriptionZh": "Held: Increases the holder’s evasion by 1/9 (11 1/9%)."
     },
@@ -39355,7 +41561,7 @@
       "id": "white-herb",
       "name": "White Herb",
       "nameZh": "白色香草",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Resets all lowered stats to normal at end of turn. Consumed after use.",
       "descriptionZh": "Held: Resets all lowered stats to normal at end of turn. Consumed after use."
     },
@@ -39363,7 +41569,7 @@
       "id": "quick-claw",
       "name": "Quick Claw",
       "nameZh": "先制之爪",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Holder has a 3/16 (18.75%) chance to move first.",
       "descriptionZh": "Held: Holder has a 3/16 (18.75%) chance to move first."
     },
@@ -39371,7 +41577,7 @@
       "id": "mental-herb",
       "name": "Mental Herb",
       "nameZh": "心靈香草",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Consumed to cure infatuation. Gen V: Also removes Taunt, Encore, Torment, Disable, and Cursed Body.",
       "descriptionZh": "Held: Consumed to cure infatuation. Gen V: Also removes Taunt, Encore, Torment, Disable, and Cursed Body."
     },
@@ -39379,7 +41585,7 @@
       "id": "scope-lens",
       "name": "Scope Lens",
       "nameZh": "焦點鏡",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Raises the holder’s critical hit ratio by one stage.",
       "descriptionZh": "Held: Raises the holder’s critical hit ratio by one stage."
     },
@@ -39387,7 +41593,7 @@
       "id": "leftovers",
       "name": "Leftovers",
       "nameZh": "吃剩的東西",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Restores 1/16 (6.25%) holder’s max HP at the end of each turn.",
       "descriptionZh": "Held: Restores 1/16 (6.25%) holder’s max HP at the end of each turn."
     },
@@ -39395,7 +41601,7 @@
       "id": "light-ball",
       "name": "Light Ball",
       "nameZh": "電氣球",
-      "category": "Held item",
+      "category": "Item",
       "description": "Doubles Pikachu’s Attack and Special Attack. Breed on Pikachu or Raichu: Pichu Egg will have Volt Tackle.",
       "descriptionZh": "Doubles Pikachu’s Attack and Special Attack. Breed on Pikachu or Raichu: Pichu Egg will have Volt Tackle."
     },
@@ -39403,7 +41609,7 @@
       "id": "soft-sand",
       "name": "Soft Sand",
       "nameZh": "柔軟沙子",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Ground-Type moves from holder do 20% more damage.",
       "descriptionZh": "Held: Ground-Type moves from holder do 20% more damage."
     },
@@ -39411,7 +41617,7 @@
       "id": "miracle-seed",
       "name": "Miracle Seed",
       "nameZh": "奇跡種子",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Grass-Type moves from holder do 20% more damage.",
       "descriptionZh": "Held: Grass-Type moves from holder do 20% more damage."
     },
@@ -39419,7 +41625,7 @@
       "id": "black-glasses",
       "name": "Black Glasses",
       "nameZh": "黑色眼鏡",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Dark-Type moves from holder do 20% more damage.",
       "descriptionZh": "Held: Dark-Type moves from holder do 20% more damage."
     },
@@ -39427,7 +41633,7 @@
       "id": "mystic-water",
       "name": "Mystic Water",
       "nameZh": "神秘水滴",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Water-Type moves from holder do 20% more damage.",
       "descriptionZh": "Held: Water-Type moves from holder do 20% more damage."
     },
@@ -39435,7 +41641,7 @@
       "id": "sharp-beak",
       "name": "Sharp Beak",
       "nameZh": "銳利鳥嘴",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Flying-Type moves from holder do 20% more damage.",
       "descriptionZh": "Held: Flying-Type moves from holder do 20% more damage."
     },
@@ -39443,7 +41649,7 @@
       "id": "never-melt-ice",
       "name": "Never-Melt Ice",
       "nameZh": "不融冰",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Ice-Type moves from holder do 20% more damage.",
       "descriptionZh": "Held: Ice-Type moves from holder do 20% more damage."
     },
@@ -39451,7 +41657,7 @@
       "id": "spell-tag",
       "name": "Spell Tag",
       "nameZh": "詛咒之符",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Ghost-Type moves from holder do 20% more damage.",
       "descriptionZh": "Held: Ghost-Type moves from holder do 20% more damage."
     },
@@ -39459,7 +41665,7 @@
       "id": "charcoal",
       "name": "Charcoal",
       "nameZh": "木炭",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Fire-Type moves from holder do 20% more damage.",
       "descriptionZh": "Held: Fire-Type moves from holder do 20% more damage."
     },
@@ -39467,7 +41673,7 @@
       "id": "wide-lens",
       "name": "Wide Lens",
       "nameZh": "廣角鏡",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Provides a 1/10 (10%) boost in accuracy to the holder.",
       "descriptionZh": "Held: Provides a 1/10 (10%) boost in accuracy to the holder."
     },
@@ -39475,7 +41681,7 @@
       "id": "light-clay",
       "name": "Light Clay",
       "nameZh": "光之黏土",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Light Screen and Reflect used by the holder last 8 rounds instead of 5.",
       "descriptionZh": "Held: Light Screen and Reflect used by the holder last 8 rounds instead of 5."
     },
@@ -39483,7 +41689,7 @@
       "id": "life-orb",
       "name": "Life Orb",
       "nameZh": "生命寶珠",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Holder’s moves inflict 30% extra damage, but cost 10% max HP.",
       "descriptionZh": "Held: Holder’s moves inflict 30% extra damage, but cost 10% max HP."
     },
@@ -39491,7 +41697,7 @@
       "id": "focus-sash",
       "name": "Focus Sash",
       "nameZh": "氣勢披帶",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Holder survives any single-hit attack at 1 HP if at max HP, then the item is consumed.",
       "descriptionZh": "Held: Holder survives any single-hit attack at 1 HP if at max HP, then the item is consumed."
     },
@@ -39499,7 +41705,7 @@
       "id": "heat-rock",
       "name": "Heat Rock",
       "nameZh": "熾熱岩石",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Sunny Day by the holder lasts 8 rounds instead of 5.",
       "descriptionZh": "Held: Sunny Day by the holder lasts 8 rounds instead of 5."
     },
@@ -39507,7 +41713,7 @@
       "id": "damp-rock",
       "name": "Damp Rock",
       "nameZh": "潮濕岩石",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Rain Dance by the holder lasts 8 rounds instead of 5.",
       "descriptionZh": "Held: Rain Dance by the holder lasts 8 rounds instead of 5."
     },
@@ -39515,7 +41721,7 @@
       "id": "choice-scarf",
       "name": "Choice Scarf",
       "nameZh": "講究圍巾",
-      "category": "Held item",
+      "category": "Item",
       "description": "Held: Increases Speed by 50%, but restricts the holder to only one move.",
       "descriptionZh": "Held: Increases Speed by 50%, but restricts the holder to only one move."
     },
@@ -39523,7 +41729,7 @@
       "id": "gengarite",
       "name": "Gengarite",
       "nameZh": "耿鬼進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Gengar to Mega Evolve into Mega Gengar.",
       "descriptionZh": "Held: Allows Gengar to Mega Evolve into Mega Gengar."
     },
@@ -39531,7 +41737,7 @@
       "id": "gardevoirite",
       "name": "Gardevoirite",
       "nameZh": "沙奈朵進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Gardevoir to Mega Evolve into Mega Gardevoir.",
       "descriptionZh": "Held: Allows Gardevoir to Mega Evolve into Mega Gardevoir."
     },
@@ -39539,7 +41745,7 @@
       "id": "ampharosite",
       "name": "Ampharosite",
       "nameZh": "電龍進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Ampharos to Mega Evolve into Mega Ampharos.",
       "descriptionZh": "Held: Allows Ampharos to Mega Evolve into Mega Ampharos."
     },
@@ -39547,7 +41753,7 @@
       "id": "venusaurite",
       "name": "Venusaurite",
       "nameZh": "妙蛙花進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Venusaur to Mega Evolve into Mega Venusaur.",
       "descriptionZh": "Held: Allows Venusaur to Mega Evolve into Mega Venusaur."
     },
@@ -39555,7 +41761,7 @@
       "id": "blastoisinite",
       "name": "Blastoisinite",
       "nameZh": "水箭龜進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Blastoise to Mega Evolve into Mega Blastoise.",
       "descriptionZh": "Held: Allows Blastoise to Mega Evolve into Mega Blastoise."
     },
@@ -39563,7 +41769,7 @@
       "id": "blazikenite",
       "name": "Blazikenite",
       "nameZh": "火焰雞進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Blaziken to Mega Evolve into Mega Blaziken.",
       "descriptionZh": "Held: Allows Blaziken to Mega Evolve into Mega Blaziken."
     },
@@ -39571,7 +41777,7 @@
       "id": "medichamite",
       "name": "Medichamite",
       "nameZh": "恰雷姆進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Medicham to Mega Evolve into Mega Medicham.",
       "descriptionZh": "Held: Allows Medicham to Mega Evolve into Mega Medicham."
     },
@@ -39579,7 +41785,7 @@
       "id": "houndoominite",
       "name": "Houndoominite",
       "nameZh": "黑魯加進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Houndoom to Mega Evolve into Mega Houndoom.",
       "descriptionZh": "Held: Allows Houndoom to Mega Evolve into Mega Houndoom."
     },
@@ -39587,7 +41793,7 @@
       "id": "aggronite",
       "name": "Aggronite",
       "nameZh": "波士可多拉進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Aggron to Mega Evolve into Mega Aggron.",
       "descriptionZh": "Held: Allows Aggron to Mega Evolve into Mega Aggron."
     },
@@ -39595,7 +41801,7 @@
       "id": "banettite",
       "name": "Banettite",
       "nameZh": "詛咒娃娃進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Banette to Mega Evolve into Mega Banette.",
       "descriptionZh": "Held: Allows Banette to Mega Evolve into Mega Banette."
     },
@@ -39603,7 +41809,7 @@
       "id": "tyranitarite",
       "name": "Tyranitarite",
       "nameZh": "班基拉斯進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Tyranitar to Mega Evolve into Mega Tyranitar.",
       "descriptionZh": "Held: Allows Tyranitar to Mega Evolve into Mega Tyranitar."
     },
@@ -39611,7 +41817,7 @@
       "id": "scizorite",
       "name": "Scizorite",
       "nameZh": "巨鉗螳螂進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Scizor to Mega Evolve into Mega Scizor.",
       "descriptionZh": "Held: Allows Scizor to Mega Evolve into Mega Scizor."
     },
@@ -39619,7 +41825,7 @@
       "id": "pinsirite",
       "name": "Pinsirite",
       "nameZh": "凱羅斯進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Pinsir to Mega Evolve into Mega Pinsir.",
       "descriptionZh": "Held: Allows Pinsir to Mega Evolve into Mega Pinsir."
     },
@@ -39627,7 +41833,7 @@
       "id": "aerodactylite",
       "name": "Aerodactylite",
       "nameZh": "化石翼龍進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Aerodactyl to Mega Evolve into Mega Aerodactyl.",
       "descriptionZh": "Held: Allows Aerodactyl to Mega Evolve into Mega Aerodactyl."
     },
@@ -39635,7 +41841,7 @@
       "id": "lucarionite",
       "name": "Lucarionite",
       "nameZh": "路卡利歐進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Lucario to Mega Evolve into Mega Lucario.",
       "descriptionZh": "Held: Allows Lucario to Mega Evolve into Mega Lucario."
     },
@@ -39643,7 +41849,7 @@
       "id": "abomasite",
       "name": "Abomasite",
       "nameZh": "暴雪王進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Abomasnow to Mega Evolve into Mega Abomasnow.",
       "descriptionZh": "Held: Allows Abomasnow to Mega Evolve into Mega Abomasnow."
     },
@@ -39651,7 +41857,7 @@
       "id": "kangaskhanite",
       "name": "Kangaskhanite",
       "nameZh": "袋獸進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Kangaskhan to Mega Evolve into Mega Kangaskhan.",
       "descriptionZh": "Held: Allows Kangaskhan to Mega Evolve into Mega Kangaskhan."
     },
@@ -39659,7 +41865,7 @@
       "id": "gyaradosite",
       "name": "Gyaradosite",
       "nameZh": "暴鯉龍進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Gyarados to Mega Evolve into Mega Gyarados.",
       "descriptionZh": "Held: Allows Gyarados to Mega Evolve into Mega Gyarados."
     },
@@ -39667,7 +41873,7 @@
       "id": "absolite",
       "name": "Absolite",
       "nameZh": "阿勃梭魯進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Absol to Mega Evolve into Mega Absol.",
       "descriptionZh": "Held: Allows Absol to Mega Evolve into Mega Absol."
     },
@@ -39675,7 +41881,7 @@
       "id": "charizardite-y",
       "name": "Charizardite Y",
       "nameZh": "噴火龍進化石Ｙ",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Charizard to Mega Evolve into Mega Charizard Y.",
       "descriptionZh": "Held: Allows Charizard to Mega Evolve into Mega Charizard Y."
     },
@@ -39683,7 +41889,7 @@
       "id": "alakazite",
       "name": "Alakazite",
       "nameZh": "胡地進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Alakazam to Mega Evolve into Mega Alakazam.",
       "descriptionZh": "Held: Allows Alakazam to Mega Evolve into Mega Alakazam."
     },
@@ -39691,7 +41897,7 @@
       "id": "heracronite",
       "name": "Heracronite",
       "nameZh": "赫拉克羅斯進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Heracross to Mega Evolve into Mega Heracross.",
       "descriptionZh": "Held: Allows Heracross to Mega Evolve into Mega Heracross."
     },
@@ -39699,7 +41905,7 @@
       "id": "mawilite",
       "name": "Mawilite",
       "nameZh": "大嘴娃進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Mawile to Mega Evolve into Mega Mawile.",
       "descriptionZh": "Held: Allows Mawile to Mega Evolve into Mega Mawile."
     },
@@ -39707,7 +41913,7 @@
       "id": "manectite",
       "name": "Manectite",
       "nameZh": "雷電獸進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Manectric to Mega Evolve into Mega Manectric.",
       "descriptionZh": "Held: Allows Manectric to Mega Evolve into Mega Manectric."
     },
@@ -39715,7 +41921,7 @@
       "id": "swampertite",
       "name": "Swampertite",
       "nameZh": "巨沼怪進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Swampert to Mega Evolve into Mega Swampert.",
       "descriptionZh": "Held: Allows Swampert to Mega Evolve into Mega Swampert."
     },
@@ -39723,7 +41929,7 @@
       "id": "sceptilite",
       "name": "Sceptilite",
       "nameZh": "蜥蜴王進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Sceptile to Mega Evolve into Mega Sceptile.",
       "descriptionZh": "Held: Allows Sceptile to Mega Evolve into Mega Sceptile."
     },
@@ -39731,7 +41937,7 @@
       "id": "sablenite",
       "name": "Sablenite",
       "nameZh": "勾魂眼進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Sableye to Mega Evolve into Mega Sableye.",
       "descriptionZh": "Held: Allows Sableye to Mega Evolve into Mega Sableye."
     },
@@ -39739,7 +41945,7 @@
       "id": "altarianite",
       "name": "Altarianite",
       "nameZh": "七夕青鳥進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Altaria to Mega Evolve into Mega Altaria.",
       "descriptionZh": "Held: Allows Altaria to Mega Evolve into Mega Altaria."
     },
@@ -39747,7 +41953,7 @@
       "id": "audinite",
       "name": "Audinite",
       "nameZh": "差不多娃娃進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Audino to Mega Evolve into Mega Audino.",
       "descriptionZh": "Held: Allows Audino to Mega Evolve into Mega Audino."
     },
@@ -39755,7 +41961,7 @@
       "id": "metagrossite",
       "name": "Metagrossite",
       "nameZh": "巨金怪進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Metagross to Mega Evolve into Mega Metagross.",
       "descriptionZh": "Held: Allows Metagross to Mega Evolve into Mega Metagross."
     },
@@ -39763,7 +41969,7 @@
       "id": "sharpedonite",
       "name": "Sharpedonite",
       "nameZh": "巨牙鯊進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Sharpedo to Mega Evolve into Mega Sharpedo.",
       "descriptionZh": "Held: Allows Sharpedo to Mega Evolve into Mega Sharpedo."
     },
@@ -39771,7 +41977,7 @@
       "id": "slowbronite",
       "name": "Slowbronite",
       "nameZh": "呆殼獸進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Slowbro to Mega Evolve into Mega Slowbro.",
       "descriptionZh": "Held: Allows Slowbro to Mega Evolve into Mega Slowbro."
     },
@@ -39779,7 +41985,7 @@
       "id": "steelixite",
       "name": "Steelixite",
       "nameZh": "大鋼蛇進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Steelix to Mega Evolve into Mega Steelix.",
       "descriptionZh": "Held: Allows Steelix to Mega Evolve into Mega Steelix."
     },
@@ -39787,7 +41993,7 @@
       "id": "pidgeotite",
       "name": "Pidgeotite",
       "nameZh": "大比鳥進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Pidgeot to Mega Evolve into Mega Pidgeot.",
       "descriptionZh": "Held: Allows Pidgeot to Mega Evolve into Mega Pidgeot."
     },
@@ -39795,7 +42001,7 @@
       "id": "glalitite",
       "name": "Glalitite",
       "nameZh": "冰鬼護進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Glalie to Mega Evolve into Mega Glalie.",
       "descriptionZh": "Held: Allows Glalie to Mega Evolve into Mega Glalie."
     },
@@ -39803,7 +42009,7 @@
       "id": "cameruptite",
       "name": "Cameruptite",
       "nameZh": "噴火駝進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Camerupt to Mega Evolve into Mega Camerupt.",
       "descriptionZh": "Held: Allows Camerupt to Mega Evolve into Mega Camerupt."
     },
@@ -39811,7 +42017,7 @@
       "id": "lopunnite",
       "name": "Lopunnite",
       "nameZh": "長耳兔進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Lopunny to Mega Evolve into Mega Lopunny.",
       "descriptionZh": "Held: Allows Lopunny to Mega Evolve into Mega Lopunny."
     },
@@ -39819,7 +42025,7 @@
       "id": "beedrillite",
       "name": "Beedrillite",
       "nameZh": "大針蜂進化石",
-      "category": "Held item",
+      "category": "Mega Stone",
       "description": "Held: Allows Beedrill to Mega Evolve into Mega Beedrill.",
       "descriptionZh": "Held: Allows Beedrill to Mega Evolve into Mega Beedrill."
     },
@@ -39827,7 +42033,7 @@
       "id": "fairy-feather",
       "name": "Fairy Feather",
       "nameZh": "Fairy Feather",
-      "category": "Held item",
+      "category": "Item",
       "description": "",
       "descriptionZh": ""
     }

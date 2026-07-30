@@ -70,6 +70,7 @@ const curatedPokemon: Pokemon[] = [
 ];
 
 const curatedMoveById = new Map(curatedMoves.map((entry) => [entry.id, entry]));
+const slicingMoveIds = new Set(["air-cutter", "air-slash", "aqua-cutter", "behemoth-blade", "bitter-blade", "ceaseless-edge", "cross-poison", "cut", "fury-cutter", "kowtow-cleave", "leaf-blade", "mighty-cleave", "night-slash", "psycho-cut", "razor-leaf", "razor-shell", "sacred-sword", "secret-sword", "slash", "solar-blade", "stone-axe", "tachyon-cutter", "x-scissor"]);
 const generatedMoves: Move[] = snapshot.moves.map((entry) => ({
   id: entry.id,
   name: entry.name,
@@ -81,7 +82,7 @@ const generatedMoves: Move[] = snapshot.moves.map((entry) => ({
   pp: entry.pp ?? 0,
   priority: entry.priority,
   target: targetById[entry.targetId] ?? "Varies",
-  flags: [],
+  flags: [...(entry.flags ?? []), ...(slicingMoveIds.has(entry.id) ? ["Slicing"] : [])],
   description: entry.description || "No effect description is available.",
   descriptionZh: entry.descriptionZh || entry.description || "目前沒有招式說明。",
 }));
