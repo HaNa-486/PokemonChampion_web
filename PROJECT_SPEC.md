@@ -1,0 +1,795 @@
+# Pokemon Champions Team Builder — Implementation Specification
+
+> Status: implementation-ready specification  
+> Audience: software engineers and coding LLM agents  
+> Last updated: 2026-07-30 (Asia/Taipei)
+
+## 0. Instructions for an implementing LLM
+
+This file is the source of truth for v1. Before changing code, read it completely and inspect the repository. Preserve unrelated user changes. Implement the milestones in order, treat every **MUST** as an acceptance requirement, and never invent game formulas, Regulation rules, translations, source data, or licensing rights.
+
+Before handing work to the product owner for UAT, run every applicable automated quality gate in this document. Deliver the exact tested version, reports, known limitations, migration notes, and UAT checklist. If this file marks something unresolved, validate it with reliable Pokémon Champions examples before enabling that production feature.
+
+## 1. Product objective
+
+Build a global, commercial-ready, unofficial Pokémon Champions database and team-building web application. It should be fast, information-dense, responsive, accessible, and convenient for competitive players.
+
+Reference sites and data sources:
+
+- UX inspiration only: <https://gamewith.ai/pokemon-champions/en>
+- Champions Battle Data: <https://championsbattledata.com/>
+- API guide: <https://championsbattledata.com/api_guide.html>
+- API rules: <https://championsbattledata.com/api-rules/>
+- PokeAPI docs: <https://pokeapi.co/docs/v2>
+- PokeAPI source: <https://github.com/PokeAPI/pokeapi>
+
+GameWith may inspire interaction patterns only. **Do not copy** its CSS, layout, wording, recommendations, images, proprietary data, or branding. The product must state that it is unofficial and not affiliated with or endorsed by Pokémon, Nintendo, GAME FREAK, Creatures Inc., or The Pokémon Company.
+
+## 2. Confirmed decisions
+
+| Topic | v1 decision |
+|---|---|
+| Game scope | Only data legal in the current Pokémon Champions Regulation is usable |
+| Formats | Singles and Doubles |
+| Languages | English (`en`) and Traditional Chinese (`zh-Hant`) |
+| Team size | Maximum 6 Pokémon |
+| Duplicate Pokémon | Not allowed under the active Regulation's species identity rule |
+| Duplicate items | Non-null held items cannot repeat; empty item slots may repeat |
+| Mega Pokémon | Different Mega Pokémon may coexist on one team |
+| Moves | Maximum 4 unique legal moves per Pokémon |
+| AP | Total maximum 66; maximum 32 per stat |
+| Nature | One non-HP stat may receive +10%, another -10%; neutral nature changes none |
+| Anonymous users | Team stored locally in versioned IndexedDB |
+| Accounts | Cloud sync/cross-device teams are phase 2, not v1 |
+| Images | Champions Battle Data assets first |
+| Included | Catalogs, details, tooltips, priority filter, builder/tray, speed comparison, admin overrides |
+| Excluded | Damage calculator, team analysis, tier lists, recommended builds, community content |
+| Commercial intent | Yes; privacy, consent, attribution, security, and legal-review readiness are required |
+
+Future only: AI build recommendations may use the complete legal Pokémon/move/ability/item/Regulation/battle dataset and a user's natural-language goal. Do not implement an LLM feature in v1, but keep normalized data and domain APIs suitable for future retrieval.
+
+## 3. v1 pages and non-goals
+
+Required pages:
+
+1. Home/current Regulation overview
+2. Pokémon database
+3. Pokémon detail
+4. Move database
+5. Ability database
+6. Held item database
+7. Team builder
+8. Speed comparison
+9. Data sources, attribution, and data date
+10. Privacy, terms, cookie settings, and unofficial-project notice
+11. Protected admin override interface
+
+Non-goals: damage calculation, recommended builds, team synergy/weakness analysis, tier lists, user comments/voting, public raw-data mirror, bulk-data download, competing general-purpose data API, and native apps.
+
+## 4. Data ownership, precedence, and legal use
+
+### 4.1 Champions Battle Data is authoritative for
+
+- Current Champions Regulation availability
+- Champions-specific Pokémon/form stats
+- Singles/Doubles battle usage, seasons, and daily snapshots
+- Common moves, items, abilities, natures, AP spreads, and teammates
+- Champions sprites/type assets
+- Showdown IDs and `saved_name` asset/file mapping
+
+Known endpoints:
+
+```text
+GET /api
+GET /api/index
+GET /data/pokemon-index.json
+GET /api/pokemon/:name
+GET /api/battle/:format/:name
+GET /api/metadata/:name
+```
+
+API routes use Showdown-like identifiers; asset paths may use human-readable `saved_name` values.
+
+### 4.2 PokeAPI is used to enrich
+
+- Stable IDs and taxonomy
+- Move type, class, power, accuracy, PP, priority, target, flags, and descriptions
+- Ability and held-item descriptions/categories
+- Localization and alias mapping
+
+PokeAPI must never overwrite a confirmed active-Regulation Champions value.
+
+### 4.3 Manual overrides
+
+Published admin overrides have highest precedence for mapping fixes, reviewed translations, Champions corrections, availability fixes, and temporarily disabling bad records.
+
+Display precedence:
+
+```text
+published manual override
+→ active Champions Regulation value
+→ normalized PokeAPI value
+→ English fallback
+→ explicit “Data unavailable”
+```
+
+Never fabricate missing data.
+
+### 4.4 Volatility and attribution
+
+Live observations already show that API guide examples may differ from current responses in counts, stats, forms, dates, and fields. Therefore never hard-code current counts/example values. Accept unknown optional fields, reject/quarantine invalid required fields, record versions/checksums/source URLs, import through staging, and atomically publish immutable snapshots. If import fails, keep serving the last valid snapshot.
+
+Public attribution must include a linked notice similar to: “Battle data provided by Pokémon Champions Battle Data.” Reasonable caching is allowed, but do not expose raw responses as a permanent mirror, dump, bulk-download product, or competing API. Cache PokeAPI responsibly and preserve BSD-3-Clause notices where applicable.
+
+## 5. Prescribed architecture
+
+Use a TypeScript monorepo with a modular-monolith backend. Do not split every domain into microservices in v1.
+
+```text
+apps/
+  web/          Next.js user/admin UI
+  api/          NestJS REST API/BFF
+  worker/       scheduled imports and BullMQ jobs
+packages/
+  domain/       pure calculations and legality rules
+  contracts/    Zod DTOs and OpenAPI types
+  database/     Prisma schema, migrations, seeds
+  ui/           accessible reusable UI
+  config/       shared TS/lint/test config
+fixtures/
+  champions-api/
+  pokeapi/
+  golden/
+docs/
+  architecture/
+  runbooks/
+  test-reports/
+```
+
+Required choices:
+
+| Area | Technology |
+|---|---|
+| Workspace | pnpm with committed frozen lockfile |
+| Web | Next.js, React, strict TypeScript |
+| API | NestJS REST + OpenAPI |
+| Worker | NestJS application context + BullMQ |
+| Database | PostgreSQL + Prisma migrations |
+| Cache/queue | Redis |
+| Assets | S3-compatible storage/CDN subject to source rules |
+| Validation | Zod at every external boundary |
+| Client data | TanStack Query |
+| Tables | TanStack Table; virtualize large results |
+| Local state | Zustand + versioned IndexedDB |
+| i18n | next-intl |
+| Tooltips | Floating UI |
+| Unit/component | Vitest + Testing Library |
+| HTTP fixtures | MSW or deterministic fixture adapter |
+| Integration | Testcontainers with real PostgreSQL/Redis |
+| E2E | Playwright: Chromium, Firefox, WebKit |
+| Accessibility | axe-core plus manual keyboard checks |
+| Load | k6 |
+| Observability | OpenTelemetry + Sentry-compatible reporting |
+
+Use supported stable versions pinned by the lockfile. Domain code must not depend on React, NestJS, Prisma, or browser APIs.
+
+Deployment: CDN/WAF in front; SSR/ISR web; stateless horizontally scalable API; PostgreSQL system of record; Redis disposable cache/queue; independently deployable worker; isolated local/test/staging/production.
+
+## 6. Database/domain model
+
+Internal entities use application UUIDs. External IDs, slugs, Showdown IDs, names, and `saved_name` are mappings, never primary keys. Mutable tables have timestamps; published snapshots are immutable.
+
+### 6.1 Provenance and mappings
+
+```text
+data_sources(
+  id UUID PK, code UNIQUE, base_url, license_url, attribution_text,
+  last_success_at NULL, last_failure_at NULL
+)
+
+external_identifiers(
+  id UUID PK, entity_type, entity_id UUID, source_id FK,
+  external_id NULL, external_key NULL, external_name NULL
+)
+```
+
+Add unique indexes scoped by source/entity type. Support PokeAPI ID/slug, Showdown ID/name, Champions slug/base name/`saved_name`.
+
+### 6.2 Pokémon and types
+
+```text
+pokemon_species(
+  id UUID PK, national_dex_no NULL, canonical_slug UNIQUE,
+  generation NULL, is_legendary, is_mythical
+)
+
+pokemon_forms(
+  id UUID PK, species_id FK, canonical_slug UNIQUE, form_name NULL,
+  is_default, height NULL, weight NULL, champions_saved_name NULL,
+  sprite_asset_id NULL
+)
+
+types(id UUID PK, code UNIQUE, sort_order)
+
+pokemon_form_types(
+  pokemon_form_id FK, type_id FK, slot CHECK 1..2,
+  PK(pokemon_form_id, slot)
+)
+```
+
+Forms are first-class entities. Mega and regional/breed/gender forms cannot be stored only as unstructured display text.
+
+### 6.3 Rulesets and stats
+
+```text
+rulesets(
+  id UUID PK, code UNIQUE, name, game_version, season_code,
+  effective_from NULL, effective_to NULL,
+  status draft|active|archived, calculation_version,
+  source_snapshot_id NULL
+)
+
+ruleset_pokemon_stats(
+  ruleset_id FK, pokemon_form_id FK,
+  hp, attack, defense, special_attack, special_defense, speed,
+  source_id FK, source_updated_at NULL,
+  PK(ruleset_id, pokemon_form_id)
+)
+
+ruleset_pokemon_availability(
+  ruleset_id FK, pokemon_form_id FK, is_available,
+  species_clause_key, reason NULL,
+  PK(ruleset_id, pokemon_form_id)
+)
+```
+
+Exactly one public default ruleset. Historical values remain queryable and are never overwritten. `species_clause_key` defines duplicate-Pokémon identity; distinct Mega Pokémon may coexist when keys differ.
+
+### 6.4 Moves
+
+```text
+moves(
+  id UUID PK, canonical_slug UNIQUE, type_id FK,
+  damage_class physical|special|status,
+  power NULL, accuracy NULL, pp NULL,
+  priority SMALLINT NOT NULL, target_code, effect_chance NULL
+)
+
+move_flags(move_id FK, flag, PK(move_id, flag))
+
+ruleset_move_overrides(
+  ruleset_id FK, move_id FK, power NULL, accuracy NULL, pp NULL,
+  priority NULL, target_code NULL, effect_text_override NULL,
+  is_available, source_id FK, PK(ruleset_id, move_id)
+)
+
+pokemon_learnable_moves(
+  ruleset_id FK, pokemon_form_id FK, move_id FK,
+  learn_method NULL, is_legal, source_id FK,
+  PK(ruleset_id, pokemon_form_id, move_id)
+)
+```
+
+Effective move values apply the ruleset override over normalized base data. Store priority as an integer; positive/zero/negative are query classifications, not stored strings.
+
+### 6.5 Abilities, items, localization
+
+```text
+abilities(id UUID PK, canonical_slug UNIQUE, short_effect NULL, effect_text NULL)
+
+pokemon_abilities(
+  ruleset_id FK, pokemon_form_id FK, ability_id FK,
+  slot NULL, is_hidden, is_available,
+  PK(ruleset_id, pokemon_form_id, ability_id)
+)
+
+items(
+  id UUID PK, canonical_slug UNIQUE, category NULL,
+  short_effect NULL, effect_text NULL, sprite_asset_id NULL
+)
+
+ruleset_items(
+  ruleset_id FK, item_id FK, is_available,
+  acquisition_method NULL, regulation_code NULL,
+  effect_override NULL, source_id FK,
+  PK(ruleset_id, item_id)
+)
+
+localized_texts(
+  id UUID PK, entity_type, entity_id UUID, locale en|zh-Hant,
+  name, short_description NULL, description NULL, source_id FK,
+  review_status imported|machine|reviewed|published
+)
+```
+
+### 6.6 Battle snapshots
+
+```text
+battle_snapshots(
+  id UUID PK, ruleset_id FK, format singles|doubles,
+  season_code, snapshot_date DATE, source_id FK, source_url,
+  source_data_version NULL, source_checksum, imported_at,
+  status staging|active|rejected|superseded,
+  validation_report JSONB,
+  UNIQUE(source_id, format, season_code, snapshot_date, source_checksum)
+)
+```
+
+Use separate fact tables with `snapshot_id`, `pokemon_form_id`, referenced entity, `rank`, numeric `percentage`, and nullable `sample_size`:
+
+- `battle_move_usage`
+- `battle_item_usage`
+- `battle_ability_usage`
+- `battle_nature_usage`
+- `battle_teammate_usage`
+- `battle_ap_spread_usage` with six AP columns plus stat-up/stat-down
+
+Do not store searchable battle data only in JSON. Blank upstream percentages remain null, never silently become 0.
+
+### 6.7 Assets
+
+```text
+assets(
+  id UUID PK, kind, source_id FK, upstream_url, cdn_url NULL,
+  content_type, width NULL, height NULL, checksum NULL,
+  status upstream|cached|missing|blocked
+)
+```
+
+Fetch only from explicit allowlists with timeout/size/type limits. Normalize path separators and URL-encode segments. Broken assets show accessible placeholders.
+
+### 6.8 Teams
+
+The same versioned Team DTO is used by IndexedDB and future server persistence.
+
+```text
+teams(
+  id UUID PK, owner_user_id NULL, public_id UNIQUE NULL, name,
+  ruleset_id FK, format, locale, revision, is_public,
+  created_at, updated_at
+)
+
+team_members(
+  id UUID PK, team_id FK, slot CHECK 1..6, pokemon_form_id FK,
+  ability_id NULL, item_id NULL, nature_code NULL,
+  ap_hp, ap_attack, ap_defense, ap_special_attack, ap_special_defense, ap_speed,
+  final_hp NULL, final_attack NULL, final_defense NULL,
+  final_special_attack NULL, final_special_defense NULL, final_speed NULL,
+  calculation_version, memo NULL,
+  UNIQUE(team_id, slot)
+)
+
+team_member_moves(
+  team_member_id FK, slot CHECK 1..4, move_id FK,
+  PK(team_member_id, slot), UNIQUE(team_member_id, move_id)
+)
+```
+
+Final stats are reproducibility snapshots, not trusted input. Domain/backend recalculates them from base stats, AP, nature, and calculation version.
+
+### 6.9 Admin overrides
+
+```text
+data_overrides(
+  id UUID PK, entity_type, entity_id UUID, ruleset_id NULL,
+  field_path, locale NULL, old_value JSONB NULL, new_value JSONB,
+  reason, status draft|published|reverted,
+  created_by, reviewed_by NULL, created_at, published_at NULL
+)
+```
+
+Admin changes require authentication, authorization, validation, preview, explicit publish, audit log, and revert. The UI must not expose arbitrary raw-row editing.
+
+## 7. Domain rules and calculation blocker
+
+All rules live as deterministic, versioned pure functions in `packages/domain`.
+
+### 7.1 AP/nature
+
+- Each AP is an integer `[0,32]`.
+- Six-stat sum is `[0,66]` while editing.
+- Builds below 66 may save locally but are marked incomplete.
+- UI displays remaining AP.
+- HP is never nature-modified.
+- Neutral nature modifies none.
+- Non-neutral nature has exactly one non-HP `1.1` stat and one different non-HP `0.9` stat.
+
+### 7.2 Versioned final-stat formula (`champions-v1`)
+
+The formula has been validated against the supplied Mega Charizard X reference image and the sampled Champions Garchomp values:
+
+```text
+HP = base HP + 75 + HP AP
+other stat = floor((base stat + 20 + stat AP) × nature multiplier)
+nature multiplier = 1.1 for the increased stat, 0.9 for the decreased stat, otherwise 1.0
+```
+
+Golden fixture: Mega Charizard X with base `78-130-111-130-85-100`, AP `2-32-0-0-0-32`, Adamant nature produces `155-200-131-135-105-152`. Zero-AP neutral Garchomp produces `183-150-115-100-105-122`. Preserve these as immutable tests and version future formula changes instead of rewriting old builds.
+
+### 7.3 Team legality
+
+The structured validator MUST enforce:
+
+- Maximum six members.
+- No duplicate `species_clause_key`.
+- Distinct legal Mega Pokémon allowed.
+- No duplicate non-null item.
+- At most four unique moves per member.
+- All Pokémon/moves/abilities/items legal in active ruleset.
+- Move learnable by selected form.
+- Ability owned by selected form.
+- AP/nature constraints.
+
+Changing ruleset never silently deletes selections. Preserve them with actionable errors until explicitly fixed/removed.
+
+## 8. UX requirements
+
+### 8.1 General
+
+Use an original design system, light/dark themes, dense desktop tables, responsive mobile cards, explicit loading/empty/error/stale states, and text/icons in addition to color. Show current Regulation, format, snapshot date, and attribution clearly. Serialize filters to the URL where practical.
+
+### 8.2 Pokémon DB/detail
+
+Database filters: localized name/alias, type, ability, learnable moves with AND/OR, current availability, Mega toggle, Singles/Doubles context. Sort by usage rank, total stats, six stats, and name.
+
+Results show sprite, name/form, types, Champions stats, abilities, and usage rank. Detail shows sprite/form/types, stats, abilities, matchups, format-specific battle usage, common moves/items/abilities/natures/AP spreads/teammates, learnable moves, data date/attribution, and team-builder controls.
+
+### 8.3 Tooltips/popovers
+
+Moves, abilities, and items must explain themselves directly.
+
+Move content: localized name, type, physical/special/status, power, accuracy, PP, signed priority (`+1`, `0`, `-1`), target, flags, short effect, details action. Ability/item content uses the effective Champions text and indicates ruleset overrides; items also show category and acquisition/regulation info when known.
+
+Behavior:
+
+- Mouse opens after about 150 ms and closes without flicker.
+- Keyboard focus opens; Escape closes.
+- Touch first tap opens information; navigation uses a distinct explicit action.
+- Flip/shift inside viewport; not clipped by tables or team tray.
+- Use accessible relationships such as `aria-describedby`.
+- Page/batched data supplies tooltip summaries; hover never creates upstream/N+1 requests.
+
+### 8.4 Move priority filter
+
+Filters include search, type, class, power, accuracy, PP, target, flags, learnable Pokémon, Regulation, and priority.
+
+Priority MUST offer:
+
+- `Priority +` → effective priority `>0`
+- `Priority 0` → `=0`
+- `Priority -` → `<0`
+- Advanced numeric min/max
+
+Results have an independent priority column. Positive values include `+`; sort numerically. Explain that priority precedes ordinary speed and does not universally guarantee moving first.
+
+### 8.5 Floating team tray
+
+Persist across relevant pages. Each member shows sprite/name/form, types, four moves with type badges, validated final stats, AP/nature, ability, item, completion/legal state, and edit/remove actions.
+
+Adding a seventh never silently overwrites; open replacement selection. Duplicate attempts show domain errors. Incomplete members are allowed and marked. Desktop uses a collapsible floating panel; mobile uses a fixed bottom bar and accessible bottom sheet. Persist with versioned IndexedDB; LocalStorage only for tiny preferences/migration flags. Navigation/refresh preserves state. Corrupt/old data migrates or quarantines without crashing.
+
+### 8.6 Speed comparison
+
+Inputs/output: multiple forms/builds, Champions base Speed, AP/nature, validated final Speed, stat stages, verified legal item/ability/weather/field modifiers, Trick Room, original/modified Speed, modifier trace, and speed ties.
+
+Order model:
+
+```text
+move priority
+→ explicit ability/item order rules
+→ field rules such as Trick Room
+→ modified Speed
+→ tie
+```
+
+Name the page **Speed Compare**, not a full turn simulator. State unsupported mechanics. Every supported multiplier/order rule requires a named golden fixture; never guess.
+
+### 8.7 i18n/accessibility
+
+Support `en` and `zh-Hant`; Chinese falls back to English. Locale changes preserve team/filters/format/page. Search accepts localized names/aliases. Identifiers never use translated names.
+
+Meet WCAG 2.2 AA: keyboard operation, visible focus, semantic headings/tables/forms/dialogs, tooltip focus support, focus trap/restoration, 200% zoom, reduced motion, compliant contrast, no color-only meaning, and screen-reader labels such as “Priority plus one.”
+
+## 9. Public API
+
+Version under `/api/v1`, validate with Zod, document with OpenAPI, and use a common error envelope.
+
+Response metadata where relevant:
+
+```json
+{
+  "meta": {
+    "ruleset": "current-code",
+    "locale": "en",
+    "dataVersion": "version",
+    "snapshotDate": "2026-07-30",
+    "stale": false,
+    "attribution": []
+  },
+  "data": {}
+}
+```
+
+Required endpoints:
+
+```text
+GET  /api/v1/rulesets/current
+GET  /api/v1/pokemon
+GET  /api/v1/pokemon/:slug
+GET  /api/v1/pokemon/:slug/moves
+GET  /api/v1/moves
+GET  /api/v1/moves/:slug
+GET  /api/v1/abilities
+GET  /api/v1/abilities/:slug
+GET  /api/v1/items
+GET  /api/v1/items/:slug
+GET  /api/v1/battle-data/:format/:pokemonSlug
+POST /api/v1/team/validate
+POST /api/v1/stats/calculate
+POST /api/v1/speed/compare
+```
+
+Examples:
+
+```text
+GET /api/v1/moves?ruleset=current&type=fire&priorityClass=positive
+GET /api/v1/moves?priorityMin=-8&priorityMax=-1
+GET /api/v1/pokemon/garchomp/moves?priorityClass=nonzero
+```
+
+Behavior: bounded pagination/stable sort; 400 field errors; 404 unknown entity; stale valid data returns 200 with `stale=true`; ETag/cache-control on reads; no arbitrary upstream proxy or raw payload exposure; POST endpoints recalculate/validate independently.
+
+## 10. Import pipeline
+
+Champions job:
+
+1. Fetch `/api` with timeout, identifying user agent, bounded retry/backoff.
+2. Compare `dataVersion`, timestamps, and checksums.
+3. Resolve ruleset, formats, forms, mappings, and asset paths.
+4. Fetch only changed/needed resources with bounded concurrency.
+5. Normalize names/percentages into staging.
+6. Validate integrity and quality thresholds.
+7. Atomically publish in one transaction.
+8. Invalidate cache only after commit.
+9. Record metrics/report and alert on rejection.
+
+PokeAPI job caches/normalizes needed resources, preserves localization/provenance, updates incrementally, runs less often, and never overwrites Champions values.
+
+Import checks: required IDs; percentages `[0,100]` or true null; blank not zero; scoped rank uniqueness where promised; mapped references or quarantine; unexpected count collapse; AP values valid; allowlisted assets; recorded version/date; unknown optionals tolerated; required missing fields rejected according to severity.
+
+Failure: never activate partial/bad data; serve last good snapshot/date; circuit-break repeated failures; import failure cannot take down public API; admin can inspect quarantine.
+
+## 11. Security, privacy, and legal requirements
+
+- Zod validation at every external boundary.
+- Parameterized ORM/database access.
+- Team names/memos render as plain text; no arbitrary HTML.
+- CSP, HSTS, Referrer-Policy, X-Content-Type-Options, minimal Permissions-Policy.
+- Rate limits by IP/endpoint/identity.
+- CSRF and Origin protection for state changes.
+- Standards-based OIDC/OAuth + PKCE for admin; MFA at production identity provider.
+- Explicit admin role/allowlist and complete audit log.
+- HttpOnly/Secure/SameSite session cookies.
+- Object-level authorization and non-guessable identifiers.
+- Secrets in secret manager; never client/log output.
+- Upstream host/path allowlist, timeout, response-size/type checks, bounded redirects.
+- CI dependency/license/secret/SAST scanning.
+- Production errors never reveal stack, SQL, paths, or environment.
+- Anonymous teams remain on device except explicit minimal validation/calculation requests.
+- Non-essential analytics/ads do not load before legally required consent.
+- Consent can be reopened/withdrawn; English/Chinese policies exist.
+- Attribution, unofficial notice, and data date are visible.
+- Obtain IP/trademark/privacy legal review before commercial launch.
+
+## 12. Performance/reliability targets
+
+```text
+LCP < 2.5 s
+INP < 200 ms
+CLS < 0.1
+prefetched tooltip < 100 ms
+client filter response < 200 ms
+team tray interaction < 100 ms
+CDN hit API p95 < 150 ms
+uncached catalog p95 < 500 ms
+calculation/validation POST p95 < 800 ms
+expected-load error rate < 0.1%
+monthly availability target 99.9%
+```
+
+Measure with production-like data on desktop and representative mid-range mobile. Use SSR/ISR, ETag/CDN/stale-while-revalidate, batched tooltip summaries, proper indexes, optimized dimensioned images, virtualization, stable bounded pagination, and concurrent import/read tests.
+
+## 13. Automated testing specification
+
+The owner performs UAT only after engineering gates pass.
+
+| Layer | Scope/tool |
+|---|---|
+| Static | TypeScript, lint, format, forbidden dependencies |
+| Unit | Vitest domain/mapping/selectors |
+| Property | fast-check randomized AP/team invariants |
+| Component | Testing Library + Vitest |
+| Integration | Testcontainers PostgreSQL/Redis |
+| Contract | Zod fixtures + scheduled limited live probes |
+| E2E | Playwright Chromium/Firefox/WebKit |
+| Accessibility | axe-core + manual keyboard |
+| Security | audit/secret/SAST + ZAP on isolated staging |
+| Performance | browser budgets + k6 |
+
+### 13.1 Domain tests
+
+AP/stats:
+
+- 0..32 accepted; -1/33 rejected.
+- Total 66 accepted; 67 rejected; below 66 accepted/incomplete.
+- Neutral/up/down nature behavior and HP prohibition.
+- Same up/down stat rejected.
+- Client final stats ignored/recalculated.
+- Calculation versions reproduce historical fixtures.
+- Golden cases cover 0/32 AP, HP, neutral, up/down, and rounding boundaries.
+
+Team legality:
+
+- 0..6 accepted; 7 rejected.
+- Duplicate species key rejected; distinct legal Mega accepted.
+- Duplicate non-null item rejected; multiple null items accepted.
+- 0..4 unique legal moves accepted; fifth/duplicate rejected.
+- Unlearnable move, wrong ability, unavailable entity rejected.
+- Ruleset switch preserves invalid data with structured errors.
+- Property tests never mark a violated invariant legal.
+
+Priority:
+
+- Positive `>0`, zero `=0`, negative `<0`.
+- Combined class and numeric ranges.
+- Signed formatting.
+- Numeric sorting across negative/zero/positive.
+
+### 13.2 Component tests
+
+Tooltips: pointer delay/open/close, keyboard/Escape, touch, edge collision, z-index/clipping, effective override content, locale fallback, accessible relationship, and no hover N+1. Visual snapshots cover light/dark, desktop/mobile, long English/Chinese, and viewport edges.
+
+Filters: each filter and combinations, URL restore, clear all, empty state, API/result count, stale-response race.
+
+Team tray: add/edit/remove, incomplete marker, six-member cap/replacement, duplicate errors, all displayed fields, desktop collapse, mobile focus behavior, refresh/navigation persistence, IndexedDB migration/corrupt quarantine.
+
+### 13.3 API/integration tests
+
+Every endpoint: valid/empty/unknown/invalid, pagination bounds, stable sort, locale fallback, ruleset isolation, ETag/cache headers, rate limit, oversized/Unicode/malicious input, SQL/XSS payload as data, stale metadata, and transaction rollback. Use real PostgreSQL and Redis containers—never SQLite as a PostgreSQL substitute.
+
+### 13.4 Fixtures and live contracts
+
+PR CI must not depend on third-party uptime. Commit minimized attribution-preserving fixtures for normal/Mega/multi-form Pokémon, single/dual types, positive/zero/negative priority, missing localization/optionals, unknown fields, mapping gaps, unavailable Regulation entity, null percentage, dated/current snapshots, and asset paths with spaces.
+
+A scheduled respectful live probe checks status, content type, required field types, IDs, dates, integer priority, sprite availability, and latency. Live failure alerts maintainers but does not make PR tests flaky.
+
+### 13.5 Import/data-quality tests
+
+- Same checksum is idempotent.
+- Partial/rejected import never activates.
+- Old snapshot stays active on failure.
+- Atomic publish exposes one coherent version.
+- Unknown optionals are safe; required missing fields quarantine/reject.
+- Blank percentage stays null.
+- Mapping collision/count collapse/invalid asset host reported.
+- Cache invalidates after commit only.
+- Handle timeout, malformed JSON/CSV, wrong type, oversized response, and 5xx.
+
+### 13.6 Speed tests
+
+Only after golden formula fixtures: missing input error; identical build tie; normal ordering; verified Trick Room ordering; stat stage/item/ability/weather/field modifiers applied exactly once and in verified order; inactive modifiers excluded; original/modified/trace output; move priority not silently mixed with raw speed; unsupported mechanics explicitly shown.
+
+### 13.7 Critical E2E journeys
+
+1. Filter Pokémon and open detail.
+2. Inspect move/ability/item tooltips by mouse and keyboard.
+3. Configure AP/nature/four moves/ability/item and add to tray.
+4. Navigate and refresh; team persists.
+5. Build six members; seventh opens replacement.
+6. Duplicate Pokémon/item shows actionable error.
+7. Switch Singles/Doubles and verify snapshot/data.
+8. Use positive/zero/negative priority filters and restore URL.
+9. Compare speeds and identify tie.
+10. Switch English/Chinese without losing state.
+11. Use mobile bottom sheet at 360/390 px.
+12. Admin previews/publishes/audits/reverts override.
+13. Stale upstream simulation shows last valid snapshot.
+
+Run Chromium, Firefox, WebKit. Required relevant widths: 360, 390, 768, 1024, 1440 px.
+
+### 13.8 Accessibility/security/privacy/load acceptance
+
+- No critical/serious axe issue on critical pages.
+- Critical journeys keyboard-only; correct focus trap/restoration; 200% zoom and reduced motion.
+- Test XSS, SQLi, CSRF, IDOR, session fixation, OAuth state/PKCE, rate limiting, oversized payload, SSRF restriction, CSP, secrets, admin RBAC/audit, unpublished data, error leakage.
+- ZAP active scan only on isolated staging.
+- Rejecting non-essential cookies prevents trackers; consent withdraw works; policies reachable; attribution/notices visible.
+- Load test catalogs, combined move filters, details, format switches, validation, speed compare, and reads during import against section 12 budgets.
+
+Coverage requirements:
+
+```text
+overall statements and branches >= 80%
+domain calculations and legality >= 95%
+critical AP/stats/team invariants approximately 100%
+```
+
+## 14. CI/CD gates
+
+Every PR runs: frozen install, format, lint/architecture rules, typecheck, unit/property/component tests, PostgreSQL/Redis integration, production build, Playwright critical journeys, accessibility checks, dependency/license/secret scans, and migration verification from the previous release.
+
+Promotion:
+
+```text
+PR gates → merge → staging migration/deploy → smoke/E2E/security/performance
+→ immutable release artifact → explicit production promotion
+```
+
+UAT and production must use the exact artifact/commit that passed gates.
+
+## 15. Observability and operations
+
+Metrics: request rates/errors/latency/cache, DB pool/slow queries, Redis hit/queue depth, import success/duration/count/quarantine, snapshot age/version, asset failures, Web Vitals by locale/device/page.
+
+Use structured JSON logs and correlation IDs; never log tokens/cookies/auth headers or unnecessary user memo data. Trace upstream fetch, normalization, transaction, cache invalidation, and public requests.
+
+Create runbooks for upstream outage/contract change, rejected/stale snapshot, quarantine surge, DB/Redis degradation, 5xx/latency, app rollback, backup restore, and secret rotation. Encrypt backups and test restoration periodically.
+
+## 16. Implementation milestones
+
+1. **Foundation:** monorepo, CI, environments, Docker dependencies, contracts/domain boundaries, migrations, error envelope, observability, health endpoints, i18n shell/design tokens.
+2. **Data platform:** fixtures, normalized schema/mappings, staging validation/atomic import, quarantine/admin override basics, attribution metadata.
+3. **Catalog UX:** catalog APIs/pages, search/filter/sort, Pokémon detail/battle data, tooltips, priority filter.
+4. **Team builder:** versioned DTO/IndexedDB, AP/nature editor, legality validator, floating tray; final stats only after golden validation.
+5. **Speed compare:** verified calculation/modifier strategies, UI, trace, Trick Room/ties from golden fixtures.
+6. **Hardening/UAT:** accessibility, security, consent/legal, browser matrix, performance, restore/failure drills, reports/checklist.
+
+Do not implement future AI recommendations or damage calculation in these milestones.
+
+## 17. Definition of Done before UAT
+
+All must be true:
+
+- Typecheck, lint, build, unit, property, component, integration, and E2E pass.
+- Chromium, Firefox, and WebKit critical journeys pass.
+- Domain legality/AP coverage gates pass.
+- Final stats/speed have trustworthy golden fixtures; otherwise outputs remain disabled/experimental and are not claimed complete.
+- English/Chinese critical flows pass.
+- No known P0/P1 defect.
+- No critical/high exploitable security finding.
+- No critical/serious accessibility issue in critical flows.
+- Import rejection, last-good fallback, atomic publish, migration, rollback, and restore exercises pass.
+- Performance budgets pass with production-like data.
+- Attribution, unofficial notice, privacy, terms, and consent are present.
+- Reports/known limitations exist and UAT deployment identifies the exact tested release.
+
+Required handoff artifacts:
+
+```text
+release identifier
+test summary and coverage
+Playwright report/artifacts
+accessibility report
+security scan summary
+performance/load report
+upstream contract/import report
+migration/rollback notes
+known limitations
+product-owner UAT checklist
+```
+
+UAT checklist must cover language/navigation, catalog accuracy, formats/Regulation, priority filter, tooltip interactions, team fields/rules, six/seventh-member flows, persistence, final stats/speed against known game examples, responsive/theme UX, attribution/privacy/consent, and admin publish/revert.
+
+## 18. Final guardrails
+
+- Do not guess or ship damage calculation in v1.
+- Do not guess final-stat or complex speed rules; require golden fixtures.
+- Do not let PokeAPI overwrite Champions active-Regulation data.
+- Do not call third-party APIs on hover or per user request.
+- Do not expose a raw-data mirror or bulk-data service.
+- Do not silently discard invalid teams after rule changes.
+- Do not trust client-calculated stats or legality.
+- Do not copy GameWith content/design/assets.
+- Do not hand off to UAT with failing tests or undocumented limitations.
+
+This specification is sufficient to continue implementation. The core final-stat formula is validated as `champions-v1`; any additional speed modifier/order rule still requires a reliable golden example before release.

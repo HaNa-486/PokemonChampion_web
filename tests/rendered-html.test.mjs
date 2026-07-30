@@ -1,0 +1,64 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+
+async function render(path = "/", init = {}) {
+  const workerUrl = new URL("../dist/server/index.js", import.meta.url);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
+  const { default: worker } = await import(workerUrl.href);
+  return worker.fetch(new Request(`http://localhost${path}`, { headers: { accept: "text/html", ...init.headers }, ...init }), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } }, { waitUntil() {}, passThroughOnException() {} });
+}
+
+test("server-renders Champions Lab instead of the starter", async () => {
+  const response = await render();
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+  assert.match(response.headers.get("content-security-policy") ?? "", /frame-ancestors 'none'/);
+  assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
+  const html = await response.text();
+  assert.match(html, /<title>Champions Lab/);
+  assert.match(html, /CHAMPIONS LAB/);
+  assert.match(html, /Pokémon DB/);
+  assert.match(html, /Battle data provided by/);
+  assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/);
+});
+
+test("filters move priority through the built API", async () => {
+  const response = await render("/api/v1/moves?priorityClass=negative", { headers: { accept: "application/json" } });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.ok(body.data.length >= 2);
+  assert.ok(body.data.every((move) => move.priority < 0));
+  assert.equal(body.meta.ruleset, "champions-m4-current");
+});
+
+test("serves the current 236-form Champions snapshot", async () => {
+  const response = await render("/api/v1/pokemon", { headers: { accept: "application/json" } });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data.length, 236);
+  assert.ok(body.data.some((entry) => entry.id === "garchomp"));
+  assert.ok(body.data.some((entry) => entry.id === "mega-charizard-x"));
+});
+
+test("rejects unauthenticated admin API calls before database access", async () => {
+  const response = await render("/api/v1/admin/overrides", { headers: { accept: "application/json" } });
+  assert.equal(response.status, 401);
+  const body = await response.json();
+  assert.equal(body.error.code, "AUTH_REQUIRED");
+});
+
+test("calculates the golden Mega Charizard X build through the built API", async () => {
+  const response = await render("/api/v1/stats/calculate", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ pokemonId: "mega-charizard-x", ap: { hp: 2, attack: 32, defense: 0, specialAttack: 0, specialDefense: 0, speed: 32 }, nature: { name: "Adamant", up: "attack", down: "specialAttack" } }) });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.deepEqual(body.data.finalStats, { hp: 155, attack: 200, defense: 131, specialAttack: 135, specialDefense: 105, speed: 152 });
+});
+
+test("rejects duplicate species and held items through the built API", async () => {
+  const shared = { moveIds: [], abilityId: null, ap: { hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0 }, nature: { name: "Serious", up: null, down: null } };
+  const response = await render("/api/v1/team/validate", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ members: [{ ...shared, id: "one", pokemonId: "charizard", itemId: "life-orb" }, { ...shared, id: "two", pokemonId: "mega-charizard-x", itemId: "life-orb" }] }) });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data.legal, false);
+  assert.deepEqual(new Set(body.data.issues.map((issue) => issue.code)), new Set(["DUPLICATE_POKEMON", "DUPLICATE_ITEM"]));
+});

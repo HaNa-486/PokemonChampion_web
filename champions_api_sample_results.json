@@ -1,0 +1,3429 @@
+{
+  "sourceGuide": "https://championsbattledata.com/api_guide",
+  "baseUrl": "https://championsbattledata.com",
+  "requestCount": 22,
+  "samples": [
+    {
+      "id": "index_api",
+      "purpose": "Index endpoint and Quick Start index",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 2959351,
+      "accessControlAllowOrigin": "*",
+      "sha256": "7f73de7e8574661458dc13c71545e1239f97229314d8e10f16d236504c133959",
+      "returnData": {
+        "topLevelKeys": [
+          "generatedAt",
+          "dataVersion",
+          "assetRoot",
+          "battleDataFolders",
+          "dailyDataFolders",
+          "seasons",
+          "defaultSeason",
+          "topicPages",
+          "pokemonPages",
+          "pokemon"
+        ],
+        "generatedAt": "2026-07-29T09:03:13.995Z",
+        "dataVersion": "20260729090313995",
+        "assetRoot": "pokemon_champions_assets",
+        "battleDataFolders": [
+          "M4"
+        ],
+        "defaultSeason": "Current",
+        "formats": null,
+        "seasons": [
+          "Current",
+          "M4"
+        ],
+        "dailyDataFolderCount": 13,
+        "dailyDataFoldersFirst7": [
+          "M4/28_07_2026",
+          "M4/27_07_2026",
+          "M4/26_07_2026",
+          "M4/25_07_2026",
+          "M4/24_07_2026",
+          "M4/23_07_2026",
+          "M4/22_07_2026"
+        ],
+        "dailyDataFoldersLast7": [
+          "M4/22_07_2026",
+          "M4/21_07_2026",
+          "M4/20_07_2026",
+          "M4/19_07_2026",
+          "M4/18_07_2026",
+          "M4/17_07_2026",
+          "M4/16_07_2026"
+        ],
+        "pokemonCount": 236,
+        "firstPokemon": {
+          "name": "Abomasnow",
+          "slug": "abomasnow",
+          "showdownId": "abomasnow",
+          "showdownName": "Abomasnow",
+          "metadataCsv": "pokemon_champions_assets/metadata/Abomasnow.csv",
+          "battleDataCsvCount": 28,
+          "learnableMoveCount": 65,
+          "summaryKeys": [
+            "dex",
+            "sprite",
+            "types",
+            "primary",
+            "forms",
+            "baseStats",
+            "baseStatTotal",
+            "battleSummary"
+          ]
+        },
+        "officialFilteringExample": {
+          "rule": "summary.types includes Ground AND summary.baseStats.speed >= 100",
+          "matchCount": 5,
+          "matches": [
+            {
+              "name": "Excadrill",
+              "showdownId": "excadrill",
+              "speed": 108,
+              "types": [
+                "Ground",
+                "Steel"
+              ]
+            },
+            {
+              "name": "Garchomp",
+              "showdownId": "garchomp",
+              "speed": 122,
+              "types": [
+                "Dragon",
+                "Ground"
+              ]
+            },
+            {
+              "name": "Gliscor",
+              "showdownId": "gliscor",
+              "speed": 115,
+              "types": [
+                "Ground",
+                "Flying"
+              ]
+            },
+            {
+              "name": "Krookodile",
+              "showdownId": "krookodile",
+              "speed": 112,
+              "types": [
+                "Ground",
+                "Dark"
+              ]
+            },
+            {
+              "name": "Mamoswine",
+              "showdownId": "mamoswine",
+              "speed": 100,
+              "types": [
+                "Ice",
+                "Ground"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "index_alias",
+      "purpose": "Index alias",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/index",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 2959351,
+      "accessControlAllowOrigin": "*",
+      "sha256": "7f73de7e8574661458dc13c71545e1239f97229314d8e10f16d236504c133959",
+      "returnData": {
+        "topLevelKeys": [
+          "generatedAt",
+          "dataVersion",
+          "assetRoot",
+          "battleDataFolders",
+          "dailyDataFolders",
+          "seasons",
+          "defaultSeason",
+          "topicPages",
+          "pokemonPages",
+          "pokemon"
+        ],
+        "generatedAt": "2026-07-29T09:03:13.995Z",
+        "dataVersion": "20260729090313995",
+        "assetRoot": "pokemon_champions_assets",
+        "battleDataFolders": [
+          "M4"
+        ],
+        "defaultSeason": "Current",
+        "formats": null,
+        "seasons": [
+          "Current",
+          "M4"
+        ],
+        "dailyDataFolderCount": 13,
+        "dailyDataFoldersFirst7": [
+          "M4/28_07_2026",
+          "M4/27_07_2026",
+          "M4/26_07_2026",
+          "M4/25_07_2026",
+          "M4/24_07_2026",
+          "M4/23_07_2026",
+          "M4/22_07_2026"
+        ],
+        "dailyDataFoldersLast7": [
+          "M4/22_07_2026",
+          "M4/21_07_2026",
+          "M4/20_07_2026",
+          "M4/19_07_2026",
+          "M4/18_07_2026",
+          "M4/17_07_2026",
+          "M4/16_07_2026"
+        ],
+        "pokemonCount": 236,
+        "firstPokemon": {
+          "name": "Abomasnow",
+          "slug": "abomasnow",
+          "showdownId": "abomasnow",
+          "showdownName": "Abomasnow",
+          "metadataCsv": "pokemon_champions_assets/metadata/Abomasnow.csv",
+          "battleDataCsvCount": 28,
+          "learnableMoveCount": 65,
+          "summaryKeys": [
+            "dex",
+            "sprite",
+            "types",
+            "primary",
+            "forms",
+            "baseStats",
+            "baseStatTotal",
+            "battleSummary"
+          ]
+        },
+        "officialFilteringExample": {
+          "rule": "summary.types includes Ground AND summary.baseStats.speed >= 100",
+          "matchCount": 5,
+          "matches": [
+            {
+              "name": "Excadrill",
+              "showdownId": "excadrill",
+              "speed": 108,
+              "types": [
+                "Ground",
+                "Steel"
+              ]
+            },
+            {
+              "name": "Garchomp",
+              "showdownId": "garchomp",
+              "speed": 122,
+              "types": [
+                "Dragon",
+                "Ground"
+              ]
+            },
+            {
+              "name": "Gliscor",
+              "showdownId": "gliscor",
+              "speed": 115,
+              "types": [
+                "Ground",
+                "Flying"
+              ]
+            },
+            {
+              "name": "Krookodile",
+              "showdownId": "krookodile",
+              "speed": 112,
+              "types": [
+                "Ground",
+                "Dark"
+              ]
+            },
+            {
+              "name": "Mamoswine",
+              "showdownId": "mamoswine",
+              "speed": 100,
+              "types": [
+                "Ice",
+                "Ground"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "index_static",
+      "purpose": "Static index JSON",
+      "method": "GET",
+      "url": "https://championsbattledata.com/data/pokemon-index.json",
+      "status": 200,
+      "contentType": "application/json",
+      "contentLength": 2959351,
+      "accessControlAllowOrigin": "*",
+      "sha256": "7f73de7e8574661458dc13c71545e1239f97229314d8e10f16d236504c133959",
+      "returnData": {
+        "topLevelKeys": [
+          "generatedAt",
+          "dataVersion",
+          "assetRoot",
+          "battleDataFolders",
+          "dailyDataFolders",
+          "seasons",
+          "defaultSeason",
+          "topicPages",
+          "pokemonPages",
+          "pokemon"
+        ],
+        "generatedAt": "2026-07-29T09:03:13.995Z",
+        "dataVersion": "20260729090313995",
+        "assetRoot": "pokemon_champions_assets",
+        "battleDataFolders": [
+          "M4"
+        ],
+        "defaultSeason": "Current",
+        "formats": null,
+        "seasons": [
+          "Current",
+          "M4"
+        ],
+        "dailyDataFolderCount": 13,
+        "dailyDataFoldersFirst7": [
+          "M4/28_07_2026",
+          "M4/27_07_2026",
+          "M4/26_07_2026",
+          "M4/25_07_2026",
+          "M4/24_07_2026",
+          "M4/23_07_2026",
+          "M4/22_07_2026"
+        ],
+        "dailyDataFoldersLast7": [
+          "M4/22_07_2026",
+          "M4/21_07_2026",
+          "M4/20_07_2026",
+          "M4/19_07_2026",
+          "M4/18_07_2026",
+          "M4/17_07_2026",
+          "M4/16_07_2026"
+        ],
+        "pokemonCount": 236,
+        "firstPokemon": {
+          "name": "Abomasnow",
+          "slug": "abomasnow",
+          "showdownId": "abomasnow",
+          "showdownName": "Abomasnow",
+          "metadataCsv": "pokemon_champions_assets/metadata/Abomasnow.csv",
+          "battleDataCsvCount": 28,
+          "learnableMoveCount": 65,
+          "summaryKeys": [
+            "dex",
+            "sprite",
+            "types",
+            "primary",
+            "forms",
+            "baseStats",
+            "baseStatTotal",
+            "battleSummary"
+          ]
+        },
+        "officialFilteringExample": {
+          "rule": "summary.types includes Ground AND summary.baseStats.speed >= 100",
+          "matchCount": 5,
+          "matches": [
+            {
+              "name": "Excadrill",
+              "showdownId": "excadrill",
+              "speed": 108,
+              "types": [
+                "Ground",
+                "Steel"
+              ]
+            },
+            {
+              "name": "Garchomp",
+              "showdownId": "garchomp",
+              "speed": 122,
+              "types": [
+                "Dragon",
+                "Ground"
+              ]
+            },
+            {
+              "name": "Gliscor",
+              "showdownId": "gliscor",
+              "speed": 115,
+              "types": [
+                "Ground",
+                "Flying"
+              ]
+            },
+            {
+              "name": "Krookodile",
+              "showdownId": "krookodile",
+              "speed": 112,
+              "types": [
+                "Ground",
+                "Dark"
+              ]
+            },
+            {
+              "name": "Mamoswine",
+              "showdownId": "mamoswine",
+              "speed": 100,
+              "types": [
+                "Ice",
+                "Ground"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "pokemon_garchomp",
+      "purpose": "Pokemon record",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/pokemon/garchomp?format=Doubles",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 357140,
+      "accessControlAllowOrigin": "*",
+      "sha256": "a34b9575818e84d1b0d3b30029d1d987da550023184002ff64e8f5a54db98485",
+      "returnData": {
+        "topLevelKeys": [
+          "name",
+          "battleName",
+          "slug",
+          "showdownId",
+          "showdownName",
+          "metadataCsv",
+          "battleDataCsvs",
+          "learnableMoveNames",
+          "summary",
+          "requestedFormat",
+          "requestedSeason",
+          "battleDataCsv",
+          "battleSummary"
+        ],
+        "name": "Garchomp",
+        "showdownId": "garchomp",
+        "showdownName": "Garchomp",
+        "requestedSeason": "Current",
+        "requestedFormat": "Doubles",
+        "battleDataCsv": {
+          "season": "Current",
+          "format": "Doubles",
+          "path": "pokemon_champions_assets/battle_data/Doubles/Garchomp.csv"
+        },
+        "pokemonRecord": {
+          "battleName": "Garchomp",
+          "slug": "garchomp",
+          "metadataCsv": "pokemon_champions_assets/metadata/Garchomp.csv",
+          "battleDataCsvCount": 28,
+          "learnableMoveCount": 58,
+          "types": [
+            "Dragon",
+            "Ground"
+          ],
+          "sprite": "pokemon_champions_assets/pokemon/Garchomp.png",
+          "baseStats": {
+            "hp": 183,
+            "attack": 150,
+            "defense": 115,
+            "sp_attack": 100,
+            "sp_defense": 105,
+            "speed": 122
+          },
+          "baseStatTotal": 775,
+          "primarySavedName": "Garchomp",
+          "abilities": "Sand Veil|Rough Skin",
+          "formCount": 2,
+          "formSavedNames": [
+            "Garchomp",
+            "Mega Garchomp"
+          ]
+        },
+        "battleSummary": {
+          "keys": [
+            "top",
+            "values",
+            "rows"
+          ],
+          "position": null,
+          "top": {
+            "move": {
+              "pokemon": "Garchomp",
+              "column_position": 1,
+              "position": 1,
+              "category": "move",
+              "rank": 1,
+              "name": "Dragon Claw",
+              "percentage": "85.6%",
+              "percentage_value": 85.6,
+              "stat_up": "",
+              "stat_down": ""
+            },
+            "held_item": {
+              "pokemon": "Garchomp",
+              "column_position": 1,
+              "position": 1,
+              "category": "held_item",
+              "rank": 1,
+              "name": "Life Orb",
+              "percentage": "64.7%",
+              "percentage_value": 64.7,
+              "stat_up": "",
+              "stat_down": ""
+            },
+            "teammate": {
+              "pokemon": "Garchomp",
+              "column_position": 1,
+              "position": 1,
+              "category": "teammate",
+              "rank": 1,
+              "name": "Charizard",
+              "percentage": "",
+              "percentage_value": null,
+              "stat_up": "",
+              "stat_down": ""
+            },
+            "stat_alignment": {
+              "pokemon": "Garchomp",
+              "column_position": 1,
+              "position": 1,
+              "category": "stat_alignment",
+              "rank": 1,
+              "name": "Jolly",
+              "percentage": "67.5%",
+              "percentage_value": 67.5,
+              "stat_up": "Speed",
+              "stat_down": "Sp. Atk"
+            },
+            "stat_points": {
+              "pokemon": "Garchomp",
+              "column_position": 1,
+              "position": 1,
+              "category": "stat_points",
+              "rank": 1,
+              "name": "",
+              "percentage": "45.3%",
+              "percentage_value": 45.3,
+              "stat_up": "",
+              "stat_down": "",
+              "hp_points": 2,
+              "attack_points": 32,
+              "defense_points": 0,
+              "sp_atk_points": 0,
+              "sp_def_points": 0,
+              "speed_points": 32
+            },
+            "ability": {
+              "pokemon": "Garchomp",
+              "column_position": 1,
+              "position": 1,
+              "category": "ability",
+              "rank": 1,
+              "name": "Rough Skin",
+              "percentage": "97.4%",
+              "percentage_value": 97.4,
+              "stat_up": "",
+              "stat_down": ""
+            }
+          },
+          "valueCategories": [
+            "move",
+            "held_item",
+            "teammate",
+            "stat_alignment",
+            "stat_points",
+            "ability"
+          ]
+        }
+      }
+    },
+    {
+      "id": "pokemon_tauros_aqua_daily",
+      "purpose": "Pokemon record with daily summaries",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/pokemon/taurospaldeaaqua?format=Doubles&season=M4&days=7",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 495313,
+      "accessControlAllowOrigin": "*",
+      "sha256": "4244ae3c69ebe70f1aead48229b7cf6a48c8d3fc81b2479a362476188043de44",
+      "returnData": {
+        "topLevelKeys": [
+          "name",
+          "battleName",
+          "slug",
+          "showdownId",
+          "showdownName",
+          "metadataCsv",
+          "battleDataCsvs",
+          "learnableMoveNames",
+          "summary",
+          "requestedFormat",
+          "requestedSeason",
+          "battleDataCsv",
+          "battleSummary",
+          "requestedDays",
+          "dailyBattleDataCsvs",
+          "dailyBattleSummary"
+        ],
+        "name": "Paldean Tauros Aqua Breed",
+        "showdownId": "taurospaldeaaqua",
+        "showdownName": "Tauros-Paldea-Aqua",
+        "requestedSeason": "M4",
+        "requestedFormat": "Doubles",
+        "requestedDays": 7,
+        "battleDataCsv": {
+          "season": "M4",
+          "format": "Doubles",
+          "path": "pokemon_champions_assets/battle_data/M4/28_07_2026/Doubles/Paldean Tauros Aqua Breed.csv",
+          "date": "28_07_2026",
+          "daily": true
+        },
+        "pokemonRecord": {
+          "battleName": "Paldean Tauros Aqua Breed",
+          "slug": "paldean-tauros-aqua-breed",
+          "metadataCsv": "pokemon_champions_assets/metadata/Tauros.csv",
+          "battleDataCsvCount": 28,
+          "learnableMoveCount": 52,
+          "types": [
+            "Fighting",
+            "Water"
+          ],
+          "sprite": "pokemon_champions_assets/pokemon/Paldean Tauros Aqua Breed.png",
+          "baseStats": {
+            "hp": 150,
+            "attack": 130,
+            "defense": 125,
+            "sp_attack": 50,
+            "sp_defense": 90,
+            "speed": 120
+          },
+          "baseStatTotal": 665,
+          "primarySavedName": "Paldean Tauros Aqua Breed",
+          "abilities": "Intimidate|Anger Point|Cud Chew",
+          "formCount": 4,
+          "formSavedNames": [
+            "Paldean Tauros Aqua Breed",
+            "Paldean Tauros Blaze Breed",
+            "Paldean Tauros Combat Breed",
+            "Tauros"
+          ]
+        },
+        "battleSummary": {
+          "keys": [
+            "top",
+            "values",
+            "rows"
+          ],
+          "position": null,
+          "top": {
+            "move": {
+              "pokemon": "Paldean Tauros Aqua Breed",
+              "column_position": 138,
+              "position": 138,
+              "category": "move",
+              "rank": 1,
+              "name": "Protect",
+              "percentage": "72.5%",
+              "percentage_value": 72.5,
+              "stat_up": "",
+              "stat_down": ""
+            },
+            "held_item": {
+              "pokemon": "Paldean Tauros Aqua Breed",
+              "column_position": 138,
+              "position": 138,
+              "category": "held_item",
+              "rank": 6,
+              "name": "Soft Sand",
+              "percentage": "53.9%",
+              "percentage_value": 53.9,
+              "stat_up": "",
+              "stat_down": ""
+            },
+            "teammate": {
+              "pokemon": "Paldean Tauros Aqua Breed",
+              "column_position": 138,
+              "position": 138,
+              "category": "teammate",
+              "rank": 1,
+              "name": "Whimsicott",
+              "percentage": "",
+              "percentage_value": null,
+              "stat_up": "",
+              "stat_down": ""
+            },
+            "stat_alignment": {
+              "pokemon": "Paldean Tauros Aqua Breed",
+              "column_position": 138,
+              "position": 138,
+              "category": "stat_alignment",
+              "rank": 1,
+              "name": "Adamant",
+              "percentage": "60.3%",
+              "percentage_value": 60.3,
+              "stat_up": "Attack",
+              "stat_down": "Sp. Atk"
+            },
+            "stat_points": {
+              "pokemon": "Paldean Tauros Aqua Breed",
+              "column_position": 138,
+              "position": 138,
+              "category": "stat_points",
+              "rank": 1,
+              "name": "",
+              "percentage": "32.3%",
+              "percentage_value": 32.3,
+              "stat_up": "",
+              "stat_down": "",
+              "hp_points": 2,
+              "attack_points": 32,
+              "defense_points": 0,
+              "sp_atk_points": 0,
+              "sp_def_points": 0,
+              "speed_points": 32
+            },
+            "ability": {
+              "pokemon": "Paldean Tauros Aqua Breed",
+              "column_position": 138,
+              "position": 138,
+              "category": "ability",
+              "rank": 1,
+              "name": "Intimidate",
+              "percentage": "62.0%",
+              "percentage_value": 62,
+              "stat_up": "",
+              "stat_down": ""
+            }
+          },
+          "valueCategories": [
+            "move",
+            "held_item",
+            "teammate",
+            "stat_alignment",
+            "stat_points",
+            "ability"
+          ]
+        },
+        "dailyBattleDataCsvs": {
+          "count": 7,
+          "dates": [
+            "28_07_2026",
+            "27_07_2026",
+            "26_07_2026",
+            "25_07_2026",
+            "24_07_2026",
+            "23_07_2026",
+            "22_07_2026"
+          ],
+          "first": {
+            "season": "M4",
+            "format": "Doubles",
+            "path": "pokemon_champions_assets/battle_data/M4/28_07_2026/Doubles/Paldean Tauros Aqua Breed.csv",
+            "date": "28_07_2026",
+            "daily": true
+          }
+        },
+        "dailyBattleSummary": {
+          "count": 7,
+          "dates": [
+            "28_07_2026",
+            "27_07_2026",
+            "26_07_2026",
+            "25_07_2026",
+            "24_07_2026",
+            "23_07_2026",
+            "22_07_2026"
+          ],
+          "first": {
+            "season": "M4",
+            "date": "28_07_2026",
+            "format": "Doubles",
+            "source": "pokemon_champions_assets/battle_data/M4/28_07_2026/Doubles/Paldean Tauros Aqua Breed.csv",
+            "summary": {
+              "top": {
+                "move": {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 1,
+                  "name": "Protect",
+                  "percentage": "72.5%",
+                  "percentage_value": 72.5,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                "held_item": {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 6,
+                  "name": "Soft Sand",
+                  "percentage": "53.9%",
+                  "percentage_value": 53.9,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                "teammate": {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 1,
+                  "name": "Whimsicott",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                "stat_alignment": {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 1,
+                  "name": "Adamant",
+                  "percentage": "60.3%",
+                  "percentage_value": 60.3,
+                  "stat_up": "Attack",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_points",
+                  "rank": 1,
+                  "name": "",
+                  "percentage": "32.3%",
+                  "percentage_value": 32.3,
+                  "stat_up": "",
+                  "stat_down": "",
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "ability",
+                  "rank": 1,
+                  "name": "Intimidate",
+                  "percentage": "62.0%",
+                  "percentage_value": 62,
+                  "stat_up": "",
+                  "stat_down": ""
+                }
+              },
+              "values": {
+                "move": [
+                  "Protect",
+                  "Close Combat",
+                  "Aqua Jet",
+                  "Raging Bull",
+                  "Rock Slide",
+                  "Earthquake",
+                  "Wave Crash",
+                  "Wild Charge",
+                  "High Horsepower",
+                  "Iron Head"
+                ],
+                "held_item": [
+                  "Life Orb",
+                  "Sitrus Berry",
+                  "White Herb",
+                  "Mystic Water",
+                  "Choice Scarf",
+                  "Soft Sand",
+                  "Expert Belt",
+                  "Hard Stone",
+                  "Muscle Band",
+                  "Shell Bell"
+                ],
+                "teammate": [
+                  "Whimsicott",
+                  "Farigiraf",
+                  "Pinsir",
+                  "Metagross",
+                  "Talonflame",
+                  "Garchomp",
+                  "Froslass",
+                  "Sinistcha",
+                  "Aerodactyl",
+                  "Kingambit"
+                ],
+                "stat_alignment": [
+                  "Adamant",
+                  "Jolly",
+                  "Careful",
+                  "Impish",
+                  "Brave",
+                  "Naughty",
+                  "Lonely",
+                  "Naive",
+                  "Sassy",
+                  "Hasty"
+                ],
+                "stat_points": [
+                  "HP 2 / Atk 32 / Def 0 / SpA 0 / SpD 0 / Spe 32",
+                  "HP 0 / Atk 32 / Def 2 / SpA 0 / SpD 0 / Spe 32",
+                  "HP 0 / Atk 32 / Def 0 / SpA 0 / SpD 2 / Spe 32",
+                  "HP 5 / Atk 32 / Def 0 / SpA 0 / SpD 0 / Spe 29",
+                  "HP 1 / Atk 32 / Def 9 / SpA 0 / SpD 0 / Spe 24",
+                  "HP 0 / Atk 32 / Def 0 / SpA 0 / SpD 0 / Spe 32",
+                  "HP 1 / Atk 32 / Def 1 / SpA 0 / SpD 0 / Spe 32",
+                  "HP 1 / Atk 32 / Def 0 / SpA 0 / SpD 1 / Spe 32"
+                ],
+                "ability": [
+                  "Intimidate",
+                  "Anger Point",
+                  "Cud Chew"
+                ]
+              },
+              "rows": [
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 1,
+                  "name": "Protect",
+                  "percentage": "72.5%",
+                  "percentage_value": 72.5,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 2,
+                  "name": "Close Combat",
+                  "percentage": "68.5%",
+                  "percentage_value": 68.5,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 3,
+                  "name": "Aqua Jet",
+                  "percentage": "67.8%",
+                  "percentage_value": 67.8,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 4,
+                  "name": "Raging Bull",
+                  "percentage": "58.6%",
+                  "percentage_value": 58.6,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 5,
+                  "name": "Rock Slide",
+                  "percentage": "36.9%",
+                  "percentage_value": 36.9,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 6,
+                  "name": "Earthquake",
+                  "percentage": "28.5%",
+                  "percentage_value": 28.5,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 7,
+                  "name": "Wave Crash",
+                  "percentage": "22.0%",
+                  "percentage_value": 22,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 8,
+                  "name": "Wild Charge",
+                  "percentage": "9.1%",
+                  "percentage_value": 9.1,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 9,
+                  "name": "High Horsepower",
+                  "percentage": "5.6%",
+                  "percentage_value": 5.6,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "move",
+                  "rank": 10,
+                  "name": "Iron Head",
+                  "percentage": "5.3%",
+                  "percentage_value": 5.3,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "19.7%",
+                  "percentage_value": 19.7,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 2,
+                  "name": "Sitrus Berry",
+                  "percentage": "15.4%",
+                  "percentage_value": 15.4,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 3,
+                  "name": "White Herb",
+                  "percentage": "13.4%",
+                  "percentage_value": 13.4,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 4,
+                  "name": "Mystic Water",
+                  "percentage": "10.4%",
+                  "percentage_value": 10.4,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 5,
+                  "name": "Choice Scarf",
+                  "percentage": "9.0%",
+                  "percentage_value": 9,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 6,
+                  "name": "Soft Sand",
+                  "percentage": "53.9%",
+                  "percentage_value": 53.9,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 7,
+                  "name": "Expert Belt",
+                  "percentage": "4.2%",
+                  "percentage_value": 4.2,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 8,
+                  "name": "Hard Stone",
+                  "percentage": "4.0%",
+                  "percentage_value": 4,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 9,
+                  "name": "Muscle Band",
+                  "percentage": "3.0%",
+                  "percentage_value": 3,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "held_item",
+                  "rank": 10,
+                  "name": "Shell Bell",
+                  "percentage": "2.9%",
+                  "percentage_value": 2.9,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 1,
+                  "name": "Whimsicott",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 2,
+                  "name": "Farigiraf",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 3,
+                  "name": "Pinsir",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 4,
+                  "name": "Metagross",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 5,
+                  "name": "Talonflame",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 6,
+                  "name": "Garchomp",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 7,
+                  "name": "Froslass",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 8,
+                  "name": "Sinistcha",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 9,
+                  "name": "Aerodactyl",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "teammate",
+                  "rank": 10,
+                  "name": "Kingambit",
+                  "percentage": "",
+                  "percentage_value": null,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 1,
+                  "name": "Adamant",
+                  "percentage": "60.3%",
+                  "percentage_value": 60.3,
+                  "stat_up": "Attack",
+                  "stat_down": "Sp. Atk"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 2,
+                  "name": "Jolly",
+                  "percentage": "30.8%",
+                  "percentage_value": 30.8,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 3,
+                  "name": "Careful",
+                  "percentage": "3.0%",
+                  "percentage_value": 3,
+                  "stat_up": "Sp. Def",
+                  "stat_down": "Sp. Atk"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 4,
+                  "name": "Impish",
+                  "percentage": "1.5%",
+                  "percentage_value": 1.5,
+                  "stat_up": "Defense",
+                  "stat_down": "Sp. Atk"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 5,
+                  "name": "Brave",
+                  "percentage": "0.9%",
+                  "percentage_value": 0.9,
+                  "stat_up": "Attack",
+                  "stat_down": "Speed"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 6,
+                  "name": "Naughty",
+                  "percentage": "0.9%",
+                  "percentage_value": 0.9,
+                  "stat_up": "Attack",
+                  "stat_down": "Sp. Def"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 7,
+                  "name": "Lonely",
+                  "percentage": "0.8%",
+                  "percentage_value": 0.8,
+                  "stat_up": "Attack",
+                  "stat_down": "Defense"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 8,
+                  "name": "Naive",
+                  "percentage": "0.4%",
+                  "percentage_value": 0.4,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Def"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 9,
+                  "name": "Sassy",
+                  "percentage": "0.3%",
+                  "percentage_value": 0.3,
+                  "stat_up": "Sp. Def",
+                  "stat_down": "Speed"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_alignment",
+                  "rank": 10,
+                  "name": "Hasty",
+                  "percentage": "0.3%",
+                  "percentage_value": 0.3,
+                  "stat_up": "Speed",
+                  "stat_down": "Defense"
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_points",
+                  "rank": 1,
+                  "name": "",
+                  "percentage": "32.3%",
+                  "percentage_value": 32.3,
+                  "stat_up": "",
+                  "stat_down": "",
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_points",
+                  "rank": 2,
+                  "name": "",
+                  "percentage": "8.6%",
+                  "percentage_value": 8.6,
+                  "stat_up": "",
+                  "stat_down": "",
+                  "hp_points": 0,
+                  "attack_points": 32,
+                  "defense_points": 2,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_points",
+                  "rank": 3,
+                  "name": "",
+                  "percentage": "8.5%",
+                  "percentage_value": 8.5,
+                  "stat_up": "",
+                  "stat_down": "",
+                  "hp_points": 0,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 2,
+                  "speed_points": 32
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_points",
+                  "rank": 4,
+                  "name": "",
+                  "percentage": "5.2%",
+                  "percentage_value": 5.2,
+                  "stat_up": "",
+                  "stat_down": "",
+                  "hp_points": 5,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 29
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_points",
+                  "rank": 5,
+                  "name": "",
+                  "percentage": "5.1%",
+                  "percentage_value": 5.1,
+                  "stat_up": "",
+                  "stat_down": "",
+                  "hp_points": 1,
+                  "attack_points": 32,
+                  "defense_points": 9,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 24
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_points",
+                  "rank": 6,
+                  "name": "",
+                  "percentage": "1.5%",
+                  "percentage_value": 1.5,
+                  "stat_up": "",
+                  "stat_down": "",
+                  "hp_points": 0,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_points",
+                  "rank": 7,
+                  "name": "",
+                  "percentage": "1.4%",
+                  "percentage_value": 1.4,
+                  "stat_up": "",
+                  "stat_down": "",
+                  "hp_points": 1,
+                  "attack_points": 32,
+                  "defense_points": 1,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "stat_points",
+                  "rank": 8,
+                  "name": "",
+                  "percentage": "1.2%",
+                  "percentage_value": 1.2,
+                  "stat_up": "",
+                  "stat_down": "",
+                  "hp_points": 1,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 1,
+                  "speed_points": 32
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "ability",
+                  "rank": 1,
+                  "name": "Intimidate",
+                  "percentage": "62.0%",
+                  "percentage_value": 62,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "ability",
+                  "rank": 2,
+                  "name": "Anger Point",
+                  "percentage": "35.1%",
+                  "percentage_value": 35.1,
+                  "stat_up": "",
+                  "stat_down": ""
+                },
+                {
+                  "pokemon": "Paldean Tauros Aqua Breed",
+                  "column_position": 138,
+                  "position": 138,
+                  "category": "ability",
+                  "rank": 3,
+                  "name": "Cud Chew",
+                  "percentage": "2.9%",
+                  "percentage_value": 2.9,
+                  "stat_up": "",
+                  "stat_down": ""
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "battle_doubles_garchomp",
+      "purpose": "Current battle rows",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/battle/Doubles/garchomp",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 15549,
+      "accessControlAllowOrigin": "*",
+      "sha256": "a91bc6d11d61afcef8f439b6bae0d7616a4c7e2830656b179facfd5c47efde07",
+      "returnData": {
+        "topLevelKeys": [
+          "pokemon",
+          "showdownId",
+          "format",
+          "season",
+          "date",
+          "source",
+          "columns",
+          "rows"
+        ],
+        "pokemon": "Garchomp",
+        "showdownId": "garchomp",
+        "format": "Doubles",
+        "season": "Current",
+        "date": null,
+        "source": "pokemon_champions_assets/battle_data/Doubles/Garchomp.csv",
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points",
+          "source_time_seconds"
+        ],
+        "rows": {
+          "rowCount": 50,
+          "categoryCounts": {
+            "move": 10,
+            "held_item": 10,
+            "teammate": 10,
+            "stat_alignment": 10,
+            "stat_points": 8,
+            "ability": 2
+          },
+          "topByCategory": {
+            "move": {
+              "rank": 1,
+              "name": "Dragon Claw",
+              "percentage": "85.6%",
+              "percentage_value": 85.6
+            },
+            "held_item": {
+              "rank": 1,
+              "name": "Life Orb",
+              "percentage": "64.7%",
+              "percentage_value": 64.7
+            },
+            "teammate": {
+              "rank": 1,
+              "name": "Charizard"
+            },
+            "stat_alignment": {
+              "rank": 1,
+              "name": "Jolly",
+              "percentage": "67.5%",
+              "percentage_value": 67.5,
+              "stat_up": "Speed",
+              "stat_down": "Sp. Atk"
+            },
+            "stat_points": {
+              "rank": 1,
+              "percentage": "45.3%",
+              "percentage_value": 45.3,
+              "hp_points": 2,
+              "attack_points": 32,
+              "defense_points": 0,
+              "sp_atk_points": 0,
+              "sp_def_points": 0,
+              "speed_points": 32
+            },
+            "ability": {
+              "rank": 1,
+              "name": "Rough Skin",
+              "percentage": "97.4%",
+              "percentage_value": 97.4
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "name_rotom_wash",
+      "purpose": "Showdown name matching",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/battle/Doubles/rotomwash",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 15485,
+      "accessControlAllowOrigin": "*",
+      "sha256": "19e035309a500f6818fe241e7a20d03c723fb34b1338341eda17cb05c73321b1",
+      "returnData": {
+        "topLevelKeys": [
+          "pokemon",
+          "showdownId",
+          "format",
+          "season",
+          "date",
+          "source",
+          "columns",
+          "rows"
+        ],
+        "pokemon": "Rotom Wash",
+        "showdownId": "rotomwash",
+        "format": "Doubles",
+        "season": "Current",
+        "date": null,
+        "source": "pokemon_champions_assets/battle_data/Doubles/Rotom Wash.csv",
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points",
+          "source_time_seconds"
+        ],
+        "rows": {
+          "rowCount": 49,
+          "categoryCounts": {
+            "move": 10,
+            "held_item": 10,
+            "teammate": 10,
+            "stat_alignment": 10,
+            "stat_points": 8,
+            "ability": 1
+          },
+          "topByCategory": {
+            "move": {
+              "rank": 1,
+              "name": "Hydro Pump",
+              "percentage": "96.4%",
+              "percentage_value": 96.4
+            },
+            "held_item": {
+              "rank": 1,
+              "name": "Sitrus Berry",
+              "percentage": "24.7%",
+              "percentage_value": 24.7
+            },
+            "teammate": {
+              "rank": 1,
+              "name": "Tyranitar"
+            },
+            "stat_alignment": {
+              "rank": 1,
+              "name": "Modest",
+              "percentage": "53.1%",
+              "percentage_value": 53.1,
+              "stat_up": "Sp. Atk",
+              "stat_down": "Attack"
+            },
+            "stat_points": {
+              "rank": 1,
+              "percentage": "14.9%",
+              "percentage_value": 14.9,
+              "hp_points": 32,
+              "attack_points": 0,
+              "defense_points": 12,
+              "sp_atk_points": 15,
+              "sp_def_points": 1,
+              "speed_points": 6
+            },
+            "ability": {
+              "rank": 1,
+              "name": "Levitate",
+              "percentage": "100.0%",
+              "percentage_value": 100
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "name_tauros_aqua_doubles",
+      "purpose": "Showdown form name matching",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/battle/Doubles/taurospaldeaaqua",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 17004,
+      "accessControlAllowOrigin": "*",
+      "sha256": "9021800c6b1bc75cf5f8873f1226504f4f36ac1b82a966c958ac7b8cbc64c8ed",
+      "returnData": {
+        "topLevelKeys": [
+          "pokemon",
+          "showdownId",
+          "format",
+          "season",
+          "date",
+          "source",
+          "columns",
+          "rows"
+        ],
+        "pokemon": "Paldean Tauros Aqua Breed",
+        "showdownId": "taurospaldeaaqua",
+        "format": "Doubles",
+        "season": "Current",
+        "date": null,
+        "source": "pokemon_champions_assets/battle_data/Doubles/Paldean Tauros Aqua Breed.csv",
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points",
+          "source_time_seconds"
+        ],
+        "rows": {
+          "rowCount": 51,
+          "categoryCounts": {
+            "move": 10,
+            "held_item": 10,
+            "teammate": 10,
+            "stat_alignment": 10,
+            "stat_points": 8,
+            "ability": 3
+          },
+          "topByCategory": {
+            "move": {
+              "rank": 1,
+              "name": "Protect",
+              "percentage": "72.5%",
+              "percentage_value": 72.5
+            },
+            "held_item": {
+              "rank": 1,
+              "name": "Life Orb",
+              "percentage": "19.7%",
+              "percentage_value": 19.7
+            },
+            "teammate": {
+              "rank": 1,
+              "name": "Whimsicott"
+            },
+            "stat_alignment": {
+              "rank": 1,
+              "name": "Adamant",
+              "percentage": "60.3%",
+              "percentage_value": 60.3,
+              "stat_up": "Attack",
+              "stat_down": "Sp. Atk"
+            },
+            "stat_points": {
+              "rank": 1,
+              "percentage": "32.3%",
+              "percentage_value": 32.3,
+              "hp_points": 2,
+              "attack_points": 32,
+              "defense_points": 0,
+              "sp_atk_points": 0,
+              "sp_def_points": 0,
+              "speed_points": 32
+            },
+            "ability": {
+              "rank": 1,
+              "name": "Intimidate",
+              "percentage": "62.0%",
+              "percentage_value": 62
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "battle_singles_raichu_alola",
+      "purpose": "Singles and Showdown form name",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/battle/Singles/raichualola",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 15752,
+      "accessControlAllowOrigin": "*",
+      "sha256": "6043acd9a636c64e3ddc6d4eab15585303fdb0db90cbaa2b93b67224202bb74c",
+      "returnData": {
+        "topLevelKeys": [
+          "pokemon",
+          "showdownId",
+          "format",
+          "season",
+          "date",
+          "source",
+          "columns",
+          "rows"
+        ],
+        "pokemon": "Alolan Raichu",
+        "showdownId": "raichualola",
+        "format": "Singles",
+        "season": "Current",
+        "date": null,
+        "source": "pokemon_champions_assets/battle_data/Singles/Alolan Raichu.csv",
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points",
+          "source_time_seconds"
+        ],
+        "rows": {
+          "rowCount": 49,
+          "categoryCounts": {
+            "move": 10,
+            "held_item": 10,
+            "teammate": 10,
+            "stat_alignment": 10,
+            "stat_points": 8,
+            "ability": 1
+          },
+          "topByCategory": {
+            "move": {
+              "rank": 1,
+              "name": "Psychic",
+              "percentage": "56.3%",
+              "percentage_value": 56.3
+            },
+            "held_item": {
+              "rank": 1,
+              "name": "Focus Sash",
+              "percentage": "52.4%",
+              "percentage_value": 52.4
+            },
+            "teammate": {
+              "rank": 1,
+              "name": "Garchomp"
+            },
+            "stat_alignment": {
+              "rank": 1,
+              "name": "Modest",
+              "percentage": "50.3%",
+              "percentage_value": 50.3,
+              "stat_up": "Sp. Atk",
+              "stat_down": "Attack"
+            },
+            "stat_points": {
+              "rank": 1,
+              "percentage": "45.6%",
+              "percentage_value": 45.6,
+              "hp_points": 2,
+              "attack_points": 0,
+              "defense_points": 0,
+              "sp_atk_points": 32,
+              "sp_def_points": 0,
+              "speed_points": 32
+            },
+            "ability": {
+              "rank": 1,
+              "name": "Surge Surfer",
+              "percentage": "100.0%",
+              "percentage_value": 100
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "name_tauros_aqua_singles",
+      "purpose": "Singles form name matching",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/battle/Singles/taurospaldeaaqua",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 17010,
+      "accessControlAllowOrigin": "*",
+      "sha256": "45a0db27d58bf7e0f9e32839ad30cf098b72af5762fb571450a34a24af6d51e2",
+      "returnData": {
+        "topLevelKeys": [
+          "pokemon",
+          "showdownId",
+          "format",
+          "season",
+          "date",
+          "source",
+          "columns",
+          "rows"
+        ],
+        "pokemon": "Paldean Tauros Aqua Breed",
+        "showdownId": "taurospaldeaaqua",
+        "format": "Singles",
+        "season": "Current",
+        "date": null,
+        "source": "pokemon_champions_assets/battle_data/Singles/Paldean Tauros Aqua Breed.csv",
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points",
+          "source_time_seconds"
+        ],
+        "rows": {
+          "rowCount": 51,
+          "categoryCounts": {
+            "move": 10,
+            "held_item": 10,
+            "teammate": 10,
+            "stat_alignment": 10,
+            "stat_points": 8,
+            "ability": 3
+          },
+          "topByCategory": {
+            "move": {
+              "rank": 1,
+              "name": "Raging Bull",
+              "percentage": "85.5%",
+              "percentage_value": 85.5
+            },
+            "held_item": {
+              "rank": 1,
+              "name": "Sitrus Berry",
+              "percentage": "19.4%",
+              "percentage_value": 19.4
+            },
+            "teammate": {
+              "rank": 1,
+              "name": "Garchomp"
+            },
+            "stat_alignment": {
+              "rank": 1,
+              "name": "Adamant",
+              "percentage": "55.0%",
+              "percentage_value": 55,
+              "stat_up": "Attack",
+              "stat_down": "Sp. Atk"
+            },
+            "stat_points": {
+              "rank": 1,
+              "percentage": "31.9%",
+              "percentage_value": 31.9,
+              "hp_points": 2,
+              "attack_points": 32,
+              "defense_points": 0,
+              "sp_atk_points": 0,
+              "sp_def_points": 0,
+              "speed_points": 32
+            },
+            "ability": {
+              "rank": 1,
+              "name": "Intimidate",
+              "percentage": "79.1%",
+              "percentage_value": 79.1
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "name_basculegion_f",
+      "purpose": "Gender form name matching",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/battle/Singles/basculegionf",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 16642,
+      "accessControlAllowOrigin": "*",
+      "sha256": "07c8e9bbc381fab4023bfdbf5d436bf99feda854214e17f8e2a42de60ca957cd",
+      "returnData": {
+        "topLevelKeys": [
+          "pokemon",
+          "showdownId",
+          "format",
+          "season",
+          "date",
+          "source",
+          "columns",
+          "rows"
+        ],
+        "pokemon": "Basculegion Female",
+        "showdownId": "basculegionf",
+        "format": "Singles",
+        "season": "Current",
+        "date": null,
+        "source": "pokemon_champions_assets/battle_data/Singles/Basculegion Female.csv",
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points",
+          "source_time_seconds"
+        ],
+        "rows": {
+          "rowCount": 51,
+          "categoryCounts": {
+            "move": 10,
+            "held_item": 10,
+            "teammate": 10,
+            "stat_alignment": 10,
+            "stat_points": 8,
+            "ability": 3
+          },
+          "topByCategory": {
+            "move": {
+              "rank": 1,
+              "name": "Aqua Jet",
+              "percentage": "66.8%",
+              "percentage_value": 66.8
+            },
+            "held_item": {
+              "rank": 1,
+              "name": "Choice Scarf",
+              "percentage": "41.6%",
+              "percentage_value": 41.6
+            },
+            "teammate": {
+              "rank": 1,
+              "name": "Garchomp"
+            },
+            "stat_alignment": {
+              "rank": 1,
+              "name": "Modest",
+              "percentage": "32.6%",
+              "percentage_value": 32.6,
+              "stat_up": "Sp. Atk",
+              "stat_down": "Attack"
+            },
+            "stat_points": {
+              "rank": 1,
+              "percentage": "27.3%",
+              "percentage_value": 27.3,
+              "hp_points": 2,
+              "attack_points": 32,
+              "defense_points": 0,
+              "sp_atk_points": 0,
+              "sp_def_points": 0,
+              "speed_points": 32
+            },
+            "ability": {
+              "rank": 1,
+              "name": "Adaptability",
+              "percentage": "90.5%",
+              "percentage_value": 90.5
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "daily_garchomp_cross_season",
+      "purpose": "Newest daily snapshots across seasons",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/battle/Doubles/garchomp?days=7",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 104395,
+      "accessControlAllowOrigin": "*",
+      "sha256": "c06c500340bb0f52a543f354a0f396deab696d344de6d303d24bb862bac49bbb",
+      "returnData": {
+        "topLevelKeys": [
+          "pokemon",
+          "showdownId",
+          "format",
+          "requestedDays",
+          "season",
+          "daily"
+        ],
+        "pokemon": "Garchomp",
+        "showdownId": "garchomp",
+        "format": "Doubles",
+        "season": null,
+        "requestedDays": 7,
+        "daily": {
+          "count": 7,
+          "dates": [
+            "28_07_2026",
+            "27_07_2026",
+            "26_07_2026",
+            "25_07_2026",
+            "24_07_2026",
+            "23_07_2026",
+            "22_07_2026"
+          ],
+          "snapshots": [
+            {
+              "season": "M4",
+              "date": "28_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/28_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "85.6%",
+                  "percentage_value": 85.6
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "64.7%",
+                  "percentage_value": 64.7
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "67.5%",
+                  "percentage_value": 67.5,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.3%",
+                  "percentage_value": 45.3,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.4%",
+                  "percentage_value": 97.4
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "27_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/27_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "85.9%",
+                  "percentage_value": 85.9
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "65.0%",
+                  "percentage_value": 65
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "67.8%",
+                  "percentage_value": 67.8,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.3%",
+                  "percentage_value": 45.3,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.5%",
+                  "percentage_value": 97.5
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "26_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/26_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "86.2%",
+                  "percentage_value": 86.2
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "65.4%",
+                  "percentage_value": 65.4
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "68.1%",
+                  "percentage_value": 68.1,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.4%",
+                  "percentage_value": 45.4,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.5%",
+                  "percentage_value": 97.5
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "25_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/25_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "86.3%",
+                  "percentage_value": 86.3
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "65.5%",
+                  "percentage_value": 65.5
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "68.3%",
+                  "percentage_value": 68.3,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.5%",
+                  "percentage_value": 45.5,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.5%",
+                  "percentage_value": 97.5
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "24_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/24_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "86.6%",
+                  "percentage_value": 86.6
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "66.0%",
+                  "percentage_value": 66
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "68.7%",
+                  "percentage_value": 68.7,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.5%",
+                  "percentage_value": 45.5,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.6%",
+                  "percentage_value": 97.6
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "23_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/23_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "86.6%",
+                  "percentage_value": 86.6
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "66.2%",
+                  "percentage_value": 66.2
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "68.9%",
+                  "percentage_value": 68.9,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.6%",
+                  "percentage_value": 45.6,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.7%",
+                  "percentage_value": 97.7
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "22_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/22_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "87.0%",
+                  "percentage_value": 87
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "66.9%",
+                  "percentage_value": 66.9
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "69.4%",
+                  "percentage_value": 69.4,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.6%",
+                  "percentage_value": 45.6,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.8%",
+                  "percentage_value": 97.8
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "daily_garchomp_m4",
+      "purpose": "Daily snapshots restricted to M4",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/battle/Doubles/garchomp?season=M4&days=7",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 104395,
+      "accessControlAllowOrigin": "*",
+      "sha256": "0380304dd6673c4fb77060e31567ba190a4c2a39d49eff163c584fa790f33a50",
+      "returnData": {
+        "topLevelKeys": [
+          "pokemon",
+          "showdownId",
+          "format",
+          "requestedDays",
+          "season",
+          "daily"
+        ],
+        "pokemon": "Garchomp",
+        "showdownId": "garchomp",
+        "format": "Doubles",
+        "season": "M4",
+        "requestedDays": 7,
+        "daily": {
+          "count": 7,
+          "dates": [
+            "28_07_2026",
+            "27_07_2026",
+            "26_07_2026",
+            "25_07_2026",
+            "24_07_2026",
+            "23_07_2026",
+            "22_07_2026"
+          ],
+          "snapshots": [
+            {
+              "season": "M4",
+              "date": "28_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/28_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "85.6%",
+                  "percentage_value": 85.6
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "64.7%",
+                  "percentage_value": 64.7
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "67.5%",
+                  "percentage_value": 67.5,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.3%",
+                  "percentage_value": 45.3,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.4%",
+                  "percentage_value": 97.4
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "27_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/27_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "85.9%",
+                  "percentage_value": 85.9
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "65.0%",
+                  "percentage_value": 65
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "67.8%",
+                  "percentage_value": 67.8,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.3%",
+                  "percentage_value": 45.3,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.5%",
+                  "percentage_value": 97.5
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "26_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/26_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "86.2%",
+                  "percentage_value": 86.2
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "65.4%",
+                  "percentage_value": 65.4
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "68.1%",
+                  "percentage_value": 68.1,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.4%",
+                  "percentage_value": 45.4,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.5%",
+                  "percentage_value": 97.5
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "25_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/25_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "86.3%",
+                  "percentage_value": 86.3
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "65.5%",
+                  "percentage_value": 65.5
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "68.3%",
+                  "percentage_value": 68.3,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.5%",
+                  "percentage_value": 45.5,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.5%",
+                  "percentage_value": 97.5
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "24_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/24_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "86.6%",
+                  "percentage_value": 86.6
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "66.0%",
+                  "percentage_value": 66
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "68.7%",
+                  "percentage_value": 68.7,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.5%",
+                  "percentage_value": 45.5,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.6%",
+                  "percentage_value": 97.6
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "23_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/23_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "86.6%",
+                  "percentage_value": 86.6
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "66.2%",
+                  "percentage_value": 66.2
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "68.9%",
+                  "percentage_value": 68.9,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.6%",
+                  "percentage_value": 45.6,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.7%",
+                  "percentage_value": 97.7
+                }
+              }
+            },
+            {
+              "season": "M4",
+              "date": "22_07_2026",
+              "source": "pokemon_champions_assets/battle_data/M4/22_07_2026/Doubles/Garchomp.csv",
+              "rowCount": 50,
+              "categoryCounts": {
+                "move": 10,
+                "held_item": 10,
+                "teammate": 10,
+                "stat_alignment": 10,
+                "stat_points": 8,
+                "ability": 2
+              },
+              "topByCategory": {
+                "move": {
+                  "rank": 1,
+                  "name": "Dragon Claw",
+                  "percentage": "87.0%",
+                  "percentage_value": 87
+                },
+                "held_item": {
+                  "rank": 1,
+                  "name": "Life Orb",
+                  "percentage": "66.9%",
+                  "percentage_value": 66.9
+                },
+                "teammate": {
+                  "rank": 1,
+                  "name": "Charizard"
+                },
+                "stat_alignment": {
+                  "rank": 1,
+                  "name": "Jolly",
+                  "percentage": "69.4%",
+                  "percentage_value": 69.4,
+                  "stat_up": "Speed",
+                  "stat_down": "Sp. Atk"
+                },
+                "stat_points": {
+                  "rank": 1,
+                  "percentage": "45.6%",
+                  "percentage_value": 45.6,
+                  "hp_points": 2,
+                  "attack_points": 32,
+                  "defense_points": 0,
+                  "sp_atk_points": 0,
+                  "sp_def_points": 0,
+                  "speed_points": 32
+                },
+                "ability": {
+                  "rank": 1,
+                  "name": "Rough Skin",
+                  "percentage": "97.8%",
+                  "percentage_value": 97.8
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "metadata_tauros",
+      "purpose": "Metadata rows for all Tauros forms",
+      "method": "GET",
+      "url": "https://championsbattledata.com/api/metadata/tauros",
+      "status": 200,
+      "contentType": "application/json; charset=utf-8",
+      "contentLength": 1557,
+      "accessControlAllowOrigin": "*",
+      "sha256": "681f8568e769420d3ba83c15d1c0726e374ddaf52b207f18fd60ea2c4e2b3d8e",
+      "returnData": {
+        "topLevelKeys": [
+          "pokemon",
+          "source",
+          "columns",
+          "rows"
+        ],
+        "pokemon": "Tauros",
+        "source": "pokemon_champions_assets/metadata/Tauros.csv",
+        "columns": [
+          "title",
+          "base_name",
+          "saved_name",
+          "types",
+          "abilities",
+          "image_path",
+          "form",
+          "hp",
+          "atk",
+          "def",
+          "spa",
+          "spd",
+          "spe",
+          "total"
+        ],
+        "rowCount": 4,
+        "firstRow": {
+          "title": "Tauros [Paldean Form (Aqua Breed)]",
+          "base_name": "Tauros",
+          "saved_name": "Paldean Tauros Aqua Breed",
+          "types": "Fighting/Water",
+          "abilities": "Intimidate|Anger Point|Cud Chew",
+          "image_path": "pokemon_champions_assets\\pokemon\\Paldean Tauros Aqua Breed.png",
+          "form": "Paldean Aqua Breed",
+          "hp": 150,
+          "atk": 130,
+          "def": 125,
+          "spa": 50,
+          "spd": 90,
+          "spe": 120,
+          "total": 665
+        },
+        "savedNames": [
+          "Paldean Tauros Aqua Breed",
+          "Paldean Tauros Blaze Breed",
+          "Paldean Tauros Combat Breed",
+          "Tauros"
+        ]
+      }
+    },
+    {
+      "id": "csv_current_doubles",
+      "purpose": "Current Doubles CSV",
+      "method": "GET",
+      "url": "https://championsbattledata.com/pokemon_champions_assets/battle_data/Doubles/Garchomp.csv",
+      "status": 200,
+      "contentType": "text/csv; charset=utf-8",
+      "contentLength": 2866,
+      "accessControlAllowOrigin": "*",
+      "sha256": "0a27897ddad66158fe43d28e427db3625ab70f4cb4eb8be4bc85ea09877553c4",
+      "returnData": {
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points",
+          "source_time_seconds"
+        ],
+        "rowCount": 50,
+        "categoryCounts": {
+          "move": 10,
+          "held_item": 10,
+          "teammate": 10,
+          "stat_alignment": 10,
+          "stat_points": 8,
+          "ability": 2
+        },
+        "firstRow": {
+          "pokemon": "Garchomp",
+          "column_position": "1",
+          "category": "move",
+          "rank": "1",
+          "name": "Dragon Claw",
+          "percentage": "85.6%",
+          "stat_up": "",
+          "stat_down": "",
+          "hp_points": "",
+          "attack_points": "",
+          "defense_points": "",
+          "sp_atk_points": "",
+          "sp_def_points": "",
+          "speed_points": "",
+          "source_time_seconds": "1.82"
+        }
+      }
+    },
+    {
+      "id": "csv_current_singles",
+      "purpose": "Current Singles CSV",
+      "method": "GET",
+      "url": "https://championsbattledata.com/pokemon_champions_assets/battle_data/Singles/Garchomp.csv",
+      "status": 200,
+      "contentType": "text/csv; charset=utf-8",
+      "contentLength": 3011,
+      "accessControlAllowOrigin": "*",
+      "sha256": "a733038ff2f74c470336bda27a6d408707304f40f61ae27272d1a9c4241f1ff5",
+      "returnData": {
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points",
+          "source_time_seconds"
+        ],
+        "rowCount": 50,
+        "categoryCounts": {
+          "move": 10,
+          "held_item": 10,
+          "teammate": 10,
+          "stat_alignment": 10,
+          "stat_points": 8,
+          "ability": 2
+        },
+        "firstRow": {
+          "pokemon": "Garchomp",
+          "column_position": "1",
+          "category": "move",
+          "rank": "1",
+          "name": "Earthquake",
+          "percentage": "99.3%",
+          "stat_up": "",
+          "stat_down": "",
+          "hp_points": "",
+          "attack_points": "",
+          "defense_points": "",
+          "sp_atk_points": "",
+          "sp_def_points": "",
+          "speed_points": "",
+          "source_time_seconds": "22220.15"
+        }
+      }
+    },
+    {
+      "id": "csv_daily_doubles",
+      "purpose": "Dated Doubles CSV",
+      "method": "GET",
+      "url": "https://championsbattledata.com/pokemon_champions_assets/battle_data/M4/16_07_2026/Doubles/Garchomp.csv",
+      "status": 200,
+      "contentType": "text/csv; charset=utf-8",
+      "contentLength": 2554,
+      "accessControlAllowOrigin": "*",
+      "sha256": "7504f72fd28f711dcb89b2e62af0b9f95f135e1eb7ddc9c4b73ec2761055d875",
+      "returnData": {
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points"
+        ],
+        "rowCount": 50,
+        "categoryCounts": {
+          "move": 10,
+          "held_item": 10,
+          "teammate": 10,
+          "stat_alignment": 10,
+          "stat_points": 8,
+          "ability": 2
+        },
+        "firstRow": {
+          "pokemon": "Garchomp",
+          "column_position": "1",
+          "category": "move",
+          "rank": "1",
+          "name": "Dragon Claw",
+          "percentage": "88.3%",
+          "stat_up": "",
+          "stat_down": "",
+          "hp_points": "",
+          "attack_points": "",
+          "defense_points": "",
+          "sp_atk_points": "",
+          "sp_def_points": "",
+          "speed_points": ""
+        }
+      }
+    },
+    {
+      "id": "csv_daily_singles",
+      "purpose": "Dated Singles CSV",
+      "method": "GET",
+      "url": "https://championsbattledata.com/pokemon_champions_assets/battle_data/M4/16_07_2026/Singles/Garchomp.csv",
+      "status": 200,
+      "contentType": "text/csv; charset=utf-8",
+      "contentLength": 2547,
+      "accessControlAllowOrigin": "*",
+      "sha256": "22e7fd3ebe104f22274f2d06c7ad06ed8577bae1f408b41f3c928b5abcad813b",
+      "returnData": {
+        "columns": [
+          "pokemon",
+          "column_position",
+          "category",
+          "rank",
+          "name",
+          "percentage",
+          "stat_up",
+          "stat_down",
+          "hp_points",
+          "attack_points",
+          "defense_points",
+          "sp_atk_points",
+          "sp_def_points",
+          "speed_points"
+        ],
+        "rowCount": 50,
+        "categoryCounts": {
+          "move": 10,
+          "held_item": 10,
+          "teammate": 10,
+          "stat_alignment": 10,
+          "stat_points": 8,
+          "ability": 2
+        },
+        "firstRow": {
+          "pokemon": "Garchomp",
+          "column_position": "1",
+          "category": "move",
+          "rank": "1",
+          "name": "Earthquake",
+          "percentage": "99.4%",
+          "stat_up": "",
+          "stat_down": "",
+          "hp_points": "",
+          "attack_points": "",
+          "defense_points": "",
+          "sp_atk_points": "",
+          "sp_def_points": "",
+          "speed_points": ""
+        }
+      }
+    },
+    {
+      "id": "csv_metadata_tauros",
+      "purpose": "Metadata CSV",
+      "method": "GET",
+      "url": "https://championsbattledata.com/pokemon_champions_assets/metadata/Tauros.csv",
+      "status": 200,
+      "contentType": "text/csv; charset=utf-8",
+      "contentLength": 896,
+      "accessControlAllowOrigin": "*",
+      "sha256": "cfa46bcc591e0d5836e441675abee2149bd90b6d4f7bd6c0a713f56b6f4def95",
+      "returnData": {
+        "columns": [
+          "title",
+          "base_name",
+          "saved_name",
+          "types",
+          "abilities",
+          "image_path",
+          "form",
+          "hp",
+          "atk",
+          "def",
+          "spa",
+          "spd",
+          "spe",
+          "total"
+        ],
+        "rowCount": 4,
+        "categoryCounts": {},
+        "firstRow": {
+          "title": "Tauros [Paldean Form (Aqua Breed)]",
+          "base_name": "Tauros",
+          "saved_name": "Paldean Tauros Aqua Breed",
+          "types": "Fighting/Water",
+          "abilities": "Intimidate|Anger Point|Cud Chew",
+          "image_path": "pokemon_champions_assets\\pokemon\\Paldean Tauros Aqua Breed.png",
+          "form": "Paldean Aqua Breed",
+          "hp": "150",
+          "atk": "130",
+          "def": "125",
+          "spa": "50",
+          "spd": "90",
+          "spe": "120",
+          "total": "665"
+        }
+      }
+    },
+    {
+      "id": "png_tauros",
+      "purpose": "Base-form sprite",
+      "method": "GET",
+      "url": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Tauros.png",
+      "status": 200,
+      "contentType": "image/png",
+      "contentLength": 20347,
+      "accessControlAllowOrigin": "*",
+      "sha256": "88a7eb7f612577b5afed5be9d78f8523d307097d7adc319759132033a563d671",
+      "returnData": {
+        "validPng": true,
+        "width": 128,
+        "height": 128
+      }
+    },
+    {
+      "id": "png_tauros_aqua",
+      "purpose": "Form sprite using saved_name",
+      "method": "GET",
+      "url": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Paldean%20Tauros%20Aqua%20Breed.png",
+      "status": 200,
+      "contentType": "image/png",
+      "contentLength": 14101,
+      "accessControlAllowOrigin": "*",
+      "sha256": "f60f5b01e81ba64b571d419b3105becdec5830f594aea8d3e679b9ad9a8da958",
+      "returnData": {
+        "validPng": true,
+        "width": 128,
+        "height": 128
+      }
+    },
+    {
+      "id": "png_type_dragon",
+      "purpose": "Type icon",
+      "method": "GET",
+      "url": "https://championsbattledata.com/pokemon_champions_assets/types/Dragon.png",
+      "status": 200,
+      "contentType": "image/png",
+      "contentLength": 1535,
+      "accessControlAllowOrigin": "*",
+      "sha256": "5d7abf84d72ffc463a48e923aa6b66775eab1c1dddf94067ebe20be5cc974957",
+      "returnData": {
+        "validPng": true,
+        "width": 64,
+        "height": 64
+      }
+    }
+  ],
+  "indexEquivalence": {
+    "apiEqualsApiIndex": true,
+    "apiEqualsStaticIndex": true,
+    "hashes": {
+      "index_api": "7f73de7e8574661458dc13c71545e1239f97229314d8e10f16d236504c133959",
+      "index_alias": "7f73de7e8574661458dc13c71545e1239f97229314d8e10f16d236504c133959",
+      "index_static": "7f73de7e8574661458dc13c71545e1239f97229314d8e10f16d236504c133959"
+    }
+  },
+  "successfulCount": 22
+}
