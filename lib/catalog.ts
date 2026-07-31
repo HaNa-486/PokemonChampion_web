@@ -31,8 +31,33 @@ const curatedItems: HeldItem[] = [
   { id: "charizardite-x", name: "Charizardite X", nameZh: "噴火龍進化石Ｘ", category: "Mega Stone", description: "Enables Mega Evolution into Mega Charizard X.", descriptionZh: "讓噴火龍超級進化為超級噴火龍Ｘ。" },
 ];
 
+// Names verified against the current Champions Battle Data held-item distributions.
+const megaStoneNameByPokemonId: Record<string, string> = {
+  "mega-abomasnow": "Abomasite", "mega-absol": "Absolite", "mega-aerodactyl": "Aerodactylite", "mega-aggron": "Aggronite", "mega-alakazam": "Alakazite",
+  "mega-raichu-x": "Raichunite X", "mega-raichu-y": "Raichunite Y", "mega-altaria": "Altarianite", "mega-ampharos": "Ampharosite", "mega-audino": "Audinite",
+  "mega-banette": "Banettite", "mega-barbaracle": "Barbaracite", "mega-beedrill": "Beedrillite", "mega-blastoise": "Blastoisinite", "mega-blaziken": "Blazikenite",
+  "mega-camerupt": "Cameruptite", "mega-chandelure": "Chandelurite", "mega-charizard-x": "Charizardite X", "mega-charizard-y": "Charizardite Y", "mega-chesnaught": "Chesnaughtite",
+  "mega-chimecho": "Chimechite", "mega-clefable": "Clefablite", "mega-crabominable": "Crabominite", "mega-delphox": "Delphoxite", "mega-dragalge": "Dragalgite",
+  "mega-dragonite": "Dragoninite", "mega-drampa": "Drampanite", "mega-eelektross": "Eelektrossite", "mega-emboar": "Emboarite", "mega-excadrill": "Excadrite",
+  "mega-falinks": "Falinksite", "mega-feraligatr": "Feraligite", "mega-floette": "Floettite", "mega-froslass": "Froslassite", "mega-slowbro": "Slowbronite",
+  "mega-gallade": "Galladite", "mega-garchomp": "Garchompite", "mega-gardevoir": "Gardevoirite", "mega-gengar": "Gengarite", "mega-glalie": "Glalitite",
+  "mega-glimmora": "Glimmoranite", "mega-golurk": "Golurkite", "mega-greninja": "Greninjite", "mega-gyarados": "Gyaradosite", "mega-hawlucha": "Hawluchanite",
+  "mega-heracross": "Heracronite", "mega-houndoom": "Houndoominite", "mega-kangaskhan": "Kangaskhanite", "mega-lopunny": "Lopunnite", "mega-lucario": "Lucarionite",
+  "mega-malamar": "Malamarite", "mega-manectric": "Manectite", "mega-mawile": "Mawilite", "mega-medicham": "Medichamite", "mega-meganium": "Meganiumite",
+  "mega-meowstic": "Meowsticite", "mega-metagross": "Metagrossite", "mega-pidgeot": "Pidgeotite", "mega-pinsir": "Pinsirite", "mega-pyroar": "Pyroarite",
+  "mega-sableye": "Sablenite", "mega-sceptile": "Sceptilite", "mega-scizor": "Scizorite", "mega-scolipede": "Scolipite", "mega-scovillain": "Scovillainite",
+  "mega-scrafty": "Scraftinite", "mega-sharpedo": "Sharpedonite", "mega-skarmory": "Skarmorite", "mega-staraptor": "Staraptite", "mega-starmie": "Starminite",
+  "mega-steelix": "Steelixite", "mega-swampert": "Swampertite", "mega-tyranitar": "Tyranitarite", "mega-venusaur": "Venusaurite", "mega-victreebel": "Victreebelite",
+};
+const itemId = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+export const megaStoneIdByPokemonId = new Map(Object.entries(megaStoneNameByPokemonId).map(([pokemonId, name]) => [pokemonId, itemId(name)]));
+
 const generatedItemById = new Map(snapshot.items.map((entry) => [entry.id, entry]));
 for (const entry of curatedItems) generatedItemById.set(entry.id, entry);
+for (const [pokemonId, name] of Object.entries(megaStoneNameByPokemonId)) {
+  const id = itemId(name);
+  if (!generatedItemById.has(id)) generatedItemById.set(id, { id, name, nameZh: name, category: "Mega Stone", description: `Required for ${pokemonId.replaceAll("-", " ").replace(/^mega /, "Mega ")} to Mega Evolve.`, descriptionZh: `此超級石為 ${name}，是該寶可夢進行超級進化時的必備持有物。` });
+}
 export const items: HeldItem[] = [...generatedItemById.values()].map((entry) => ({
   id: entry.id, name: entry.name, nameZh: entry.nameZh || entry.name,
   category: entry.category || "Held item",

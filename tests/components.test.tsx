@@ -1,11 +1,12 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChampionsApp } from "../components/ChampionsApp";
 import { MoveDatabaseV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
 import { useTeamStore } from "../lib/team-store";
 
 beforeEach(() => useTeamStore.setState({ members: [], hydrated: true }));
+afterEach(() => vi.unstubAllGlobals());
 
 describe("Move Database", () => {
   it("filters positive and negative priority independently", async () => {
@@ -106,6 +107,35 @@ describe("Speed Compare", () => {
 });
 
 describe("ChampionsApp", () => {
+  it("opens complete Pokémon details and switches current battle formats", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
+      scope: "species",
+      singles: { pokemon: "Absol", format: "Singles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rows: [{ category: "move", rank: 1, name: "Sucker Punch", percentage: "70.0%", percentageValue: 70, statUp: "", statDown: "", ap: null }] },
+      doubles: { pokemon: "Absol", format: "Doubles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rows: [{ category: "held_item", rank: 1, name: "Absolite", percentage: "39.5%", percentageValue: 39.5, statUp: "", statDown: "", ap: null }] },
+    } })));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon or type…"), "Absol");
+    await user.click(screen.getByRole("button", { name: "Absol", exact: true }));
+    const dialog = screen.getByRole("dialog", { name: "Absol" });
+    expect(within(dialog).getByText("Learnable moves")).toBeInTheDocument();
+    expect(within(dialog).getByText("Available abilities")).toBeInTheDocument();
+    expect(await within(dialog).findByText("Absolite")).toBeInTheDocument();
+    await user.click(within(dialog).getByRole("button", { name: "Singles" }));
+    expect(within(dialog).getAllByText("Sucker Punch").length).toBeGreaterThan(1);
+  });
+
+  it("preselects and locks the dedicated stone for a Mega build", async () => {
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon or type…"), "Mega Absol");
+    await user.click(screen.getByRole("button", { name: "Configure Mega Absol" }));
+    const item = screen.getByRole("combobox", { name: /Held item/ });
+    expect(item).toBeDisabled();
+    expect(item).toHaveValue("absolite");
+    expect(screen.getByText("This Mega form must hold its dedicated Mega Stone.")).toBeInTheDocument();
+  });
+
   it("switches language without losing navigation", async () => {
     const user = userEvent.setup();
     render(<ChampionsApp />);
