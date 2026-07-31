@@ -142,6 +142,17 @@ export const moveById = new Map(moves.map((entry) => [entry.id, entry]));
 export const abilityById = new Map(abilities.map((entry) => [entry.id, entry]));
 export const itemById = new Map(items.map((entry) => [entry.id, entry]));
 export const pokemonById = new Map(pokemon.map((entry) => [entry.id, entry]));
+export const megaPokemonByStoneId = new Map<string, Pokemon>();
+for (const [pokemonId, stoneId] of megaStoneIdByPokemonId) {
+  const entry = pokemonById.get(pokemonId);
+  if (entry) megaPokemonByStoneId.set(stoneId, entry);
+}
+
+const usageNameKey = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+export const moveIdByUsageName = new Map(moves.map((entry) => [usageNameKey(entry.name), entry.id]));
+export const itemIdByUsageName = new Map(items.map((entry) => [usageNameKey(entry.name), entry.id]));
+export const abilityIdByUsageName = new Map(abilities.map((entry) => [usageNameKey(entry.name), entry.id]));
+export const usageEntityKey = usageNameKey;
 
 function reversePokemonIndex(selectIds: (entry: Pokemon) => string[]) {
   const index = new Map<string, Pokemon[]>();

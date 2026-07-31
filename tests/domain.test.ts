@@ -5,6 +5,34 @@ import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
 import { abilityCategories, itemEffectCategories } from "../lib/filtering";
 import { defensiveMatchups, formatMultiplier } from "../lib/type-chart";
+import { recommendedAbilityId, recommendedItemId, recommendedMoveIds } from "../lib/battle-recommendations";
+import { migrateSavedTeams } from "../lib/team-store";
+import type { BattleUsage } from "../lib/types";
+
+const usageFixture = (rows: BattleUsage["rows"]): BattleUsage => ({ pokemon: "Blastoise", format: "Doubles", season: "Current", date: null, source: "test", rows });
+const usageRow = (category: string, rank: number, name: string) => ({ category, rank, name, percentage: "50%", percentageValue: 50, statUp: "", statDown: "", ap: null });
+
+describe("battle-data build recommendations", () => {
+  it("maps ranked upstream names to the best legal item, ability, and four moves", () => {
+    const selected = pokemonById.get("blastoise")!;
+    const usage = usageFixture([
+      usageRow("move", 3, "Aqua Tail"), usageRow("move", 1, "Aqua Jet"), usageRow("move", 5, "Not A Real Move"),
+      usageRow("move", 2, "Aura Sphere"), usageRow("move", 4, "Body Press"), usageRow("held_item", 1, "Blastoisinite"),
+      usageRow("ability", 1, "Torrent"),
+    ]);
+    expect(recommendedItemId(usage)).toBe("blastoisinite");
+    expect(recommendedMoveIds(usage, selected)).toEqual(["aqua-jet", "aura-sphere", "aqua-tail", "body-press"]);
+    expect(recommendedAbilityId(usage, selected)).toBe("torrent");
+  });
+});
+
+describe("saved team migration", () => {
+  const member = { id: "one", pokemonId: "absol", moveIds: [], abilityId: null, itemId: null, ap: { ...ZERO_STATS }, nature: { name: "Serious", up: null, down: null } } satisfies TeamMember;
+  it("preserves the legacy team as Doubles and keeps new Singles/Doubles groups separate", () => {
+    expect(migrateSavedTeams({ version: 1, members: [member] })).toEqual({ singles: [], doubles: [member] });
+    expect(migrateSavedTeams({ version: 2, teams: { singles: [member], doubles: [] } })).toEqual({ singles: [member], doubles: [] });
+  });
+});
 
 describe("champions-v1 stat formula golden fixtures", () => {
   it("matches the Mega Charizard X Adamant reference build", () => {

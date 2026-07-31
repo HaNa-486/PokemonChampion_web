@@ -1,6 +1,7 @@
 export type StatName = "hp" | "attack" | "defense" | "specialAttack" | "specialDefense" | "speed";
 export type NonHpStat = Exclude<StatName, "hp">;
 export type Stats = Record<StatName, number>;
+export type BattleFormat = "singles" | "doubles";
 
 export type Nature = { name: string; nameZh?: string; up: NonHpStat | null; down: NonHpStat | null };
 

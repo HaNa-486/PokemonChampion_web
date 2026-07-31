@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChampionsApp } from "../components/ChampionsApp";
@@ -7,7 +7,7 @@ import { ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
 import type { TeamMember } from "../lib/types";
 
-beforeEach(() => useTeamStore.setState({ members: [], hydrated: true }));
+beforeEach(() => useTeamStore.setState({ teams: { singles: [], doubles: [] }, hydrated: true }));
 afterEach(() => vi.unstubAllGlobals());
 
 describe("Move Database", () => {
@@ -122,7 +122,7 @@ describe("ChampionsApp", () => {
   it("renders every member in a full six-Pokémon scrollable team list", () => {
     const pokemonIds = ["abomasnow", "aerodactyl", "alakazam", "arbok", "arcanine", "garchomp"];
     const members: TeamMember[] = pokemonIds.map((pokemonId, index) => ({ id: `member-${index}`, pokemonId, abilityId: null, itemId: null, moveIds: [], ap: { ...ZERO_STATS }, nature: { name: "Serious", nameZh: "認真", up: null, down: null } }));
-    useTeamStore.setState({ members, hydrated: true });
+    useTeamStore.setState({ teams: { singles: [], doubles: members }, hydrated: true });
     const { container } = render(<ChampionsApp />);
     const list = container.querySelector(".team-list")!;
     expect(list).toBeInTheDocument();
@@ -140,6 +140,20 @@ describe("ChampionsApp", () => {
     await user.click(screen.getByRole("button", { name: "Next page" }));
     expect(container.querySelectorAll("tbody tr")).toHaveLength(58);
     expect(screen.getByText("Page", { exact: false })).toHaveTextContent("4 / 4");
+  });
+
+  it("filters Pokémon by type, form, ability, known moves, and minimum stats", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
+    const filters = container.querySelector(".pokemon-advanced-filters")!;
+    await user.click(within(filters).getByRole("button", { name: "Water" }));
+    await user.click(within(filters).getByRole("button", { name: "Mega" }));
+    await user.selectOptions(within(filters).getByRole("combobox", { name: "Filter by ability" }), "mega-launcher");
+    await user.selectOptions(within(filters).getByRole("combobox", { name: "Add known move filter" }), "aura-sphere");
+    await user.clear(within(filters).getByRole("spinbutton", { name: "Minimum SpA" }));
+    await user.type(within(filters).getByRole("spinbutton", { name: "Minimum SpA" }), "130");
+    expect(screen.getByRole("button", { name: /^Mega Blastoise/ })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Blastoise", exact: true })).not.toBeInTheDocument();
   });
 
   it("opens complete Pokémon details and switches current battle formats", async () => {
@@ -189,6 +203,43 @@ describe("ChampionsApp", () => {
     expect(item).toBeDisabled();
     expect(item).toHaveValue("absolite");
     expect(screen.getByText("This Mega form must hold its dedicated Mega Stone.")).toBeInTheDocument();
+  });
+
+  it("applies current-format usage and transforms a base Pokémon when its Mega Stone is selected", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
+      singles: { pokemon: "Blastoise", format: "Singles", season: "Current", date: null, source: "test", rows: [{ category: "held_item", rank: 1, name: "Leftovers", percentage: "40%", percentageValue: 40, statUp: "", statDown: "", ap: null }] },
+      doubles: { pokemon: "Blastoise", format: "Doubles", season: "Current", date: null, source: "test", rows: [
+        { category: "held_item", rank: 1, name: "Blastoisinite", percentage: "80%", percentageValue: 80, statUp: "", statDown: "", ap: null },
+        { category: "ability", rank: 1, name: "Mega Launcher", percentage: "100%", percentageValue: 100, statUp: "", statDown: "", ap: null },
+        ...["Aura Sphere", "Dark Pulse", "Dragon Pulse", "Water Pulse"].map((name, index) => ({ category: "move", rank: index + 1, name, percentage: `${90 - index}%`, percentageValue: 90 - index, statUp: "", statDown: "", ap: null })),
+      ] },
+    } })));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon or type…"), "Blastoise");
+    await user.click(screen.getByRole("button", { name: "Configure Blastoise" }));
+    expect(await screen.findByRole("heading", { name: "Mega Blastoise" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("blastoisinite");
+    await waitFor(() => expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("mega-launcher"));
+    expect(screen.getByText(/transforms this build into Mega Blastoise/)).toBeInTheDocument();
+    const moveValues = screen.getAllByRole("combobox", { name: /Move [1-4]/ }).map((entry) => (entry as HTMLSelectElement).value);
+    expect(moveValues).toEqual(["aura-sphere", "dark-pulse", "dragon-pulse", "water-pulse"]);
+    const buildMode = screen.getAllByRole("group", { name: "Team mode" }).at(-1)!;
+    await user.click(within(buildMode).getByRole("button", { name: "Singles" }));
+    expect(await screen.findByRole("heading", { name: "Blastoise" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("leftovers");
+  });
+
+  it("keeps independent selectable Singles and Doubles teams", async () => {
+    const member = (id: string, pokemonId: string): TeamMember => ({ id, pokemonId, abilityId: null, itemId: null, moveIds: [], ap: { ...ZERO_STATS }, nature: { name: "Serious", up: null, down: null } });
+    useTeamStore.setState({ teams: { singles: [member("single", "absol")], doubles: [member("double", "garchomp")] }, hydrated: true });
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    expect(within(tray).getByText("Garchomp")).toBeInTheDocument();
+    await user.click(within(tray).getByRole("button", { name: "Singles 1/6" }));
+    expect(within(tray).getByText("Absol")).toBeInTheDocument();
+    expect(within(tray).queryByText("Garchomp")).not.toBeInTheDocument();
   });
 
   it("switches language without losing navigation", async () => {
