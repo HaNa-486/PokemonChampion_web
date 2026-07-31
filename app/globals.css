@@ -65,6 +65,12 @@ tbody tr:hover { background: #f2fbf7; }
 .ability-list { display: flex; flex-wrap: wrap; gap: 4px 10px; min-width: 180px; }
 .add-button { width: 38px; height: 38px; border: 0; border-radius: 12px; color: white; background: var(--ink); font-size: 1.45rem; line-height: 1; box-shadow: 0 6px 15px rgba(24,43,49,.2); }
 .add-button:hover { background: var(--mint-dark); transform: translateY(-1px); }
+.pagination { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 17px 24px; border-top: 1px solid var(--line); background: #fbfcfb; }
+.pagination button { min-width: 108px; border: 1px solid var(--line); border-radius: 999px; padding: 8px 13px; color: var(--ink); background: white; font-weight: 850; }
+.pagination button:hover:not(:disabled) { color: white; border-color: var(--mint-dark); background: var(--mint-dark); }
+.pagination button:disabled { cursor: not-allowed; opacity: .4; }
+.pagination span { color: var(--muted); font-size: .82rem; }
+.pagination b { color: var(--mint-dark); }
 
 .badge-row { display: flex; flex-wrap: wrap; gap: 5px; }
 .badge-row.compact { margin-top: 5px; }
@@ -280,6 +286,8 @@ footer a { color: var(--mint-dark); }
   .catalog-panel .pokemon-name strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .catalog-panel .type-badge { min-width: 45px; padding: 4px 5px; font-size: .58rem; }
   .catalog-panel .add-button { width: 34px; height: 34px; }
+  .pagination { gap: 8px; padding: 13px 10px; }
+  .pagination button { min-width: 86px; padding: 7px 9px; }
   .filter-bar { padding: 13px 16px; }
   .advanced-filters { padding: 14px 16px; }
   .filter-group { grid-template-columns: 1fr; gap: 4px; }

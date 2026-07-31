@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChampionsApp } from "../components/ChampionsApp";
-import { MoveDatabaseV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
+import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
 import { useTeamStore } from "../lib/team-store";
 
 beforeEach(() => useTeamStore.setState({ members: [], hydrated: true }));
@@ -107,6 +107,18 @@ describe("Speed Compare", () => {
 });
 
 describe("ChampionsApp", () => {
+  it("paginates all legal Pokémon forms instead of hiding rows after 100", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(100);
+    expect(screen.getByText("Page", { exact: false })).toHaveTextContent("1 / 4");
+    await user.click(screen.getByRole("button", { name: "Next page" }));
+    await user.click(screen.getByRole("button", { name: "Next page" }));
+    await user.click(screen.getByRole("button", { name: "Next page" }));
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(58);
+    expect(screen.getByText("Page", { exact: false })).toHaveTextContent("4 / 4");
+  });
+
   it("opens complete Pokémon details and switches current battle formats", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
       scope: "species",
