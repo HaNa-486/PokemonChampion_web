@@ -1,17 +1,29 @@
 import type { Move, Nature, NonHpStat, Pokemon, Stats, TeamMember } from "./types";
 
 export const ZERO_STATS: Stats = { hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0 };
-export const NEUTRAL_NATURE: Nature = { name: "Serious", up: null, down: null };
+export const NEUTRAL_NATURE: Nature = { name: "Serious", nameZh: "認真", up: null, down: null };
 export const NATURES: Nature[] = [
   NEUTRAL_NATURE,
-  { name: "Adamant", up: "attack", down: "specialAttack" },
-  { name: "Modest", up: "specialAttack", down: "attack" },
-  { name: "Jolly", up: "speed", down: "specialAttack" },
-  { name: "Timid", up: "speed", down: "attack" },
-  { name: "Bold", up: "defense", down: "attack" },
-  { name: "Calm", up: "specialDefense", down: "attack" },
-  { name: "Relaxed", up: "defense", down: "speed" },
-  { name: "Sassy", up: "specialDefense", down: "speed" },
+  { name: "Lonely", nameZh: "怕寂寞", up: "attack", down: "defense" },
+  { name: "Adamant", nameZh: "固執", up: "attack", down: "specialAttack" },
+  { name: "Naughty", nameZh: "頑皮", up: "attack", down: "specialDefense" },
+  { name: "Brave", nameZh: "勇敢", up: "attack", down: "speed" },
+  { name: "Bold", nameZh: "大膽", up: "defense", down: "attack" },
+  { name: "Impish", nameZh: "淘氣", up: "defense", down: "specialAttack" },
+  { name: "Lax", nameZh: "樂天", up: "defense", down: "specialDefense" },
+  { name: "Relaxed", nameZh: "悠閒", up: "defense", down: "speed" },
+  { name: "Modest", nameZh: "內斂", up: "specialAttack", down: "attack" },
+  { name: "Mild", nameZh: "慢吞吞", up: "specialAttack", down: "defense" },
+  { name: "Rash", nameZh: "馬虎", up: "specialAttack", down: "specialDefense" },
+  { name: "Quiet", nameZh: "冷靜", up: "specialAttack", down: "speed" },
+  { name: "Calm", nameZh: "溫和", up: "specialDefense", down: "attack" },
+  { name: "Gentle", nameZh: "溫順", up: "specialDefense", down: "defense" },
+  { name: "Careful", nameZh: "慎重", up: "specialDefense", down: "specialAttack" },
+  { name: "Sassy", nameZh: "自大", up: "specialDefense", down: "speed" },
+  { name: "Timid", nameZh: "膽小", up: "speed", down: "attack" },
+  { name: "Hasty", nameZh: "急躁", up: "speed", down: "defense" },
+  { name: "Jolly", nameZh: "爽朗", up: "speed", down: "specialAttack" },
+  { name: "Naive", nameZh: "天真", up: "speed", down: "specialDefense" },
 ];
 
 export type ValidationIssue = { code: string; message: string; memberId?: string };

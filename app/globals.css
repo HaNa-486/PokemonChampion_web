@@ -194,8 +194,23 @@ tbody tr:hover { background: #f2fbf7; }
 .team-moves { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 9px 0; }
 .team-moves > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #dbe7e3; font-size: .7rem; }
 .team-moves .type-badge { min-width: 38px; padding: 3px 4px; font-size: .52rem; }
-.team-meta { display: flex; gap: 12px; padding: 8px 0; border-top: 1px solid #365159; border-bottom: 1px solid #365159; font-size: .72rem; }
+.team-meta { display: flex; flex-wrap: wrap; gap: 6px 12px; padding: 8px 0; border-top: 1px solid #365159; border-bottom: 1px solid #365159; font-size: .72rem; }
 .team-meta .info-trigger { color: #8ee0c5; }
+.type-matchups { padding: 18px 0; border-top: 1px solid var(--line); }
+.type-matchups > h3 { margin: 0 0 4px; }
+.type-matchups > p { margin: 0 0 13px; color: var(--muted); font-size: .74rem; }
+.matchup-group { display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: start; gap: 8px; margin-top: 8px; }
+.matchup-group > strong { padding-top: 3px; color: var(--muted); font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; }
+.matchup-group > div { display: flex; flex-wrap: wrap; gap: 5px; }
+.matchup-badge { display: inline-flex; align-items: center; gap: 3px; padding-right: 6px; border-radius: 7px; background: #eef4f1; }
+.matchup-badge b { color: var(--ink); font-size: .62rem; }
+.matchup-none { color: var(--muted); }
+.compact-matchups { margin: 8px 0; padding: 6px 0; border-color: #365159; border-bottom: 1px solid #365159; }
+.compact-matchups .matchup-group { grid-template-columns: 47px minmax(0, 1fr); gap: 4px; margin-top: 4px; }
+.compact-matchups .matchup-group > strong { color: #8fa9a4; font-size: .54rem; }
+.compact-matchups .type-badge { min-width: 38px; padding: 3px 4px; font-size: .5rem; }
+.compact-matchups .matchup-badge { background: #29464d; }
+.compact-matchups .matchup-badge b { color: white; font-size: .5rem; }
 .mini-stats { display: grid; grid-template-columns: repeat(6, 1fr); margin-top: 9px; }
 .mini-stats span { display: grid; text-align: center; }
 .mini-stats small { color: #8fa9a4; font-size: .58rem; }

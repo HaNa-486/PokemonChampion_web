@@ -92,6 +92,8 @@ export function MoveDatabaseV2({ locale }: { locale: Locale }) {
   const [properties, setProperties] = useState<string[]>([]);
   const [sort, setSort] = useState<SortState<MoveSortKey>>({ key: "name", direction: "asc" });
   const [selected, setSelected] = useState<ReverseSelection | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 100;
   const typeOptions = useMemo(() => [...new Set(moves.map((move) => move.type))].sort(), []);
   const targetOptions = useMemo(() => [...new Set(moves.map((move) => move.target))].sort(), []);
   const propertyOptions = useMemo(() => [...new Set(moves.flatMap((move) => move.flags))].sort(), []);
@@ -100,10 +102,36 @@ export function MoveDatabaseV2({ locale }: { locale: Locale }) {
     const searchMatch = `${move.name} ${move.nameZh}`.toLowerCase().includes(query.toLowerCase());
     return searchMatch && priorityMatches(move, priorities) && (!types.length || types.includes(move.type)) && (!categories.length || categories.includes(move.category)) && (!targets.length || targets.includes(move.target)) && (!properties.length || properties.some((flag) => move.flags.includes(flag)));
   });
-  const rows = [...allMatches].sort((a, b) => compareValues(value(a) ?? Number.POSITIVE_INFINITY, value(b) ?? Number.POSITIVE_INFINITY, sort.direction) || a.name.localeCompare(b.name)).slice(0, 100);
+  const sorted = [...allMatches].sort((a, b) => compareValues(value(a) ?? Number.POSITIVE_INFINITY, value(b) ?? Number.POSITIVE_INFINITY, sort.direction) || a.name.localeCompare(b.name));
+  const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
+  const safePage = Math.min(page, pageCount);
+  const start = (safePage - 1) * pageSize;
+  const rows = sorted.slice(start, start + pageSize);
+  const rangeStart = sorted.length ? start + 1 : 0;
+  const rangeEnd = Math.min(start + rows.length, sorted.length);
+  const changeSort = (next: SortState<MoveSortKey>) => { setSort(next); setPage(1); };
   const openUsers = (move: Move) => setSelected({ id: move.id, kind: "move", name: localName(move, locale), description: locale === "zh-Hant" ? move.descriptionZh : move.description, users: pokemonByMoveId.get(move.id) ?? [], move });
   const userLabel = locale === "zh-Hant" ? "可使用此招式的寶可夢" : "Usable Pokémon";
-  return <><section className="panel"><div className="panel-head moves-head"><div><p className="eyebrow">MOVE INTELLIGENCE</p><h1>{locale === "zh-Hant" ? "招式資料庫" : "Move DB"}</h1><p>{allMatches.length} / {moves.length} moves · showing {rows.length}</p></div><input aria-label="Search moves" className="move-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={locale === "zh-Hant" ? "搜尋招式…" : "Search moves…"} /></div><div className="advanced-filters"><FilterGroup label="Priority" options={["+ Positive", "0 Neutral", "− Negative"]} selected={priorities.map((value) => value === "positive" ? "+ Positive" : value === "zero" ? "0 Neutral" : "− Negative")} onToggle={(label) => { const value = label.startsWith("+") ? "positive" : label.startsWith("0") ? "zero" : "negative"; setPriorities((current) => toggleValue(current, value) as PriorityClass[]); }} /><FilterGroup label="Type" options={typeOptions} selected={types} onToggle={(value) => setTypes((current) => toggleValue(current, value))} /><FilterGroup label="Category" options={["Physical", "Special", "Status"]} selected={categories} onToggle={(value) => setCategories((current) => toggleValue(current, value))} /><FilterGroup label="Target" options={targetOptions} selected={targets} onToggle={(value) => setTargets((current) => toggleValue(current, value))} /><FilterGroup label="Properties" options={propertyOptions} selected={properties} onToggle={(value) => setProperties((current) => toggleValue(current, value))} /></div><div className="table-scroll"><table><thead><tr>{([ ["Move", "name"], ["Type", "type"], ["Class", "category"], ["Power", "power"], ["Acc.", "accuracy"], ["PP", "pp"], ["Priority", "priority"], ["Target", "target"], ["Properties", "flags"], [userLabel, "users"] ] as Array<[string, MoveSortKey]>).map(([label, key]) => <SortHeader key={key} label={label} column={key} sort={sort} onChange={setSort} />)}</tr></thead><tbody>{rows.map((move) => { const userCount = pokemonByMoveId.get(move.id)?.length ?? 0; return <tr key={move.id}><td><MoveTooltip move={move} locale={locale} onActivate={() => openUsers(move)} /></td><td><TypeBadge type={move.type} /></td><td>{move.category}</td><td>{move.power ?? "—"}</td><td>{move.accuracy ?? "—"}</td><td>{move.pp}</td><td><span className={`priority-value priority-${move.priority > 0 ? "positive" : move.priority < 0 ? "negative" : "zero"}`}>{formatPriority(move.priority)}</span></td><td>{move.target}</td><td>{move.flags.join(" · ") || "—"}</td><td><button className="reverse-count" onClick={() => openUsers(move)} aria-label={`View ${userCount} Pokémon that can use ${move.name}`}>{userCount}</button></td></tr>; })}</tbody></table></div></section>{selected && <PokemonUsersDialog key={`${selected.kind}-${selected.id}`} selection={selected} locale={locale} onClose={() => setSelected(null)} />}</>;
+  const pageCopy = locale === "zh-Hant" ? { showing: "顯示", of: "共", page: "第", pageSuffix: "頁", previous: "上一頁", next: "下一頁" } : { showing: "showing", of: "of", page: "Page", pageSuffix: "", previous: "Previous", next: "Next" };
+  const resetPage = () => setPage(1);
+  return <>
+    <section className="panel">
+      <div className="panel-head moves-head">
+        <div><p className="eyebrow">MOVE INTELLIGENCE</p><h1>{locale === "zh-Hant" ? "招式資料庫" : "Move DB"}</h1><p>{allMatches.length} / {moves.length} moves · {pageCopy.showing} {rangeStart}–{rangeEnd} {pageCopy.of} {sorted.length}</p></div>
+        <input aria-label="Search moves" className="move-search" value={query} onChange={(event) => { setQuery(event.target.value); resetPage(); }} placeholder={locale === "zh-Hant" ? "搜尋招式…" : "Search moves…"} />
+      </div>
+      <div className="advanced-filters">
+        <FilterGroup label="Priority" options={["+ Positive", "0 Neutral", "− Negative"]} selected={priorities.map((entry) => entry === "positive" ? "+ Positive" : entry === "zero" ? "0 Neutral" : "− Negative")} onToggle={(label) => { const entry = label.startsWith("+") ? "positive" : label.startsWith("0") ? "zero" : "negative"; setPriorities((current) => toggleValue(current, entry) as PriorityClass[]); resetPage(); }} />
+        <FilterGroup label="Type" options={typeOptions} selected={types} onToggle={(entry) => { setTypes((current) => toggleValue(current, entry)); resetPage(); }} />
+        <FilterGroup label="Category" options={["Physical", "Special", "Status"]} selected={categories} onToggle={(entry) => { setCategories((current) => toggleValue(current, entry)); resetPage(); }} />
+        <FilterGroup label="Target" options={targetOptions} selected={targets} onToggle={(entry) => { setTargets((current) => toggleValue(current, entry)); resetPage(); }} />
+        <FilterGroup label="Properties" options={propertyOptions} selected={properties} onToggle={(entry) => { setProperties((current) => toggleValue(current, entry)); resetPage(); }} />
+      </div>
+      <div className="table-scroll"><table><thead><tr>{([ ["Move", "name"], ["Type", "type"], ["Class", "category"], ["Power", "power"], ["Acc.", "accuracy"], ["PP", "pp"], ["Priority", "priority"], ["Target", "target"], ["Properties", "flags"], [userLabel, "users"] ] as Array<[string, MoveSortKey]>).map(([label, key]) => <SortHeader key={key} label={label} column={key} sort={sort} onChange={changeSort} />)}</tr></thead><tbody>{rows.map((move) => { const userCount = pokemonByMoveId.get(move.id)?.length ?? 0; return <tr key={move.id}><td><MoveTooltip move={move} locale={locale} onActivate={() => openUsers(move)} /></td><td><TypeBadge type={move.type} /></td><td>{move.category}</td><td>{move.power ?? "—"}</td><td>{move.accuracy ?? "—"}</td><td>{move.pp}</td><td><span className={`priority-value priority-${move.priority > 0 ? "positive" : move.priority < 0 ? "negative" : "zero"}`}>{formatPriority(move.priority)}</span></td><td>{move.target}</td><td>{move.flags.join(" · ") || "—"}</td><td><button className="reverse-count" onClick={() => openUsers(move)} aria-label={`View ${userCount} Pokémon that can use ${move.name}`}>{userCount}</button></td></tr>; })}</tbody></table></div>
+      <nav className="pagination" aria-label="Move pages"><button disabled={safePage === 1} onClick={() => setPage((current) => Math.max(1, current - 1))} aria-label="Previous move page">‹ {pageCopy.previous}</button><span>{pageCopy.page} <b>{safePage}</b> / {pageCount} {pageCopy.pageSuffix}</span><button disabled={safePage === pageCount} onClick={() => setPage((current) => Math.min(pageCount, current + 1))} aria-label="Next move page">{pageCopy.next} ›</button></nav>
+    </section>
+    {selected && <PokemonUsersDialog key={`${selected.kind}-${selected.id}`} selection={selected} locale={locale} onClose={() => setSelected(null)} />}
+  </>;
 }
 
 type AbilitySortKey = "name" | "category" | "users";

@@ -2,7 +2,7 @@ export type StatName = "hp" | "attack" | "defense" | "specialAttack" | "specialD
 export type NonHpStat = Exclude<StatName, "hp">;
 export type Stats = Record<StatName, number>;
 
-export type Nature = { name: string; up: NonHpStat | null; down: NonHpStat | null };
+export type Nature = { name: string; nameZh?: string; up: NonHpStat | null; down: NonHpStat | null };
 
 export type PokemonType = "Normal" | "Fire" | "Water" | "Electric" | "Grass" | "Ice" | "Fighting" | "Poison" | "Ground" | "Flying" | "Psychic" | "Bug" | "Rock" | "Ghost" | "Dragon" | "Dark" | "Steel" | "Fairy";
 

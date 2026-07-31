@@ -61,6 +61,16 @@ describe("Move Database", () => {
     expect(within(dialog).getByText("Garchomp")).toBeInTheDocument();
     expect(within(dialog).getByText("Mega Charizard X")).toBeInTheDocument();
   });
+
+  it("paginates all moves instead of hiding entries after 100", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<MoveDatabaseV2 locale="en" />);
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(100);
+    expect(screen.getByText("Page", { exact: false })).toHaveTextContent("1 / 6");
+    for (let page = 1; page < 6; page += 1) await user.click(screen.getByRole("button", { name: "Next move page" }));
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(27);
+    expect(screen.getByText("Page", { exact: false })).toHaveTextContent("6 / 6");
+  });
 });
 
 describe("reference filters", () => {
@@ -133,8 +143,28 @@ describe("ChampionsApp", () => {
     expect(within(dialog).getByText("Learnable moves")).toBeInTheDocument();
     expect(within(dialog).getByText("Available abilities")).toBeInTheDocument();
     expect(await within(dialog).findByText("Absolite")).toBeInTheDocument();
+    const matchups = within(dialog).getByRole("heading", { name: "Defensive type matchups" }).closest("section")!;
+    expect(within(matchups).getByText("Weak")).toBeInTheDocument();
+    expect(within(matchups).getByText("Psychic")).toBeInTheDocument();
+    expect(within(matchups).getByText("0×")).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "Singles" }));
     expect(within(dialog).getAllByText("Sucker Punch").length).toBeGreaterThan(1);
+  });
+
+  it("shows all 21 natures with stat effects and keeps matchups on the team card", async () => {
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon or type…"), "Absol");
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    const nature = screen.getByRole("combobox", { name: "Nature" });
+    expect(within(nature).getAllByRole("option")).toHaveLength(21);
+    expect(within(nature).getByRole("option", { name: "Adamant (Atk ↑ / SpA ↓)" })).toBeInTheDocument();
+    await user.selectOptions(nature, "Adamant");
+    await user.click(screen.getByRole("button", { name: "Build & add" }));
+    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    expect(within(tray).getByText("Weak")).toBeInTheDocument();
+    expect(within(tray).getByText("Immune")).toBeInTheDocument();
+    expect(within(tray).getByText("Adamant")).toHaveAttribute("title", "Adamant (Atk ↑ / SpA ↓)");
   });
 
   it("preselects and locks the dedicated stone for a Mega build", async () => {

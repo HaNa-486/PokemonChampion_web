@@ -1,9 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { abilities, items, megaStoneIdByPokemonId, moves, pokemon, pokemonByAbilityId, pokemonById, pokemonByMoveId } from "../lib/catalog";
-import { calculateFinalStats, formatPriority, modifiedSpeed, priorityMatches, validateAp, validateTeam, ZERO_STATS } from "../lib/domain";
+import { calculateFinalStats, formatPriority, modifiedSpeed, NATURES, priorityMatches, validateAp, validateTeam, ZERO_STATS } from "../lib/domain";
 import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
 import { abilityCategories, itemEffectCategories } from "../lib/filtering";
+import { defensiveMatchups, formatMultiplier } from "../lib/type-chart";
 
 describe("champions-v1 stat formula golden fixtures", () => {
   it("matches the Mega Charizard X Adamant reference build", () => {
@@ -22,6 +23,31 @@ describe("AP validation", () => {
     expect(validateAp({ hp: 2, attack: 32, defense: 0, specialAttack: 0, specialDefense: 0, speed: 32 })).toEqual([]);
     expect(validateAp({ hp: 3, attack: 32, defense: 0, specialAttack: 0, specialDefense: 0, speed: 32 }).map((x) => x.code)).toContain("AP_TOTAL_EXCEEDED");
     expect(validateAp({ ...ZERO_STATS, speed: 33 }).map((x) => x.code)).toContain("AP_OUT_OF_RANGE");
+  });
+});
+
+describe("Champions natures", () => {
+  it("exposes the 21 supported natures with every modifying stat pair", () => {
+    expect(NATURES).toHaveLength(21);
+    expect(NATURES.filter((nature) => nature.up === null && nature.down === null).map((nature) => nature.name)).toEqual(["Serious"]);
+    const modifying = NATURES.filter((nature) => nature.up && nature.down);
+    expect(modifying).toHaveLength(20);
+    expect(new Set(modifying.map((nature) => `${nature.up}:${nature.down}`)).size).toBe(20);
+    expect(NATURES.find((nature) => nature.name === "Adamant")).toMatchObject({ nameZh: "固執", up: "attack", down: "specialAttack" });
+  });
+});
+
+describe("defensive type matchups", () => {
+  it("combines both defensive types, including 4x, quarter resistance, and immunity", () => {
+    const aggron = defensiveMatchups(["Steel", "Rock"]);
+    expect(aggron.weak).toEqual(expect.arrayContaining([{ type: "Fighting", multiplier: 4 }, { type: "Ground", multiplier: 4 }, { type: "Water", multiplier: 2 }]));
+    expect(aggron.immune).toContainEqual({ type: "Poison", multiplier: 0 });
+    expect(aggron.resistant).toContainEqual({ type: "Normal", multiplier: .25 });
+    expect(formatMultiplier(.25)).toBe("¼×");
+
+    const aerodactyl = defensiveMatchups(["Rock", "Flying"]);
+    expect(aerodactyl.immune).toContainEqual({ type: "Ground", multiplier: 0 });
+    expect(aerodactyl.weak).toContainEqual({ type: "Electric", multiplier: 2 });
   });
 });
 
