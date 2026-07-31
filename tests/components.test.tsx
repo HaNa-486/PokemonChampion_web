@@ -3,7 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChampionsApp } from "../components/ChampionsApp";
 import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
+import { ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
+import type { TeamMember } from "../lib/types";
 
 beforeEach(() => useTeamStore.setState({ members: [], hydrated: true }));
 afterEach(() => vi.unstubAllGlobals());
@@ -117,6 +119,17 @@ describe("Speed Compare", () => {
 });
 
 describe("ChampionsApp", () => {
+  it("renders every member in a full six-Pokémon scrollable team list", () => {
+    const pokemonIds = ["abomasnow", "aerodactyl", "alakazam", "arbok", "arcanine", "garchomp"];
+    const members: TeamMember[] = pokemonIds.map((pokemonId, index) => ({ id: `member-${index}`, pokemonId, abilityId: null, itemId: null, moveIds: [], ap: { ...ZERO_STATS }, nature: { name: "Serious", nameZh: "認真", up: null, down: null } }));
+    useTeamStore.setState({ members, hydrated: true });
+    const { container } = render(<ChampionsApp />);
+    const list = container.querySelector(".team-list")!;
+    expect(list).toBeInTheDocument();
+    expect(list.querySelectorAll(":scope > .team-card")).toHaveLength(6);
+    expect(within(list).getByText("Garchomp")).toBeInTheDocument();
+  });
+
   it("paginates all legal Pokémon forms instead of hiding rows after 100", async () => {
     const user = userEvent.setup();
     const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
