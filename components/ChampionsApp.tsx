@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { abilities, abilityById, itemById, items, megaPokemonByStoneId, megaStoneIdByPokemonId, moveById, moves, pokemon, pokemonById } from "../lib/catalog";
-import { recommendedAbilityId, recommendedItemId, recommendedMoveIds } from "../lib/battle-recommendations";
+import { recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
 import { apTotal, calculateFinalStats, formatPriority, modifiedSpeed, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
 import type { BattleFormat, BattleUsage, Move, Nature, Pokemon, Stats, TeamMember } from "../lib/types";
@@ -107,6 +107,10 @@ function BuildEditorContent({ selected, locale, format, onFormatChange: setAppFo
     rawSetItemId(nextItem);
     setMoveIds((suggestedMoves.length ? suggestedMoves : target.moveIds).slice(0, 4));
     setAbilityId(recommendedAbilityId(nextUsage, target) ?? target.abilityIds[0] ?? null);
+    if (chosenItem === undefined) {
+      setNature(recommendedNature(nextUsage) ?? NEUTRAL_NATURE);
+      setAp(recommendedAp(nextUsage) ?? { ...ZERO_STATS });
+    }
   };
   const changeFormat = (nextFormat: BattleFormat) => {
     setAppFormat(nextFormat);

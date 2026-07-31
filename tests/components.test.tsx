@@ -148,12 +148,25 @@ describe("ChampionsApp", () => {
     const filters = container.querySelector(".pokemon-advanced-filters")!;
     await user.click(within(filters).getByRole("button", { name: "Water" }));
     await user.click(within(filters).getByRole("button", { name: "Mega" }));
-    await user.selectOptions(within(filters).getByRole("combobox", { name: "Filter by ability" }), "mega-launcher");
-    await user.selectOptions(within(filters).getByRole("combobox", { name: "Add known move filter" }), "aura-sphere");
+    await user.type(within(filters).getByRole("combobox", { name: "Search ability filter" }), "Mega Launcher");
+    await user.type(within(filters).getByRole("combobox", { name: "Search known move filter" }), "Aura Sphere");
     await user.clear(within(filters).getByRole("spinbutton", { name: "Minimum SpA" }));
     await user.type(within(filters).getByRole("spinbutton", { name: "Minimum SpA" }), "130");
     expect(screen.getByRole("button", { name: /^Mega Blastoise/ })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Blastoise", exact: true })).not.toBeInTheDocument();
+  });
+
+  it("lets users choose OR or AND behavior for multiple type filters", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
+    const filters = container.querySelector(".pokemon-advanced-filters")!;
+    await user.click(within(filters).getByRole("button", { name: "Ground" }));
+    await user.click(within(filters).getByRole("button", { name: "Steel" }));
+    expect(screen.getByRole("button", { name: "Garchomp" })).toBeInTheDocument();
+    const logic = within(filters).getByRole("group", { name: "Type filter logic" });
+    await user.click(within(logic).getByRole("button", { name: "AND" }));
+    expect(screen.queryByRole("button", { name: "Garchomp" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Excadrill" })).toBeInTheDocument();
   });
 
   it("opens complete Pokémon details and switches current battle formats", async () => {
@@ -211,6 +224,8 @@ describe("ChampionsApp", () => {
       doubles: { pokemon: "Blastoise", format: "Doubles", season: "Current", date: null, source: "test", rows: [
         { category: "held_item", rank: 1, name: "Blastoisinite", percentage: "80%", percentageValue: 80, statUp: "", statDown: "", ap: null },
         { category: "ability", rank: 1, name: "Mega Launcher", percentage: "100%", percentageValue: 100, statUp: "", statDown: "", ap: null },
+        { category: "stat_alignment", rank: 1, name: "Modest", percentage: "75%", percentageValue: 75, statUp: "Sp. Atk", statDown: "Attack", ap: null },
+        { category: "stat_points", rank: 1, name: "", percentage: "60%", percentageValue: 60, statUp: "", statDown: "", ap: { hp: 2, attack: 0, defense: 0, specialAttack: 32, specialDefense: 0, speed: 32 } },
         ...["Aura Sphere", "Dark Pulse", "Dragon Pulse", "Water Pulse"].map((name, index) => ({ category: "move", rank: index + 1, name, percentage: `${90 - index}%`, percentageValue: 90 - index, statUp: "", statDown: "", ap: null })),
       ] },
     } })));
@@ -221,6 +236,10 @@ describe("ChampionsApp", () => {
     expect(await screen.findByRole("heading", { name: "Mega Blastoise" })).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("blastoisinite");
     await waitFor(() => expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("mega-launcher"));
+    expect(screen.getByRole("combobox", { name: "Nature" })).toHaveValue("Modest");
+    expect(screen.getByRole("slider", { name: /SpA/ })).toHaveValue("32");
+    expect(screen.getByRole("slider", { name: /Spe/ })).toHaveValue("32");
+    expect(screen.getByText("0 / 66 remaining")).toBeInTheDocument();
     expect(screen.getByText(/transforms this build into Mega Blastoise/)).toBeInTheDocument();
     const moveValues = screen.getAllByRole("combobox", { name: /Move [1-4]/ }).map((entry) => (entry as HTMLSelectElement).value);
     expect(moveValues).toEqual(["aura-sphere", "dark-pulse", "dragon-pulse", "water-pulse"]);

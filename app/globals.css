@@ -97,7 +97,10 @@ tbody tr:hover { background: #f2fbf7; }
 .filter-group > b { padding-top: 8px; color: var(--ink); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
 .filter-group > div { display: flex; flex-wrap: wrap; gap: 7px; }
 .pokemon-advanced-filters { background: #fbfdfc; }
-.filter-select-row select { width: min(360px, 100%); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; color: var(--ink); background: white; }
+.filter-select-row select, .filter-select-row input { width: min(360px, 100%); border: 1px solid var(--line); border-radius: 10px; padding: 9px 11px; color: var(--ink); background: white; }
+.filter-select-row input:focus { border-color: #78cdb4; outline: 3px solid rgba(31,181,140,.16); }
+.filter-logic-row .segmented { align-items: center; width: fit-content; }
+.filter-logic-row .segmented span { margin-left: 8px; color: var(--muted); font-size: .72rem; }
 .selected-filter { border: 1px solid #a9dccc; border-radius: 999px; padding: 7px 10px; color: var(--mint-dark); background: #eaf8f3; font-weight: 800; }
 .stat-minimum-filter label { display: grid; gap: 3px; color: var(--muted); font-size: .66rem; font-weight: 800; }
 .stat-minimum-filter input { width: 76px; border: 1px solid var(--line); border-radius: 8px; padding: 7px 8px; color: var(--ink); background: white; }

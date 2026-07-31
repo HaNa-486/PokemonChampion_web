@@ -5,7 +5,7 @@ import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
 import { abilityCategories, itemEffectCategories } from "../lib/filtering";
 import { defensiveMatchups, formatMultiplier } from "../lib/type-chart";
-import { recommendedAbilityId, recommendedItemId, recommendedMoveIds } from "../lib/battle-recommendations";
+import { recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
 import { migrateSavedTeams } from "../lib/team-store";
 import type { BattleUsage } from "../lib/types";
 
@@ -19,10 +19,19 @@ describe("battle-data build recommendations", () => {
       usageRow("move", 3, "Aqua Tail"), usageRow("move", 1, "Aqua Jet"), usageRow("move", 5, "Not A Real Move"),
       usageRow("move", 2, "Aura Sphere"), usageRow("move", 4, "Body Press"), usageRow("held_item", 1, "Blastoisinite"),
       usageRow("ability", 1, "Torrent"),
+      { ...usageRow("stat_alignment", 1, "Modest"), statUp: "Sp. Atk", statDown: "Attack" },
+      { ...usageRow("stat_points", 1, ""), ap: { hp: 2, attack: 0, defense: 0, specialAttack: 32, specialDefense: 0, speed: 32 } },
     ]);
     expect(recommendedItemId(usage)).toBe("blastoisinite");
     expect(recommendedMoveIds(usage, selected)).toEqual(["aqua-jet", "aura-sphere", "aqua-tail", "body-press"]);
     expect(recommendedAbilityId(usage, selected)).toBe("torrent");
+    expect(recommendedNature(usage)).toMatchObject({ name: "Modest", up: "specialAttack", down: "attack" });
+    expect(recommendedAp(usage)).toEqual({ hp: 2, attack: 0, defense: 0, specialAttack: 32, specialDefense: 0, speed: 32 });
+  });
+
+  it("rejects invalid upstream AP spreads", () => {
+    const usage = usageFixture([{ ...usageRow("stat_points", 1, ""), ap: { hp: 3, attack: 32, defense: 0, specialAttack: 0, specialDefense: 0, speed: 32 } }]);
+    expect(recommendedAp(usage)).toBeNull();
   });
 });
 
