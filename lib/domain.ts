@@ -41,7 +41,7 @@ export const apTotal = (ap: Stats) => Object.values(ap).reduce((sum, value) => s
 export const priorityMatches = (move: Move, classes: Array<"positive" | "zero" | "negative">) => classes.length === 0 || classes.some((value) => value === "positive" ? move.priority > 0 : value === "negative" ? move.priority < 0 : move.priority === 0);
 export const formatPriority = (priority: number) => priority > 0 ? `+${priority}` : String(priority);
 
-export function validateTeam(members: TeamMember[], pokemonById: Map<string, Pokemon>, legalItemIds: Set<string>): ValidationIssue[] {
+export function validateTeam(members: TeamMember[], pokemonById: Map<string, Pokemon>, legalItemIds: Set<string>, megaStoneIdByPokemonId: Map<string, string>): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   if (members.length > 6) issues.push({ code: "TEAM_FULL", message: "A team can contain at most six Pokémon." });
   const pokemonIds = new Set<string>();
@@ -51,6 +51,11 @@ export function validateTeam(members: TeamMember[], pokemonById: Map<string, Pok
     if (!pokemon) { issues.push({ code: "POKEMON_UNAVAILABLE", message: "This Pokémon is unavailable.", memberId: member.id }); continue; }
     if (pokemonIds.has(pokemon.id)) issues.push({ code: "DUPLICATE_POKEMON", message: `${pokemon.name} is already on the team.`, memberId: member.id });
     pokemonIds.add(pokemon.id);
+    if (pokemon.isMega) {
+      const requiredStone = megaStoneIdByPokemonId.get(pokemon.id);
+      if (!requiredStone) issues.push({ code: "MEGA_STONE_CONFIGURATION_MISSING", message: `${pokemon.name} does not have a configured Mega Stone.`, memberId: member.id });
+      else if (member.itemId !== requiredStone) issues.push({ code: "MEGA_STONE_REQUIRED", message: `${pokemon.name} must hold its required Mega Stone.`, memberId: member.id });
+    }
     if (member.itemId) {
       if (!legalItemIds.has(member.itemId)) issues.push({ code: "ITEM_UNAVAILABLE", message: "Selected item is unavailable.", memberId: member.id });
       if (items.has(member.itemId)) issues.push({ code: "DUPLICATE_ITEM", message: "Held items cannot be duplicated.", memberId: member.id });

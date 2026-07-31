@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { abilities, items, moves, pokemon, pokemonByAbilityId, pokemonById, pokemonByMoveId } from "../lib/catalog";
+import { abilities, items, megaStoneIdByPokemonId, moves, pokemon, pokemonByAbilityId, pokemonById, pokemonByMoveId } from "../lib/catalog";
 import { calculateFinalStats, formatPriority, modifiedSpeed, priorityMatches, validateAp, validateTeam, ZERO_STATS } from "../lib/domain";
 import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
@@ -40,10 +40,20 @@ describe("priority", () => {
 describe("team legality", () => {
   const member = (id: string, pokemonId: string, itemId: string | null): TeamMember => ({ id, pokemonId, itemId, abilityId: null, moveIds: [], ap: { ...ZERO_STATS }, nature: { name: "Serious", up: null, down: null } });
   it("rejects duplicate species and items but permits distinct Mega species", () => {
-    const issues = validateTeam([member("a", "charizard", "life-orb"), member("b", "charizard", "life-orb")], pokemonById, new Set(items.map((item) => item.id)));
+    const issues = validateTeam([member("a", "charizard", "life-orb"), member("b", "charizard", "life-orb")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
     expect(issues.map((issue) => issue.code)).toEqual(expect.arrayContaining(["DUPLICATE_POKEMON", "DUPLICATE_ITEM"]));
-    const legal = validateTeam([member("a", "mega-charizard-x", "life-orb"), member("b", "mega-charizard-y", "charizardite-x")], pokemonById, new Set(items.map((item) => item.id)));
+    const legal = validateTeam([member("a", "mega-charizard-x", "charizardite-x"), member("b", "mega-charizard-y", "charizardite-y")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
     expect(legal).toEqual([]);
+  });
+
+  it("forces every Mega form to hold its dedicated stone", () => {
+    const missing = validateTeam([member("a", "mega-absol", null)], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
+    const wrong = validateTeam([member("b", "mega-absol", "life-orb")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
+    const legal = validateTeam([member("c", "mega-absol", "absolite")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
+    expect(missing.map((issue) => issue.code)).toContain("MEGA_STONE_REQUIRED");
+    expect(wrong.map((issue) => issue.code)).toContain("MEGA_STONE_REQUIRED");
+    expect(legal).toEqual([]);
+    expect(pokemon.filter((entry) => entry.isMega).every((entry) => megaStoneIdByPokemonId.has(entry.id))).toBe(true);
   });
 });
 

@@ -62,3 +62,13 @@ test("rejects duplicate species and held items through the built API", async () 
   assert.equal(body.data.legal, false);
   assert.deepEqual(new Set(body.data.issues.map((issue) => issue.code)), new Set(["DUPLICATE_POKEMON", "DUPLICATE_ITEM"]));
 });
+
+test("enforces the dedicated Mega Stone through the built API", async () => {
+  const shared = { moveIds: [], abilityId: null, ap: { hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0 }, nature: { name: "Serious", up: null, down: null } };
+  const wrong = await render("/api/v1/team/validate", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ members: [{ ...shared, id: "mega", pokemonId: "mega-absol", itemId: "life-orb" }] }) });
+  const wrongBody = await wrong.json();
+  assert.equal(wrongBody.data.legal, false);
+  assert.ok(wrongBody.data.issues.some((issue) => issue.code === "MEGA_STONE_REQUIRED"));
+  const legal = await render("/api/v1/team/validate", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ members: [{ ...shared, id: "mega", pokemonId: "mega-absol", itemId: "absolite" }] }) });
+  assert.equal((await legal.json()).data.legal, true);
+});

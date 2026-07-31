@@ -58,6 +58,8 @@ tbody tr:hover { background: #f2fbf7; }
 .pokemon-name img, .team-card-title img, .speed-row img, .builder-identity img { object-fit: contain; image-rendering: auto; }
 .pokemon-name strong { display: block; font-size: 1rem; }
 .pokemon-name small { display: block; color: var(--coral); margin-top: 3px; font-weight: 800; }
+.pokemon-detail-trigger { border: 0; padding: 0; color: inherit; background: transparent; text-align: left; }
+.pokemon-detail-trigger:hover strong { color: var(--mint-dark); text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 4px; }
 .stat-cell, .stat-accent { font-variant-numeric: tabular-nums; font-weight: 750; }
 .stat-accent { color: var(--mint-dark); }
 .ability-list { display: flex; flex-wrap: wrap; gap: 4px 10px; min-width: 180px; }
@@ -127,6 +129,39 @@ tbody tr:hover { background: #f2fbf7; }
 .move-slots { grid-template-columns: repeat(4, 1fr); margin-top: 12px; }
 .build-editor label { display: grid; gap: 6px; color: var(--muted); font-size: .76rem; font-weight: 800; }
 .build-editor select, .speed-controls select { width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px; color: var(--ink); background: white; }
+.build-editor select:disabled { color: var(--mint-dark); border-color: #8dd8c2; background: #edf9f5; opacity: 1; font-weight: 850; }
+.field-note { color: var(--mint-dark); font-size: .68rem; line-height: 1.35; }
+
+.detail-backdrop { position: fixed; inset: 0; z-index: 75; display: grid; place-items: center; padding: 20px; background: rgba(9,26,31,.68); backdrop-filter: blur(8px); }
+.pokemon-detail { position: relative; width: min(1120px,100%); max-height: calc(100vh - 34px); overflow-y: auto; padding: 28px; border-radius: 25px; background: #fff; box-shadow: var(--shadow); }
+.detail-identity { display: grid; grid-template-columns: 112px minmax(0,1fr) auto; align-items: center; gap: 20px; padding-right: 44px; }
+.detail-identity img { object-fit: contain; }
+.detail-identity h2 { margin: 3px 0 10px; font-size: clamp(2rem,4vw,3.2rem); letter-spacing: -.045em; }
+.detail-build { width: auto; min-width: 140px; margin: 0; }
+.detail-stats { display: grid; grid-template-columns: repeat(6,1fr); gap: 8px; margin: 20px 0; padding: 15px; border-radius: 15px; background: #f1f7f4; }
+.detail-stats span { display: grid; justify-items: center; gap: 3px; }
+.detail-stats small { color: var(--muted); font-size: .67rem; font-weight: 800; }
+.detail-stats b { color: var(--mint-dark); font-size: 1.15rem; }
+.detail-section { padding: 20px 0; border-top: 1px solid var(--line); }
+.detail-section h3 { margin: 0; }
+.detail-section h3 span { color: var(--mint-dark); }
+.detail-section-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.detail-section-head input { width: min(320px,100%); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.detail-abilities { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 13px; }
+.learnable-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 8px; max-height: 330px; overflow-y: auto; padding: 2px; }
+.learnable-grid article { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; gap: 6px 9px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: #fbfdfc; }
+.learnable-grid article small { grid-column: 2; color: var(--muted); font-size: .68rem; }
+.battle-source, .data-scope-note { color: var(--muted); font-size: .76rem; line-height: 1.45; }
+.data-scope-note { margin: -5px 0 14px; padding: 9px 12px; border-left: 3px solid var(--sun); background: #fff9e8; }
+.battle-usage { display: grid; gap: 20px; }
+.battle-usage section h3 { margin-bottom: 8px; font-size: 1rem; }
+.usage-table { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.usage-head, .usage-row { display: grid; grid-template-columns: 50px minmax(0,1fr) 90px; align-items: center; gap: 10px; padding: 9px 12px; }
+.usage-head { color: var(--muted); background: #f1f5f3; font-size: .68rem; font-weight: 900; text-transform: uppercase; }
+.usage-row + .usage-row { border-top: 1px solid var(--line); }
+.usage-row b { color: var(--mint-dark); }
+.usage-row strong { text-align: right; font-variant-numeric: tabular-nums; }
+.detail-empty { padding: 35px 12px; color: var(--muted); text-align: center; }
 .ap-head { display: flex; align-items: center; justify-content: space-between; margin: 24px 0 9px; }
 .ap-head h3 { margin: 0; }
 .remaining { border-radius: 999px; padding: 6px 10px; color: var(--mint-dark); background: #e7f8f2; font-size: .74rem; font-weight: 850; }
@@ -237,9 +272,9 @@ footer a { color: var(--mint-dark); }
   .catalog-panel table, .catalog-panel tbody { display: block; width: 100%; }
   .catalog-panel thead { display: none; }
   .catalog-panel tbody { display: grid; gap: 9px; padding: 12px; }
-  .catalog-panel tbody tr { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto 38px; align-items: center; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 5px 18px rgba(18,48,54,.05); }
+  .catalog-panel tbody tr { display: grid; grid-template-columns: minmax(0, 1fr) auto 38px; align-items: center; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 5px 18px rgba(18,48,54,.05); }
   .catalog-panel td { border: 0; padding: 8px 6px; }
-  .catalog-panel table td:nth-child(n+4):nth-child(-n+10) { display: none; }
+  .catalog-panel table td:nth-child(n+3):nth-child(-n+9) { display: none; }
   .catalog-panel .pokemon-name { min-width: 0; }
   .catalog-panel .pokemon-name img { width: 46px; height: 46px; }
   .catalog-panel .pokemon-name strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -263,6 +298,14 @@ footer a { color: var(--mint-dark); }
   .team-tray, .team-tray.collapsed { left: 10px; right: 10px; bottom: 9px; width: auto; max-height: 70vh; border-radius: 17px; }
   .team-list { max-height: calc(70vh - 55px); }
   .build-editor { padding: 20px 16px; }
+  .pokemon-detail { max-height: calc(100vh - 20px); padding: 20px 15px; border-radius: 17px; }
+  .detail-backdrop { padding: 10px; }
+  .detail-identity { grid-template-columns: 76px 1fr; gap: 12px; padding-right: 35px; }
+  .detail-identity img { width: 76px; height: 76px; }
+  .detail-build { grid-column: 1 / -1; width: 100%; }
+  .detail-stats { grid-template-columns: repeat(3,1fr); }
+  .detail-section-head { align-items: stretch; flex-direction: column; }
+  .learnable-grid { grid-template-columns: 1fr; }
   .builder-grid, .move-slots, .stat-editor { grid-template-columns: 1fr; }
   .stat-editor label { grid-template-columns: 75px 1fr 28px; }
   .speed-row { grid-template-columns: 34px 56px 1fr auto; padding: 10px 0; }

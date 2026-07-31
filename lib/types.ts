@@ -22,6 +22,17 @@ export type Pokemon = {
   usageSingles: number; usageDoubles: number; isMega?: boolean;
 };
 
+export type BattleUsageRow = {
+  category: string; rank: number; name: string; percentage: string;
+  percentageValue: number | null; statUp: string; statDown: string;
+  ap: Stats | null;
+};
+
+export type BattleUsage = {
+  pokemon: string; format: "Singles" | "Doubles"; season: string;
+  date: string | null; source: string; rows: BattleUsageRow[];
+};
+
 export type TeamMember = {
   id: string; pokemonId: string; moveIds: string[]; abilityId: string | null;
   itemId: string | null; ap: Stats; nature: Nature;
