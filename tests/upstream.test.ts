@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { normalizeChampionsPokemon, parseCsv } from "../scripts/sync-upstream.mjs";
+import { matchChampionsSourceForForm, normalizeChampionsPokemon, parseCsv } from "../scripts/sync-upstream.mjs";
 
 describe("upstream adapters", () => {
   it("parses quoted CSV fields and escaped quotes", () => {
@@ -16,5 +16,24 @@ describe("upstream adapters", () => {
     });
     expect(result.baseStats).toEqual({ hp: 108, attack: 130, defense: 95, specialAttack: 80, specialDefense: 85, speed: 102 });
     expect(result.imageUrl).toBe("https://championsbattledata.com/pokemon_champions_assets/pokemon/Garchomp.png");
+    expect(result.battleDataKey).toBe("garchomp");
+  });
+
+  it("maps regional metadata rows to their own Showdown battle keys", () => {
+    const entries = [
+      { name: "Alolan Ninetales", slug: "alolan-ninetales", showdownId: "ninetalesalola" },
+      { name: "Ninetales", slug: "ninetales", showdownId: "ninetales" },
+    ];
+    expect(matchChampionsSourceForForm({ saved_name: "Alolan Ninetales", base_name: "Ninetales" }, entries)?.showdownId).toBe("ninetalesalola");
+    expect(matchChampionsSourceForForm({ saved_name: "Ninetales", base_name: "Ninetales" }, entries)?.showdownId).toBe("ninetales");
+  });
+
+  it("only lets an unindexed Mega form inherit its base form source", () => {
+    const entries = [
+      { name: "Alolan Raichu", slug: "alolan-raichu", showdownId: "raichualola" },
+      { name: "Raichu", slug: "raichu", showdownId: "raichu" },
+    ];
+    expect(matchChampionsSourceForForm({ saved_name: "Mega Raichu X", base_name: "Raichu" }, entries)?.showdownId).toBe("raichu");
+    expect(matchChampionsSourceForForm({ saved_name: "Unknown Form", base_name: "Raichu" }, entries)).toBeNull();
   });
 });

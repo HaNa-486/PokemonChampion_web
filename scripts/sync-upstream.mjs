@@ -44,6 +44,7 @@ export function normalizeChampionsPokemon(entry, origin = "https://championsbatt
   return {
     id: entry.showdownId ?? entry.slug,
     speciesKey: entry.slug ?? entry.showdownId,
+    battleDataKey: entry.showdownId ?? entry.slug,
     name: entry.name,
     savedName,
     types: Array.isArray(summary.types) ? summary.types : [],
@@ -51,6 +52,21 @@ export function normalizeChampionsPokemon(entry, origin = "https://championsbatt
     imageUrl: new URL(String(spritePath).replaceAll("\\", "/"), `${origin}/`).href,
     moveNames: Array.isArray(entry.learnableMoveNames) ? entry.learnableMoveNames : [],
   };
+}
+
+export function matchChampionsSourceForForm(form, entries) {
+  const savedName = String(form?.saved_name ?? "");
+  const savedSlug = slugify(savedName);
+  const direct = entries.find((entry) => String(entry.name ?? "").toLocaleLowerCase("en") === savedName.toLocaleLowerCase("en"))
+    ?? entries.find((entry) => entry.slug === savedSlug);
+  if (direct) return direct;
+
+  const baseSlug = slugify(String(form?.base_name ?? ""));
+  const base = entries.find((entry) => entry.slug === baseSlug)
+    ?? entries.find((entry) => slugify(String(entry.name ?? "")) === baseSlug);
+  if (base && /^mega\b/i.test(savedName)) return base;
+  if (entries.length === 1) return entries[0];
+  return null;
 }
 
 async function fetchText(url) {
@@ -129,15 +145,31 @@ export async function buildSnapshot() {
   const abilityProseZhHant = byLanguage(abilityProseRows, "ability_id", 4);
   const abilityIdByName = new Map(abilityRows.map((row) => [abilityNamesEn.get(row.id)?.name, row.identifier]).filter(([name]) => Boolean(name)));
   const pokemonMap = new Map();
-  for (const { entry, rows } of metadataGroups) {
-    const fallback = normalizeChampionsPokemon(entry);
-    const forms = rows.length ? rows : [{ saved_name: fallback.savedName, types: fallback.types.join("/"), abilities: "", hp: fallback.baseStats.hp + 75, atk: fallback.baseStats.attack + 20, def: fallback.baseStats.defense + 20, spa: fallback.baseStats.specialAttack + 20, spd: fallback.baseStats.specialDefense + 20, spe: fallback.baseStats.speed + 20 }];
+  const groupsByMetadataPath = new Map();
+  for (const group of metadataGroups) {
+    const metadataPath = String(group.entry.metadataCsv ?? "").replaceAll("\\", "/");
+    if (!metadataPath) {
+      groupsByMetadataPath.set(`__${group.entry.showdownId ?? group.entry.slug}`, { entries: [group.entry], rows: group.rows });
+      continue;
+    }
+    const existing = groupsByMetadataPath.get(metadataPath) ?? { entries: [], rows: group.rows };
+    existing.entries.push(group.entry);
+    groupsByMetadataPath.set(metadataPath, existing);
+  }
+  for (const { entries, rows } of groupsByMetadataPath.values()) {
+    const fallback = normalizeChampionsPokemon(entries[0]);
+    const forms = rows.length ? rows : [{ saved_name: fallback.savedName, base_name: entries[0].name, types: fallback.types.join("/"), abilities: "", hp: fallback.baseStats.hp + 75, atk: fallback.baseStats.attack + 20, def: fallback.baseStats.defense + 20, spa: fallback.baseStats.specialAttack + 20, spd: fallback.baseStats.specialDefense + 20, spe: fallback.baseStats.speed + 20 }];
     for (const form of forms) {
+      const entry = matchChampionsSourceForForm(form, entries);
+      if (!entry) throw new Error(`Could not map metadata form ${form.saved_name} to a unique Champions index entry.`);
       const name = form.saved_name || entry.name;
       const number = (value, offset) => Math.max(1, Number(value || 0) - offset);
       const id = slugify(name);
       pokemonMap.set(id, {
-        id, speciesKey: entry.slug ?? entry.showdownId, name, savedName: name,
+        id,
+        speciesKey: slugify(form.base_name || entry.name),
+        battleDataKey: entry.showdownId ?? entry.slug,
+        name, savedName: name,
         types: String(form.types || "").split("/").filter(Boolean),
         baseStats: { hp: number(form.hp, 75), attack: number(form.atk, 20), defense: number(form.def, 20), specialAttack: number(form.spa, 20), specialDefense: number(form.spd, 20), speed: number(form.spe, 20) },
         imageUrl: `https://championsbattledata.com/pokemon_champions_assets/pokemon/${encodeURIComponent(name)}.png`,

@@ -18,7 +18,7 @@ export type Ability = { id: string; name: string; nameZh: string; description: s
 export type HeldItem = { id: string; name: string; nameZh: string; category: string; description: string; descriptionZh: string };
 
 export type Pokemon = {
-  id: string; speciesKey: string; name: string; nameZh: string; types: PokemonType[];
+  id: string; speciesKey: string; battleDataKey?: string; name: string; nameZh: string; types: PokemonType[];
   baseStats: Stats; imageUrl: string; abilityIds: string[]; moveIds: string[];
   usageSingles: number; usageDoubles: number; isMega?: boolean;
 };

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-07-30T18:06:14.388Z",
+  "generatedAt": "2026-08-01T17:02:38.211Z",
   "sources": {
     "champions": {
       "url": "https://championsbattledata.com/api/index",
@@ -34,7 +34,7 @@
   },
   "counts": {
     "pokemon": 358,
-    "moves": 527,
+    "moves": 537,
     "abilities": 200,
     "items": 66
   },
@@ -42,6 +42,7 @@
     {
       "id": "abomasnow",
       "speciesKey": "abomasnow",
+      "battleDataKey": "abomasnow",
       "name": "Abomasnow",
       "savedName": "Abomasnow",
       "types": [
@@ -132,6 +133,7 @@
     {
       "id": "mega-abomasnow",
       "speciesKey": "abomasnow",
+      "battleDataKey": "abomasnow",
       "name": "Mega Abomasnow",
       "savedName": "Mega Abomasnow",
       "types": [
@@ -221,6 +223,7 @@
     {
       "id": "absol",
       "speciesKey": "absol",
+      "battleDataKey": "absol",
       "name": "Absol",
       "savedName": "Absol",
       "types": [
@@ -317,6 +320,7 @@
     {
       "id": "mega-absol",
       "speciesKey": "absol",
+      "battleDataKey": "absol",
       "name": "Mega Absol",
       "savedName": "Mega Absol",
       "types": [
@@ -410,7 +414,8 @@
     },
     {
       "id": "aegislash-shield-forme",
-      "speciesKey": "aegislash-shield-forme",
+      "speciesKey": "aegislash",
+      "battleDataKey": "aegislash",
       "name": "Aegislash Shield Forme",
       "savedName": "Aegislash Shield Forme",
       "types": [
@@ -479,7 +484,8 @@
     },
     {
       "id": "aegislash-blade-forme",
-      "speciesKey": "aegislash-shield-forme",
+      "speciesKey": "aegislash",
+      "battleDataKey": "aegislash",
       "name": "Aegislash Blade Forme",
       "savedName": "Aegislash Blade Forme",
       "types": [
@@ -549,6 +555,7 @@
     {
       "id": "aerodactyl",
       "speciesKey": "aerodactyl",
+      "battleDataKey": "aerodactyl",
       "name": "Aerodactyl",
       "savedName": "Aerodactyl",
       "types": [
@@ -633,6 +640,7 @@
     {
       "id": "mega-aerodactyl",
       "speciesKey": "aerodactyl",
+      "battleDataKey": "aerodactyl",
       "name": "Mega Aerodactyl",
       "savedName": "Mega Aerodactyl",
       "types": [
@@ -715,6 +723,7 @@
     {
       "id": "aggron",
       "speciesKey": "aggron",
+      "battleDataKey": "aggron",
       "name": "Aggron",
       "savedName": "Aggron",
       "types": [
@@ -824,6 +833,7 @@
     {
       "id": "mega-aggron",
       "speciesKey": "aggron",
+      "battleDataKey": "aggron",
       "name": "Mega Aggron",
       "savedName": "Mega Aggron",
       "types": [
@@ -930,6 +940,7 @@
     {
       "id": "alakazam",
       "speciesKey": "alakazam",
+      "battleDataKey": "alakazam",
       "name": "Alakazam",
       "savedName": "Alakazam",
       "types": [
@@ -1015,6 +1026,7 @@
     {
       "id": "mega-alakazam",
       "speciesKey": "alakazam",
+      "battleDataKey": "alakazam",
       "name": "Mega Alakazam",
       "savedName": "Mega Alakazam",
       "types": [
@@ -1098,6 +1110,7 @@
     {
       "id": "alcremie",
       "speciesKey": "alcremie",
+      "battleDataKey": "alcremie",
       "name": "Alcremie",
       "savedName": "Alcremie",
       "types": [
@@ -1171,6 +1184,7 @@
     {
       "id": "alcremie-caramel-swirl",
       "speciesKey": "alcremie",
+      "battleDataKey": "alcremie",
       "name": "Alcremie Caramel Swirl",
       "savedName": "Alcremie Caramel Swirl",
       "types": [
@@ -1244,6 +1258,7 @@
     {
       "id": "alcremie-lemon-cream",
       "speciesKey": "alcremie",
+      "battleDataKey": "alcremie",
       "name": "Alcremie Lemon Cream",
       "savedName": "Alcremie Lemon Cream",
       "types": [
@@ -1317,6 +1332,7 @@
     {
       "id": "alcremie-matcha-cream",
       "speciesKey": "alcremie",
+      "battleDataKey": "alcremie",
       "name": "Alcremie Matcha Cream",
       "savedName": "Alcremie Matcha Cream",
       "types": [
@@ -1390,6 +1406,7 @@
     {
       "id": "alcremie-mint-cream",
       "speciesKey": "alcremie",
+      "battleDataKey": "alcremie",
       "name": "Alcremie Mint Cream",
       "savedName": "Alcremie Mint Cream",
       "types": [
@@ -1463,6 +1480,7 @@
     {
       "id": "alcremie-rainbow-swirl",
       "speciesKey": "alcremie",
+      "battleDataKey": "alcremie",
       "name": "Alcremie Rainbow Swirl",
       "savedName": "Alcremie Rainbow Swirl",
       "types": [
@@ -1536,6 +1554,7 @@
     {
       "id": "alcremie-ruby-cream",
       "speciesKey": "alcremie",
+      "battleDataKey": "alcremie",
       "name": "Alcremie Ruby Cream",
       "savedName": "Alcremie Ruby Cream",
       "types": [
@@ -1609,6 +1628,7 @@
     {
       "id": "alcremie-ruby-swirl",
       "speciesKey": "alcremie",
+      "battleDataKey": "alcremie",
       "name": "Alcremie Ruby Swirl",
       "savedName": "Alcremie Ruby Swirl",
       "types": [
@@ -1682,6 +1702,7 @@
     {
       "id": "alcremie-salted-cream",
       "speciesKey": "alcremie",
+      "battleDataKey": "alcremie",
       "name": "Alcremie Salted Cream",
       "savedName": "Alcremie Salted Cream",
       "types": [
@@ -1755,6 +1776,7 @@
     {
       "id": "alolan-ninetales",
       "speciesKey": "ninetales",
+      "battleDataKey": "ninetalesalola",
       "name": "Alolan Ninetales",
       "savedName": "Alolan Ninetales",
       "types": [
@@ -1773,70 +1795,67 @@
       "moveNames": [
         "Agility",
         "Attract",
+        "Aurora Veil",
+        "Avalanche",
         "Baby-Doll Eyes",
         "Baton Pass",
+        "Blizzard",
         "Body Slam",
-        "Burning Jealousy",
         "Calm Mind",
         "Charm",
+        "Chilling Water",
         "Confuse Ray",
         "Dark Pulse",
+        "Dazzling Gleam",
         "Dig",
         "Disable",
         "Double-Edge",
+        "Draining Kiss",
         "Encore",
         "Endure",
-        "Energy Ball",
         "Extrasensory",
         "Facade",
         "Fake Tears",
-        "Fire Blast",
-        "Fire Spin",
         "Flail",
-        "Flame Charge",
-        "Flamethrower",
-        "Flare Blitz",
         "Foul Play",
+        "Freeze-Dry",
         "Giga Impact",
-        "Healing Wish",
-        "Heat Wave",
         "Helping Hand",
         "Hex",
         "Howl",
         "Hyper Beam",
         "Hypnosis",
+        "Ice Beam",
+        "Ice Shard",
+        "Icicle Spear",
+        "Icy Wind",
         "Imprison",
-        "Inferno",
         "Iron Tail",
-        "Memento",
-        "Mystical Fire",
+        "Misty Terrain",
+        "Moonblast",
         "Nasty Plot",
-        "Night Shade",
-        "Overheat",
         "Pain Split",
         "Payback",
+        "Play Rough",
         "Power Swap",
         "Protect",
         "Psych Up",
         "Psyshock",
-        "Quick Attack",
+        "Rain Dance",
         "Rest",
         "Roar",
         "Round",
         "Safeguard",
-        "Scorching Sands",
-        "Shadow Ball",
         "Sleep Talk",
-        "Snarl",
         "Snore",
-        "Solar Beam",
+        "Snowscape",
         "Spite",
         "Stored Power",
         "Substitute",
-        "Sunny Day",
         "Tail Slap",
+        "Triple Axel",
         "Weather Ball",
-        "Will-O-Wisp",
+        "Wonder Room",
         "Zen Headbutt"
       ],
       "abilityIds": [
@@ -1847,6 +1866,7 @@
     {
       "id": "ninetales",
       "speciesKey": "ninetales",
+      "battleDataKey": "ninetales",
       "name": "Ninetales",
       "savedName": "Ninetales",
       "types": [
@@ -1938,6 +1958,7 @@
     {
       "id": "raichu",
       "speciesKey": "raichu",
+      "battleDataKey": "raichu",
       "name": "Raichu",
       "savedName": "Raichu",
       "types": [
@@ -2028,6 +2049,7 @@
     {
       "id": "alolan-raichu",
       "speciesKey": "raichu",
+      "battleDataKey": "raichualola",
       "name": "Alolan Raichu",
       "savedName": "Alolan Raichu",
       "types": [
@@ -2048,7 +2070,7 @@
         "Alluring Voice",
         "Body Slam",
         "Brick Break",
-        "Brutal Swing",
+        "Calm Mind",
         "Charge",
         "Charge Beam",
         "Charm",
@@ -2056,7 +2078,6 @@
         "Dig",
         "Discharge",
         "Double Team",
-        "Drain Punch",
         "Draining Kiss",
         "Eerie Impulse",
         "Electric Terrain",
@@ -2065,6 +2086,7 @@
         "Encore",
         "Endeavor",
         "Endure",
+        "Expanding Force",
         "Facade",
         "Fake Out",
         "Fake Tears",
@@ -2080,11 +2102,16 @@
         "Iron Tail",
         "Knock Off",
         "Light Screen",
+        "Magic Room",
         "Mega Kick",
         "Nasty Plot",
         "Nuzzle",
         "Play Rough",
         "Protect",
+        "Psychic",
+        "Psychic Noise",
+        "Psychic Terrain",
+        "Psyshock",
         "Quick Attack",
         "Rain Dance",
         "Reflect",
@@ -2092,8 +2119,11 @@
         "Reversal",
         "Rising Voltage",
         "Round",
+        "Skill Swap",
         "Sleep Talk",
         "Snore",
+        "Speed Swap",
+        "Stored Power",
         "Substitute",
         "Surf",
         "Sweet Kiss",
@@ -2118,6 +2148,7 @@
     {
       "id": "mega-raichu-x",
       "speciesKey": "raichu",
+      "battleDataKey": "raichu",
       "name": "Mega Raichu X",
       "savedName": "Mega Raichu X",
       "types": [
@@ -2207,6 +2238,7 @@
     {
       "id": "mega-raichu-y",
       "speciesKey": "raichu",
+      "battleDataKey": "raichu",
       "name": "Mega Raichu Y",
       "savedName": "Mega Raichu Y",
       "types": [
@@ -2296,6 +2328,7 @@
     {
       "id": "altaria",
       "speciesKey": "altaria",
+      "battleDataKey": "altaria",
       "name": "Altaria",
       "savedName": "Altaria",
       "types": [
@@ -2386,6 +2419,7 @@
     {
       "id": "mega-altaria",
       "speciesKey": "altaria",
+      "battleDataKey": "altaria",
       "name": "Mega Altaria",
       "savedName": "Mega Altaria",
       "types": [
@@ -2475,6 +2509,7 @@
     {
       "id": "ampharos",
       "speciesKey": "ampharos",
+      "battleDataKey": "ampharos",
       "name": "Ampharos",
       "savedName": "Ampharos",
       "types": [
@@ -2566,6 +2601,7 @@
     {
       "id": "mega-ampharos",
       "speciesKey": "ampharos",
+      "battleDataKey": "ampharos",
       "name": "Mega Ampharos",
       "savedName": "Mega Ampharos",
       "types": [
@@ -2657,6 +2693,7 @@
     {
       "id": "annihilape",
       "speciesKey": "annihilape",
+      "battleDataKey": "annihilape",
       "name": "Annihilape",
       "savedName": "Annihilape",
       "types": [
@@ -2758,6 +2795,7 @@
     {
       "id": "appletun",
       "speciesKey": "appletun",
+      "battleDataKey": "appletun",
       "name": "Appletun",
       "savedName": "Appletun",
       "types": [
@@ -2835,6 +2873,7 @@
     {
       "id": "araquanid",
       "speciesKey": "araquanid",
+      "battleDataKey": "araquanid",
       "name": "Araquanid",
       "savedName": "Araquanid",
       "types": [
@@ -2911,6 +2950,7 @@
     {
       "id": "arbok",
       "speciesKey": "arbok",
+      "battleDataKey": "arbok",
       "name": "Arbok",
       "savedName": "Arbok",
       "types": [
@@ -3005,7 +3045,8 @@
     },
     {
       "id": "hisuian-arcanine",
-      "speciesKey": "hisuian-arcanine",
+      "speciesKey": "arcanine",
+      "battleDataKey": "arcaninehisui",
       "name": "Hisuian Arcanine",
       "savedName": "Hisuian Arcanine",
       "types": [
@@ -3095,7 +3136,8 @@
     },
     {
       "id": "arcanine",
-      "speciesKey": "hisuian-arcanine",
+      "speciesKey": "arcanine",
+      "battleDataKey": "arcanine",
       "name": "Arcanine",
       "savedName": "Arcanine",
       "types": [
@@ -3117,9 +3159,11 @@
         "Body Slam",
         "Bulldoze",
         "Burn Up",
+        "Charm",
         "Close Combat",
         "Covet",
         "Crunch",
+        "Curse",
         "Dig",
         "Double-Edge",
         "Dragon Pulse",
@@ -3133,7 +3177,6 @@
         "Flamethrower",
         "Flare Blitz",
         "Giga Impact",
-        "Head Smash",
         "Heat Crash",
         "Heat Wave",
         "Helping Hand",
@@ -3145,28 +3188,20 @@
         "Morning Sun",
         "Outrage",
         "Overheat",
-        "Power Gem",
+        "Play Rough",
         "Protect",
         "Psychic Fangs",
         "Raging Fury",
         "Rest",
         "Reversal",
         "Roar",
-        "Rock Blast",
-        "Rock Slide",
-        "Rock Tomb",
         "Round",
-        "Sandstorm",
         "Scary Face",
         "Scorching Sands",
         "Sleep Talk",
-        "Smack Down",
-        "Smart Strike",
         "Snarl",
         "Snore",
         "Solar Beam",
-        "Stealth Rock",
-        "Stone Edge",
         "Substitute",
         "Sunny Day",
         "Temper Flare",
@@ -3185,6 +3220,7 @@
     {
       "id": "archaludon",
       "speciesKey": "archaludon",
+      "battleDataKey": "archaludon",
       "name": "Archaludon",
       "savedName": "Archaludon",
       "types": [
@@ -3262,6 +3298,7 @@
     {
       "id": "ariados",
       "speciesKey": "ariados",
+      "battleDataKey": "ariados",
       "name": "Ariados",
       "savedName": "Ariados",
       "types": [
@@ -3352,6 +3389,7 @@
     {
       "id": "armarouge",
       "speciesKey": "armarouge",
+      "battleDataKey": "armarouge",
       "name": "Armarouge",
       "savedName": "Armarouge",
       "types": [
@@ -3432,6 +3470,7 @@
     {
       "id": "aromatisse",
       "speciesKey": "aromatisse",
+      "battleDataKey": "aromatisse",
       "name": "Aromatisse",
       "savedName": "Aromatisse",
       "types": [
@@ -3504,6 +3543,7 @@
     {
       "id": "audino",
       "speciesKey": "audino",
+      "battleDataKey": "audino",
       "name": "Audino",
       "savedName": "Audino",
       "types": [
@@ -3598,6 +3638,7 @@
     {
       "id": "mega-audino",
       "speciesKey": "audino",
+      "battleDataKey": "audino",
       "name": "Mega Audino",
       "savedName": "Mega Audino",
       "types": [
@@ -3691,6 +3732,7 @@
     {
       "id": "aurorus",
       "speciesKey": "aurorus",
+      "battleDataKey": "aurorus",
       "name": "Aurorus",
       "savedName": "Aurorus",
       "types": [
@@ -3771,7 +3813,8 @@
     },
     {
       "id": "avalugg",
-      "speciesKey": "hisuian-avalugg",
+      "speciesKey": "avalugg",
+      "battleDataKey": "avalugg",
       "name": "Avalugg",
       "savedName": "Avalugg",
       "types": [
@@ -3787,7 +3830,6 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Avalugg.png",
       "moveNames": [
-        "Ancient Power",
         "Aurora Veil",
         "Avalanche",
         "Bite",
@@ -3798,43 +3840,44 @@
         "Chilling Water",
         "Crunch",
         "Curse",
-        "Dig",
         "Double-Edge",
         "Earthquake",
         "Endure",
         "Facade",
+        "Flash Cannon",
+        "Frost Breath",
         "Giga Impact",
         "Gyro Ball",
-        "Hard Press",
         "Heavy Slam",
         "High Horsepower",
+        "Hydro Pump",
         "Hyper Beam",
         "Ice Beam",
         "Ice Fang",
         "Ice Spinner",
+        "Icicle Crash",
         "Icicle Spear",
         "Icy Wind",
         "Iron Defense",
         "Iron Head",
-        "Meteor Beam",
         "Mirror Coat",
-        "Mountain Gale",
         "Protect",
         "Rain Dance",
         "Rapid Spin",
         "Recover",
         "Rest",
-        "Rock Blast",
         "Rock Slide",
         "Rock Tomb",
-        "Sandstorm",
+        "Round",
         "Scary Face",
         "Sleep Talk",
+        "Snore",
         "Snowscape",
-        "Stealth Rock",
         "Stomping Tantrum",
         "Stone Edge",
         "Substitute",
+        "Superpower",
+        "Surf",
         "Wide Guard"
       ],
       "abilityIds": [
@@ -3845,7 +3888,8 @@
     },
     {
       "id": "hisuian-avalugg",
-      "speciesKey": "hisuian-avalugg",
+      "speciesKey": "avalugg",
+      "battleDataKey": "avalugghisui",
       "name": "Hisuian Avalugg",
       "savedName": "Hisuian Avalugg",
       "types": [
@@ -3921,6 +3965,7 @@
     {
       "id": "azumarill",
       "speciesKey": "azumarill",
+      "battleDataKey": "azumarill",
       "name": "Azumarill",
       "savedName": "Azumarill",
       "types": [
@@ -4013,6 +4058,7 @@
     {
       "id": "banette",
       "speciesKey": "banette",
+      "battleDataKey": "banette",
       "name": "Banette",
       "savedName": "Banette",
       "types": [
@@ -4104,6 +4150,7 @@
     {
       "id": "mega-banette",
       "speciesKey": "banette",
+      "battleDataKey": "banette",
       "name": "Mega Banette",
       "savedName": "Mega Banette",
       "types": [
@@ -4193,6 +4240,7 @@
     {
       "id": "barbaracle",
       "speciesKey": "barbaracle",
+      "battleDataKey": "barbaracle",
       "name": "Barbaracle",
       "savedName": "Barbaracle",
       "types": [
@@ -4290,6 +4338,7 @@
     {
       "id": "mega-barbaracle",
       "speciesKey": "barbaracle",
+      "battleDataKey": "barbaracle",
       "name": "Mega Barbaracle",
       "savedName": "Mega Barbaracle",
       "types": [
@@ -4384,7 +4433,8 @@
     },
     {
       "id": "basculegion-male",
-      "speciesKey": "basculegion-male",
+      "speciesKey": "basculegion",
+      "battleDataKey": "basculegion",
       "name": "Basculegion Male",
       "savedName": "Basculegion Male",
       "types": [
@@ -4459,7 +4509,8 @@
     },
     {
       "id": "basculegion-female",
-      "speciesKey": "basculegion-male",
+      "speciesKey": "basculegion",
+      "battleDataKey": "basculegionf",
       "name": "Basculegion Female",
       "savedName": "Basculegion Female",
       "types": [
@@ -4535,6 +4586,7 @@
     {
       "id": "bastiodon",
       "speciesKey": "bastiodon",
+      "battleDataKey": "bastiodon",
       "name": "Bastiodon",
       "savedName": "Bastiodon",
       "types": [
@@ -4628,6 +4680,7 @@
     {
       "id": "beartic",
       "speciesKey": "beartic",
+      "battleDataKey": "beartic",
       "name": "Beartic",
       "savedName": "Beartic",
       "types": [
@@ -4728,6 +4781,7 @@
     {
       "id": "beedrill",
       "speciesKey": "beedrill",
+      "battleDataKey": "beedrill",
       "name": "Beedrill",
       "savedName": "Beedrill",
       "types": [
@@ -4806,6 +4860,7 @@
     {
       "id": "mega-beedrill",
       "speciesKey": "beedrill",
+      "battleDataKey": "beedrill",
       "name": "Mega Beedrill",
       "savedName": "Mega Beedrill",
       "types": [
@@ -4883,6 +4938,7 @@
     {
       "id": "bellibolt",
       "speciesKey": "bellibolt",
+      "battleDataKey": "bellibolt",
       "name": "Bellibolt",
       "savedName": "Bellibolt",
       "types": [
@@ -4947,6 +5003,7 @@
     {
       "id": "blastoise",
       "speciesKey": "blastoise",
+      "battleDataKey": "blastoise",
       "name": "Blastoise",
       "savedName": "Blastoise",
       "types": [
@@ -5044,6 +5101,7 @@
     {
       "id": "mega-blastoise",
       "speciesKey": "blastoise",
+      "battleDataKey": "blastoise",
       "name": "Mega Blastoise",
       "savedName": "Mega Blastoise",
       "types": [
@@ -5140,6 +5198,7 @@
     {
       "id": "blaziken",
       "speciesKey": "blaziken",
+      "battleDataKey": "blaziken",
       "name": "Blaziken",
       "savedName": "Blaziken",
       "types": [
@@ -5243,6 +5302,7 @@
     {
       "id": "mega-blaziken",
       "speciesKey": "blaziken",
+      "battleDataKey": "blaziken",
       "name": "Mega Blaziken",
       "savedName": "Mega Blaziken",
       "types": [
@@ -5345,6 +5405,7 @@
     {
       "id": "camerupt",
       "speciesKey": "camerupt",
+      "battleDataKey": "camerupt",
       "name": "Camerupt",
       "savedName": "Camerupt",
       "types": [
@@ -5438,6 +5499,7 @@
     {
       "id": "mega-camerupt",
       "speciesKey": "camerupt",
+      "battleDataKey": "camerupt",
       "name": "Mega Camerupt",
       "savedName": "Mega Camerupt",
       "types": [
@@ -5529,6 +5591,7 @@
     {
       "id": "castform",
       "speciesKey": "castform",
+      "battleDataKey": "castform",
       "name": "Castform",
       "savedName": "Castform",
       "types": [
@@ -5589,6 +5652,7 @@
     {
       "id": "castform-rainy-form",
       "speciesKey": "castform",
+      "battleDataKey": "castform",
       "name": "Castform Rainy Form",
       "savedName": "Castform Rainy Form",
       "types": [
@@ -5649,6 +5713,7 @@
     {
       "id": "castform-snowy-form",
       "speciesKey": "castform",
+      "battleDataKey": "castform",
       "name": "Castform Snowy Form",
       "savedName": "Castform Snowy Form",
       "types": [
@@ -5709,6 +5774,7 @@
     {
       "id": "castform-sunny-form",
       "speciesKey": "castform",
+      "battleDataKey": "castform",
       "name": "Castform Sunny Form",
       "savedName": "Castform Sunny Form",
       "types": [
@@ -5769,6 +5835,7 @@
     {
       "id": "ceruledge",
       "speciesKey": "ceruledge",
+      "battleDataKey": "ceruledge",
       "name": "Ceruledge",
       "savedName": "Ceruledge",
       "types": [
@@ -5849,6 +5916,7 @@
     {
       "id": "chandelure",
       "speciesKey": "chandelure",
+      "battleDataKey": "chandelure",
       "name": "Chandelure",
       "savedName": "Chandelure",
       "types": [
@@ -5929,6 +5997,7 @@
     {
       "id": "mega-chandelure",
       "speciesKey": "chandelure",
+      "battleDataKey": "chandelure",
       "name": "Mega Chandelure",
       "savedName": "Mega Chandelure",
       "types": [
@@ -6007,6 +6076,7 @@
     {
       "id": "charizard",
       "speciesKey": "charizard",
+      "battleDataKey": "charizard",
       "name": "Charizard",
       "savedName": "Charizard",
       "types": [
@@ -6104,6 +6174,7 @@
     {
       "id": "mega-charizard-x",
       "speciesKey": "charizard",
+      "battleDataKey": "charizard",
       "name": "Mega Charizard X",
       "savedName": "Mega Charizard X",
       "types": [
@@ -6200,6 +6271,7 @@
     {
       "id": "mega-charizard-y",
       "speciesKey": "charizard",
+      "battleDataKey": "charizard",
       "name": "Mega Charizard Y",
       "savedName": "Mega Charizard Y",
       "types": [
@@ -6296,6 +6368,7 @@
     {
       "id": "chesnaught",
       "speciesKey": "chesnaught",
+      "battleDataKey": "chesnaught",
       "name": "Chesnaught",
       "savedName": "Chesnaught",
       "types": [
@@ -6408,6 +6481,7 @@
     {
       "id": "mega-chesnaught",
       "speciesKey": "chesnaught",
+      "battleDataKey": "chesnaught",
       "name": "Mega Chesnaught",
       "savedName": "Mega Chesnaught",
       "types": [
@@ -6519,6 +6593,7 @@
     {
       "id": "chimecho",
       "speciesKey": "chimecho",
+      "battleDataKey": "chimecho",
       "name": "Chimecho",
       "savedName": "Chimecho",
       "types": [
@@ -6607,6 +6682,7 @@
     {
       "id": "mega-chimecho",
       "speciesKey": "chimecho",
+      "battleDataKey": "chimecho",
       "name": "Mega Chimecho",
       "savedName": "Mega Chimecho",
       "types": [
@@ -6696,6 +6772,7 @@
     {
       "id": "clawitzer",
       "speciesKey": "clawitzer",
+      "battleDataKey": "clawitzer",
       "name": "Clawitzer",
       "savedName": "Clawitzer",
       "types": [
@@ -6771,6 +6848,7 @@
     {
       "id": "clefable",
       "speciesKey": "clefable",
+      "battleDataKey": "clefable",
       "name": "Clefable",
       "savedName": "Clefable",
       "types": [
@@ -6887,6 +6965,7 @@
     {
       "id": "mega-clefable",
       "speciesKey": "clefable",
+      "battleDataKey": "clefable",
       "name": "Mega Clefable",
       "savedName": "Mega Clefable",
       "types": [
@@ -7002,6 +7081,7 @@
     {
       "id": "cofagrigus",
       "speciesKey": "cofagrigus",
+      "battleDataKey": "cofagrigus",
       "name": "Cofagrigus",
       "savedName": "Cofagrigus",
       "types": [
@@ -7079,6 +7159,7 @@
     {
       "id": "conkeldurr",
       "speciesKey": "conkeldurr",
+      "battleDataKey": "conkeldurr",
       "name": "Conkeldurr",
       "savedName": "Conkeldurr",
       "types": [
@@ -7165,6 +7246,7 @@
     {
       "id": "corviknight",
       "speciesKey": "corviknight",
+      "battleDataKey": "corviknight",
       "name": "Corviknight",
       "savedName": "Corviknight",
       "types": [
@@ -7246,6 +7328,7 @@
     {
       "id": "crabominable",
       "speciesKey": "crabominable",
+      "battleDataKey": "crabominable",
       "name": "Crabominable",
       "savedName": "Crabominable",
       "types": [
@@ -7335,6 +7418,7 @@
     {
       "id": "mega-crabominable",
       "speciesKey": "crabominable",
+      "battleDataKey": "crabominable",
       "name": "Mega Crabominable",
       "savedName": "Mega Crabominable",
       "types": [
@@ -7421,7 +7505,8 @@
     },
     {
       "id": "hisuian-decidueye",
-      "speciesKey": "hisuian-decidueye",
+      "speciesKey": "decidueye",
+      "battleDataKey": "decidueyehisui",
       "name": "Hisuian Decidueye",
       "savedName": "Hisuian Decidueye",
       "types": [
@@ -7512,7 +7597,8 @@
     },
     {
       "id": "decidueye",
-      "speciesKey": "hisuian-decidueye",
+      "speciesKey": "decidueye",
+      "battleDataKey": "decidueye",
       "name": "Decidueye",
       "savedName": "Decidueye",
       "types": [
@@ -7529,18 +7615,15 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Decidueye.png",
       "moveNames": [
+        "Acrobatics",
         "Aerial Ace",
         "Air Cutter",
         "Air Slash",
-        "Aura Sphere",
         "Baton Pass",
         "Brave Bird",
-        "Brick Break",
-        "Bulk Up",
         "Bullet Seed",
-        "Close Combat",
-        "Coaching",
         "Confuse Ray",
+        "Curse",
         "Defog",
         "Double Team",
         "Dual Wingbeat",
@@ -7548,8 +7631,6 @@
         "Energy Ball",
         "Facade",
         "Feather Dance",
-        "Focus Blast",
-        "Focus Punch",
         "Frenzy Plant",
         "Giga Drain",
         "Giga Impact",
@@ -7558,7 +7639,10 @@
         "Grassy Terrain",
         "Haze",
         "Helping Hand",
+        "Hex",
+        "Hurricane",
         "Hyper Beam",
+        "Imprison",
         "Knock Off",
         "Leaf Blade",
         "Leaf Storm",
@@ -7567,22 +7651,27 @@
         "Low Sweep",
         "Nasty Plot",
         "Night Shade",
+        "Phantom Force",
         "Pluck",
+        "Poltergeist",
         "Protect",
+        "Psycho Cut",
         "Rain Dance",
         "Rest",
-        "Reversal",
-        "Rock Tomb",
         "Roost",
         "Round",
-        "Scary Face",
         "Seed Bomb",
+        "Shadow Ball",
         "Shadow Claw",
         "Shadow Sneak",
+        "Skitter Smack",
         "Sleep Talk",
         "Smack Down",
         "Snore",
         "Solar Beam",
+        "Solar Blade",
+        "Spirit Shackle",
+        "Spite",
         "Steel Wing",
         "Substitute",
         "Sucker Punch",
@@ -7590,11 +7679,8 @@
         "Swords Dance",
         "Synthesis",
         "Tailwind",
-        "Taunt",
         "Trailblaze",
-        "Triple Arrows",
-        "U-turn",
-        "Upper Hand"
+        "U-turn"
       ],
       "abilityIds": [
         "overgrow",
@@ -7604,6 +7690,7 @@
     {
       "id": "dedenne",
       "speciesKey": "dedenne",
+      "battleDataKey": "dedenne",
       "name": "Dedenne",
       "savedName": "Dedenne",
       "types": [
@@ -7680,6 +7767,7 @@
     {
       "id": "delphox",
       "speciesKey": "delphox",
+      "battleDataKey": "delphox",
       "name": "Delphox",
       "savedName": "Delphox",
       "types": [
@@ -7777,6 +7865,7 @@
     {
       "id": "mega-delphox",
       "speciesKey": "delphox",
+      "battleDataKey": "delphox",
       "name": "Mega Delphox",
       "savedName": "Mega Delphox",
       "types": [
@@ -7873,6 +7962,7 @@
     {
       "id": "diggersby",
       "speciesKey": "diggersby",
+      "battleDataKey": "diggersby",
       "name": "Diggersby",
       "savedName": "Diggersby",
       "types": [
@@ -7957,6 +8047,7 @@
     {
       "id": "ditto",
       "speciesKey": "ditto",
+      "battleDataKey": "ditto",
       "name": "Ditto",
       "savedName": "Ditto",
       "types": [
@@ -7982,6 +8073,7 @@
     {
       "id": "dragalge",
       "speciesKey": "dragalge",
+      "battleDataKey": "dragalge",
       "name": "Dragalge",
       "savedName": "Dragalge",
       "types": [
@@ -8060,6 +8152,7 @@
     {
       "id": "mega-dragalge",
       "speciesKey": "dragalge",
+      "battleDataKey": "dragalge",
       "name": "Mega Dragalge",
       "savedName": "Mega Dragalge",
       "types": [
@@ -8136,6 +8229,7 @@
     {
       "id": "dragapult",
       "speciesKey": "dragapult",
+      "battleDataKey": "dragapult",
       "name": "Dragapult",
       "savedName": "Dragapult",
       "types": [
@@ -8225,6 +8319,7 @@
     {
       "id": "dragonite",
       "speciesKey": "dragonite",
+      "battleDataKey": "dragonite",
       "name": "Dragonite",
       "savedName": "Dragonite",
       "types": [
@@ -8333,6 +8428,7 @@
     {
       "id": "mega-dragonite",
       "speciesKey": "dragonite",
+      "battleDataKey": "dragonite",
       "name": "Mega Dragonite",
       "savedName": "Mega Dragonite",
       "types": [
@@ -8440,6 +8536,7 @@
     {
       "id": "drampa",
       "speciesKey": "drampa",
+      "battleDataKey": "drampa",
       "name": "Drampa",
       "savedName": "Drampa",
       "types": [
@@ -8532,6 +8629,7 @@
     {
       "id": "mega-drampa",
       "speciesKey": "drampa",
+      "battleDataKey": "drampa",
       "name": "Mega Drampa",
       "savedName": "Mega Drampa",
       "types": [
@@ -8622,6 +8720,7 @@
     {
       "id": "eelektross",
       "speciesKey": "eelektross",
+      "battleDataKey": "eelektross",
       "name": "Eelektross",
       "savedName": "Eelektross",
       "types": [
@@ -8720,6 +8819,7 @@
     {
       "id": "mega-eelektross",
       "speciesKey": "eelektross",
+      "battleDataKey": "eelektross",
       "name": "Mega Eelektross",
       "savedName": "Mega Eelektross",
       "types": [
@@ -8818,6 +8918,7 @@
     {
       "id": "emboar",
       "speciesKey": "emboar",
+      "battleDataKey": "emboar",
       "name": "Emboar",
       "savedName": "Emboar",
       "types": [
@@ -8922,6 +9023,7 @@
     {
       "id": "mega-emboar",
       "speciesKey": "emboar",
+      "battleDataKey": "emboar",
       "name": "Mega Emboar",
       "savedName": "Mega Emboar",
       "types": [
@@ -9025,6 +9127,7 @@
     {
       "id": "emolga",
       "speciesKey": "emolga",
+      "battleDataKey": "emolga",
       "name": "Emolga",
       "savedName": "Emolga",
       "types": [
@@ -9096,6 +9199,7 @@
     {
       "id": "empoleon",
       "speciesKey": "empoleon",
+      "battleDataKey": "empoleon",
       "name": "Empoleon",
       "savedName": "Empoleon",
       "types": [
@@ -9195,6 +9299,7 @@
     {
       "id": "espathra",
       "speciesKey": "espathra",
+      "battleDataKey": "espathra",
       "name": "Espathra",
       "savedName": "Espathra",
       "types": [
@@ -9277,6 +9382,7 @@
     {
       "id": "espeon",
       "speciesKey": "espeon",
+      "battleDataKey": "espeon",
       "name": "Espeon",
       "savedName": "Espeon",
       "types": [
@@ -9368,6 +9474,7 @@
     {
       "id": "excadrill",
       "speciesKey": "excadrill",
+      "battleDataKey": "excadrill",
       "name": "Excadrill",
       "savedName": "Excadrill",
       "types": [
@@ -9447,6 +9554,7 @@
     {
       "id": "mega-excadrill",
       "speciesKey": "excadrill",
+      "battleDataKey": "excadrill",
       "name": "Mega Excadrill",
       "savedName": "Mega Excadrill",
       "types": [
@@ -9524,6 +9632,7 @@
     {
       "id": "falinks",
       "speciesKey": "falinks",
+      "battleDataKey": "falinks",
       "name": "Falinks",
       "savedName": "Falinks",
       "types": [
@@ -9599,6 +9708,7 @@
     {
       "id": "mega-falinks",
       "speciesKey": "falinks",
+      "battleDataKey": "falinks",
       "name": "Mega Falinks",
       "savedName": "Mega Falinks",
       "types": [
@@ -9673,6 +9783,7 @@
     {
       "id": "fan-rotom",
       "speciesKey": "fan-rotom",
+      "battleDataKey": "rotomfan",
       "name": "Fan Rotom",
       "savedName": "Fan Rotom",
       "types": [
@@ -9740,6 +9851,7 @@
     {
       "id": "farigiraf",
       "speciesKey": "farigiraf",
+      "battleDataKey": "farigiraf",
       "name": "Farigiraf",
       "savedName": "Farigiraf",
       "types": [
@@ -9836,6 +9948,7 @@
     {
       "id": "feraligatr",
       "speciesKey": "feraligatr",
+      "battleDataKey": "feraligatr",
       "name": "Feraligatr",
       "savedName": "Feraligatr",
       "types": [
@@ -9942,6 +10055,7 @@
     {
       "id": "mega-feraligatr",
       "speciesKey": "feraligatr",
+      "battleDataKey": "feraligatr",
       "name": "Mega Feraligatr",
       "savedName": "Mega Feraligatr",
       "types": [
@@ -10048,6 +10162,7 @@
     {
       "id": "flapple",
       "speciesKey": "flapple",
+      "battleDataKey": "flapple",
       "name": "Flapple",
       "savedName": "Flapple",
       "types": [
@@ -10118,6 +10233,7 @@
     {
       "id": "flareon",
       "speciesKey": "flareon",
+      "battleDataKey": "flareon",
       "name": "Flareon",
       "savedName": "Flareon",
       "types": [
@@ -10199,6 +10315,7 @@
     {
       "id": "floette",
       "speciesKey": "floette",
+      "battleDataKey": "floette",
       "name": "Floette",
       "savedName": "Floette",
       "types": [
@@ -10264,6 +10381,7 @@
     {
       "id": "mega-floette",
       "speciesKey": "floette",
+      "battleDataKey": "floette",
       "name": "Mega Floette",
       "savedName": "Mega Floette",
       "types": [
@@ -10327,7 +10445,8 @@
     },
     {
       "id": "florges-red-flower",
-      "speciesKey": "florges-red-flower",
+      "speciesKey": "florges",
+      "battleDataKey": "florges",
       "name": "Florges Red Flower",
       "savedName": "Florges Red Flower",
       "types": [
@@ -10397,7 +10516,8 @@
     },
     {
       "id": "florges-blue-flower",
-      "speciesKey": "florges-red-flower",
+      "speciesKey": "florges",
+      "battleDataKey": "florges",
       "name": "Florges Blue Flower",
       "savedName": "Florges Blue Flower",
       "types": [
@@ -10467,7 +10587,8 @@
     },
     {
       "id": "florges-orange-flower",
-      "speciesKey": "florges-red-flower",
+      "speciesKey": "florges",
+      "battleDataKey": "florges",
       "name": "Florges Orange Flower",
       "savedName": "Florges Orange Flower",
       "types": [
@@ -10537,7 +10658,8 @@
     },
     {
       "id": "florges-white-flower",
-      "speciesKey": "florges-red-flower",
+      "speciesKey": "florges",
+      "battleDataKey": "florges",
       "name": "Florges White Flower",
       "savedName": "Florges White Flower",
       "types": [
@@ -10607,7 +10729,8 @@
     },
     {
       "id": "florges-yellow-flower",
-      "speciesKey": "florges-red-flower",
+      "speciesKey": "florges",
+      "battleDataKey": "florges",
       "name": "Florges Yellow Flower",
       "savedName": "Florges Yellow Flower",
       "types": [
@@ -10678,6 +10801,7 @@
     {
       "id": "forretress",
       "speciesKey": "forretress",
+      "battleDataKey": "forretress",
       "name": "Forretress",
       "savedName": "Forretress",
       "types": [
@@ -10772,6 +10896,7 @@
     {
       "id": "froslass",
       "speciesKey": "froslass",
+      "battleDataKey": "froslass",
       "name": "Froslass",
       "savedName": "Froslass",
       "types": [
@@ -10865,6 +10990,7 @@
     {
       "id": "mega-froslass",
       "speciesKey": "froslass",
+      "battleDataKey": "froslass",
       "name": "Mega Froslass",
       "savedName": "Mega Froslass",
       "types": [
@@ -10956,7 +11082,8 @@
     },
     {
       "id": "furfrou-natural-form",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou Natural Form",
       "savedName": "Furfrou Natural Form",
       "types": [
@@ -11019,7 +11146,8 @@
     },
     {
       "id": "furfrou-dandy-trim",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou Dandy Trim",
       "savedName": "Furfrou Dandy Trim",
       "types": [
@@ -11082,7 +11210,8 @@
     },
     {
       "id": "furfrou-debutante-trim",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou Debutante Trim",
       "savedName": "Furfrou Debutante Trim",
       "types": [
@@ -11145,7 +11274,8 @@
     },
     {
       "id": "furfrou-diamond-trim",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou Diamond Trim",
       "savedName": "Furfrou Diamond Trim",
       "types": [
@@ -11208,7 +11338,8 @@
     },
     {
       "id": "furfrou-heart-trim",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou Heart Trim",
       "savedName": "Furfrou Heart Trim",
       "types": [
@@ -11271,7 +11402,8 @@
     },
     {
       "id": "furfrou-kabuki-trim",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou Kabuki Trim",
       "savedName": "Furfrou Kabuki Trim",
       "types": [
@@ -11334,7 +11466,8 @@
     },
     {
       "id": "furfrou-la-reine-trim",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou La Reine Trim",
       "savedName": "Furfrou La Reine Trim",
       "types": [
@@ -11397,7 +11530,8 @@
     },
     {
       "id": "furfrou-matron-trim",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou Matron Trim",
       "savedName": "Furfrou Matron Trim",
       "types": [
@@ -11460,7 +11594,8 @@
     },
     {
       "id": "furfrou-pharaoh-trim",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou Pharaoh Trim",
       "savedName": "Furfrou Pharaoh Trim",
       "types": [
@@ -11523,7 +11658,8 @@
     },
     {
       "id": "furfrou-star-trim",
-      "speciesKey": "furfrou-natural-form",
+      "speciesKey": "furfrou",
+      "battleDataKey": "furfrou",
       "name": "Furfrou Star Trim",
       "savedName": "Furfrou Star Trim",
       "types": [
@@ -11587,6 +11723,7 @@
     {
       "id": "slowbro",
       "speciesKey": "slowbro",
+      "battleDataKey": "slowbro",
       "name": "Slowbro",
       "savedName": "Slowbro",
       "types": [
@@ -11691,6 +11828,7 @@
     {
       "id": "galarian-slowbro",
       "speciesKey": "slowbro",
+      "battleDataKey": "slowbrogalar",
       "name": "Galarian Slowbro",
       "savedName": "Galarian Slowbro",
       "types": [
@@ -11707,6 +11845,7 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Galarian%20Slowbro.png",
       "moveNames": [
+        "Acid Spray",
         "Amnesia",
         "Avalanche",
         "Belch",
@@ -11723,6 +11862,7 @@
         "Dig",
         "Disable",
         "Dive",
+        "Double-Edge",
         "Drain Punch",
         "Earthquake",
         "Endure",
@@ -11732,16 +11872,18 @@
         "Flamethrower",
         "Fling",
         "Focus Blast",
-        "Focus Punch",
         "Foul Play",
         "Future Sight",
         "Giga Impact",
         "Grass Knot",
+        "Gunk Shot",
+        "Haze",
         "Heal Pulse",
         "Helping Hand",
         "Hydro Pump",
         "Hyper Beam",
         "Ice Beam",
+        "Ice Fang",
         "Ice Punch",
         "Icy Wind",
         "Imprison",
@@ -11752,22 +11894,29 @@
         "Mud Shot",
         "Muddy Water",
         "Nasty Plot",
+        "Poison Jab",
+        "Power Gem",
         "Protect",
         "Psych Up",
         "Psychic",
-        "Psychic Noise",
         "Psychic Terrain",
         "Psyshock",
         "Rain Dance",
         "Razor Shell",
         "Rest",
+        "Rock Blast",
         "Round",
         "Safeguard",
-        "Scald",
+        "Sandstorm",
+        "Scary Face",
         "Shadow Ball",
+        "Shell Side Arm",
         "Skill Swap",
         "Slack Off",
         "Sleep Talk",
+        "Sludge Bomb",
+        "Sludge Wave",
+        "Smack Down",
         "Snore",
         "Snowscape",
         "Stored Power",
@@ -11775,9 +11924,12 @@
         "Sunny Day",
         "Surf",
         "Thunder Wave",
+        "Toxic",
+        "Toxic Spikes",
         "Tri Attack",
         "Trick",
         "Trick Room",
+        "Venoshock",
         "Water Pulse",
         "Waterfall",
         "Weather Ball",
@@ -11795,6 +11947,7 @@
     {
       "id": "mega-slowbro",
       "speciesKey": "slowbro",
+      "battleDataKey": "slowbro",
       "name": "Mega Slowbro",
       "savedName": "Mega Slowbro",
       "types": [
@@ -11897,6 +12050,7 @@
     {
       "id": "galarian-slowking",
       "speciesKey": "slowking",
+      "battleDataKey": "slowkinggalar",
       "name": "Galarian Slowking",
       "savedName": "Galarian Slowking",
       "types": [
@@ -11913,6 +12067,7 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Galarian%20Slowking.png",
       "moveNames": [
+        "Acid Spray",
         "Amnesia",
         "Avalanche",
         "Belch",
@@ -11931,6 +12086,7 @@
         "Dive",
         "Drain Punch",
         "Earthquake",
+        "Eerie Spell",
         "Endure",
         "Expanding Force",
         "Facade",
@@ -11939,13 +12095,14 @@
         "Flamethrower",
         "Fling",
         "Focus Blast",
-        "Focus Punch",
         "Foul Play",
         "Future Sight",
         "Giga Impact",
         "Grass Knot",
+        "Gunk Shot",
         "Heal Pulse",
         "Helping Hand",
+        "Hex",
         "Hydro Pump",
         "Hyper Beam",
         "Ice Beam",
@@ -11956,9 +12113,11 @@
         "Iron Tail",
         "Light Screen",
         "Liquidation",
+        "Low Sweep",
         "Mud Shot",
         "Muddy Water",
         "Nasty Plot",
+        "Poison Jab",
         "Power Gem",
         "Protect",
         "Psych Up",
@@ -11968,29 +12127,34 @@
         "Psyshock",
         "Rain Dance",
         "Razor Shell",
-        "Reflect",
         "Rest",
-        "Rock Slide",
-        "Rock Tomb",
         "Round",
         "Safeguard",
-        "Scald",
+        "Scary Face",
         "Shadow Ball",
         "Skill Swap",
         "Slack Off",
         "Sleep Talk",
+        "Sludge Bomb",
+        "Sludge Wave",
+        "Snarl",
         "Snore",
         "Snowscape",
+        "Stomping Tantrum",
         "Stored Power",
         "Substitute",
         "Sunny Day",
         "Surf",
         "Swagger",
+        "Taunt",
         "Thunder Punch",
         "Thunder Wave",
+        "Toxic",
+        "Toxic Spikes",
         "Tri Attack",
         "Trick",
         "Trick Room",
+        "Venoshock",
         "Water Pulse",
         "Waterfall",
         "Weather Ball",
@@ -12008,6 +12172,7 @@
     {
       "id": "slowking",
       "speciesKey": "slowking",
+      "battleDataKey": "slowking",
       "name": "Slowking",
       "savedName": "Slowking",
       "types": [
@@ -12119,6 +12284,7 @@
     {
       "id": "stunfisk",
       "speciesKey": "stunfisk",
+      "battleDataKey": "stunfisk",
       "name": "Stunfisk",
       "savedName": "Stunfisk",
       "types": [
@@ -12193,6 +12359,7 @@
     {
       "id": "galarian-stunfisk",
       "speciesKey": "stunfisk",
+      "battleDataKey": "stunfiskgalar",
       "name": "Galarian Stunfisk",
       "savedName": "Galarian Stunfisk",
       "types": [
@@ -12210,23 +12377,26 @@
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Galarian%20Stunfisk.png",
       "moveNames": [
         "Attract",
+        "Bind",
         "Bounce",
         "Bulldoze",
-        "Charge",
+        "Counter",
+        "Crunch",
         "Curse",
         "Dig",
-        "Discharge",
         "Earth Power",
         "Earthquake",
-        "Eerie Impulse",
-        "Electric Terrain",
-        "Electroweb",
         "Endure",
         "Facade",
         "Fissure",
         "Flail",
+        "Flash Cannon",
         "Foul Play",
+        "Ice Fang",
+        "Iron Defense",
         "Lash Out",
+        "Metal Claw",
+        "Metal Sound",
         "Mud Shot",
         "Mud-Slap",
         "Muddy Water",
@@ -12241,20 +12411,22 @@
         "Round",
         "Sandstorm",
         "Scald",
+        "Screech",
         "Sleep Talk",
         "Sludge Bomb",
         "Sludge Wave",
+        "Snap Trap",
         "Snore",
         "Spite",
         "Stealth Rock",
+        "Steel Beam",
         "Stomping Tantrum",
         "Stone Edge",
         "Substitute",
         "Sucker Punch",
         "Surf",
-        "Thunder",
+        "Terrain Pulse",
         "Thunder Wave",
-        "Thunderbolt",
         "Uproar",
         "Yawn"
       ],
@@ -12265,6 +12437,7 @@
     {
       "id": "gallade",
       "speciesKey": "gallade",
+      "battleDataKey": "gallade",
       "name": "Gallade",
       "savedName": "Gallade",
       "types": [
@@ -12396,6 +12569,7 @@
     {
       "id": "mega-gallade",
       "speciesKey": "gallade",
+      "battleDataKey": "gallade",
       "name": "Mega Gallade",
       "savedName": "Mega Gallade",
       "types": [
@@ -12525,6 +12699,7 @@
     {
       "id": "garbodor",
       "speciesKey": "garbodor",
+      "battleDataKey": "garbodor",
       "name": "Garbodor",
       "savedName": "Garbodor",
       "types": [
@@ -12603,6 +12778,7 @@
     {
       "id": "garchomp",
       "speciesKey": "garchomp",
+      "battleDataKey": "garchomp",
       "name": "Garchomp",
       "savedName": "Garchomp",
       "types": [
@@ -12686,6 +12862,7 @@
     {
       "id": "mega-garchomp",
       "speciesKey": "garchomp",
+      "battleDataKey": "garchomp",
       "name": "Mega Garchomp",
       "savedName": "Mega Garchomp",
       "types": [
@@ -12768,6 +12945,7 @@
     {
       "id": "gardevoir",
       "speciesKey": "gardevoir",
+      "battleDataKey": "gardevoir",
       "name": "Gardevoir",
       "savedName": "Gardevoir",
       "types": [
@@ -12874,6 +13052,7 @@
     {
       "id": "mega-gardevoir",
       "speciesKey": "gardevoir",
+      "battleDataKey": "gardevoir",
       "name": "Mega Gardevoir",
       "savedName": "Mega Gardevoir",
       "types": [
@@ -12978,6 +13157,7 @@
     {
       "id": "garganacl",
       "speciesKey": "garganacl",
+      "battleDataKey": "garganacl",
       "name": "Garganacl",
       "savedName": "Garganacl",
       "types": [
@@ -13057,6 +13237,7 @@
     {
       "id": "gengar",
       "speciesKey": "gengar",
+      "battleDataKey": "gengar",
       "name": "Gengar",
       "savedName": "Gengar",
       "types": [
@@ -13157,6 +13338,7 @@
     {
       "id": "mega-gengar",
       "speciesKey": "gengar",
+      "battleDataKey": "gengar",
       "name": "Mega Gengar",
       "savedName": "Mega Gengar",
       "types": [
@@ -13257,6 +13439,7 @@
     {
       "id": "gholdengo",
       "speciesKey": "gholdengo",
+      "battleDataKey": "gholdengo",
       "name": "Gholdengo",
       "savedName": "Gholdengo",
       "types": [
@@ -13323,6 +13506,7 @@
     {
       "id": "glaceon",
       "speciesKey": "glaceon",
+      "battleDataKey": "glaceon",
       "name": "Glaceon",
       "savedName": "Glaceon",
       "types": [
@@ -13406,6 +13590,7 @@
     {
       "id": "glalie",
       "speciesKey": "glalie",
+      "battleDataKey": "glalie",
       "name": "Glalie",
       "savedName": "Glalie",
       "types": [
@@ -13487,6 +13672,7 @@
     {
       "id": "mega-glalie",
       "speciesKey": "glalie",
+      "battleDataKey": "glalie",
       "name": "Mega Glalie",
       "savedName": "Mega Glalie",
       "types": [
@@ -13566,6 +13752,7 @@
     {
       "id": "glimmora",
       "speciesKey": "glimmora",
+      "battleDataKey": "glimmora",
       "name": "Glimmora",
       "savedName": "Glimmora",
       "types": [
@@ -13637,6 +13824,7 @@
     {
       "id": "mega-glimmora",
       "speciesKey": "glimmora",
+      "battleDataKey": "glimmora",
       "name": "Mega Glimmora",
       "savedName": "Mega Glimmora",
       "types": [
@@ -13707,6 +13895,7 @@
     {
       "id": "gliscor",
       "speciesKey": "gliscor",
+      "battleDataKey": "gliscor",
       "name": "Gliscor",
       "savedName": "Gliscor",
       "types": [
@@ -13810,6 +13999,7 @@
     {
       "id": "golurk",
       "speciesKey": "golurk",
+      "battleDataKey": "golurk",
       "name": "Golurk",
       "savedName": "Golurk",
       "types": [
@@ -13915,6 +14105,7 @@
     {
       "id": "mega-golurk",
       "speciesKey": "golurk",
+      "battleDataKey": "golurk",
       "name": "Mega Golurk",
       "savedName": "Mega Golurk",
       "types": [
@@ -14017,7 +14208,8 @@
     },
     {
       "id": "hisuian-goodra",
-      "speciesKey": "hisuian-goodra",
+      "speciesKey": "goodra",
+      "battleDataKey": "goodrahisui",
       "name": "Hisuian Goodra",
       "savedName": "Hisuian Goodra",
       "types": [
@@ -14106,7 +14298,8 @@
     },
     {
       "id": "goodra",
-      "speciesKey": "hisuian-goodra",
+      "speciesKey": "goodra",
+      "battleDataKey": "goodra",
       "name": "Goodra",
       "savedName": "Goodra",
       "types": [
@@ -14122,18 +14315,22 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Goodra.png",
       "moveNames": [
+        "Acid Armor",
         "Acid Spray",
-        "Ancient Power",
+        "Aqua Tail",
+        "Assurance",
         "Blizzard",
         "Body Press",
         "Body Slam",
         "Breaking Swipe",
+        "Brutal Swing",
         "Bulldoze",
         "Charm",
         "Chilling Water",
         "Counter",
         "Curse",
         "Draco Meteor",
+        "Dragon Breath",
         "Dragon Cheer",
         "Dragon Claw",
         "Dragon Pulse",
@@ -14146,43 +14343,43 @@
         "Fire Punch",
         "Flail",
         "Flamethrower",
-        "Flash Cannon",
+        "Focus Blast",
+        "Focus Punch",
+        "Giga Drain",
         "Giga Impact",
-        "Gyro Ball",
-        "Heavy Slam",
         "Hydro Pump",
         "Hyper Beam",
         "Ice Beam",
-        "Ice Spinner",
-        "Iron Head",
         "Iron Tail",
         "Knock Off",
-        "Lash Out",
         "Life Dew",
+        "Mega Kick",
         "Mud Shot",
         "Muddy Water",
         "Outrage",
+        "Poison Tail",
+        "Power Whip",
         "Protect",
         "Rain Dance",
         "Rest",
         "Rock Slide",
-        "Rock Tomb",
-        "Sandstorm",
-        "Scary Face",
-        "Shelter",
+        "Round",
+        "Scald",
         "Skitter Smack",
         "Sleep Talk",
         "Sludge Bomb",
         "Sludge Wave",
-        "Steel Beam",
+        "Snore",
         "Stomping Tantrum",
         "Substitute",
         "Sunny Day",
+        "Superpower",
         "Surf",
         "Tearful Look",
         "Thunder",
         "Thunder Punch",
         "Thunderbolt",
+        "Toxic",
         "Water Pulse",
         "Weather Ball"
       ],
@@ -14194,7 +14391,8 @@
     },
     {
       "id": "gourgeist",
-      "speciesKey": "gourgeist-small-variety",
+      "speciesKey": "gourgeist",
+      "battleDataKey": "gourgeist",
       "name": "Gourgeist",
       "savedName": "Gourgeist",
       "types": [
@@ -14281,7 +14479,8 @@
     },
     {
       "id": "gourgeist-jumbo-variety",
-      "speciesKey": "gourgeist-small-variety",
+      "speciesKey": "gourgeist",
+      "battleDataKey": "gourgeistsuper",
       "name": "Gourgeist Jumbo Variety",
       "savedName": "Gourgeist Jumbo Variety",
       "types": [
@@ -14368,7 +14567,8 @@
     },
     {
       "id": "gourgeist-large-variety",
-      "speciesKey": "gourgeist-small-variety",
+      "speciesKey": "gourgeist",
+      "battleDataKey": "gourgeistlarge",
       "name": "Gourgeist Large Variety",
       "savedName": "Gourgeist Large Variety",
       "types": [
@@ -14455,7 +14655,8 @@
     },
     {
       "id": "gourgeist-small-variety",
-      "speciesKey": "gourgeist-small-variety",
+      "speciesKey": "gourgeist",
+      "battleDataKey": "gourgeistsmall",
       "name": "Gourgeist Small Variety",
       "savedName": "Gourgeist Small Variety",
       "types": [
@@ -14543,6 +14744,7 @@
     {
       "id": "greninja",
       "speciesKey": "greninja",
+      "battleDataKey": "greninja",
       "name": "Greninja",
       "savedName": "Greninja",
       "types": [
@@ -14632,6 +14834,7 @@
     {
       "id": "mega-greninja",
       "speciesKey": "greninja",
+      "battleDataKey": "greninja",
       "name": "Mega Greninja",
       "savedName": "Mega Greninja",
       "types": [
@@ -14720,6 +14923,7 @@
     {
       "id": "grimmsnarl",
       "speciesKey": "grimmsnarl",
+      "battleDataKey": "grimmsnarl",
       "name": "Grimmsnarl",
       "savedName": "Grimmsnarl",
       "types": [
@@ -14810,6 +15014,7 @@
     {
       "id": "gyarados",
       "speciesKey": "gyarados",
+      "battleDataKey": "gyarados",
       "name": "Gyarados",
       "savedName": "Gyarados",
       "types": [
@@ -14902,6 +15107,7 @@
     {
       "id": "mega-gyarados",
       "speciesKey": "gyarados",
+      "battleDataKey": "gyarados",
       "name": "Mega Gyarados",
       "savedName": "Mega Gyarados",
       "types": [
@@ -14993,6 +15199,7 @@
     {
       "id": "hatterene",
       "speciesKey": "hatterene",
+      "battleDataKey": "hatterene",
       "name": "Hatterene",
       "savedName": "Hatterene",
       "types": [
@@ -15080,6 +15287,7 @@
     {
       "id": "hawlucha",
       "speciesKey": "hawlucha",
+      "battleDataKey": "hawlucha",
       "name": "Hawlucha",
       "savedName": "Hawlucha",
       "types": [
@@ -15181,6 +15389,7 @@
     {
       "id": "mega-hawlucha",
       "speciesKey": "hawlucha",
+      "battleDataKey": "hawlucha",
       "name": "Mega Hawlucha",
       "savedName": "Mega Hawlucha",
       "types": [
@@ -15280,6 +15489,7 @@
     {
       "id": "heliolisk",
       "speciesKey": "heliolisk",
+      "battleDataKey": "heliolisk",
       "name": "Heliolisk",
       "savedName": "Heliolisk",
       "types": [
@@ -15370,6 +15580,7 @@
     {
       "id": "heracross",
       "speciesKey": "heracross",
+      "battleDataKey": "heracross",
       "name": "Heracross",
       "savedName": "Heracross",
       "types": [
@@ -15462,6 +15673,7 @@
     {
       "id": "mega-heracross",
       "speciesKey": "heracross",
+      "battleDataKey": "heracross",
       "name": "Mega Heracross",
       "savedName": "Mega Heracross",
       "types": [
@@ -15552,6 +15764,7 @@
     {
       "id": "hippowdon",
       "speciesKey": "hippowdon",
+      "battleDataKey": "hippowdon",
       "name": "Hippowdon",
       "savedName": "Hippowdon",
       "types": [
@@ -15627,6 +15840,7 @@
     {
       "id": "hisuian-samurott",
       "speciesKey": "samurott",
+      "battleDataKey": "samurotthisui",
       "name": "Hisuian Samurott",
       "savedName": "Hisuian Samurott",
       "types": [
@@ -15654,8 +15868,10 @@
         "Body Slam",
         "Brick Break",
         "Bulldoze",
+        "Ceaseless Edge",
         "Chilling Water",
         "Copycat",
+        "Dark Pulse",
         "Detect",
         "Dig",
         "Dive",
@@ -15676,6 +15892,7 @@
         "Icy Wind",
         "Iron Tail",
         "Knock Off",
+        "Lash Out",
         "Liquidation",
         "Megahorn",
         "Night Slash",
@@ -15689,15 +15906,18 @@
         "Screech",
         "Sleep Talk",
         "Smart Strike",
+        "Snarl",
         "Snore",
         "Snowscape",
         "Soak",
         "Substitute",
+        "Sucker Punch",
         "Superpower",
         "Surf",
         "Swords Dance",
         "Taunt",
         "Thief",
+        "Throat Chop",
         "Upper Hand",
         "Vacuum Wave",
         "Water Pulse",
@@ -15713,6 +15933,7 @@
     {
       "id": "samurott",
       "speciesKey": "samurott",
+      "battleDataKey": "samurott",
       "name": "Samurott",
       "savedName": "Samurott",
       "types": [
@@ -15798,6 +16019,7 @@
     {
       "id": "hisuian-typhlosion",
       "speciesKey": "typhlosion",
+      "battleDataKey": "typhlosionhisui",
       "name": "Hisuian Typhlosion",
       "savedName": "Hisuian Typhlosion",
       "types": [
@@ -15821,6 +16043,8 @@
         "Bulldoze",
         "Burn Up",
         "Burning Jealousy",
+        "Calm Mind",
+        "Confuse Ray",
         "Covet",
         "Curse",
         "Dig",
@@ -15833,47 +16057,47 @@
         "Facade",
         "Fire Blast",
         "Fire Fang",
-        "Fire Pledge",
         "Fire Punch",
         "Fire Spin",
         "Flame Charge",
         "Flamethrower",
         "Flare Blitz",
-        "Fling",
         "Focus Blast",
         "Focus Punch",
         "Giga Impact",
         "Gyro Ball",
         "Heat Wave",
-        "Helping Hand",
+        "Hex",
         "Howl",
         "Hyper Beam",
+        "Infernal Parade",
         "Inferno",
         "Iron Head",
         "Lava Plume",
         "Low Kick",
         "Mega Kick",
+        "Mystical Fire",
+        "Night Shade",
         "Overheat",
         "Play Rough",
+        "Poltergeist",
         "Protect",
         "Quick Attack",
         "Rest",
         "Reversal",
         "Roar",
         "Rock Slide",
-        "Rock Tomb",
         "Round",
-        "Scorching Sands",
         "Shadow Ball",
         "Shadow Claw",
         "Sleep Talk",
         "Snore",
         "Solar Beam",
+        "Spite",
         "Stomping Tantrum",
         "Substitute",
         "Sunny Day",
         "Temper Flare",
-        "Throat Chop",
         "Thunder Punch",
         "Wild Charge",
         "Will-O-Wisp",
@@ -15887,6 +16111,7 @@
     {
       "id": "typhlosion",
       "speciesKey": "typhlosion",
+      "battleDataKey": "typhlosion",
       "name": "Typhlosion",
       "savedName": "Typhlosion",
       "types": [
@@ -15975,6 +16200,7 @@
     {
       "id": "hisuian-zoroark",
       "speciesKey": "zoroark",
+      "battleDataKey": "zoroarkhisui",
       "name": "Hisuian Zoroark",
       "savedName": "Hisuian Zoroark",
       "types": [
@@ -15994,18 +16220,19 @@
         "Aerial Ace",
         "Agility",
         "Assurance",
+        "Bitter Malice",
         "Body Slam",
         "Bounce",
         "Brick Break",
         "Burning Jealousy",
         "Calm Mind",
+        "Comeuppance",
         "Confuse Ray",
-        "Counter",
         "Crunch",
+        "Curse",
         "Dark Pulse",
         "Detect",
         "Dig",
-        "Encore",
         "Endure",
         "Extrasensory",
         "Facade",
@@ -16013,6 +16240,7 @@
         "Flamethrower",
         "Fling",
         "Focus Blast",
+        "Focus Punch",
         "Foul Play",
         "Giga Impact",
         "Grass Knot",
@@ -16021,6 +16249,7 @@
         "Hone Claws",
         "Hyper Beam",
         "Hyper Voice",
+        "Icy Wind",
         "Imprison",
         "Knock Off",
         "Lash Out",
@@ -16029,11 +16258,11 @@
         "Mega Kick",
         "Memento",
         "Nasty Plot",
-        "Night Daze",
         "Night Shade",
-        "Night Slash",
         "Pain Split",
         "Payback",
+        "Phantom Force",
+        "Poltergeist",
         "Protect",
         "Psych Up",
         "Psychic",
@@ -16044,24 +16273,24 @@
         "Scary Face",
         "Shadow Ball",
         "Shadow Claw",
+        "Shadow Sneak",
         "Skitter Smack",
         "Sleep Talk",
         "Sludge Bomb",
         "Snarl",
         "Snore",
+        "Snowscape",
         "Spite",
         "Substitute",
-        "Sucker Punch",
-        "Sunny Day",
         "Swords Dance",
         "Taunt",
         "Thief",
         "Throat Chop",
         "Torment",
-        "Toxic",
         "Trick",
         "U-turn",
-        "Uproar"
+        "Uproar",
+        "Will-O-Wisp"
       ],
       "abilityIds": [
         "illusion"
@@ -16070,6 +16299,7 @@
     {
       "id": "zoroark",
       "speciesKey": "zoroark",
+      "battleDataKey": "zoroark",
       "name": "Zoroark",
       "savedName": "Zoroark",
       "types": [
@@ -16164,6 +16394,7 @@
     {
       "id": "houndoom",
       "speciesKey": "houndoom",
+      "battleDataKey": "houndoom",
       "name": "Houndoom",
       "savedName": "Houndoom",
       "types": [
@@ -16257,6 +16488,7 @@
     {
       "id": "mega-houndoom",
       "speciesKey": "houndoom",
+      "battleDataKey": "houndoom",
       "name": "Mega Houndoom",
       "savedName": "Mega Houndoom",
       "types": [
@@ -16348,6 +16580,7 @@
     {
       "id": "houndstone",
       "speciesKey": "houndstone",
+      "battleDataKey": "houndstone",
       "name": "Houndstone",
       "savedName": "Houndstone",
       "types": [
@@ -16424,6 +16657,7 @@
     {
       "id": "hydrapple",
       "speciesKey": "hydrapple",
+      "battleDataKey": "hydrapple",
       "name": "Hydrapple",
       "savedName": "Hydrapple",
       "types": [
@@ -16504,6 +16738,7 @@
     {
       "id": "hydreigon",
       "speciesKey": "hydreigon",
+      "battleDataKey": "hydreigon",
       "name": "Hydreigon",
       "savedName": "Hydreigon",
       "types": [
@@ -16607,6 +16842,7 @@
     {
       "id": "incineroar",
       "speciesKey": "incineroar",
+      "battleDataKey": "incineroar",
       "name": "Incineroar",
       "savedName": "Incineroar",
       "types": [
@@ -16711,6 +16947,7 @@
     {
       "id": "infernape",
       "speciesKey": "infernape",
+      "battleDataKey": "infernape",
       "name": "Infernape",
       "savedName": "Infernape",
       "types": [
@@ -16825,6 +17062,7 @@
     {
       "id": "jolteon",
       "speciesKey": "jolteon",
+      "battleDataKey": "jolteon",
       "name": "Jolteon",
       "savedName": "Jolteon",
       "types": [
@@ -16909,6 +17147,7 @@
     {
       "id": "kangaskhan",
       "speciesKey": "kangaskhan",
+      "battleDataKey": "kangaskhan",
       "name": "Kangaskhan",
       "savedName": "Kangaskhan",
       "types": [
@@ -17001,6 +17240,7 @@
     {
       "id": "mega-kangaskhan",
       "speciesKey": "kangaskhan",
+      "battleDataKey": "kangaskhan",
       "name": "Mega Kangaskhan",
       "savedName": "Mega Kangaskhan",
       "types": [
@@ -17091,6 +17331,7 @@
     {
       "id": "kingambit",
       "speciesKey": "kingambit",
+      "battleDataKey": "kingambit",
       "name": "Kingambit",
       "savedName": "Kingambit",
       "types": [
@@ -17169,6 +17410,7 @@
     {
       "id": "kleavor",
       "speciesKey": "kleavor",
+      "battleDataKey": "kleavor",
       "name": "Kleavor",
       "savedName": "Kleavor",
       "types": [
@@ -17253,6 +17495,7 @@
     {
       "id": "klefki",
       "speciesKey": "klefki",
+      "battleDataKey": "klefki",
       "name": "Klefki",
       "savedName": "Klefki",
       "types": [
@@ -17323,6 +17566,7 @@
     {
       "id": "kommo-o",
       "speciesKey": "kommo-o",
+      "battleDataKey": "kommoo",
       "name": "Kommo-o",
       "savedName": "Kommo-o",
       "types": [
@@ -17427,6 +17671,7 @@
     {
       "id": "krookodile",
       "speciesKey": "krookodile",
+      "battleDataKey": "krookodile",
       "name": "Krookodile",
       "savedName": "Krookodile",
       "types": [
@@ -17537,6 +17782,7 @@
     {
       "id": "leafeon",
       "speciesKey": "leafeon",
+      "battleDataKey": "leafeon",
       "name": "Leafeon",
       "savedName": "Leafeon",
       "types": [
@@ -17620,6 +17866,7 @@
     {
       "id": "liepard",
       "speciesKey": "liepard",
+      "battleDataKey": "liepard",
       "name": "Liepard",
       "savedName": "Liepard",
       "types": [
@@ -17705,6 +17952,7 @@
     {
       "id": "lopunny",
       "speciesKey": "lopunny",
+      "battleDataKey": "lopunny",
       "name": "Lopunny",
       "savedName": "Lopunny",
       "types": [
@@ -17810,6 +18058,7 @@
     {
       "id": "mega-lopunny",
       "speciesKey": "lopunny",
+      "battleDataKey": "lopunny",
       "name": "Mega Lopunny",
       "savedName": "Mega Lopunny",
       "types": [
@@ -17914,6 +18163,7 @@
     {
       "id": "lucario",
       "speciesKey": "lucario",
+      "battleDataKey": "lucario",
       "name": "Lucario",
       "savedName": "Lucario",
       "types": [
@@ -18025,6 +18275,7 @@
     {
       "id": "mega-lucario",
       "speciesKey": "lucario",
+      "battleDataKey": "lucario",
       "name": "Mega Lucario",
       "savedName": "Mega Lucario",
       "types": [
@@ -18134,6 +18385,7 @@
     {
       "id": "luxray",
       "speciesKey": "luxray",
+      "battleDataKey": "luxray",
       "name": "Luxray",
       "savedName": "Luxray",
       "types": [
@@ -18212,7 +18464,8 @@
     },
     {
       "id": "lycanroc",
-      "speciesKey": "lycanroc-midnight-form",
+      "speciesKey": "lycanroc",
+      "battleDataKey": "lycanroc",
       "name": "Lycanroc",
       "savedName": "Lycanroc",
       "types": [
@@ -18228,6 +18481,9 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Lycanroc.png",
       "moveNames": [
+        "Accelerock",
+        "Agility",
+        "Assurance",
         "Bite",
         "Body Slam",
         "Brick Break",
@@ -18235,20 +18491,16 @@
         "Bulldoze",
         "Charm",
         "Close Combat",
-        "Counter",
         "Crunch",
         "Dig",
         "Double Team",
         "Double-Edge",
+        "Drill Run",
         "Earth Power",
         "Endeavor",
         "Endure",
         "Facade",
         "Fire Fang",
-        "Fire Punch",
-        "Fling",
-        "Focus Punch",
-        "Foul Play",
         "Giga Impact",
         "Helping Hand",
         "Howl",
@@ -18256,28 +18508,21 @@
         "Iron Defense",
         "Iron Head",
         "Iron Tail",
-        "Knock Off",
-        "Lash Out",
         "Last Resort",
-        "Low Sweep",
-        "Mega Kick",
         "Mud-Slap",
-        "Outrage",
-        "Payback",
         "Play Rough",
         "Protect",
         "Psychic Fangs",
+        "Quick Attack",
+        "Quick Guard",
         "Rest",
-        "Reversal",
         "Roar",
         "Rock Blast",
         "Rock Slide",
         "Rock Tomb",
         "Round",
-        "Sand Attack",
         "Sandstorm",
         "Scary Face",
-        "Shadow Claw",
         "Sleep Talk",
         "Snarl",
         "Snore",
@@ -18288,15 +18533,12 @@
         "Sucker Punch",
         "Sunny Day",
         "Swords Dance",
-        "Tackle",
+        "Tail Slap",
+        "Take Down",
         "Taunt",
         "Thrash",
-        "Throat Chop",
         "Thunder Fang",
-        "Thunder Punch",
         "Trailblaze",
-        "Upper Hand",
-        "Uproar",
         "Zen Headbutt"
       ],
       "abilityIds": [
@@ -18307,7 +18549,8 @@
     },
     {
       "id": "lycanroc-dusk-form",
-      "speciesKey": "lycanroc-midnight-form",
+      "speciesKey": "lycanroc",
+      "battleDataKey": "lycanrocdusk",
       "name": "Lycanroc Dusk Form",
       "savedName": "Lycanroc Dusk Form",
       "types": [
@@ -18323,6 +18566,7 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Lycanroc%20Dusk%20Form.png",
       "moveNames": [
+        "Accelerock",
         "Bite",
         "Body Slam",
         "Brick Break",
@@ -18332,18 +18576,17 @@
         "Close Combat",
         "Counter",
         "Crunch",
+        "Crush Claw",
         "Dig",
         "Double Team",
         "Double-Edge",
+        "Drill Run",
         "Earth Power",
         "Endeavor",
         "Endure",
         "Facade",
         "Fire Fang",
-        "Fire Punch",
-        "Fling",
-        "Focus Punch",
-        "Foul Play",
+        "Focus Energy",
         "Giga Impact",
         "Helping Hand",
         "Howl",
@@ -18351,17 +18594,14 @@
         "Iron Defense",
         "Iron Head",
         "Iron Tail",
-        "Knock Off",
-        "Lash Out",
         "Last Resort",
-        "Low Sweep",
-        "Mega Kick",
         "Mud-Slap",
         "Outrage",
-        "Payback",
         "Play Rough",
         "Protect",
         "Psychic Fangs",
+        "Quick Attack",
+        "Quick Guard",
         "Rest",
         "Reversal",
         "Roar",
@@ -18369,10 +18609,8 @@
         "Rock Slide",
         "Rock Tomb",
         "Round",
-        "Sand Attack",
         "Sandstorm",
         "Scary Face",
-        "Shadow Claw",
         "Sleep Talk",
         "Snarl",
         "Snore",
@@ -18381,17 +18619,13 @@
         "Stone Edge",
         "Substitute",
         "Sucker Punch",
-        "Sunny Day",
         "Swords Dance",
-        "Tackle",
+        "Tail Slap",
         "Taunt",
         "Thrash",
         "Throat Chop",
         "Thunder Fang",
-        "Thunder Punch",
         "Trailblaze",
-        "Upper Hand",
-        "Uproar",
         "Zen Headbutt"
       ],
       "abilityIds": [
@@ -18400,7 +18634,8 @@
     },
     {
       "id": "lycanroc-midnight-form",
-      "speciesKey": "lycanroc-midnight-form",
+      "speciesKey": "lycanroc",
+      "battleDataKey": "lycanrocmidnight",
       "name": "Lycanroc Midnight Form",
       "savedName": "Lycanroc Midnight Form",
       "types": [
@@ -18496,6 +18731,7 @@
     {
       "id": "machamp",
       "speciesKey": "machamp",
+      "battleDataKey": "machamp",
       "name": "Machamp",
       "savedName": "Machamp",
       "types": [
@@ -18587,6 +18823,7 @@
     {
       "id": "malamar",
       "speciesKey": "malamar",
+      "battleDataKey": "malamar",
       "name": "Malamar",
       "savedName": "Malamar",
       "types": [
@@ -18681,6 +18918,7 @@
     {
       "id": "mega-malamar",
       "speciesKey": "malamar",
+      "battleDataKey": "malamar",
       "name": "Mega Malamar",
       "savedName": "Mega Malamar",
       "types": [
@@ -18773,6 +19011,7 @@
     {
       "id": "mamoswine",
       "speciesKey": "mamoswine",
+      "battleDataKey": "mamoswine",
       "name": "Mamoswine",
       "savedName": "Mamoswine",
       "types": [
@@ -18863,6 +19102,7 @@
     {
       "id": "manectric",
       "speciesKey": "manectric",
+      "battleDataKey": "manectric",
       "name": "Manectric",
       "savedName": "Manectric",
       "types": [
@@ -18938,6 +19178,7 @@
     {
       "id": "mega-manectric",
       "speciesKey": "manectric",
+      "battleDataKey": "manectric",
       "name": "Mega Manectric",
       "savedName": "Mega Manectric",
       "types": [
@@ -19010,7 +19251,8 @@
     },
     {
       "id": "maushold",
-      "speciesKey": "maushold-family-of-four",
+      "speciesKey": "maushold",
+      "battleDataKey": "mausholdfour",
       "name": "Maushold",
       "savedName": "Maushold",
       "types": [
@@ -19086,7 +19328,8 @@
     },
     {
       "id": "maushold-family-of-four",
-      "speciesKey": "maushold-family-of-four",
+      "speciesKey": "maushold",
+      "battleDataKey": "mausholdfour",
       "name": "Maushold Family of Four",
       "savedName": "Maushold Family of Four",
       "types": [
@@ -19163,6 +19406,7 @@
     {
       "id": "mawile",
       "speciesKey": "mawile",
+      "battleDataKey": "mawile",
       "name": "Mawile",
       "savedName": "Mawile",
       "types": [
@@ -19260,6 +19504,7 @@
     {
       "id": "mega-mawile",
       "speciesKey": "mawile",
+      "battleDataKey": "mawile",
       "name": "Mega Mawile",
       "savedName": "Mega Mawile",
       "types": [
@@ -19355,6 +19600,7 @@
     {
       "id": "medicham",
       "speciesKey": "medicham",
+      "battleDataKey": "medicham",
       "name": "Medicham",
       "savedName": "Medicham",
       "types": [
@@ -19457,6 +19703,7 @@
     {
       "id": "mega-medicham",
       "speciesKey": "medicham",
+      "battleDataKey": "medicham",
       "name": "Mega Medicham",
       "savedName": "Mega Medicham",
       "types": [
@@ -19558,6 +19805,7 @@
     {
       "id": "meganium",
       "speciesKey": "meganium",
+      "battleDataKey": "meganium",
       "name": "Meganium",
       "savedName": "Meganium",
       "types": [
@@ -19644,6 +19892,7 @@
     {
       "id": "mega-meganium",
       "speciesKey": "meganium",
+      "battleDataKey": "meganium",
       "name": "Mega Meganium",
       "savedName": "Mega Meganium",
       "types": [
@@ -19730,6 +19979,7 @@
     {
       "id": "meowscarada",
       "speciesKey": "meowscarada",
+      "battleDataKey": "meowscarada",
       "name": "Meowscarada",
       "savedName": "Meowscarada",
       "types": [
@@ -19822,7 +20072,8 @@
     },
     {
       "id": "meowstic",
-      "speciesKey": "meowstic-female",
+      "speciesKey": "meowstic",
+      "battleDataKey": "meowstic",
       "name": "Meowstic",
       "savedName": "Meowstic",
       "types": [
@@ -19850,19 +20101,19 @@
         "Endure",
         "Energy Ball",
         "Expanding Force",
-        "Extrasensory",
         "Facade",
         "Fake Out",
         "Fake Tears",
-        "Future Sight",
         "Giga Impact",
         "Gravity",
         "Helping Hand",
         "Hyper Beam",
+        "Imprison",
         "Iron Tail",
         "Light Screen",
         "Magic Room",
-        "Magical Leaf",
+        "Mean Look",
+        "Misty Terrain",
         "Nasty Plot",
         "Payback",
         "Play Rough",
@@ -19872,6 +20123,7 @@
         "Psychic Noise",
         "Psychic Terrain",
         "Psyshock",
+        "Quick Guard",
         "Rain Dance",
         "Reflect",
         "Rest",
@@ -19893,6 +20145,7 @@
         "Trailblaze",
         "Trick",
         "Trick Room",
+        "Wish",
         "Wonder Room",
         "Yawn",
         "Zen Headbutt"
@@ -19905,7 +20158,8 @@
     },
     {
       "id": "mega-meowstic",
-      "speciesKey": "meowstic-female",
+      "speciesKey": "meowstic",
+      "battleDataKey": "meowstic",
       "name": "Mega Meowstic",
       "savedName": "Mega Meowstic",
       "types": [
@@ -19933,19 +20187,19 @@
         "Endure",
         "Energy Ball",
         "Expanding Force",
-        "Extrasensory",
         "Facade",
         "Fake Out",
         "Fake Tears",
-        "Future Sight",
         "Giga Impact",
         "Gravity",
         "Helping Hand",
         "Hyper Beam",
+        "Imprison",
         "Iron Tail",
         "Light Screen",
         "Magic Room",
-        "Magical Leaf",
+        "Mean Look",
+        "Misty Terrain",
         "Nasty Plot",
         "Payback",
         "Play Rough",
@@ -19955,6 +20209,7 @@
         "Psychic Noise",
         "Psychic Terrain",
         "Psyshock",
+        "Quick Guard",
         "Rain Dance",
         "Reflect",
         "Rest",
@@ -19976,6 +20231,7 @@
         "Trailblaze",
         "Trick",
         "Trick Room",
+        "Wish",
         "Wonder Room",
         "Yawn",
         "Zen Headbutt"
@@ -19986,7 +20242,8 @@
     },
     {
       "id": "meowstic-female",
-      "speciesKey": "meowstic-female",
+      "speciesKey": "meowstic",
+      "battleDataKey": "meowsticf",
       "name": "Meowstic Female",
       "savedName": "Meowstic Female",
       "types": [
@@ -20070,6 +20327,7 @@
     {
       "id": "metagross",
       "speciesKey": "metagross",
+      "battleDataKey": "metagross",
       "name": "Metagross",
       "savedName": "Metagross",
       "types": [
@@ -20163,6 +20421,7 @@
     {
       "id": "mega-metagross",
       "speciesKey": "metagross",
+      "battleDataKey": "metagross",
       "name": "Mega Metagross",
       "savedName": "Mega Metagross",
       "types": [
@@ -20255,6 +20514,7 @@
     {
       "id": "milotic",
       "speciesKey": "milotic",
+      "battleDataKey": "milotic",
       "name": "Milotic",
       "savedName": "Milotic",
       "types": [
@@ -20342,6 +20602,7 @@
     {
       "id": "mimikyu",
       "speciesKey": "mimikyu",
+      "battleDataKey": "mimikyu",
       "name": "Mimikyu",
       "savedName": "Mimikyu",
       "types": [
@@ -20428,6 +20689,7 @@
     {
       "id": "morpeko",
       "speciesKey": "morpeko",
+      "battleDataKey": "morpeko",
       "name": "Morpeko",
       "savedName": "Morpeko",
       "types": [
@@ -20517,6 +20779,7 @@
     {
       "id": "morpeko-hangry-mode",
       "speciesKey": "morpeko",
+      "battleDataKey": "morpeko",
       "name": "Morpeko Hangry Mode",
       "savedName": "Morpeko Hangry Mode",
       "types": [
@@ -20606,6 +20869,7 @@
     {
       "id": "mr-rime",
       "speciesKey": "mr-rime",
+      "battleDataKey": "mrrime",
       "name": "Mr. Rime",
       "savedName": "Mr. Rime",
       "types": [
@@ -20726,6 +20990,7 @@
     {
       "id": "mudsdale",
       "speciesKey": "mudsdale",
+      "battleDataKey": "mudsdale",
       "name": "Mudsdale",
       "savedName": "Mudsdale",
       "types": [
@@ -20796,6 +21061,7 @@
     {
       "id": "musharna",
       "speciesKey": "musharna",
+      "battleDataKey": "musharna",
       "name": "Musharna",
       "savedName": "Musharna",
       "types": [
@@ -20871,6 +21137,7 @@
     {
       "id": "noivern",
       "speciesKey": "noivern",
+      "battleDataKey": "noivern",
       "name": "Noivern",
       "savedName": "Noivern",
       "types": [
@@ -20961,6 +21228,7 @@
     {
       "id": "oranguru",
       "speciesKey": "oranguru",
+      "battleDataKey": "oranguru",
       "name": "Oranguru",
       "savedName": "Oranguru",
       "types": [
@@ -21052,6 +21320,7 @@
     {
       "id": "orthworm",
       "speciesKey": "orthworm",
+      "battleDataKey": "orthworm",
       "name": "Orthworm",
       "savedName": "Orthworm",
       "types": [
@@ -21116,6 +21385,7 @@
     {
       "id": "overqwil",
       "speciesKey": "overqwil",
+      "battleDataKey": "overqwil",
       "name": "Overqwil",
       "savedName": "Overqwil",
       "types": [
@@ -21201,7 +21471,8 @@
     },
     {
       "id": "palafin-zero-form",
-      "speciesKey": "palafin-zero-form",
+      "speciesKey": "palafin",
+      "battleDataKey": "palafin",
       "name": "Palafin Zero Form",
       "savedName": "Palafin Zero Form",
       "types": [
@@ -21283,7 +21554,8 @@
     },
     {
       "id": "palafin-hero-form",
-      "speciesKey": "palafin-zero-form",
+      "speciesKey": "palafin",
+      "battleDataKey": "palafin",
       "name": "Palafin Hero Form",
       "savedName": "Palafin Hero Form",
       "types": [
@@ -21366,6 +21638,7 @@
     {
       "id": "paldean-tauros-aqua-breed",
       "speciesKey": "tauros",
+      "battleDataKey": "taurospaldeaaqua",
       "name": "Paldean Tauros Aqua Breed",
       "savedName": "Paldean Tauros Aqua Breed",
       "types": [
@@ -21382,32 +21655,31 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Paldean%20Tauros%20Aqua%20Breed.png",
       "moveNames": [
-        "Assurance",
-        "Blizzard",
+        "Aqua Jet",
+        "Body Press",
         "Body Slam",
+        "Bulk Up",
         "Bulldoze",
+        "Chilling Water",
         "Close Combat",
         "Curse",
         "Dig",
         "Double-Edge",
+        "Drill Run",
         "Earthquake",
         "Endeavor",
         "Endure",
         "Facade",
-        "Fire Blast",
-        "Flamethrower",
         "Giga Impact",
-        "Helping Hand",
         "High Horsepower",
+        "Hydro Pump",
         "Hyper Beam",
-        "Ice Beam",
-        "Icy Wind",
         "Iron Head",
         "Iron Tail",
         "Lash Out",
+        "Liquidation",
         "Megahorn",
         "Outrage",
-        "Payback",
         "Protect",
         "Raging Bull",
         "Rain Dance",
@@ -21418,24 +21690,20 @@
         "Round",
         "Sandstorm",
         "Scary Face",
-        "Shadow Ball",
         "Sleep Talk",
         "Smart Strike",
         "Snore",
-        "Solar Beam",
         "Stomping Tantrum",
         "Stone Edge",
         "Substitute",
-        "Sunny Day",
         "Surf",
         "Swagger",
         "Thief",
         "Thrash",
-        "Throat Chop",
-        "Thunder",
-        "Thunderbolt",
         "Trailblaze",
         "Uproar",
+        "Water Pulse",
+        "Wave Crash",
         "Whirlpool",
         "Wild Charge",
         "Zen Headbutt"
@@ -21449,6 +21717,7 @@
     {
       "id": "paldean-tauros-blaze-breed",
       "speciesKey": "tauros",
+      "battleDataKey": "taurospaldeablaze",
       "name": "Paldean Tauros Blaze Breed",
       "savedName": "Paldean Tauros Blaze Breed",
       "types": [
@@ -21465,32 +21734,33 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Paldean%20Tauros%20Blaze%20Breed.png",
       "moveNames": [
-        "Assurance",
-        "Blizzard",
+        "Body Press",
         "Body Slam",
+        "Bulk Up",
         "Bulldoze",
         "Close Combat",
         "Curse",
         "Dig",
         "Double-Edge",
+        "Drill Run",
         "Earthquake",
         "Endeavor",
         "Endure",
         "Facade",
         "Fire Blast",
+        "Fire Spin",
+        "Flame Charge",
         "Flamethrower",
+        "Flare Blitz",
         "Giga Impact",
-        "Helping Hand",
         "High Horsepower",
         "Hyper Beam",
-        "Ice Beam",
-        "Icy Wind",
         "Iron Head",
         "Iron Tail",
         "Lash Out",
         "Megahorn",
         "Outrage",
-        "Payback",
+        "Overheat",
         "Protect",
         "Raging Bull",
         "Rain Dance",
@@ -21501,26 +21771,21 @@
         "Round",
         "Sandstorm",
         "Scary Face",
-        "Shadow Ball",
         "Sleep Talk",
         "Smart Strike",
         "Snore",
-        "Solar Beam",
         "Stomping Tantrum",
         "Stone Edge",
         "Substitute",
         "Sunny Day",
-        "Surf",
         "Swagger",
+        "Temper Flare",
         "Thief",
         "Thrash",
-        "Throat Chop",
-        "Thunder",
-        "Thunderbolt",
         "Trailblaze",
         "Uproar",
-        "Whirlpool",
         "Wild Charge",
+        "Will-O-Wisp",
         "Zen Headbutt"
       ],
       "abilityIds": [
@@ -21532,6 +21797,7 @@
     {
       "id": "paldean-tauros-combat-breed",
       "speciesKey": "tauros",
+      "battleDataKey": "taurospaldeacombat",
       "name": "Paldean Tauros Combat Breed",
       "savedName": "Paldean Tauros Combat Breed",
       "types": [
@@ -21548,31 +21814,27 @@
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Paldean%20Tauros%20Combat%20Breed.png",
       "moveNames": [
         "Assurance",
-        "Blizzard",
+        "Body Press",
         "Body Slam",
+        "Bulk Up",
         "Bulldoze",
         "Close Combat",
         "Curse",
         "Dig",
         "Double-Edge",
+        "Drill Run",
         "Earthquake",
         "Endeavor",
         "Endure",
         "Facade",
-        "Fire Blast",
-        "Flamethrower",
         "Giga Impact",
-        "Helping Hand",
         "High Horsepower",
         "Hyper Beam",
-        "Ice Beam",
-        "Icy Wind",
         "Iron Head",
         "Iron Tail",
         "Lash Out",
         "Megahorn",
         "Outrage",
-        "Payback",
         "Protect",
         "Raging Bull",
         "Rain Dance",
@@ -21583,11 +21845,9 @@
         "Round",
         "Sandstorm",
         "Scary Face",
-        "Shadow Ball",
         "Sleep Talk",
         "Smart Strike",
         "Snore",
-        "Solar Beam",
         "Stomping Tantrum",
         "Stone Edge",
         "Substitute",
@@ -21597,11 +21857,8 @@
         "Thief",
         "Thrash",
         "Throat Chop",
-        "Thunder",
-        "Thunderbolt",
         "Trailblaze",
         "Uproar",
-        "Whirlpool",
         "Wild Charge",
         "Zen Headbutt"
       ],
@@ -21614,6 +21871,7 @@
     {
       "id": "tauros",
       "speciesKey": "tauros",
+      "battleDataKey": "tauros",
       "name": "Tauros",
       "savedName": "Tauros",
       "types": [
@@ -21696,6 +21954,7 @@
     {
       "id": "pangoro",
       "speciesKey": "pangoro",
+      "battleDataKey": "pangoro",
       "name": "Pangoro",
       "savedName": "Pangoro",
       "types": [
@@ -21803,6 +22062,7 @@
     {
       "id": "passimian",
       "speciesKey": "passimian",
+      "battleDataKey": "passimian",
       "name": "Passimian",
       "savedName": "Passimian",
       "types": [
@@ -21893,6 +22153,7 @@
     {
       "id": "pelipper",
       "speciesKey": "pelipper",
+      "battleDataKey": "pelipper",
       "name": "Pelipper",
       "savedName": "Pelipper",
       "types": [
@@ -21972,6 +22233,7 @@
     {
       "id": "pidgeot",
       "speciesKey": "pidgeot",
+      "battleDataKey": "pidgeot",
       "name": "Pidgeot",
       "savedName": "Pidgeot",
       "types": [
@@ -22029,6 +22291,7 @@
     {
       "id": "mega-pidgeot",
       "speciesKey": "pidgeot",
+      "battleDataKey": "pidgeot",
       "name": "Mega Pidgeot",
       "savedName": "Mega Pidgeot",
       "types": [
@@ -22084,6 +22347,7 @@
     {
       "id": "pikachu",
       "speciesKey": "pikachu",
+      "battleDataKey": "pikachu",
       "name": "Pikachu",
       "savedName": "Pikachu",
       "types": [
@@ -22169,6 +22433,7 @@
     {
       "id": "mega-pinsir",
       "speciesKey": "pinsir",
+      "battleDataKey": "pinsir",
       "name": "Mega Pinsir",
       "savedName": "Mega Pinsir",
       "types": [
@@ -22246,6 +22511,7 @@
     {
       "id": "pinsir",
       "speciesKey": "pinsir",
+      "battleDataKey": "pinsir",
       "name": "Pinsir",
       "savedName": "Pinsir",
       "types": [
@@ -22324,6 +22590,7 @@
     {
       "id": "politoed",
       "speciesKey": "politoed",
+      "battleDataKey": "politoed",
       "name": "Politoed",
       "savedName": "Politoed",
       "types": [
@@ -22406,6 +22673,7 @@
     {
       "id": "polteageist",
       "speciesKey": "polteageist",
+      "battleDataKey": "polteageist",
       "name": "Polteageist",
       "savedName": "Polteageist",
       "types": [
@@ -22476,6 +22744,7 @@
     {
       "id": "primarina",
       "speciesKey": "primarina",
+      "battleDataKey": "primarina",
       "name": "Primarina",
       "savedName": "Primarina",
       "types": [
@@ -22565,6 +22834,7 @@
     {
       "id": "pyroar",
       "speciesKey": "pyroar",
+      "battleDataKey": "pyroar",
       "name": "Pyroar",
       "savedName": "Pyroar",
       "types": [
@@ -22640,6 +22910,7 @@
     {
       "id": "mega-pyroar",
       "speciesKey": "pyroar",
+      "battleDataKey": "pyroar",
       "name": "Mega Pyroar",
       "savedName": "Mega Pyroar",
       "types": [
@@ -22713,6 +22984,7 @@
     {
       "id": "quaquaval",
       "speciesKey": "quaquaval",
+      "battleDataKey": "quaquaval",
       "name": "Quaquaval",
       "savedName": "Quaquaval",
       "types": [
@@ -22798,6 +23070,7 @@
     {
       "id": "qwilfish",
       "speciesKey": "qwilfish",
+      "battleDataKey": "qwilfish",
       "name": "Qwilfish",
       "savedName": "Qwilfish",
       "types": [
@@ -22888,6 +23161,7 @@
     {
       "id": "rampardos",
       "speciesKey": "rampardos",
+      "battleDataKey": "rampardos",
       "name": "Rampardos",
       "savedName": "Rampardos",
       "types": [
@@ -22986,6 +23260,7 @@
     {
       "id": "reuniclus",
       "speciesKey": "reuniclus",
+      "battleDataKey": "reuniclus",
       "name": "Reuniclus",
       "savedName": "Reuniclus",
       "types": [
@@ -23078,6 +23353,7 @@
     {
       "id": "rhyperior",
       "speciesKey": "rhyperior",
+      "battleDataKey": "rhyperior",
       "name": "Rhyperior",
       "savedName": "Rhyperior",
       "types": [
@@ -23196,6 +23472,7 @@
     {
       "id": "roserade",
       "speciesKey": "roserade",
+      "battleDataKey": "roserade",
       "name": "Roserade",
       "savedName": "Roserade",
       "types": [
@@ -23275,7 +23552,8 @@
     },
     {
       "id": "rotom-wash",
-      "speciesKey": "rotom-wash",
+      "speciesKey": "rotom",
+      "battleDataKey": "rotomwash",
       "name": "Rotom Wash",
       "savedName": "Rotom Wash",
       "types": [
@@ -23343,7 +23621,8 @@
     },
     {
       "id": "rotom",
-      "speciesKey": "rotom-wash",
+      "speciesKey": "rotom",
+      "battleDataKey": "rotom",
       "name": "Rotom",
       "savedName": "Rotom",
       "types": [
@@ -23375,7 +23654,6 @@
         "Foul Play",
         "Helping Hand",
         "Hex",
-        "Hydro Pump",
         "Hyper Voice",
         "Light Screen",
         "Nasty Plot",
@@ -23411,7 +23689,8 @@
     },
     {
       "id": "rotom-fan",
-      "speciesKey": "rotom-wash",
+      "speciesKey": "rotom",
+      "battleDataKey": "rotomfan",
       "name": "Rotom Fan",
       "savedName": "Rotom Fan",
       "types": [
@@ -23428,6 +23707,7 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Rotom%20Fan.png",
       "moveNames": [
+        "Air Slash",
         "Charge",
         "Charge Beam",
         "Confuse Ray",
@@ -23443,7 +23723,6 @@
         "Foul Play",
         "Helping Hand",
         "Hex",
-        "Hydro Pump",
         "Hyper Voice",
         "Light Screen",
         "Nasty Plot",
@@ -23479,7 +23758,8 @@
     },
     {
       "id": "rotom-frost",
-      "speciesKey": "rotom-wash",
+      "speciesKey": "rotom",
+      "battleDataKey": "rotomfrost",
       "name": "Rotom Frost",
       "savedName": "Rotom Frost",
       "types": [
@@ -23496,6 +23776,7 @@
       },
       "imageUrl": "https://championsbattledata.com/pokemon_champions_assets/pokemon/Rotom%20Frost.png",
       "moveNames": [
+        "Blizzard",
         "Charge",
         "Charge Beam",
         "Confuse Ray",
@@ -23511,7 +23792,6 @@
         "Foul Play",
         "Helping Hand",
         "Hex",
-        "Hydro Pump",
         "Hyper Voice",
         "Light Screen",
         "Nasty Plot",
@@ -23547,7 +23827,8 @@
     },
     {
       "id": "rotom-heat",
-      "speciesKey": "rotom-wash",
+      "speciesKey": "rotom",
+      "battleDataKey": "rotomheat",
       "name": "Rotom Heat",
       "savedName": "Rotom Heat",
       "types": [
@@ -23579,11 +23860,11 @@
         "Foul Play",
         "Helping Hand",
         "Hex",
-        "Hydro Pump",
         "Hyper Voice",
         "Light Screen",
         "Nasty Plot",
         "Night Shade",
+        "Overheat",
         "Pain Split",
         "Poltergeist",
         "Protect",
@@ -23615,7 +23896,8 @@
     },
     {
       "id": "rotom-mow",
-      "speciesKey": "rotom-wash",
+      "speciesKey": "rotom",
+      "battleDataKey": "rotommow",
       "name": "Rotom Mow",
       "savedName": "Rotom Mow",
       "types": [
@@ -23647,8 +23929,8 @@
         "Foul Play",
         "Helping Hand",
         "Hex",
-        "Hydro Pump",
         "Hyper Voice",
+        "Leaf Storm",
         "Light Screen",
         "Nasty Plot",
         "Night Shade",
@@ -23684,6 +23966,7 @@
     {
       "id": "runerigus",
       "speciesKey": "runerigus",
+      "battleDataKey": "runerigus",
       "name": "Runerigus",
       "savedName": "Runerigus",
       "types": [
@@ -23778,6 +24061,7 @@
     {
       "id": "sableye",
       "speciesKey": "sableye",
+      "battleDataKey": "sableye",
       "name": "Sableye",
       "savedName": "Sableye",
       "types": [
@@ -23893,6 +24177,7 @@
     {
       "id": "mega-sableye",
       "speciesKey": "sableye",
+      "battleDataKey": "sableye",
       "name": "Mega Sableye",
       "savedName": "Mega Sableye",
       "types": [
@@ -24006,6 +24291,7 @@
     {
       "id": "salazzle",
       "speciesKey": "salazzle",
+      "battleDataKey": "salazzle",
       "name": "Salazzle",
       "savedName": "Salazzle",
       "types": [
@@ -24102,6 +24388,7 @@
     {
       "id": "sandaconda",
       "speciesKey": "sandaconda",
+      "battleDataKey": "sandaconda",
       "name": "Sandaconda",
       "savedName": "Sandaconda",
       "types": [
@@ -24176,6 +24463,7 @@
     {
       "id": "sceptile",
       "speciesKey": "sceptile",
+      "battleDataKey": "sceptile",
       "name": "Sceptile",
       "savedName": "Sceptile",
       "types": [
@@ -24277,6 +24565,7 @@
     {
       "id": "mega-sceptile",
       "speciesKey": "sceptile",
+      "battleDataKey": "sceptile",
       "name": "Mega Sceptile",
       "savedName": "Mega Sceptile",
       "types": [
@@ -24378,6 +24667,7 @@
     {
       "id": "scizor",
       "speciesKey": "scizor",
+      "battleDataKey": "scizor",
       "name": "Scizor",
       "savedName": "Scizor",
       "types": [
@@ -24468,6 +24758,7 @@
     {
       "id": "mega-scizor",
       "speciesKey": "scizor",
+      "battleDataKey": "scizor",
       "name": "Mega Scizor",
       "savedName": "Mega Scizor",
       "types": [
@@ -24556,6 +24847,7 @@
     {
       "id": "scolipede",
       "speciesKey": "scolipede",
+      "battleDataKey": "scolipede",
       "name": "Scolipede",
       "savedName": "Scolipede",
       "types": [
@@ -24635,6 +24927,7 @@
     {
       "id": "mega-scolipede",
       "speciesKey": "scolipede",
+      "battleDataKey": "scolipede",
       "name": "Mega Scolipede",
       "savedName": "Mega Scolipede",
       "types": [
@@ -24712,6 +25005,7 @@
     {
       "id": "scovillain",
       "speciesKey": "scovillain",
+      "battleDataKey": "scovillain",
       "name": "Scovillain",
       "savedName": "Scovillain",
       "types": [
@@ -24786,6 +25080,7 @@
     {
       "id": "mega-scovillain",
       "speciesKey": "scovillain",
+      "battleDataKey": "scovillain",
       "name": "Mega Scovillain",
       "savedName": "Mega Scovillain",
       "types": [
@@ -24858,6 +25153,7 @@
     {
       "id": "scrafty",
       "speciesKey": "scrafty",
+      "battleDataKey": "scrafty",
       "name": "Scrafty",
       "savedName": "Scrafty",
       "types": [
@@ -24966,6 +25262,7 @@
     {
       "id": "mega-scrafty",
       "speciesKey": "scrafty",
+      "battleDataKey": "scrafty",
       "name": "Mega Scrafty",
       "savedName": "Mega Scrafty",
       "types": [
@@ -25072,6 +25369,7 @@
     {
       "id": "serperior",
       "speciesKey": "serperior",
+      "battleDataKey": "serperior",
       "name": "Serperior",
       "savedName": "Serperior",
       "types": [
@@ -25150,6 +25448,7 @@
     {
       "id": "sharpedo",
       "speciesKey": "sharpedo",
+      "battleDataKey": "sharpedo",
       "name": "Sharpedo",
       "savedName": "Sharpedo",
       "types": [
@@ -25235,6 +25534,7 @@
     {
       "id": "mega-sharpedo",
       "speciesKey": "sharpedo",
+      "battleDataKey": "sharpedo",
       "name": "Mega Sharpedo",
       "savedName": "Mega Sharpedo",
       "types": [
@@ -25319,6 +25619,7 @@
     {
       "id": "simipour",
       "speciesKey": "simipour",
+      "battleDataKey": "simipour",
       "name": "Simipour",
       "savedName": "Simipour",
       "types": [
@@ -25397,6 +25698,7 @@
     {
       "id": "simisage",
       "speciesKey": "simisage",
+      "battleDataKey": "simisage",
       "name": "Simisage",
       "savedName": "Simisage",
       "types": [
@@ -25473,6 +25775,7 @@
     {
       "id": "simisear",
       "speciesKey": "simisear",
+      "battleDataKey": "simisear",
       "name": "Simisear",
       "savedName": "Simisear",
       "types": [
@@ -25552,6 +25855,7 @@
     {
       "id": "sinistcha",
       "speciesKey": "sinistcha",
+      "battleDataKey": "sinistcha",
       "name": "Sinistcha",
       "savedName": "Sinistcha",
       "types": [
@@ -25613,6 +25917,7 @@
     {
       "id": "skarmory",
       "speciesKey": "skarmory",
+      "battleDataKey": "skarmory",
       "name": "Skarmory",
       "savedName": "Skarmory",
       "types": [
@@ -25690,6 +25995,7 @@
     {
       "id": "mega-skarmory",
       "speciesKey": "skarmory",
+      "battleDataKey": "skarmory",
       "name": "Mega Skarmory",
       "savedName": "Mega Skarmory",
       "types": [
@@ -25765,6 +26071,7 @@
     {
       "id": "skeledirge",
       "speciesKey": "skeledirge",
+      "battleDataKey": "skeledirge",
       "name": "Skeledirge",
       "savedName": "Skeledirge",
       "types": [
@@ -25847,6 +26154,7 @@
     {
       "id": "slurpuff",
       "speciesKey": "slurpuff",
+      "battleDataKey": "slurpuff",
       "name": "Slurpuff",
       "savedName": "Slurpuff",
       "types": [
@@ -25913,6 +26221,7 @@
     {
       "id": "sneasler",
       "speciesKey": "sneasler",
+      "battleDataKey": "sneasler",
       "name": "Sneasler",
       "savedName": "Sneasler",
       "types": [
@@ -26002,6 +26311,7 @@
     {
       "id": "snorlax",
       "speciesKey": "snorlax",
+      "battleDataKey": "snorlax",
       "name": "Snorlax",
       "savedName": "Snorlax",
       "types": [
@@ -26110,6 +26420,7 @@
     {
       "id": "spiritomb",
       "speciesKey": "spiritomb",
+      "battleDataKey": "spiritomb",
       "name": "Spiritomb",
       "savedName": "Spiritomb",
       "types": [
@@ -26189,6 +26500,7 @@
     {
       "id": "staraptor",
       "speciesKey": "staraptor",
+      "battleDataKey": "staraptor",
       "name": "Staraptor",
       "savedName": "Staraptor",
       "types": [
@@ -26257,6 +26569,7 @@
     {
       "id": "mega-staraptor",
       "speciesKey": "staraptor",
+      "battleDataKey": "staraptor",
       "name": "Mega Staraptor",
       "savedName": "Mega Staraptor",
       "types": [
@@ -26324,6 +26637,7 @@
     {
       "id": "starmie",
       "speciesKey": "starmie",
+      "battleDataKey": "starmie",
       "name": "Starmie",
       "savedName": "Starmie",
       "types": [
@@ -26412,6 +26726,7 @@
     {
       "id": "mega-starmie",
       "speciesKey": "starmie",
+      "battleDataKey": "starmie",
       "name": "Mega Starmie",
       "savedName": "Mega Starmie",
       "types": [
@@ -26498,6 +26813,7 @@
     {
       "id": "steelix",
       "speciesKey": "steelix",
+      "battleDataKey": "steelix",
       "name": "Steelix",
       "savedName": "Steelix",
       "types": [
@@ -26591,6 +26907,7 @@
     {
       "id": "mega-steelix",
       "speciesKey": "steelix",
+      "battleDataKey": "steelix",
       "name": "Mega Steelix",
       "savedName": "Mega Steelix",
       "types": [
@@ -26682,6 +26999,7 @@
     {
       "id": "swampert",
       "speciesKey": "swampert",
+      "battleDataKey": "swampert",
       "name": "Swampert",
       "savedName": "Swampert",
       "types": [
@@ -26784,6 +27102,7 @@
     {
       "id": "mega-swampert",
       "speciesKey": "swampert",
+      "battleDataKey": "swampert",
       "name": "Mega Swampert",
       "savedName": "Mega Swampert",
       "types": [
@@ -26885,6 +27204,7 @@
     {
       "id": "sylveon",
       "speciesKey": "sylveon",
+      "battleDataKey": "sylveon",
       "name": "Sylveon",
       "savedName": "Sylveon",
       "types": [
@@ -26966,6 +27286,7 @@
     {
       "id": "talonflame",
       "speciesKey": "talonflame",
+      "battleDataKey": "talonflame",
       "name": "Talonflame",
       "savedName": "Talonflame",
       "types": [
@@ -27042,6 +27363,7 @@
     {
       "id": "tinkaton",
       "speciesKey": "tinkaton",
+      "battleDataKey": "tinkaton",
       "name": "Tinkaton",
       "savedName": "Tinkaton",
       "types": [
@@ -27115,6 +27437,7 @@
     {
       "id": "torkoal",
       "speciesKey": "torkoal",
+      "battleDataKey": "torkoal",
       "name": "Torkoal",
       "savedName": "Torkoal",
       "types": [
@@ -27201,6 +27524,7 @@
     {
       "id": "torterra",
       "speciesKey": "torterra",
+      "battleDataKey": "torterra",
       "name": "Torterra",
       "savedName": "Torterra",
       "types": [
@@ -27298,6 +27622,7 @@
     {
       "id": "toucannon",
       "speciesKey": "toucannon",
+      "battleDataKey": "toucannon",
       "name": "Toucannon",
       "savedName": "Toucannon",
       "types": [
@@ -27378,6 +27703,7 @@
     {
       "id": "toxapex",
       "speciesKey": "toxapex",
+      "battleDataKey": "toxapex",
       "name": "Toxapex",
       "savedName": "Toxapex",
       "types": [
@@ -27456,6 +27782,7 @@
     {
       "id": "toxicroak",
       "speciesKey": "toxicroak",
+      "battleDataKey": "toxicroak",
       "name": "Toxicroak",
       "savedName": "Toxicroak",
       "types": [
@@ -27563,6 +27890,7 @@
     {
       "id": "trevenant",
       "speciesKey": "trevenant",
+      "battleDataKey": "trevenant",
       "name": "Trevenant",
       "savedName": "Trevenant",
       "types": [
@@ -27663,6 +27991,7 @@
     {
       "id": "tsareena",
       "speciesKey": "tsareena",
+      "battleDataKey": "tsareena",
       "name": "Tsareena",
       "savedName": "Tsareena",
       "types": [
@@ -27743,6 +28072,7 @@
     {
       "id": "tyranitar",
       "speciesKey": "tyranitar",
+      "battleDataKey": "tyranitar",
       "name": "Tyranitar",
       "savedName": "Tyranitar",
       "types": [
@@ -27860,6 +28190,7 @@
     {
       "id": "mega-tyranitar",
       "speciesKey": "tyranitar",
+      "battleDataKey": "tyranitar",
       "name": "Mega Tyranitar",
       "savedName": "Mega Tyranitar",
       "types": [
@@ -27976,6 +28307,7 @@
     {
       "id": "tyrantrum",
       "speciesKey": "tyrantrum",
+      "battleDataKey": "tyrantrum",
       "name": "Tyrantrum",
       "savedName": "Tyrantrum",
       "types": [
@@ -28065,6 +28397,7 @@
     {
       "id": "umbreon",
       "speciesKey": "umbreon",
+      "battleDataKey": "umbreon",
       "name": "Umbreon",
       "savedName": "Umbreon",
       "types": [
@@ -28156,6 +28489,7 @@
     {
       "id": "vanilluxe",
       "speciesKey": "vanilluxe",
+      "battleDataKey": "vanilluxe",
       "name": "Vanilluxe",
       "savedName": "Vanilluxe",
       "types": [
@@ -28224,6 +28558,7 @@
     {
       "id": "vaporeon",
       "speciesKey": "vaporeon",
+      "battleDataKey": "vaporeon",
       "name": "Vaporeon",
       "savedName": "Vaporeon",
       "types": [
@@ -28308,6 +28643,7 @@
     {
       "id": "venusaur",
       "speciesKey": "venusaur",
+      "battleDataKey": "venusaur",
       "name": "Venusaur",
       "savedName": "Venusaur",
       "types": [
@@ -28390,6 +28726,7 @@
     {
       "id": "mega-venusaur",
       "speciesKey": "venusaur",
+      "battleDataKey": "venusaur",
       "name": "Mega Venusaur",
       "savedName": "Mega Venusaur",
       "types": [
@@ -28471,6 +28808,7 @@
     {
       "id": "victreebel",
       "speciesKey": "victreebel",
+      "battleDataKey": "victreebel",
       "name": "Victreebel",
       "savedName": "Victreebel",
       "types": [
@@ -28556,6 +28894,7 @@
     {
       "id": "mega-victreebel",
       "speciesKey": "victreebel",
+      "battleDataKey": "victreebel",
       "name": "Mega Victreebel",
       "savedName": "Mega Victreebel",
       "types": [
@@ -28640,6 +28979,7 @@
     {
       "id": "vileplume",
       "speciesKey": "vileplume",
+      "battleDataKey": "vileplume",
       "name": "Vileplume",
       "savedName": "Vileplume",
       "types": [
@@ -28718,7 +29058,8 @@
     },
     {
       "id": "vivillon-icy-snow-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Icy Snow Pattern",
       "savedName": "Vivillon Icy Snow Pattern",
       "types": [
@@ -28787,7 +29128,8 @@
     },
     {
       "id": "vivillon-archipelago-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Archipelago Pattern",
       "savedName": "Vivillon Archipelago Pattern",
       "types": [
@@ -28856,7 +29198,8 @@
     },
     {
       "id": "vivillon-continental-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Continental Pattern",
       "savedName": "Vivillon Continental Pattern",
       "types": [
@@ -28925,7 +29268,8 @@
     },
     {
       "id": "vivillon-elegant-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Elegant Pattern",
       "savedName": "Vivillon Elegant Pattern",
       "types": [
@@ -28994,7 +29338,8 @@
     },
     {
       "id": "vivillon-fancy-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Fancy Pattern",
       "savedName": "Vivillon Fancy Pattern",
       "types": [
@@ -29063,7 +29408,8 @@
     },
     {
       "id": "vivillon-garden-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Garden Pattern",
       "savedName": "Vivillon Garden Pattern",
       "types": [
@@ -29132,7 +29478,8 @@
     },
     {
       "id": "vivillon-high-plains-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon High Plains Pattern",
       "savedName": "Vivillon High Plains Pattern",
       "types": [
@@ -29201,7 +29548,8 @@
     },
     {
       "id": "vivillon-jungle-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Jungle Pattern",
       "savedName": "Vivillon Jungle Pattern",
       "types": [
@@ -29270,7 +29618,8 @@
     },
     {
       "id": "vivillon-marine-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Marine Pattern",
       "savedName": "Vivillon Marine Pattern",
       "types": [
@@ -29339,7 +29688,8 @@
     },
     {
       "id": "vivillon-meadow-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Meadow Pattern",
       "savedName": "Vivillon Meadow Pattern",
       "types": [
@@ -29408,7 +29758,8 @@
     },
     {
       "id": "vivillon-modern-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Modern Pattern",
       "savedName": "Vivillon Modern Pattern",
       "types": [
@@ -29477,7 +29828,8 @@
     },
     {
       "id": "vivillon-monsoon-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Monsoon Pattern",
       "savedName": "Vivillon Monsoon Pattern",
       "types": [
@@ -29546,7 +29898,8 @@
     },
     {
       "id": "vivillon-ocean-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Ocean Pattern",
       "savedName": "Vivillon Ocean Pattern",
       "types": [
@@ -29615,7 +29968,8 @@
     },
     {
       "id": "vivillon-poke-ball-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Poké Ball Pattern",
       "savedName": "Vivillon Poké Ball Pattern",
       "types": [
@@ -29684,7 +30038,8 @@
     },
     {
       "id": "vivillon-polar-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Polar Pattern",
       "savedName": "Vivillon Polar Pattern",
       "types": [
@@ -29753,7 +30108,8 @@
     },
     {
       "id": "vivillon-river-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon River Pattern",
       "savedName": "Vivillon River Pattern",
       "types": [
@@ -29822,7 +30178,8 @@
     },
     {
       "id": "vivillon-sandstorm-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Sandstorm Pattern",
       "savedName": "Vivillon Sandstorm Pattern",
       "types": [
@@ -29891,7 +30248,8 @@
     },
     {
       "id": "vivillon-savanna-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Savanna Pattern",
       "savedName": "Vivillon Savanna Pattern",
       "types": [
@@ -29960,7 +30318,8 @@
     },
     {
       "id": "vivillon-sun-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Sun Pattern",
       "savedName": "Vivillon Sun Pattern",
       "types": [
@@ -30029,7 +30388,8 @@
     },
     {
       "id": "vivillon-tundra-pattern",
-      "speciesKey": "vivillon-fancy-pattern",
+      "speciesKey": "vivillon",
+      "battleDataKey": "vivillonfancy",
       "name": "Vivillon Tundra Pattern",
       "savedName": "Vivillon Tundra Pattern",
       "types": [
@@ -30099,6 +30459,7 @@
     {
       "id": "volcarona",
       "speciesKey": "volcarona",
+      "battleDataKey": "volcarona",
       "name": "Volcarona",
       "savedName": "Volcarona",
       "types": [
@@ -30183,6 +30544,7 @@
     {
       "id": "watchog",
       "speciesKey": "watchog",
+      "battleDataKey": "watchog",
       "name": "Watchog",
       "savedName": "Watchog",
       "types": [
@@ -30260,6 +30622,7 @@
     {
       "id": "weavile",
       "speciesKey": "weavile",
+      "battleDataKey": "weavile",
       "name": "Weavile",
       "savedName": "Weavile",
       "types": [
@@ -30358,6 +30721,7 @@
     {
       "id": "whimsicott",
       "speciesKey": "whimsicott",
+      "battleDataKey": "whimsicott",
       "name": "Whimsicott",
       "savedName": "Whimsicott",
       "types": [
@@ -30434,6 +30798,7 @@
     {
       "id": "wyrdeer",
       "speciesKey": "wyrdeer",
+      "battleDataKey": "wyrdeer",
       "name": "Wyrdeer",
       "savedName": "Wyrdeer",
       "types": [
@@ -30853,6 +31218,25 @@
       ],
       "description": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
       "descriptionZh": "Prevents the target from fleeing and inflicts damage for 2-5 turns."
+    },
+    {
+      "id": "take-down",
+      "name": "Take Down",
+      "nameZh": "猛撞",
+      "type": "Normal",
+      "category": "Physical",
+      "power": 90,
+      "accuracy": 85,
+      "pp": 20,
+      "priority": 0,
+      "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
+      "description": "User receives 1/4 the damage it inflicts in recoil.",
+      "descriptionZh": "User receives 1/4 the damage it inflicts in recoil."
     },
     {
       "id": "thrash",
@@ -33050,6 +33434,24 @@
       ],
       "description": "Inflicts regular damage with no additional effect.",
       "descriptionZh": "Inflicts regular damage with no additional effect."
+    },
+    {
+      "id": "dragon-breath",
+      "name": "Dragon Breath",
+      "nameZh": "龍息",
+      "type": "Dragon",
+      "category": "Special",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 20,
+      "priority": 0,
+      "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
+      "description": "Has a chance to paralyze the target.",
+      "descriptionZh": "Has a chance to paralyze the target."
     },
     {
       "id": "baton-pass",
@@ -38243,6 +38645,24 @@
       "descriptionZh": "Grants the user protection for the rest of the turn and poisons any Pokémon that tries to use a contact move on it."
     },
     {
+      "id": "spirit-shackle",
+      "name": "Spirit Shackle",
+      "nameZh": "縫影",
+      "type": "Ghost",
+      "category": "Physical",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 10,
+      "priority": 0,
+      "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror"
+      ],
+      "description": "Traps the target.",
+      "descriptionZh": "Traps the target."
+    },
+    {
       "id": "darkest-lariat",
       "name": "Darkest Lariat",
       "nameZh": "ＤＤ金勾臂",
@@ -38699,6 +39119,25 @@
       "descriptionZh": "Has double power if the user’s last move failed."
     },
     {
+      "id": "accelerock",
+      "name": "Accelerock",
+      "nameZh": "衝岩",
+      "type": "Rock",
+      "category": "Physical",
+      "power": 40,
+      "accuracy": 100,
+      "pp": 20,
+      "priority": 1,
+      "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
+      "description": "Inflicts regular damage with no additional effect.",
+      "descriptionZh": "Inflicts regular damage with no additional effect."
+    },
+    {
       "id": "liquidation",
       "name": "Liquidation",
       "nameZh": "水流裂破",
@@ -38876,6 +39315,25 @@
       "flags": [],
       "description": "",
       "descriptionZh": ""
+    },
+    {
+      "id": "snap-trap",
+      "name": "Snap Trap",
+      "nameZh": "捕獸夾",
+      "type": "Grass",
+      "category": "Physical",
+      "power": 35,
+      "accuracy": 100,
+      "pp": 15,
+      "priority": 0,
+      "targetId": 10,
+      "flags": [
+        "Contact",
+        "Protect",
+        "Mirror"
+      ],
+      "description": "Prevents the target from fleeing and inflicts damage for 2-5 turns.",
+      "descriptionZh": "Prevents the target from fleeing and inflicts damage for 2-5 turns."
     },
     {
       "id": "aura-wheel",
@@ -39074,6 +39532,24 @@
       "targetId": 10,
       "flags": [
         "Charge",
+        "Protect",
+        "Mirror"
+      ],
+      "description": "Inflicts regular damage with no additional effect.",
+      "descriptionZh": "Inflicts regular damage with no additional effect."
+    },
+    {
+      "id": "shell-side-arm",
+      "name": "Shell Side Arm",
+      "nameZh": "臂貝武器",
+      "type": "Poison",
+      "category": "Special",
+      "power": 90,
+      "accuracy": 100,
+      "pp": 10,
+      "priority": 0,
+      "targetId": 10,
+      "flags": [
         "Protect",
         "Mirror"
       ],
@@ -39341,6 +39817,26 @@
       "descriptionZh": "Has a chance to burn the target."
     },
     {
+      "id": "eerie-spell",
+      "name": "Eerie Spell",
+      "nameZh": "詭異咒語",
+      "type": "Psychic",
+      "category": "Special",
+      "power": 80,
+      "accuracy": 100,
+      "pp": 5,
+      "priority": 0,
+      "targetId": 10,
+      "flags": [
+        "Protect",
+        "Mirror",
+        "Sound",
+        "Authentic"
+      ],
+      "description": "Inflicts regular damage with no additional effect.",
+      "descriptionZh": "Inflicts regular damage with no additional effect."
+    },
+    {
       "id": "dire-claw",
       "name": "Dire Claw",
       "nameZh": "克命爪",
@@ -39461,6 +39957,21 @@
       "descriptionZh": ""
     },
     {
+      "id": "bitter-malice",
+      "name": "Bitter Malice",
+      "nameZh": "冤冤相报",
+      "type": "Ghost",
+      "category": "Special",
+      "power": 75,
+      "accuracy": 100,
+      "pp": 10,
+      "priority": 0,
+      "targetId": 10,
+      "flags": [],
+      "description": "",
+      "descriptionZh": ""
+    },
+    {
       "id": "shelter",
       "name": "Shelter",
       "nameZh": "闭关",
@@ -39484,6 +39995,36 @@
       "power": 90,
       "accuracy": 100,
       "pp": 10,
+      "priority": 0,
+      "targetId": 10,
+      "flags": [],
+      "description": "",
+      "descriptionZh": ""
+    },
+    {
+      "id": "infernal-parade",
+      "name": "Infernal Parade",
+      "nameZh": "群魔乱舞",
+      "type": "Ghost",
+      "category": "Special",
+      "power": 60,
+      "accuracy": 100,
+      "pp": 15,
+      "priority": 0,
+      "targetId": 10,
+      "flags": [],
+      "description": "",
+      "descriptionZh": ""
+    },
+    {
+      "id": "ceaseless-edge",
+      "name": "Ceaseless Edge",
+      "nameZh": "秘剑・千重涛",
+      "type": "Dark",
+      "category": "Physical",
+      "power": 65,
+      "accuracy": 90,
+      "pp": 15,
       "priority": 0,
       "targetId": 10,
       "flags": [],

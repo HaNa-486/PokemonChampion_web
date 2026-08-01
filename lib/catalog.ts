@@ -122,6 +122,7 @@ const generatedPokemon: Pokemon[] = snapshot.pokemon.map((entry, index) => {
   return {
     id: entry.id,
     speciesKey: entry.speciesKey,
+    battleDataKey: entry.battleDataKey ?? entry.speciesKey,
     name: entry.name,
     nameZh: curatedPokemonNameZh.get(entry.id) ?? entry.name,
     types: entry.types as Pokemon["types"],

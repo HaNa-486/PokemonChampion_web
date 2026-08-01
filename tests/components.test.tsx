@@ -5,6 +5,7 @@ import { ChampionsApp } from "../components/ChampionsApp";
 import { TypeChart, TypeChartFloating } from "../components/TypeChartView";
 import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
 import { ZERO_STATS } from "../lib/domain";
+import { moves } from "../lib/catalog";
 import { useTeamStore } from "../lib/team-store";
 import type { TeamMember } from "../lib/types";
 
@@ -68,11 +69,12 @@ describe("Move Database", () => {
   it("paginates all moves instead of hiding entries after 100", async () => {
     const user = userEvent.setup();
     const { container } = render(<MoveDatabaseV2 locale="en" />);
+    const pages = Math.ceil(moves.length / 100);
     expect(container.querySelectorAll("tbody tr")).toHaveLength(100);
-    expect(screen.getByText("Page", { exact: false })).toHaveTextContent("1 / 6");
-    for (let page = 1; page < 6; page += 1) await user.click(screen.getByRole("button", { name: "Next move page" }));
-    expect(container.querySelectorAll("tbody tr")).toHaveLength(27);
-    expect(screen.getByText("Page", { exact: false })).toHaveTextContent("6 / 6");
+    expect(screen.getByText("Page", { exact: false })).toHaveTextContent(`1 / ${pages}`);
+    for (let page = 1; page < pages; page += 1) await user.click(screen.getByRole("button", { name: "Next move page" }));
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(moves.length % 100 || 100);
+    expect(screen.getByText("Page", { exact: false })).toHaveTextContent(`${pages} / ${pages}`);
   });
 });
 
