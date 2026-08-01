@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { abilities, items, megaStoneIdByPokemonId, moves, pokemon, pokemonByAbilityId, pokemonById, pokemonByMoveId } from "../lib/catalog";
-import { calculateFinalStats, formatPriority, modifiedSpeed, NATURES, priorityMatches, validateAp, validateTeam, ZERO_STATS } from "../lib/domain";
+import { calculateFinalStats, formatPriority, modifiedSpeed, NATURES, priorityMatches, sanitizeTeamMembers, validateAp, validateTeam, ZERO_STATS } from "../lib/domain";
 import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
 import { abilityCategories, itemEffectCategories } from "../lib/filtering";
-import { defensiveMatchups, formatMultiplier } from "../lib/type-chart";
+import { defensiveMatchups, formatMultiplier, typeEffectiveness } from "../lib/type-chart";
 import { recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
 import { migrateSavedTeams } from "../lib/team-store";
 import type { BattleUsage } from "../lib/types";
@@ -86,6 +86,12 @@ describe("defensive type matchups", () => {
     expect(aerodactyl.immune).toContainEqual({ type: "Ground", multiplier: 0 });
     expect(aerodactyl.weak).toContainEqual({ type: "Electric", multiplier: 2 });
   });
+
+  it("exposes every single-type attack/defense multiplier for the full chart", () => {
+    expect(typeEffectiveness("Fire", "Grass")).toBe(2);
+    expect(typeEffectiveness("Electric", "Ground")).toBe(0);
+    expect(typeEffectiveness("Normal", "Normal")).toBe(1);
+  });
 });
 
 describe("priority", () => {
@@ -107,6 +113,22 @@ describe("team legality", () => {
     expect(issues.map((issue) => issue.code)).toEqual(expect.arrayContaining(["DUPLICATE_POKEMON", "DUPLICATE_ITEM"]));
     const legal = validateTeam([member("a", "mega-charizard-x", "charizardite-x"), member("b", "mega-charizard-y", "charizardite-y")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
     expect(legal).toEqual([]);
+  });
+
+  it("rejects a base form with any of its Mega forms while permitting two distinct Mega branches", () => {
+    const baseAndMega = validateTeam([member("a", "alakazam", "sitrus-berry"), member("b", "mega-alakazam", "alakazite")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
+    expect(baseAndMega.map((issue) => issue.code)).toContain("DUPLICATE_POKEMON");
+    const twoMegaBranches = validateTeam([member("a", "mega-charizard-x", "charizardite-x"), member("b", "mega-charizard-y", "charizardite-y")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
+    expect(twoMegaBranches).toEqual([]);
+  });
+
+  it("removes persisted base/Mega conflicts while preserving distinct Mega branches", () => {
+    const sanitized = sanitizeTeamMembers([
+      member("base", "charizard", null), member("mega-x", "mega-charizard-x", "charizardite-x"), member("mega-y", "mega-charizard-y", "charizardite-y"),
+    ], pokemonById);
+    expect(sanitized.map((entry) => entry.id)).toEqual(["base"]);
+    const megasOnly = sanitizeTeamMembers([member("mega-x", "mega-charizard-x", "charizardite-x"), member("mega-y", "mega-charizard-y", "charizardite-y")], pokemonById);
+    expect(megasOnly).toHaveLength(2);
   });
 
   it("forces every Mega form to hold its dedicated stone", () => {

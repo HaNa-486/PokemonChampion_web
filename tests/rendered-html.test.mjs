@@ -22,6 +22,14 @@ test("server-renders Champions Lab instead of the starter", async () => {
   assert.doesNotMatch(html, /codex-preview|Your site is taking shape|react-loading-skeleton/);
 });
 
+test("server-renders the standalone type matchup chart", async () => {
+  const response = await render("/type-chart");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+  assert.match(html, /Type Matchup Chart/);
+  assert.match(html, /Attack.*Defend/);
+});
+
 test("filters move priority through the built API", async () => {
   const response = await render("/api/v1/moves?priorityClass=negative", { headers: { accept: "application/json" } });
   assert.equal(response.status, 200);
@@ -61,6 +69,18 @@ test("rejects duplicate species and held items through the built API", async () 
   const body = await response.json();
   assert.equal(body.data.legal, false);
   assert.deepEqual(new Set(body.data.issues.map((issue) => issue.code)), new Set(["DUPLICATE_POKEMON", "DUPLICATE_ITEM"]));
+});
+
+test("rejects a base Pokemon and its Mega form in the same built-API team", async () => {
+  const shared = { moveIds: [], abilityId: null, ap: { hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0 }, nature: { name: "Serious", up: null, down: null } };
+  const response = await render("/api/v1/team/validate", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ members: [
+    { ...shared, id: "base", pokemonId: "alakazam", itemId: "sitrus-berry" },
+    { ...shared, id: "mega", pokemonId: "mega-alakazam", itemId: "alakazite" },
+  ] }) });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data.legal, false);
+  assert.ok(body.data.issues.some((issue) => issue.code === "DUPLICATE_POKEMON"));
 });
 
 test("enforces the dedicated Mega Stone through the built API", async () => {

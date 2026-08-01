@@ -53,16 +53,36 @@ export const apTotal = (ap: Stats) => Object.values(ap).reduce((sum, value) => s
 export const priorityMatches = (move: Move, classes: Array<"positive" | "zero" | "negative">) => classes.length === 0 || classes.some((value) => value === "positive" ? move.priority > 0 : value === "negative" ? move.priority < 0 : move.priority === 0);
 export const formatPriority = (priority: number) => priority > 0 ? `+${priority}` : String(priority);
 
+export function pokemonIdentityConflicts(first: Pokemon, second: Pokemon) {
+  if (first.id === second.id) return true;
+  return first.speciesKey === second.speciesKey && (!first.isMega || !second.isMega);
+}
+
+export function sanitizeTeamMembers(members: TeamMember[], pokemonById: Map<string, Pokemon>) {
+  const kept: TeamMember[] = [];
+  for (const member of members) {
+    const candidate = pokemonById.get(member.pokemonId);
+    if (!candidate) continue;
+    const conflicts = kept.some((existing) => {
+      const existingPokemon = pokemonById.get(existing.pokemonId);
+      return existingPokemon ? pokemonIdentityConflicts(existingPokemon, candidate) : false;
+    });
+    if (!conflicts) kept.push(member);
+    if (kept.length === 6) break;
+  }
+  return kept;
+}
+
 export function validateTeam(members: TeamMember[], pokemonById: Map<string, Pokemon>, legalItemIds: Set<string>, megaStoneIdByPokemonId: Map<string, string>): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   if (members.length > 6) issues.push({ code: "TEAM_FULL", message: "A team can contain at most six Pokémon." });
-  const pokemonIds = new Set<string>();
+  const selectedPokemon: Pokemon[] = [];
   const items = new Set<string>();
   for (const member of members) {
     const pokemon = pokemonById.get(member.pokemonId);
     if (!pokemon) { issues.push({ code: "POKEMON_UNAVAILABLE", message: "This Pokémon is unavailable.", memberId: member.id }); continue; }
-    if (pokemonIds.has(pokemon.id)) issues.push({ code: "DUPLICATE_POKEMON", message: `${pokemon.name} is already on the team.`, memberId: member.id });
-    pokemonIds.add(pokemon.id);
+    if (selectedPokemon.some((entry) => pokemonIdentityConflicts(entry, pokemon))) issues.push({ code: "DUPLICATE_POKEMON", message: `${pokemon.name} or another form of it is already on the team.`, memberId: member.id });
+    selectedPokemon.push(pokemon);
     if (pokemon.isMega) {
       const requiredStone = megaStoneIdByPokemonId.get(pokemon.id);
       if (!requiredStone) issues.push({ code: "MEGA_STONE_CONFIGURATION_MISSING", message: `${pokemon.name} does not have a configured Mega Stone.`, memberId: member.id });

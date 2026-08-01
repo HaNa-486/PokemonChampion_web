@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from "@testing-library/rea
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChampionsApp } from "../components/ChampionsApp";
+import { TypeChart, TypeChartFloating } from "../components/TypeChartView";
 import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
 import { ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
@@ -279,5 +280,22 @@ describe("ChampionsApp", () => {
     expect(screen.getByRole("button", { name: "Rough Skin" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Held Item DB" }));
     expect(screen.getByRole("button", { name: "Choice Scarf" })).toBeInTheDocument();
+  });
+});
+
+describe("Type matchup chart", () => {
+  it("renders the complete 18 by 18 effectiveness matrix", () => {
+    const { container } = render(<TypeChart locale="en" />);
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(18);
+    expect(container.querySelectorAll("tbody td")).toHaveLength(324);
+    expect(screen.getByText("Type Matchup Chart")).toBeInTheDocument();
+  });
+
+  it("opens from the lower-left floating control and links to the full page", async () => {
+    const user = userEvent.setup();
+    render(<TypeChartFloating />);
+    await user.click(screen.getByRole("button", { name: /Type chart/ }));
+    expect(screen.getByRole("link", { name: /Open full type chart page/ })).toHaveAttribute("href", "/type-chart");
+    expect(screen.getByLabelText("Type Matchup Chart")).toBeInTheDocument();
   });
 });

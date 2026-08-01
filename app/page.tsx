@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ChampionsApp } from "../components/ChampionsApp";
+import { TypeChartFloating } from "../components/TypeChartView";
 
 export const metadata: Metadata = {
   title: "Champions Lab — Pokémon Champions Team Builder",
@@ -7,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <ChampionsApp />;
+  return <><ChampionsApp /><TypeChartFloating /></>;
 }

@@ -2,6 +2,8 @@
 
 import { get, set as setValue } from "idb-keyval";
 import { create } from "zustand";
+import { pokemonById } from "./catalog";
+import { sanitizeTeamMembers } from "./domain";
 import type { BattleFormat, TeamMember } from "./types";
 
 const STORAGE_KEY = "champions-lab-team-v1";
@@ -21,10 +23,10 @@ export function migrateSavedTeams(saved: unknown): Record<BattleFormat, TeamMemb
   if (!saved || typeof saved !== "object") return emptyTeams();
   const value = saved as { version?: number; members?: TeamMember[]; teams?: Partial<Record<BattleFormat, TeamMember[]>> };
   if (value.version === 2 && value.teams) return {
-    singles: Array.isArray(value.teams.singles) ? value.teams.singles.slice(0, 6) : [],
-    doubles: Array.isArray(value.teams.doubles) ? value.teams.doubles.slice(0, 6) : [],
+    singles: Array.isArray(value.teams.singles) ? sanitizeTeamMembers(value.teams.singles, pokemonById) : [],
+    doubles: Array.isArray(value.teams.doubles) ? sanitizeTeamMembers(value.teams.doubles, pokemonById) : [],
   };
-  if (value.version === 1 && Array.isArray(value.members)) return { singles: [], doubles: value.members.slice(0, 6) };
+  if (value.version === 1 && Array.isArray(value.members)) return { singles: [], doubles: sanitizeTeamMembers(value.members, pokemonById) };
   return emptyTeams();
 }
 
@@ -46,7 +48,7 @@ export const useTeamStore = create<TeamState>((set, getState) => ({
   },
   add: (format, member) => {
     const teams = getState().teams;
-    const next = { ...teams, [format]: [...teams[format], member].slice(0, 6) };
+    const next = { ...teams, [format]: sanitizeTeamMembers([...teams[format], member], pokemonById) };
     set({ teams: next });
     persist(next);
   },

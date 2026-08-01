@@ -23,10 +23,14 @@ const modifiers: Partial<Record<PokemonType, Partial<Record<PokemonType, number>
   Fairy: { Fire: .5, Fighting: 2, Poison: .5, Dragon: 2, Dark: 2, Steel: .5 },
 };
 
+export function typeEffectiveness(attacking: PokemonType, defending: PokemonType) {
+  return modifiers[attacking]?.[defending] ?? 1;
+}
+
 export type TypeMatchup = { type: PokemonType; multiplier: number };
 
 export function defensiveMatchups(defenderTypes: PokemonType[]) {
-  const values = ALL_TYPES.map((type) => ({ type, multiplier: defenderTypes.reduce((result, defender) => result * (modifiers[type]?.[defender] ?? 1), 1) }));
+  const values = ALL_TYPES.map((type) => ({ type, multiplier: defenderTypes.reduce((result, defender) => result * typeEffectiveness(type, defender), 1) }));
   return {
     immune: values.filter((entry) => entry.multiplier === 0),
     resistant: values.filter((entry) => entry.multiplier > 0 && entry.multiplier < 1),
