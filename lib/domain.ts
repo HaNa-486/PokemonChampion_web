@@ -54,8 +54,7 @@ export const priorityMatches = (move: Move, classes: Array<"positive" | "zero" |
 export const formatPriority = (priority: number) => priority > 0 ? `+${priority}` : String(priority);
 
 export function pokemonIdentityConflicts(first: Pokemon, second: Pokemon) {
-  if (first.id === second.id) return true;
-  return first.speciesKey === second.speciesKey && (!first.isMega || !second.isMega);
+  return first.speciesKey === second.speciesKey;
 }
 
 export function sanitizeTeamMembers(members: TeamMember[], pokemonById: Map<string, Pokemon>) {

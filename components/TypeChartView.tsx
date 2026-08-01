@@ -34,8 +34,8 @@ export function TypeChart({ locale, compact = false }: { locale: Locale; compact
     </div>
     <div className="type-chart-scroll" tabIndex={0} aria-label={copy.title}>
       <table className="type-chart-table">
-        <thead><tr><th className="chart-axis">{copy.attack}</th>{ALL_TYPES.map((type) => <th key={type} title={typeName(type, locale)}><span className={`chart-type-dot type-${type.toLowerCase()}`}>{typeName(type, locale).slice(0, compact ? 1 : 2)}</span></th>)}</tr></thead>
-        <tbody>{ALL_TYPES.map((attacking) => <tr key={attacking}><th><TypeBadge type={attacking} /><span>{typeName(attacking, locale)}</span></th>{ALL_TYPES.map((defending) => { const value = typeEffectiveness(attacking, defending); const className = value === 2 ? "effect-super" : value === .5 ? "effect-resist" : value === 0 ? "effect-immune" : "effect-neutral"; return <td className={className} key={defending} title={`${typeName(attacking, locale)} → ${typeName(defending, locale)}: ${value}×`}>{cellText(value)}</td>; })}</tr>)}</tbody>
+        <thead><tr><th className="chart-axis">{copy.attack}</th>{ALL_TYPES.map((type) => <th key={type} title={typeName(type, locale)}><div className="chart-defender-label"><TypeBadge type={type} />{locale === "zh-Hant" && <span>{typeName(type, locale)}</span>}</div></th>)}</tr></thead>
+        <tbody>{ALL_TYPES.map((attacking) => <tr key={attacking}><th><div className="chart-attacker-label"><TypeBadge type={attacking} />{locale === "zh-Hant" && <span>{typeName(attacking, locale)}</span>}</div></th>{ALL_TYPES.map((defending) => { const value = typeEffectiveness(attacking, defending); const className = value === 2 ? "effect-super" : value === .5 ? "effect-resist" : value === 0 ? "effect-immune" : "effect-neutral"; return <td className={className} key={defending} title={`${typeName(attacking, locale)} → ${typeName(defending, locale)}: ${value}×`}>{cellText(value)}</td>; })}</tr>)}</tbody>
       </table>
     </div>
   </section>;

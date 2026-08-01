@@ -83,6 +83,18 @@ test("rejects a base Pokemon and its Mega form in the same built-API team", asyn
   assert.ok(body.data.issues.some((issue) => issue.code === "DUPLICATE_POKEMON"));
 });
 
+test("rejects two Mega branches of the same Pokemon in the built API", async () => {
+  const shared = { moveIds: [], abilityId: null, ap: { hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0 }, nature: { name: "Serious", up: null, down: null } };
+  const response = await render("/api/v1/team/validate", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ members: [
+    { ...shared, id: "mega-x", pokemonId: "mega-raichu-x", itemId: "raichunite-x" },
+    { ...shared, id: "mega-y", pokemonId: "mega-raichu-y", itemId: "raichunite-y" },
+  ] }) });
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.data.legal, false);
+  assert.ok(body.data.issues.some((issue) => issue.code === "DUPLICATE_POKEMON"));
+});
+
 test("enforces the dedicated Mega Stone through the built API", async () => {
   const shared = { moveIds: [], abilityId: null, ap: { hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0 }, nature: { name: "Serious", up: null, down: null } };
   const wrong = await render("/api/v1/team/validate", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ members: [{ ...shared, id: "mega", pokemonId: "mega-absol", itemId: "life-orb" }] }) });

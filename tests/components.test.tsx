@@ -157,6 +157,19 @@ describe("ChampionsApp", () => {
     expect(screen.queryByRole("button", { name: "Blastoise", exact: true })).not.toBeInTheDocument();
   });
 
+  it("searches names only and keeps type matching in the advanced type filter", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
+    const filters = container.querySelector(".pokemon-advanced-filters")!;
+    const nameSearch = within(filters).getByRole("textbox", { name: "Search Pokémon by name" });
+    await user.type(nameSearch, "ra");
+    expect(screen.queryByRole("button", { name: "Whimsicott" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Mega Meganium/ })).not.toBeInTheDocument();
+    await user.clear(nameSearch);
+    await user.click(within(filters).getByRole("button", { name: "Grass" }));
+    expect(screen.getByRole("button", { name: "Whimsicott" })).toBeInTheDocument();
+  });
+
   it("lets users choose OR or AND behavior for multiple type filters", async () => {
     const user = userEvent.setup();
     const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
@@ -178,7 +191,7 @@ describe("ChampionsApp", () => {
     } })));
     const user = userEvent.setup();
     render(<ChampionsApp />);
-    await user.type(screen.getByPlaceholderText("Search Pokémon or type…"), "Absol");
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
     await user.click(screen.getByRole("button", { name: "Absol", exact: true }));
     const dialog = screen.getByRole("dialog", { name: "Absol" });
     expect(within(dialog).getByText("Learnable moves")).toBeInTheDocument();
@@ -195,7 +208,7 @@ describe("ChampionsApp", () => {
   it("shows all 21 natures with stat effects and keeps matchups on the team card", async () => {
     const user = userEvent.setup();
     render(<ChampionsApp />);
-    await user.type(screen.getByPlaceholderText("Search Pokémon or type…"), "Absol");
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
     await user.click(screen.getByRole("button", { name: "Configure Absol" }));
     const nature = screen.getByRole("combobox", { name: "Nature" });
     expect(within(nature).getAllByRole("option")).toHaveLength(21);
@@ -211,7 +224,7 @@ describe("ChampionsApp", () => {
   it("preselects and locks the dedicated stone for a Mega build", async () => {
     const user = userEvent.setup();
     render(<ChampionsApp />);
-    await user.type(screen.getByPlaceholderText("Search Pokémon or type…"), "Mega Absol");
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Mega Absol");
     await user.click(screen.getByRole("button", { name: "Configure Mega Absol" }));
     const item = screen.getByRole("combobox", { name: /Held item/ });
     expect(item).toBeDisabled();
@@ -232,7 +245,7 @@ describe("ChampionsApp", () => {
     } })));
     const user = userEvent.setup();
     render(<ChampionsApp />);
-    await user.type(screen.getByPlaceholderText("Search Pokémon or type…"), "Blastoise");
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Blastoise");
     await user.click(screen.getByRole("button", { name: "Configure Blastoise" }));
     expect(await screen.findByRole("heading", { name: "Mega Blastoise" })).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("blastoisinite");
@@ -268,7 +281,7 @@ describe("ChampionsApp", () => {
     await user.click(screen.getByRole("button", { name: "繁中" }));
     expect(screen.getByRole("button", { name: "招式資料庫" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
-    await user.type(screen.getByPlaceholderText("搜尋寶可夢或屬性…"), "Garchomp");
+    await user.type(screen.getByPlaceholderText("搜尋寶可夢名稱…"), "Garchomp");
     expect(screen.getByText("烈咬陸鯊")).toBeInTheDocument();
   });
 
@@ -288,6 +301,9 @@ describe("Type matchup chart", () => {
     const { container } = render(<TypeChart locale="en" />);
     expect(container.querySelectorAll("tbody tr")).toHaveLength(18);
     expect(container.querySelectorAll("tbody td")).toHaveLength(324);
+    const defendingHeader = container.querySelector("thead")!;
+    expect(within(defendingHeader).getByText("Normal")).toBeInTheDocument();
+    expect(within(defendingHeader).getByText("Fairy")).toBeInTheDocument();
     expect(screen.getByText("Type Matchup Chart")).toBeInTheDocument();
   });
 

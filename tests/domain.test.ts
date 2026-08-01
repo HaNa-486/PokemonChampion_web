@@ -108,27 +108,27 @@ describe("priority", () => {
 
 describe("team legality", () => {
   const member = (id: string, pokemonId: string, itemId: string | null): TeamMember => ({ id, pokemonId, itemId, abilityId: null, moveIds: [], ap: { ...ZERO_STATS }, nature: { name: "Serious", up: null, down: null } });
-  it("rejects duplicate species and items but permits distinct Mega species", () => {
+  it("rejects duplicate Pokémon and held items", () => {
     const issues = validateTeam([member("a", "charizard", "life-orb"), member("b", "charizard", "life-orb")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
     expect(issues.map((issue) => issue.code)).toEqual(expect.arrayContaining(["DUPLICATE_POKEMON", "DUPLICATE_ITEM"]));
-    const legal = validateTeam([member("a", "mega-charizard-x", "charizardite-x"), member("b", "mega-charizard-y", "charizardite-y")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
-    expect(legal).toEqual([]);
+    const branchedMegas = validateTeam([member("a", "mega-charizard-x", "charizardite-x"), member("b", "mega-charizard-y", "charizardite-y")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
+    expect(branchedMegas.map((issue) => issue.code)).toContain("DUPLICATE_POKEMON");
   });
 
-  it("rejects a base form with any of its Mega forms while permitting two distinct Mega branches", () => {
+  it("rejects a base form with a Mega form and rejects different Mega branches of one species", () => {
     const baseAndMega = validateTeam([member("a", "alakazam", "sitrus-berry"), member("b", "mega-alakazam", "alakazite")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
     expect(baseAndMega.map((issue) => issue.code)).toContain("DUPLICATE_POKEMON");
-    const twoMegaBranches = validateTeam([member("a", "mega-charizard-x", "charizardite-x"), member("b", "mega-charizard-y", "charizardite-y")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
-    expect(twoMegaBranches).toEqual([]);
+    const twoMegaBranches = validateTeam([member("a", "mega-raichu-x", "raichunite-x"), member("b", "mega-raichu-y", "raichunite-y")], pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
+    expect(twoMegaBranches.map((issue) => issue.code)).toContain("DUPLICATE_POKEMON");
   });
 
-  it("removes persisted base/Mega conflicts while preserving distinct Mega branches", () => {
+  it("removes every persisted form conflict, including different Mega branches", () => {
     const sanitized = sanitizeTeamMembers([
       member("base", "charizard", null), member("mega-x", "mega-charizard-x", "charizardite-x"), member("mega-y", "mega-charizard-y", "charizardite-y"),
     ], pokemonById);
     expect(sanitized.map((entry) => entry.id)).toEqual(["base"]);
-    const megasOnly = sanitizeTeamMembers([member("mega-x", "mega-charizard-x", "charizardite-x"), member("mega-y", "mega-charizard-y", "charizardite-y")], pokemonById);
-    expect(megasOnly).toHaveLength(2);
+    const megasOnly = sanitizeTeamMembers([member("mega-x", "mega-raichu-x", "raichunite-x"), member("mega-y", "mega-raichu-y", "raichunite-y")], pokemonById);
+    expect(megasOnly.map((entry) => entry.id)).toEqual(["mega-x"]);
   });
 
   it("forces every Mega form to hold its dedicated stone", () => {
