@@ -29,11 +29,6 @@ const worker = {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
 
-    if (!isDispatchAuthPath(url.pathname)) {
-      const accessResponse = enforceChatGptSignIn(request);
-      if (accessResponse) return withSecurityHeaders(accessResponse);
-    }
-
     if (url.pathname === "/_vinext/image") {
       const allowedWidths = [...DEFAULT_DEVICE_SIZES, ...DEFAULT_IMAGE_SIZES];
       const response = await handleImageOptimization(request, {
@@ -63,38 +58,3 @@ function withSecurityHeaders(response: Response): Response {
 }
 
 export default worker;
-
-const AUTHENTICATED_EMAIL_HEADER = "oai-authenticated-user-email";
-const DISPATCH_AUTH_PATHS = new Set([
-  "/signin-with-chatgpt",
-  "/signout-with-chatgpt",
-  "/callback",
-]);
-
-function isDispatchAuthPath(pathname: string): boolean {
-  return DISPATCH_AUTH_PATHS.has(pathname);
-}
-
-function enforceChatGptSignIn(request: Request): Response | null {
-  const email = request.headers.get(AUTHENTICATED_EMAIL_HEADER)?.trim().toLowerCase();
-  const wantsHtml = request.method === "GET" && (request.headers.get("accept") ?? "").includes("text/html");
-
-  if (!email) {
-    if (wantsHtml) {
-      const url = new URL(request.url);
-      const returnTo = `${url.pathname}${url.search}`;
-      const location = `/signin-with-chatgpt?return_to=${encodeURIComponent(returnTo)}`;
-      return new Response(null, { status: 302, headers: { location, "cache-control": "no-store" } });
-    }
-    return accessJson(401, "AUTH_REQUIRED", "Sign in with ChatGPT to access this UAT site.");
-  }
-
-  return null;
-}
-
-function accessJson(status: number, code: string, message: string): Response {
-  return Response.json({ error: { code, message } }, {
-    status,
-    headers: { "cache-control": "no-store" },
-  });
-}

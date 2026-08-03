@@ -5,28 +5,8 @@ async function render(path = "/", init = {}) {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
-  return worker.fetch(new Request(`http://localhost${path}`, { ...init, headers: { accept: "text/html", "oai-authenticated-user-email": "uat@example.com", ...init.headers } }), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } }, { waitUntil() {}, passThroughOnException() {} });
+  return worker.fetch(new Request(`http://localhost${path}`, { headers: { accept: "text/html", ...init.headers }, ...init }), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } }, { waitUntil() {}, passThroughOnException() {} });
 }
-
-test("redirects anonymous HTML visitors to ChatGPT sign-in", async () => {
-  const response = await render("/?view=moves", { headers: { "oai-authenticated-user-email": "" }, redirect: "manual" });
-  assert.equal(response.status, 302);
-  assert.equal(response.headers.get("cache-control"), "no-store");
-  assert.equal(response.headers.get("location"), "/signin-with-chatgpt?return_to=%2F%3Fview%3Dmoves");
-});
-
-test("allows any signed-in ChatGPT account", async () => {
-  const response = await render("/", { headers: { "oai-authenticated-user-email": "other@example.com" } });
-  assert.equal(response.status, 200);
-  assert.match(await response.text(), /CHAMPIONS LAB/);
-});
-
-test("denies anonymous API requests without redirecting", async () => {
-  const response = await render("/api/v1/pokemon", { headers: { accept: "application/json", "oai-authenticated-user-email": "" } });
-  assert.equal(response.status, 401);
-  assert.equal(response.headers.get("location"), null);
-  assert.equal((await response.json()).error.code, "AUTH_REQUIRED");
-});
 
 test("server-renders Champions Lab instead of the starter", async () => {
   const response = await render();
@@ -72,7 +52,7 @@ test("serves the expanded current Champions form snapshot", async () => {
 });
 
 test("rejects unauthenticated admin API calls before database access", async () => {
-  const response = await render("/api/v1/admin/overrides", { headers: { accept: "application/json", "oai-authenticated-user-email": "" } });
+  const response = await render("/api/v1/admin/overrides", { headers: { accept: "application/json" } });
   assert.equal(response.status, 401);
   const body = await response.json();
   assert.equal(body.error.code, "AUTH_REQUIRED");
