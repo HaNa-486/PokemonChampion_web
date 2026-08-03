@@ -65,6 +65,32 @@ describe("Move Database", () => {
     const dialog = screen.getByRole("dialog", { name: "Dragon Claw" });
     expect(within(dialog).getByText("Garchomp")).toBeInTheDocument();
     expect(within(dialog).getByText("Mega Charizard X")).toBeInTheDocument();
+    const defaultCards = Array.from(dialog.querySelectorAll(".reverse-grid article"));
+    const preferredFlags = defaultCards.map((card) => card.classList.contains("preferred-type"));
+    const firstNonPreferred = preferredFlags.indexOf(false);
+    expect(firstNonPreferred === -1 || preferredFlags.slice(firstNonPreferred).every((value) => !value)).toBe(true);
+    const sort = within(dialog).getByRole("combobox", { name: "Sort reverse lookup Pokémon" });
+    const direction = within(dialog).getByRole("combobox", { name: "Reverse lookup sort direction" });
+    expect(sort).toHaveValue("relevance");
+    expect(direction).toBeDisabled();
+    await user.selectOptions(sort, "speed");
+    expect(direction).toHaveValue("desc");
+    const descendingSpeeds = Array.from(dialog.querySelectorAll(".reverse-card-stats span:nth-child(6) b"), (node) => Number(node.textContent));
+    expect(descendingSpeeds).toEqual([...descendingSpeeds].sort((a, b) => b - a));
+    await user.selectOptions(direction, "asc");
+    const ascendingSpeeds = Array.from(dialog.querySelectorAll(".reverse-card-stats span:nth-child(6) b"), (node) => Number(node.textContent));
+    expect(ascendingSpeeds).toEqual([...ascendingSpeeds].sort((a, b) => a - b));
+    const filters = dialog.querySelector<HTMLElement>(".reverse-filters")!;
+    await user.click(within(filters).getByRole("button", { name: "Dragon" }));
+    await user.click(within(filters).getByRole("button", { name: "Fire" }));
+    await user.click(within(filters).getByRole("button", { name: "AND" }));
+    await user.click(within(filters).getByRole("button", { name: "Mega" }));
+    await user.type(within(filters).getByRole("combobox", { name: "Search reverse lookup ability filter" }), "Tough Claws");
+    await user.type(within(filters).getByRole("combobox", { name: "Search reverse lookup known move filter" }), "Flare Blitz");
+    await user.clear(within(filters).getByRole("spinbutton", { name: "Reverse lookup minimum SpA" }));
+    await user.type(within(filters).getByRole("spinbutton", { name: "Reverse lookup minimum SpA" }), "100");
+    expect(within(dialog).getByText("Mega Charizard X")).toBeInTheDocument();
+    expect(dialog.querySelectorAll(".reverse-grid article")).toHaveLength(1);
   });
 
   it("paginates all moves instead of hiding entries after 100", async () => {

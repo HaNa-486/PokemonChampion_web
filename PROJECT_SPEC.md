@@ -488,7 +488,7 @@ Priority MUST offer:
 
 Results have an independent priority column. Positive values include `+`; sort numerically. Explain that priority precedes ordinary speed and does not universally guarantee moving first.
 
-Move and ability tables also show the total number of current-Regulation Pokémon forms that can use the entry. The count is numerically sortable. Activating the name or count opens an accessible reverse-lookup dialog containing every eligible form, its sprite, types, and Mega/form identity. Reverse indexes are built from the normalized legal snapshot; hover must not query upstream data.
+Move and ability tables also show the total number of current-Regulation Pokémon forms that can use the entry. The count is numerically sortable. Activating the name or count opens an accessible reverse-lookup dialog containing every eligible form, its sprite, types, Mega/form identity, six base stats, and abilities. The dialog reuses Pokémon DB's name-only search, type OR/AND, regular/Mega, searchable ability, multiple known-move AND, and six minimum-stat filters. Users can sort by name, type, ability, or any base stat in either direction. For a move lookup, the deterministic default order places Pokémon sharing the move's type first, then orders by type and Pokémon name; remaining Pokémon follow by type and name. Ability lookups default to type then name. Mobile keeps search and sorting visible while advanced filters use an accessible collapsible panel. Reverse indexes are built from the normalized legal snapshot; hover must not query upstream data.
 
 ### 8.5 Floating team tray
 
@@ -696,7 +696,7 @@ Filters: name-only search, type OR/AND, regular/Mega, searchable ability, multip
 
 Battle usage: mapped move/item/ability rows expose their canonical tooltip content; move rows show the correct type badge; pointer, keyboard, and touch activation work; unmapped upstream rows remain readable and never crash the panel.
 
-Reverse lookup: move/ability eligible-form counts, numeric sorting, complete accessible dialog contents, form identity, and current-Regulation exclusion.
+Reverse lookup: move/ability eligible-form counts, numeric sorting, complete accessible dialog contents, form identity, current-Regulation exclusion, Pokémon DB-equivalent filter combinations, stat/name/type/ability sort keys in both directions, move-type-first default ordering, filtered/total counts, clear/empty states, and mobile filter collapse.
 
 Team tray: add/edit/remove, independent Singles/Doubles groups, format-aware usage defaults, incomplete marker, six-member cap/replacement, duplicate-family/item errors, all displayed fields and matchups, six full cards reachable through internal scrolling, desktop collapse, mobile focus behavior, refresh/navigation persistence, IndexedDB migration/corrupt quarantine.
 
