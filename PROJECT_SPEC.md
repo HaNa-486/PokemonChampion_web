@@ -1,12 +1,12 @@
 # Pokemon Champions Team Builder — Implementation Specification
 
-> Status: implementation-ready specification  
+> Status: as-built v1 specification and commercial-scale target
 > Audience: software engineers and coding LLM agents  
-> Last updated: 2026-07-30 (Asia/Taipei)
+> Last updated: 2026-08-03 (Asia/Taipei)
 
 ## 0. Instructions for an implementing LLM
 
-This file is the source of truth for v1. Before changing code, read it completely and inspect the repository. Preserve unrelated user changes. Implement the milestones in order, treat every **MUST** as an acceptance requirement, and never invent game formulas, Regulation rules, translations, source data, or licensing rights.
+This file is the source of truth for the shipped v1 behavior and its commercial-scale target. Before changing code, read it completely and inspect the repository. For the existing repository, preserve its working Next.js/vinext/Sites architecture unless a separately approved migration milestone explicitly replaces it. Preserve unrelated user changes, treat every **MUST** as an acceptance requirement, and never invent game formulas, Regulation rules, translations, source data, or licensing rights.
 
 Before handing work to the product owner for UAT, run every applicable automated quality gate in this document. Deliver the exact tested version, reports, known limitations, migration notes, and UAT checklist. If this file marks something unresolved, validate it with reliable Pokémon Champions examples before enabling that production feature.
 
@@ -33,20 +33,20 @@ GameWith may inspire interaction patterns only. **Do not copy** its CSS, layout,
 | Formats | Singles and Doubles |
 | Languages | English (`en`) and Traditional Chinese (`zh-Hant`) |
 | Team size | Maximum 6 Pokémon |
-| Duplicate Pokémon | The same selectable Pokémon form cannot repeat; distinct Mega forms may coexist |
+| Duplicate Pokémon | Forms sharing one `species_clause_key` cannot coexist: base + Mega and sibling Mega branches such as X/Y are duplicates |
 | Duplicate items | Non-null held items cannot repeat; empty item slots may repeat |
-| Mega Pokémon | Different Mega Pokémon may coexist on one team |
+| Mega Pokémon | Mega Pokémon from different species families may coexist; each must hold its dedicated Mega Stone |
 | Moves | Maximum 4 unique legal moves per Pokémon |
 | AP | Total maximum 66; maximum 32 per stat |
 | Nature | One non-HP stat may receive +10%, another -10%; neutral nature changes none |
 | Anonymous users | Team stored locally in versioned IndexedDB |
 | Accounts | Cloud sync/cross-device teams are phase 2, not v1 |
 | Images | Champions Battle Data assets first |
-| Included | Catalogs, details, tooltips, priority filter, builder/tray, speed comparison, admin overrides |
-| Excluded | Damage calculator, team analysis, tier lists, recommended builds, community content |
+| Included | Complete paginated catalogs, details, tooltips, reverse lookup, advanced filters, type chart, usage-based build defaults, builder/tray, speed comparison, admin overrides |
+| Excluded | Damage calculator, AI/strategy recommendations, team analysis, tier lists, community content |
 | Commercial intent | Yes; privacy, consent, attribution, security, and legal-review readiness are required |
 
-Future only: AI build recommendations may use the complete legal Pokémon/move/ability/item/Regulation/battle dataset and a user's natural-language goal. Do not implement an LLM feature in v1, but keep normalized data and domain APIs suitable for future retrieval.
+The v1 usage-based defaults are deterministic: for the chosen Singles or Doubles format, apply the highest-ranked legal held item, ability, nature, AP spread, and up to four legal unique moves from current Champions battle data. They are editable starting values, not strategic recommendations. Future-only AI recommendations may use the complete legal Pokémon/move/ability/item/Regulation/battle dataset and a user's natural-language goal. Do not implement an LLM feature in v1, but keep normalized data and domain APIs suitable for future retrieval.
 
 ## 3. v1 pages and non-goals
 
@@ -60,11 +60,12 @@ Required pages:
 6. Held item database
 7. Team builder
 8. Speed comparison
-9. Data sources, attribution, and data date
-10. Privacy, terms, cookie settings, and unofficial-project notice
-11. Protected admin override interface
+9. Full 18×18 type matchup chart
+10. Data sources, attribution, and data date
+11. Privacy, terms, cookie settings, and unofficial-project notice
+12. Protected admin override interface
 
-Non-goals: damage calculation, recommended builds, team synergy/weakness analysis, tier lists, user comments/voting, public raw-data mirror, bulk-data download, competing general-purpose data API, and native apps.
+Non-goals: damage calculation, AI/strategy recommendations, team synergy analysis, tier lists, user comments/voting, public raw-data mirror, bulk-data download, competing general-purpose data API, and native apps.
 
 ## 4. Data ownership, precedence, and legal use
 
@@ -121,9 +122,17 @@ Live observations already show that API guide examples may differ from current r
 
 Public attribution must include a linked notice similar to: “Battle data provided by Pokémon Champions Battle Data.” Reasonable caching is allowed, but do not expose raw responses as a permanent mirror, dump, bulk-download product, or competing API. Cache PokeAPI responsibly and preserve BSD-3-Clause notices where applicable.
 
-## 5. Prescribed architecture
+## 5. Architecture: shipped v1 and scale target
 
-Use a TypeScript monorepo with a modular-monolith backend. Do not split every domain into microservices in v1.
+### 5.1 Shipped v1 architecture
+
+The existing repository is authoritative for v1 implementation shape. It uses pnpm, Next.js/React, strict TypeScript, vinext, Cloudflare-compatible Sites output, Zustand plus versioned IndexedDB, Floating UI, Vitest/Testing Library, and a committed generated Champions/PokeAPI snapshot. API/BFF routes live in the same application. Preserve `.openai/hosting.json`, the current lockfile, build pipeline, and Sites deployment packaging.
+
+Domain calculations, legality, normalization, and recommendation mapping MUST remain deterministic and independently testable outside React components. External boundaries must be validated and must not become arbitrary upstream proxies.
+
+### 5.2 Commercial-scale target
+
+The following modular-monolith layout is a future migration target for account sync, durable historical data, scheduled imports, larger operational scale, and stronger isolation. Do not rewrite the shipped application into this topology without an explicitly approved migration plan, compatibility tests, data migration, rollback plan, and unchanged user-visible behavior.
 
 ```text
 apps/
@@ -146,7 +155,7 @@ docs/
   test-reports/
 ```
 
-Required choices:
+Commercial-scale target choices:
 
 | Area | Technology |
 |---|---|
@@ -171,13 +180,24 @@ Required choices:
 | Load | k6 |
 | Observability | OpenTelemetry + Sentry-compatible reporting |
 
-Use supported stable versions pinned by the lockfile. Domain code must not depend on React, NestJS, Prisma, or browser APIs.
+Use supported stable versions pinned by the lockfile. Domain code must not depend on React, NestJS, Prisma, or browser APIs. Until the scale migration is approved, new v1 work MUST use the shipped architecture in section 5.1 rather than introducing a parallel backend stack.
 
 Deployment: CDN/WAF in front; SSR/ISR web; stateless horizontally scalable API; PostgreSQL system of record; Redis disposable cache/queue; independently deployable worker; isolated local/test/staging/production.
 
 ## 6. Database/domain model
 
 Internal entities use application UUIDs. External IDs, slugs, Showdown IDs, names, and `saved_name` are mappings, never primary keys. Mutable tables have timestamps; published snapshots are immutable.
+
+The shipped snapshot/runtime form DTO MUST keep these identities separate:
+
+```text
+id             stable internal/UI form id
+speciesKey     family legality key used to prevent duplicate base/Mega branches
+battleDataKey  Champions Showdown id used by /api/battle/:format/:name
+savedName      metadata/CSV/asset display and filename mapping
+```
+
+`speciesKey` MUST NOT be used as the battle API lookup key. Regional, gender, breed, appliance, and other independently indexed forms use their own `battleDataKey`. Only a metadata-only Mega form without an independent Champions index record may explicitly inherit its base form's battle source. Ambiguous mappings fail the import; they are never resolved by last-write-wins behavior.
 
 ### 6.1 Provenance and mappings
 
@@ -206,6 +226,7 @@ pokemon_species(
 pokemon_forms(
   id UUID PK, species_id FK, canonical_slug UNIQUE, form_name NULL,
   is_default, height NULL, weight NULL, champions_saved_name NULL,
+  champions_showdown_id NULL, species_clause_key,
   sprite_asset_id NULL
 )
 
@@ -243,7 +264,7 @@ ruleset_pokemon_availability(
 )
 ```
 
-Exactly one public default ruleset. Historical values remain queryable and are never overwritten. `species_clause_key` is the selectable form identity for duplicate checks; distinct Mega Pokémon have different keys and may coexist.
+Exactly one public default ruleset. Historical values remain queryable and are never overwritten. `species_clause_key` identifies the underlying team-legality family: a base form and all of its Mega branches share the same key and cannot coexist. Mega Pokémon from different families have different keys and may coexist.
 
 ### 6.4 Moves
 
@@ -411,9 +432,10 @@ Golden fixture: Mega Charizard X with base `78-130-111-130-85-100`, AP `2-32-0-0
 The structured validator MUST enforce:
 
 - Maximum six members.
-- No duplicate selectable-form `species_clause_key`; distinct Mega forms are legal together.
-- Distinct legal Mega Pokémon allowed.
+- No duplicate `species_clause_key`: base + Mega and sibling Mega branches such as X/Y are mutually exclusive.
+- Distinct legal Mega Pokémon from different species families are allowed.
 - No duplicate non-null item.
+- Every Mega form holds its dedicated Mega Stone; selecting that stone on a base form immediately switches the effective sprite, name, types, ability pool, base stats, and final stats to the matching Mega form.
 - At most four unique moves per member.
 - All Pokémon/moves/abilities/items legal in active ruleset.
 - Move learnable by selected form.
@@ -430,9 +452,9 @@ Use an original design system, light/dark themes, dense desktop tables, responsi
 
 ### 8.2 Pokémon DB/detail
 
-Database filters: localized name/alias, type, ability, learnable moves with AND/OR, current availability, Mega toggle, Singles/Doubles context. Sort by usage rank, total stats, six stats, and name.
+Name search matches localized Pokémon names/aliases only; type text is handled by the type filters and must not leak into name search. Database filters include multi-select type with explicit OR/AND behavior, regular/Mega form, searchable ability, multiple searchable learnable moves using AND, minimum values for all six base stats, current availability, and Singles/Doubles context. Sort by name, type, usage rank where available, total stats, and all six stats.
 
-Results show sprite, name/form, types, Champions stats, abilities, and usage rank. Detail shows sprite/form/types, stats, abilities, matchups, format-specific battle usage, common moves/items/abilities/natures/AP spreads/teammates, learnable moves, data date/attribution, and team-builder controls.
+Results show sprite, name/form, types, Champions stats, abilities, and usage rank where available. All legal results are reachable through pagination; a fixed first-100 truncation is forbidden. Headers show filtered total, visible range, and total count. Detail shows sprite/form/types, stats, all available abilities, weaknesses/resistances/immunities, format-specific battle usage, common moves/items/abilities/natures/AP spreads/teammates, the complete form-specific learnset, data date/attribution, and team-builder controls.
 
 ### 8.3 Tooltips/popovers
 
@@ -462,11 +484,13 @@ Priority MUST offer:
 
 Results have an independent priority column. Positive values include `+`; sort numerically. Explain that priority precedes ordinary speed and does not universally guarantee moving first.
 
+Move and ability tables also show the total number of current-Regulation Pokémon forms that can use the entry. The count is numerically sortable. Activating the name or count opens an accessible reverse-lookup dialog containing every eligible form, its sprite, types, and Mega/form identity. Reverse indexes are built from the normalized legal snapshot; hover must not query upstream data.
+
 ### 8.5 Floating team tray
 
-Persist across relevant pages. Each member shows sprite/name/form, types, four moves with type badges, validated final stats, AP/nature, ability, item, completion/legal state, and edit/remove actions.
+Persist across relevant pages. Singles and Doubles each own an independent versioned team of up to six members and can be switched without losing either group. Each member shows sprite/name/form, types, weaknesses/resistances/immunities, four moves with type badges, validated final stats, AP/nature, ability, item, completion/legal state, and edit/remove actions.
 
-Adding a seventh never silently overwrites; open replacement selection. Duplicate attempts show domain errors. Incomplete members are allowed and marked. Desktop uses a collapsible floating panel; mobile uses a fixed bottom bar and accessible bottom sheet. Persist with versioned IndexedDB; LocalStorage only for tiny preferences/migration flags. Navigation/refresh preserves state. Corrupt/old data migrates or quarantines without crashing.
+Adding a seventh never silently overwrites; open replacement selection. Duplicate attempts show domain errors. Incomplete members are allowed and marked. Desktop uses a collapsible floating panel whose internal scroll area makes all six complete cards reachable; mobile uses a fixed bottom bar and accessible bottom sheet. Persist with versioned IndexedDB; LocalStorage only for tiny preferences/migration flags. Navigation/refresh preserves state. Corrupt/old data migrates or quarantines without crashing.
 
 ### 8.6 Speed comparison
 
@@ -484,7 +508,21 @@ move priority
 
 Name the page **Speed Compare**, not a full turn simulator. State unsupported mechanics. Every supported multiplier/order rule requires a named golden fixture; never guess.
 
-### 8.7 i18n/accessibility
+### 8.7 Usage-based build defaults and Mega transformation
+
+Opening the Build Workbench immediately requests current usage for the selected form's `battleDataKey` in both formats. The currently selected Singles/Doubles mode deterministically applies the highest-ranked legal held item, ability, nature, valid AP spread, and up to four unique learnable moves. A format switch reapplies that format's defaults. Missing, unmapped, duplicated, or illegal upstream rows are skipped; the UI clearly falls back to catalog defaults rather than fabricating a value. Every field remains user-editable except a required Mega Stone.
+
+All 21 supported Champions natures appear with explicit increased/decreased stat labels; neutral natures state that no stat changes. AP defaults must pass the same `[0,32]` per-stat and total `≤66` validator as manual edits.
+
+A Mega form preselects and locks its dedicated stone. Selecting a Mega Stone on a base form changes the effective form immediately, including sprite, displayed name, types, ability options, base stats, matchup profile, final stats, and team-legality identity. The transformed build remains subject to duplicate-family and duplicate-item validation.
+
+### 8.8 Type matchup chart
+
+Provide a complete 18×18 attack-versus-defense matrix as a standalone page. Attack types run down the left and defending types across the top. Use full, high-contrast type badges plus text/icon cues; color alone is insufficient. The first column remains sticky during horizontal scrolling and the header row remains sticky during vertical scrolling.
+
+Desktop also provides a collapsible lower-left floating chart because the team tray occupies the lower-right. Its chart area must support real horizontal and vertical scrolling without clipping its scrollbars. Mobile hides the floating panel and exposes only the standalone page link. Verify behavior at 390, 768, and 1440 CSS pixels.
+
+### 8.9 i18n/accessibility
 
 Support `en` and `zh-Hant`; Chinese falls back to English. Locale changes preserve team/filters/format/page. Search accepts localized names/aliases. Identifiers never use translated names.
 
@@ -555,7 +593,7 @@ Champions job:
 
 PokeAPI job caches/normalizes needed resources, preserves localization/provenance, updates incrementally, runs less often, and never overwrites Champions values.
 
-Import checks: required IDs; percentages `[0,100]` or true null; blank not zero; scoped rank uniqueness where promised; mapped references or quarantine; unexpected count collapse; AP values valid; allowlisted assets; recorded version/date; unknown optionals tolerated; required missing fields rejected according to severity.
+Import checks: required IDs; every directly indexed form's `battleDataKey` equals its Champions `showdownId`; regional/gender/breed/appliance forms do not inherit a sibling's battle source; metadata rows map to exactly one index entry or an explicitly allowed metadata-only Mega fallback; percentages `[0,100]` or true null; blank not zero; scoped rank uniqueness where promised; mapped references or quarantine; unexpected count collapse; AP values valid; allowlisted assets; recorded version/date; unknown optionals tolerated; required missing fields rejected according to severity. The Ninetales/Alolan Ninetales pair is a permanent golden mapping fixture covering different keys, types, abilities, learnsets, battle sources, and usage-based defaults.
 
 Failure: never activate partial/bad data; serve last good snapshot/date; circuit-break repeated failures; import failure cannot take down public API; admin can inspect quarantine.
 
@@ -631,8 +669,9 @@ AP/stats:
 Team legality:
 
 - 0..6 accepted; 7 rejected.
-- Duplicate species key rejected; distinct legal Mega accepted.
+- Duplicate family key rejected, including base + Mega and sibling Mega X/Y branches; Mega forms from different families are accepted.
 - Duplicate non-null item rejected; multiple null items accepted.
+- Every Mega form is locked to its dedicated stone; selecting a stone on a base form switches every effective form field.
 - 0..4 unique legal moves accepted; fifth/duplicate rejected.
 - Unlearnable move, wrong ability, unavailable entity rejected.
 - Ruleset switch preserves invalid data with structured errors.
@@ -649,9 +688,13 @@ Priority:
 
 Tooltips: pointer delay/open/close, keyboard/Escape, touch, edge collision, z-index/clipping, effective override content, locale fallback, accessible relationship, and no hover N+1. Visual snapshots cover light/dark, desktop/mobile, long English/Chinese, and viewport edges.
 
-Filters: each filter and combinations, URL restore, clear all, empty state, API/result count, stale-response race.
+Filters: name-only search, type OR/AND, regular/Mega, searchable ability, multiple known-move AND, six minimum stats, each move filter and combinations, URL restore where supported, clear all, empty state, API/result count, pagination through the real final page, dynamic totals, and stale-response race.
 
-Team tray: add/edit/remove, incomplete marker, six-member cap/replacement, duplicate errors, all displayed fields, desktop collapse, mobile focus behavior, refresh/navigation persistence, IndexedDB migration/corrupt quarantine.
+Reverse lookup: move/ability eligible-form counts, numeric sorting, complete accessible dialog contents, form identity, and current-Regulation exclusion.
+
+Team tray: add/edit/remove, independent Singles/Doubles groups, format-aware usage defaults, incomplete marker, six-member cap/replacement, duplicate-family/item errors, all displayed fields and matchups, six full cards reachable through internal scrolling, desktop collapse, mobile focus behavior, refresh/navigation persistence, IndexedDB migration/corrupt quarantine.
+
+Type chart: all 18×18 cells, dual-type multiplication, sticky header/first column, high-contrast badges, desktop floating panel with horizontal/vertical scrolling, standalone page, and mobile floating-panel suppression.
 
 ### 13.3 API/integration tests
 
@@ -663,6 +706,8 @@ PR CI must not depend on third-party uptime. Commit minimized attribution-preser
 
 A scheduled respectful live probe checks status, content type, required field types, IDs, dates, integer priority, sprite availability, and latency. Live failure alerts maintainers but does not make PR tests flaky.
 
+The committed offline form-integrity audit runs on every deployment. A live audit runs whenever the upstream sync/mapping code or snapshot changes and on a schedule. It compares every Champions index name and `showdownId` with the committed form's `battleDataKey`, reports related metadata groups, and probes both Singles and Doubles for the Ninetales golden pair. Third-party downtime must not make ordinary PR unit tests flaky.
+
 ### 13.5 Import/data-quality tests
 
 - Same checksum is idempotent.
@@ -672,6 +717,9 @@ A scheduled respectful live probe checks status, content type, required field ty
 - Unknown optionals are safe; required missing fields quarantine/reject.
 - Blank percentage stays null.
 - Mapping collision/count collapse/invalid asset host reported.
+- Every form has non-empty `id`, `speciesKey`, `battleDataKey`, and `savedName`; directly indexed forms equal their live `showdownId`.
+- Regional/gender/breed/appliance mappings remain form-specific; Ninetales and Alolan Ninetales retain distinct types, abilities, learnsets, sources, and format defaults.
+- Ambiguous shared metadata mapping fails instead of overwriting a whole family.
 - Cache invalidates after commit only.
 - Handle timeout, malformed JSON/CSV, wrong type, oversized response, and 5xx.
 
@@ -687,13 +735,18 @@ Only after golden formula fixtures: missing input error; identical build tie; no
 4. Navigate and refresh; team persists.
 5. Build six members; seventh opens replacement.
 6. Duplicate Pokémon/item shows actionable error.
-7. Switch Singles/Doubles and verify snapshot/data.
-8. Use positive/zero/negative priority filters and restore URL.
-9. Compare speeds and identify tie.
-10. Switch English/Chinese without losing state.
-11. Use mobile bottom sheet at 360/390 px.
-12. Admin previews/publishes/audits/reverts override.
-13. Stale upstream simulation shows last valid snapshot.
+7. Reject base + Mega and sibling Mega branches; allow Mega forms from different families.
+8. Switch Singles/Doubles and verify independent teams, form-specific usage data, and defaults.
+9. Use positive/zero/negative priority filters and restore URL.
+10. Open move/ability reverse lookup and sort by eligible-form count.
+11. Transform a base form by selecting its Mega Stone and verify every effective field.
+12. Scroll the six-card team tray to its final member.
+13. Open the floating type chart, scroll both axes, verify sticky labels, then use the mobile standalone page.
+14. Compare speeds and identify tie.
+15. Switch English/Chinese without losing state.
+16. Use mobile bottom sheet at 360/390 px.
+17. Admin previews/publishes/audits/reverts override.
+18. Stale upstream simulation shows last valid snapshot.
 
 Run Chromium, Firefox, WebKit. Required relevant widths: 360, 390, 768, 1024, 1440 px.
 
@@ -717,6 +770,8 @@ critical AP/stats/team invariants approximately 100%
 ## 14. CI/CD gates
 
 Every PR runs: frozen install, format, lint/architecture rules, typecheck, unit/property/component tests, PostgreSQL/Redis integration, production build, Playwright critical journeys, accessibility checks, dependency/license/secret scans, and migration verification from the previous release.
+
+For the shipped repository, `pnpm verify:deploy` is the minimum local deployment gate and runs lint, TypeScript checking, the offline form-integrity audit, all Vitest suites, the production build, and built-output SSR/API tests. It does not replace the remaining commercial-hardening gates above. When `scripts/sync-upstream.mjs`, form mappings, or `data/generated/champions-snapshot.json` changes, also run `pnpm data:audit:live`. Follow `DEPLOYMENT_CHECKLIST.md`; production must use the exact commit and artifact that passed these gates.
 
 Promotion:
 
@@ -785,6 +840,9 @@ UAT checklist must cover language/navigation, catalog accuracy, formats/Regulati
 - Do not guess or ship damage calculation in v1.
 - Do not guess final-stat or complex speed rules; require golden fixtures.
 - Do not let PokeAPI overwrite Champions active-Regulation data.
+- Do not use `speciesKey` as a form-specific battle API key or let shared metadata overwrite sibling forms.
+- Do not allow a base form and its Mega form, or sibling Mega branches, in one team.
+- Do not describe deterministic usage defaults as AI or strategic recommendations.
 - Do not call third-party APIs on hover or per user request.
 - Do not expose a raw-data mirror or bulk-data service.
 - Do not silently discard invalid teams after rule changes.

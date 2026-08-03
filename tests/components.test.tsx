@@ -127,7 +127,7 @@ describe("ChampionsApp", () => {
     const members: TeamMember[] = pokemonIds.map((pokemonId, index) => ({ id: `member-${index}`, pokemonId, abilityId: null, itemId: null, moveIds: [], ap: { ...ZERO_STATS }, nature: { name: "Serious", nameZh: "認真", up: null, down: null } }));
     useTeamStore.setState({ teams: { singles: [], doubles: members }, hydrated: true });
     const { container } = render(<ChampionsApp />);
-    const list = container.querySelector(".team-list")!;
+    const list = container.querySelector<HTMLElement>(".team-list")!;
     expect(list).toBeInTheDocument();
     expect(list.querySelectorAll(":scope > .team-card")).toHaveLength(6);
     expect(within(list).getByText("Garchomp")).toBeInTheDocument();
@@ -148,7 +148,7 @@ describe("ChampionsApp", () => {
   it("filters Pokémon by type, form, ability, known moves, and minimum stats", async () => {
     const user = userEvent.setup();
     const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
-    const filters = container.querySelector(".pokemon-advanced-filters")!;
+    const filters = container.querySelector<HTMLElement>(".pokemon-advanced-filters")!;
     await user.click(within(filters).getByRole("button", { name: "Water" }));
     await user.click(within(filters).getByRole("button", { name: "Mega" }));
     await user.type(within(filters).getByRole("combobox", { name: "Search ability filter" }), "Mega Launcher");
@@ -156,13 +156,13 @@ describe("ChampionsApp", () => {
     await user.clear(within(filters).getByRole("spinbutton", { name: "Minimum SpA" }));
     await user.type(within(filters).getByRole("spinbutton", { name: "Minimum SpA" }), "130");
     expect(screen.getByRole("button", { name: /^Mega Blastoise/ })).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Blastoise", exact: true })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /^Blastoise$/ })).not.toBeInTheDocument();
   });
 
   it("searches names only and keeps type matching in the advanced type filter", async () => {
     const user = userEvent.setup();
     const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
-    const filters = container.querySelector(".pokemon-advanced-filters")!;
+    const filters = container.querySelector<HTMLElement>(".pokemon-advanced-filters")!;
     const nameSearch = within(filters).getByRole("textbox", { name: "Search Pokémon by name" });
     await user.type(nameSearch, "ra");
     expect(screen.queryByRole("button", { name: "Whimsicott" })).not.toBeInTheDocument();
@@ -175,7 +175,7 @@ describe("ChampionsApp", () => {
   it("lets users choose OR or AND behavior for multiple type filters", async () => {
     const user = userEvent.setup();
     const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
-    const filters = container.querySelector(".pokemon-advanced-filters")!;
+    const filters = container.querySelector<HTMLElement>(".pokemon-advanced-filters")!;
     await user.click(within(filters).getByRole("button", { name: "Ground" }));
     await user.click(within(filters).getByRole("button", { name: "Steel" }));
     expect(screen.getByRole("button", { name: "Garchomp" })).toBeInTheDocument();
@@ -194,7 +194,7 @@ describe("ChampionsApp", () => {
     const user = userEvent.setup();
     render(<ChampionsApp />);
     await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
-    await user.click(screen.getByRole("button", { name: "Absol", exact: true }));
+    await user.click(screen.getByRole("button", { name: /^Absol$/ }));
     const dialog = screen.getByRole("dialog", { name: "Absol" });
     expect(within(dialog).getByText("Learnable moves")).toBeInTheDocument();
     expect(within(dialog).getByText("Available abilities")).toBeInTheDocument();

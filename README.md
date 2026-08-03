@@ -2,15 +2,18 @@
 
 An unofficial Pokémon Champions team-building database for the current regulation. It combines the live [Pokémon Champions Battle Data](https://championsbattledata.com/) index with structured move data from the [PokeAPI repository](https://github.com/PokeAPI/pokeapi).
 
-The implementation contract, data model, security boundaries, acceptance criteria, and full test design live in [PROJECT_SPEC.md](./PROJECT_SPEC.md).
+The implementation contract, data model, security boundaries, acceptance criteria, and full test design live in [PROJECT_SPEC.md](./PROJECT_SPEC.md). Release work follows [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md).
 
 ## Features
 
 - Current-regulation Pokémon database using Champions sprites and stats
-- Searchable move database with positive, zero, and negative priority filters
+- Complete paginated Pokémon and move catalogs with advanced filters, sorting, and move/ability reverse lookup
+- Positive, zero, and negative move-priority filters
 - Accessible hover, focus, and click explanations for moves, abilities, and held items
-- Six-member team tray with species and held-item clause validation
+- Independent Singles/Doubles six-member teams with family and held-item clause validation
 - Four selected moves with type badges, ability, item, AP, nature, and calculated final stats
+- Format-specific usage defaults and dedicated Mega Stone transformation
+- Defensive matchup summaries plus a complete 18×18 type chart
 - Speed comparison with stages, Choice Scarf, and Trick Room ordering
 - English and Traditional Chinese UI
 - Protected, allowlisted admin draft-override console backed by Cloudflare D1
@@ -30,13 +33,14 @@ pnpm run dev
 ## Validation
 
 ```bash
-pnpm run test:unit
-pnpm run test:coverage
-pnpm run lint
-pnpm test
+pnpm run verify:deploy
 ```
 
-`pnpm test` runs unit/component tests, a production build, and built-worker integration tests.
+`verify:deploy` runs lint, TypeScript checking, the offline form-integrity audit, unit/component tests, a production build, and built-worker integration tests. When upstream sync code, form mappings, or the generated snapshot changes, also run:
+
+```bash
+pnpm run data:audit:live
+```
 
 ## Admin and database
 

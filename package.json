@@ -13,6 +13,10 @@
     "test:unit": "vitest run",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "typecheck": "tsc --noEmit",
+    "data:audit": "node scripts/audit-form-integrity.mjs",
+    "data:audit:live": "node scripts/audit-form-integrity.mjs --live",
+    "verify:deploy": "pnpm run lint && pnpm run typecheck && pnpm run data:audit && pnpm test",
     "db:generate": "drizzle-kit generate"
     ,"data:sync": "node scripts/sync-upstream.mjs"
   },
