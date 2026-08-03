@@ -5,7 +5,8 @@ describe("battle data API proxy", () => {
   afterEach(() => vi.unstubAllGlobals());
 
   it("uses a form-specific battle data key and returns both formats", async () => {
-    const upstreamFetch = vi.fn(async (input: string | URL | Request) => {
+    const upstreamFetch = vi.fn(async (input: string | URL | Request, init?: RequestInit) => {
+      expect(init?.signal).toBeInstanceOf(AbortSignal);
       const url = String(input);
       const format = url.includes("/Singles/") ? "Singles" : "Doubles";
       const pokemon = url.endsWith("/ninetalesalola") ? "Alolan Ninetales" : "Ninetales";
@@ -38,5 +39,14 @@ describe("battle data API proxy", () => {
     const response = await GET(new Request("http://localhost/api/v1/pokemon/battle?pokemonId=https%3A%2F%2Fevil.example"));
     expect(response.status).toBe(404);
     expect(upstreamFetch).not.toHaveBeenCalled();
+  });
+
+  it("rejects oversized upstream payloads", async () => {
+    const upstreamFetch = vi.fn(async () => new Response("{}", {
+      headers: { "content-type": "application/json", "content-length": String(2 * 1024 * 1024) },
+    }));
+    vi.stubGlobal("fetch", upstreamFetch);
+    const response = await GET(new Request("http://localhost/api/v1/pokemon/battle?pokemonId=ninetales"));
+    expect(response.status).toBe(502);
   });
 });

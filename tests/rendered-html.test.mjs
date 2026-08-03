@@ -12,7 +12,10 @@ test("server-renders Champions Lab instead of the starter", async () => {
   const response = await render();
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("x-content-type-options"), "nosniff");
+  assert.match(response.headers.get("strict-transport-security") ?? "", /max-age=31536000/);
+  assert.equal(response.headers.get("cross-origin-opener-policy"), "same-origin");
   assert.match(response.headers.get("content-security-policy") ?? "", /frame-ancestors 'none'/);
+  assert.match(response.headers.get("content-security-policy") ?? "", /upgrade-insecure-requests/);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>Champions Lab/);

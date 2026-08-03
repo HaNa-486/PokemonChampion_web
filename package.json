@@ -17,14 +17,14 @@
     "data:audit": "node scripts/audit-form-integrity.mjs",
     "data:audit:live": "node scripts/audit-form-integrity.mjs --live",
     "verify:deploy": "pnpm run lint && pnpm run typecheck && pnpm run data:audit && pnpm test",
-    "db:generate": "drizzle-kit generate"
-    ,"data:sync": "node scripts/sync-upstream.mjs"
+    "db:generate": "drizzle-kit generate",
+    "data:sync": "node scripts/sync-upstream.mjs"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.20",
     "drizzle-orm": "0.45.2",
     "idb-keyval": "^6.3.0",
-    "next": "16.2.6",
+    "next": "16.2.11",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "zod": "^4.4.3",
@@ -44,7 +44,7 @@
     "@vitest/coverage-v8": "^4.1.10",
     "drizzle-kit": "0.31.10",
     "eslint": "9.39.4",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.2.11",
     "fake-indexeddb": "^6.2.5",
     "jsdom": "^30.0.1",
     "react-server-dom-webpack": "19.2.6",

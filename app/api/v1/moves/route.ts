@@ -6,7 +6,9 @@ const allowed = new Set(["positive", "zero", "negative"]);
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const query = (url.searchParams.get("q") ?? "").toLowerCase();
+  const rawQuery = url.searchParams.get("q") ?? "";
+  if (rawQuery.length > 100) return apiError(400, "INVALID_FILTER", "Search query must not exceed 100 characters.");
+  const query = rawQuery.toLowerCase();
   const rawClass = url.searchParams.get("priorityClass");
   if (rawClass && rawClass !== "nonzero" && !allowed.has(rawClass)) return apiError(400, "INVALID_FILTER", "priorityClass must be positive, zero, negative, or nonzero.");
   const classes = rawClass === "nonzero" ? ["positive", "negative"] : rawClass ? [rawClass] : [];

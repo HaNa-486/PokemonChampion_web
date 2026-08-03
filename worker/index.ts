@@ -47,10 +47,12 @@ const worker = {
 
 function withSecurityHeaders(response: Response): Response {
   const secured = new Response(response.body, response);
-  secured.headers.set("content-security-policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://championsbattledata.com; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");
+  secured.headers.set("content-security-policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://championsbattledata.com; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; manifest-src 'self'; upgrade-insecure-requests");
   secured.headers.set("referrer-policy", "strict-origin-when-cross-origin");
   secured.headers.set("x-content-type-options", "nosniff");
   secured.headers.set("x-frame-options", "DENY");
+  secured.headers.set("strict-transport-security", "max-age=31536000; includeSubDomains");
+  secured.headers.set("cross-origin-opener-policy", "same-origin");
   secured.headers.set("permissions-policy", "camera=(), microphone=(), geolocation=(), payment=()");
   return secured;
 }

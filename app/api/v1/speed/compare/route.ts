@@ -1,11 +1,11 @@
-import { apiError, apiSuccess, speedCompareSchema } from "../../../../../lib/api";
+import { apiError, apiSuccess, readJsonBody, speedCompareSchema } from "../../../../../lib/api";
 import { pokemonById } from "../../../../../lib/catalog";
 import { calculateFinalStats, modifiedSpeed } from "../../../../../lib/domain";
 
 export async function POST(request: Request) {
-  let input: unknown;
-  try { input = await request.json(); } catch { return apiError(400, "INVALID_JSON", "Request body must be valid JSON."); }
-  const parsed = speedCompareSchema.safeParse(input);
+  const body = await readJsonBody(request);
+  if (!body.ok) return body.response;
+  const parsed = speedCompareSchema.safeParse(body.value);
   if (!parsed.success) return apiError(400, "VALIDATION_ERROR", "Invalid speed comparison input.", parsed.error.flatten());
   const rows = parsed.data.entries.map((entry, index) => {
     const pokemon = pokemonById.get(entry.pokemonId);

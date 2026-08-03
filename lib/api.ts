@@ -20,3 +20,93 @@ export function apiSuccess(data: unknown, init?: ResponseInit) {
 export function apiError(status: number, code: string, message: string, details?: unknown) {
   return Response.json({ error: { code, message, details } }, { status, headers: { "cache-control": "no-store" } });
 }
+
+export type JsonBodyResult =
+  | { ok: true; value: unknown }
+  | { ok: false; response: Response };
+
+export async function readJsonBody(
+  request: Request,
+  maxBytes = 32 * 1024,
+): Promise<JsonBodyResult> {
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!/^application\/(?:[\w!#$&^_.+-]+\+)?json(?:\s*;|$)/i.test(contentType)) {
+    return {
+      ok: false,
+      response: apiError(415, "JSON_REQUIRED", "Content-Type must be application/json."),
+    };
+  }
+
+  const advertisedLength = Number(request.headers.get("content-length"));
+  if (Number.isFinite(advertisedLength) && advertisedLength > maxBytes) {
+    return {
+      ok: false,
+      response: apiError(413, "PAYLOAD_TOO_LARGE", `Request body must not exceed ${maxBytes} bytes.`),
+    };
+  }
+
+  try {
+    const text = await readBoundedText(request.body, maxBytes);
+    return { ok: true, value: JSON.parse(text) };
+  } catch (error) {
+    if (error instanceof PayloadTooLargeError) {
+      return {
+        ok: false,
+        response: apiError(413, "PAYLOAD_TOO_LARGE", `Request body must not exceed ${maxBytes} bytes.`),
+      };
+    }
+    return {
+      ok: false,
+      response: apiError(400, "INVALID_JSON", "Request body must be valid JSON."),
+    };
+  }
+}
+
+export function isSameOriginRequest(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+  try {
+    return new URL(origin).origin === new URL(request.url).origin;
+  } catch {
+    return false;
+  }
+}
+
+export async function readBoundedJsonResponse(
+  response: Response,
+  maxBytes = 1024 * 1024,
+): Promise<unknown> {
+  const advertisedLength = Number(response.headers.get("content-length"));
+  if (Number.isFinite(advertisedLength) && advertisedLength > maxBytes) {
+    throw new PayloadTooLargeError();
+  }
+  return JSON.parse(await readBoundedText(response.body, maxBytes));
+}
+
+class PayloadTooLargeError extends Error {}
+
+async function readBoundedText(
+  body: ReadableStream<Uint8Array> | null,
+  maxBytes: number,
+): Promise<string> {
+  if (!body) return "";
+  const reader = body.getReader();
+  const decoder = new TextDecoder("utf-8", { fatal: true });
+  let size = 0;
+  let text = "";
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > maxBytes) throw new PayloadTooLargeError();
+      text += decoder.decode(value, { stream: true });
+    }
+    return text + decoder.decode();
+  } catch (error) {
+    await reader.cancel(error).catch(() => undefined);
+    throw error;
+  } finally {
+    reader.releaseLock();
+  }
+}

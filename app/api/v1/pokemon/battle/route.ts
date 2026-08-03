@@ -1,4 +1,4 @@
-import { apiError, apiSuccess } from "../../../../../lib/api";
+import { apiError, apiSuccess, readBoundedJsonResponse } from "../../../../../lib/api";
 import { normalizeBattleUsage } from "../../../../../lib/battle-data";
 import { pokemonById } from "../../../../../lib/catalog";
 
@@ -7,9 +7,10 @@ const UPSTREAM = "https://championsbattledata.com/api/battle";
 async function load(format: "Singles" | "Doubles", battleDataKey: string) {
   const response = await fetch(`${UPSTREAM}/${format}/${encodeURIComponent(battleDataKey)}`, {
     headers: { accept: "application/json", "user-agent": "ChampionsLab/0.1 (+https://championsbattledata.com/)" },
+    signal: AbortSignal.timeout(8_000),
   });
   if (!response.ok) throw new Error(`Upstream ${format} request failed with ${response.status}.`);
-  return normalizeBattleUsage(await response.json(), format);
+  return normalizeBattleUsage(await readBoundedJsonResponse(response), format);
 }
 
 export async function GET(request: Request) {
