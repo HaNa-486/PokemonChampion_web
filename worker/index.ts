@@ -5,8 +5,6 @@ import handler from "vinext/server/app-router-entry";
 interface Env {
   ASSETS: Fetcher;
   DB: D1Database;
-  ADMIN_EMAILS?: string;
-  UAT_EMAILS?: string;
   IMAGES: {
     input(stream: ReadableStream): {
       transform(options: Record<string, unknown>): {
@@ -32,7 +30,7 @@ const worker = {
     const url = new URL(request.url);
 
     if (!isDispatchAuthPath(url.pathname)) {
-      const accessResponse = enforceUatAccess(request, env);
+      const accessResponse = enforceChatGptSignIn(request);
       if (accessResponse) return withSecurityHeaders(accessResponse);
     }
 
@@ -77,12 +75,8 @@ function isDispatchAuthPath(pathname: string): boolean {
   return DISPATCH_AUTH_PATHS.has(pathname);
 }
 
-function enforceUatAccess(request: Request, env: Env): Response | null {
+function enforceChatGptSignIn(request: Request): Response | null {
   const email = request.headers.get(AUTHENTICATED_EMAIL_HEADER)?.trim().toLowerCase();
-  const allowed = new Set([
-    ...parseEmailList(env.UAT_EMAILS),
-    ...parseEmailList(env.ADMIN_EMAILS),
-  ]);
   const wantsHtml = request.method === "GET" && (request.headers.get("accept") ?? "").includes("text/html");
 
   if (!email) {
@@ -95,32 +89,12 @@ function enforceUatAccess(request: Request, env: Env): Response | null {
     return accessJson(401, "AUTH_REQUIRED", "Sign in with ChatGPT to access this UAT site.");
   }
 
-  if (allowed.size === 0) {
-    return accessJson(503, "ACCESS_NOT_CONFIGURED", "The UAT access list is not configured.");
-  }
-
-  if (!allowed.has(email)) {
-    if (wantsHtml) return accessDeniedPage();
-    return accessJson(403, "UAT_ACCESS_DENIED", "This ChatGPT account is not on the UAT access list.");
-  }
-
   return null;
-}
-
-function parseEmailList(value: string | undefined): string[] {
-  return (value ?? "").split(",").map((email) => email.trim().toLowerCase()).filter(Boolean);
 }
 
 function accessJson(status: number, code: string, message: string): Response {
   return Response.json({ error: { code, message } }, {
     status,
     headers: { "cache-control": "no-store" },
-  });
-}
-
-function accessDeniedPage(): Response {
-  return new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>UAT access denied</title></head><body><main><h1>UAT access denied</h1><p>This ChatGPT account is not on the Champions Lab UAT access list.</p><p>此 ChatGPT 帳號不在 Champions Lab 的 UAT 測試名單中。</p><a href="/signout-with-chatgpt?return_to=%2F">Sign out / 登出</a></main></body></html>`, {
-    status: 403,
-    headers: { "content-type": "text/html; charset=utf-8", "cache-control": "no-store" },
   });
 }

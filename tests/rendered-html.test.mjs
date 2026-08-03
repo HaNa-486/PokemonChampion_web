@@ -5,7 +5,7 @@ async function render(path = "/", init = {}) {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
   workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
   const { default: worker } = await import(workerUrl.href);
-  return worker.fetch(new Request(`http://localhost${path}`, { ...init, headers: { accept: "text/html", "oai-authenticated-user-email": "uat@example.com", ...init.headers } }), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) }, UAT_EMAILS: "uat@example.com" }, { waitUntil() {}, passThroughOnException() {} });
+  return worker.fetch(new Request(`http://localhost${path}`, { ...init, headers: { accept: "text/html", "oai-authenticated-user-email": "uat@example.com", ...init.headers } }), { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } }, { waitUntil() {}, passThroughOnException() {} });
 }
 
 test("redirects anonymous HTML visitors to ChatGPT sign-in", async () => {
@@ -15,10 +15,10 @@ test("redirects anonymous HTML visitors to ChatGPT sign-in", async () => {
   assert.equal(response.headers.get("location"), "/signin-with-chatgpt?return_to=%2F%3Fview%3Dmoves");
 });
 
-test("denies signed-in accounts outside the UAT allowlist", async () => {
+test("allows any signed-in ChatGPT account", async () => {
   const response = await render("/", { headers: { "oai-authenticated-user-email": "other@example.com" } });
-  assert.equal(response.status, 403);
-  assert.match(await response.text(), /UAT access denied/);
+  assert.equal(response.status, 200);
+  assert.match(await response.text(), /CHAMPIONS LAB/);
 });
 
 test("denies anonymous API requests without redirecting", async () => {

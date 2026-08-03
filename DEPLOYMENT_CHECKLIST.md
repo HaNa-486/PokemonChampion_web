@@ -115,8 +115,8 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] JSON write endpoints reject non-JSON and oversized request bodies before schema validation.
 - [ ] Authenticated write endpoints reject missing or cross-origin `Origin` headers.
 - [ ] Admin APIs reject unauthenticated and unauthorized requests before database access.
-- [ ] Public UAT mode redirects anonymous HTML visitors to ChatGPT sign-in and permits only `UAT_EMAILS` or `ADMIN_EMAILS`.
-- [ ] Anonymous and non-allowlisted API requests return 401/403 without redirects or cached responses.
+- [ ] Public UAT mode redirects anonymous HTML visitors to ChatGPT sign-in and permits any authenticated ChatGPT account.
+- [ ] Anonymous API requests return 401 without redirects or cached responses.
 - [ ] No secret, access token, auth header, or private user data is committed or logged.
 - [ ] `pnpm audit --prod --audit-level=moderate` reports no known production dependency vulnerabilities.
 - [ ] Dependency, license, secret, and static-security scans pass for a commercial release candidate.
