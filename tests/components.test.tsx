@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChampionsApp } from "../components/ChampionsApp";
 import { TypeChart, TypeChartFloating } from "../components/TypeChartView";
 import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
+import { compareLearnableMoves } from "../components/PokemonDetailDialog";
 import { ZERO_STATS } from "../lib/domain";
 import { moves } from "../lib/catalog";
 import { useTeamStore } from "../lib/team-store";
@@ -122,6 +123,12 @@ describe("Speed Compare", () => {
 });
 
 describe("ChampionsApp", () => {
+  it("sorts detail learnsets by category, type, descending priority, properties, and target", () => {
+    const names = ["Swords Dance", "Air Slash", "Assurance", "Aerial Ace", "Sucker Punch"];
+    const fixture = names.map((name) => moves.find((move) => move.name === name)!);
+    expect([...fixture].sort(compareLearnableMoves).map((move) => move.name)).toEqual(["Sucker Punch", "Assurance", "Aerial Ace", "Air Slash", "Swords Dance"]);
+  });
+
   it("renders every member in a full six-Pokémon scrollable team list", () => {
     const pokemonIds = ["abomasnow", "aerodactyl", "alakazam", "arbok", "arcanine", "garchomp"];
     const members: TeamMember[] = pokemonIds.map((pokemonId, index) => ({ id: `member-${index}`, pokemonId, abilityId: null, itemId: null, moveIds: [], ap: { ...ZERO_STATS }, nature: { name: "Serious", nameZh: "認真", up: null, down: null } }));

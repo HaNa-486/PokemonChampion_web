@@ -19,6 +19,16 @@ const categoryLabels: Record<string, [string, string]> = {
 };
 const localName = (entry: { name: string; nameZh: string }, locale: Locale) => locale === "zh-Hant" ? entry.nameZh : entry.name;
 const toggleValue = (values: string[], value: string) => values.includes(value) ? values.filter((entry) => entry !== value) : [...values, value];
+const moveCategoryRank: Record<Move["category"], number> = { Physical: 0, Special: 1, Status: 2 };
+
+export function compareLearnableMoves(a: Move, b: Move) {
+  return moveCategoryRank[a.category] - moveCategoryRank[b.category]
+    || a.type.localeCompare(b.type)
+    || b.priority - a.priority
+    || [...a.flags].sort().join(" ").localeCompare([...b.flags].sort().join(" "))
+    || a.target.localeCompare(b.target)
+    || a.name.localeCompare(b.name);
+}
 
 function FilterGroup({ label, options, selected, onToggle }: { label: string; options: string[]; selected: string[]; onToggle: (value: string) => void }) {
   return <div className="filter-group"><b>{label}</b><div>{options.map((option) => <button type="button" className="filter-chip" key={option} onClick={() => onToggle(option)} aria-pressed={selected.includes(option)}>{option}</button>)}</div></div>;
@@ -75,7 +85,7 @@ export function PokemonDetailDialog({ pokemon, locale, initialFormat, onClose, o
   const moveEntries = useMemo(() => learnableMoves.filter((move) => {
     const searchMatch = `${move.name} ${move.nameZh}`.toLowerCase().includes(moveQuery.toLowerCase());
     return searchMatch && priorityMatches(move, priorities) && (!types.length || types.includes(move.type)) && (!categories.length || categories.includes(move.category)) && (!targets.length || targets.includes(move.target)) && (!properties.length || properties.some((flag) => move.flags.includes(flag)));
-  }), [learnableMoves, moveQuery, priorities, types, categories, targets, properties]);
+  }).sort(compareLearnableMoves), [learnableMoves, moveQuery, priorities, types, categories, targets, properties]);
   const activeFilterCount = priorities.length + types.length + categories.length + targets.length + properties.length;
   const clearMoveFilters = () => { setMoveQuery(""); setPriorities([]); setTypes([]); setCategories([]); setTargets([]); setProperties([]); };
   useEffect(() => {

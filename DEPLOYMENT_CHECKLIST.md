@@ -81,6 +81,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Type OR/AND, form, ability, multiple known moves, and minimum-stat filters work in combination.
 - [ ] Move type/category/target/property/priority filters work in combination.
 - [ ] Pokémon-detail learnsets expose the same five move filters, filtered/total count, clear/empty states, and only legal moves for that form.
+- [ ] Pokémon-detail learnsets default to category → type → descending priority → properties → target, with name used only as a final tie-breaker.
 - [ ] Move and Ability eligible-Pokémon counts sort numerically and open complete reverse lookup.
 - [ ] Pokémon detail shows form-specific learnsets, abilities, matchups, and both battle formats.
 - [ ] Current-season move/item/ability entries open canonical tooltips; moves show their visible type badge and unmapped rows remain readable.
