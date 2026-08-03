@@ -134,19 +134,21 @@ tbody tr:hover { background: #f2fbf7; }
 .reverse-filters .filter-actions { padding-left: 100px; }
 .reverse-dialog h3 { margin: 4px 0 12px; }
 .reverse-dialog h3 span { color: var(--mint-dark); }
-.reverse-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 9px; }
-.reverse-grid article { display: flex; align-items: flex-start; gap: 9px; min-width: 0; padding: 11px; border: 1px solid var(--line); border-radius: 13px; background: #fbfdfc; }
-.reverse-grid article.preferred-type { border-color: #9bd9c7; background: #f2fbf8; }
-.reverse-grid article img { flex: 0 0 auto; object-fit: contain; }
-.reverse-grid article > div { min-width: 0; flex: 1; }
-.reverse-grid article strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.reverse-grid article small { display: block; margin-top: 4px; color: var(--coral); font-weight: 800; }
-.reverse-match-note { border-radius: 999px; padding: 3px 6px; color: var(--mint-dark); background: #dff5ed; font-size: .58rem; font-weight: 850; }
-.reverse-card-stats { display: grid; grid-template-columns: repeat(6,1fr); gap: 3px; margin-top: 8px; padding-top: 7px; border-top: 1px solid var(--line); }
-.reverse-card-stats span { display: grid; justify-items: center; gap: 1px; font-size: .68rem; }
-.reverse-card-stats small { margin: 0 !important; color: var(--muted) !important; font-size: .55rem; }
-.reverse-card-stats b { color: var(--ink); font-variant-numeric: tabular-nums; }
-.reverse-card-abilities { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-top: 7px; color: var(--mint-dark); font-size: .64rem; font-weight: 750; }
+.reverse-table-scroll { overflow: auto; max-height: 48vh; border: 1px solid var(--line); border-radius: 13px; }
+.reverse-results-table { width: 100%; min-width: 920px; border-collapse: separate; border-spacing: 0; }
+.reverse-results-table th { position: sticky; top: 0; z-index: 2; background: #f1f5f3; }
+.reverse-results-table th:first-child { left: 0; z-index: 4; }
+.reverse-results-table td { border-top: 1px solid var(--line); padding: 9px 10px; text-align: center; font-weight: 750; font-variant-numeric: tabular-nums; }
+.reverse-results-table td:first-child { position: sticky; left: 0; z-index: 1; width: 245px; background: white; text-align: left; }
+.reverse-results-table tr.preferred-type td { background: #f2fbf8; }
+.reverse-results-table tr.preferred-type td:first-child { background: #eaf8f3; }
+.reverse-pokemon-cell { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.reverse-pokemon-cell img { flex: 0 0 auto; object-fit: contain; }
+.reverse-pokemon-cell > span { display: grid; min-width: 0; gap: 2px; }
+.reverse-pokemon-cell strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.reverse-pokemon-cell small { color: var(--coral); font-size: .62rem; font-weight: 850; }
+.reverse-pokemon-cell em { color: var(--mint-dark); font-size: .58rem; font-style: normal; font-weight: 850; }
+.reverse-results-table .ability-list { justify-content: flex-start; min-width: 180px; text-align: left; }
 .reverse-empty { padding: 50px 15px; color: var(--muted); text-align: center; }
 .priority-value { display: inline-flex; min-width: 35px; justify-content: center; border-radius: 7px; padding: 4px 7px; font-weight: 900; }
 .priority-value.priority-positive { color: #08795f; background: #dff7ee; }
@@ -426,7 +428,9 @@ footer a { color: var(--mint-dark); }
   .reverse-filters .filter-group > div { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
   .reverse-filters .filter-chip { flex: 0 0 auto; }
   .reverse-filters .filter-actions { padding-left: 0; }
-  .reverse-grid { grid-template-columns: 1fr; }
+  .reverse-table-scroll { max-height: 48dvh; }
+  .reverse-results-table { min-width: 900px; }
+  .reverse-results-table td:first-child { width: 205px; }
   .team-tray, .team-tray.collapsed { left: 10px; right: 10px; bottom: 9px; width: auto; max-height: 70dvh; border-radius: 17px; }
   .team-tray.open { height: 70dvh; }
   .build-editor { padding: 20px 16px; }

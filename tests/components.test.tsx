@@ -65,8 +65,8 @@ describe("Move Database", () => {
     const dialog = screen.getByRole("dialog", { name: "Dragon Claw" });
     expect(within(dialog).getByText("Garchomp")).toBeInTheDocument();
     expect(within(dialog).getByText("Mega Charizard X")).toBeInTheDocument();
-    const defaultCards = Array.from(dialog.querySelectorAll(".reverse-grid article"));
-    const preferredFlags = defaultCards.map((card) => card.classList.contains("preferred-type"));
+    const defaultRows = Array.from(dialog.querySelectorAll(".reverse-results-table tbody tr"));
+    const preferredFlags = defaultRows.map((row) => row.classList.contains("preferred-type"));
     const firstNonPreferred = preferredFlags.indexOf(false);
     expect(firstNonPreferred === -1 || preferredFlags.slice(firstNonPreferred).every((value) => !value)).toBe(true);
     const sort = within(dialog).getByRole("combobox", { name: "Sort reverse lookup Pokémon" });
@@ -75,10 +75,15 @@ describe("Move Database", () => {
     expect(direction).toBeDisabled();
     await user.selectOptions(sort, "speed");
     expect(direction).toHaveValue("desc");
-    const descendingSpeeds = Array.from(dialog.querySelectorAll(".reverse-card-stats span:nth-child(6) b"), (node) => Number(node.textContent));
+    const table = within(dialog).getByRole("table");
+    const speedHeader = within(table).getByRole("button", { name: /Spe/ });
+    expect(speedHeader.closest("th")).toHaveAttribute("aria-sort", "descending");
+    const descendingSpeeds = Array.from(dialog.querySelectorAll(".reverse-results-table td[data-stat='speed']"), (node) => Number(node.textContent));
     expect(descendingSpeeds).toEqual([...descendingSpeeds].sort((a, b) => b - a));
-    await user.selectOptions(direction, "asc");
-    const ascendingSpeeds = Array.from(dialog.querySelectorAll(".reverse-card-stats span:nth-child(6) b"), (node) => Number(node.textContent));
+    await user.click(speedHeader);
+    expect(direction).toHaveValue("asc");
+    expect(speedHeader.closest("th")).toHaveAttribute("aria-sort", "ascending");
+    const ascendingSpeeds = Array.from(dialog.querySelectorAll(".reverse-results-table td[data-stat='speed']"), (node) => Number(node.textContent));
     expect(ascendingSpeeds).toEqual([...ascendingSpeeds].sort((a, b) => a - b));
     const filters = dialog.querySelector<HTMLElement>(".reverse-filters")!;
     await user.click(within(filters).getByRole("button", { name: "Dragon" }));
@@ -90,7 +95,7 @@ describe("Move Database", () => {
     await user.clear(within(filters).getByRole("spinbutton", { name: "Reverse lookup minimum SpA" }));
     await user.type(within(filters).getByRole("spinbutton", { name: "Reverse lookup minimum SpA" }), "100");
     expect(within(dialog).getByText("Mega Charizard X")).toBeInTheDocument();
-    expect(dialog.querySelectorAll(".reverse-grid article")).toHaveLength(1);
+    expect(dialog.querySelectorAll(".reverse-results-table tbody tr")).toHaveLength(1);
   });
 
   it("paginates all moves instead of hiding entries after 100", async () => {

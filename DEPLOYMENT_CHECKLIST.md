@@ -85,6 +85,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Move and Ability eligible-Pokémon counts sort numerically and open complete reverse lookup.
 - [ ] Reverse lookup supports name, Type OR/AND, Form, Ability, additional known moves, minimum stats, and clear/empty states.
 - [ ] Reverse lookup sorts by name/type/ability/all six stats in both directions; move lookups default to same-move-type first, then type and Pokémon name.
+- [ ] Reverse results use the Pokémon DB-style table; header sorting and sort controls stay synchronized, and mobile horizontal scrolling keeps the Pokémon column sticky.
 - [ ] Pokémon detail shows form-specific learnsets, abilities, matchups, and both battle formats.
 - [ ] Current-season move/item/ability entries open canonical tooltips; moves show their visible type badge and unmapped rows remain readable.
 - [ ] Singles/Doubles usage defaults apply the highest-ranked legal item, ability, nature, AP spread, and four unique learnable moves.
