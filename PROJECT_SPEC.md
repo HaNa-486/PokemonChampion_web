@@ -456,6 +456,10 @@ Name search matches localized Pokémon names/aliases only; type text is handled 
 
 Results show sprite, name/form, types, Champions stats, abilities, and usage rank where available. All legal results are reachable through pagination; a fixed first-100 truncation is forbidden. Headers show filtered total, visible range, and total count. Detail shows sprite/form/types, stats, all available abilities, weaknesses/resistances/immunities, format-specific battle usage, common moves/items/abilities/natures/AP spreads/teammates, the complete form-specific learnset, data date/attribution, and team-builder controls.
 
+The form-specific learnset inside Pokémon detail reuses the Move DB search plus priority-sign, type, category, target, and property filters. Filter combinations use the same semantics as Move DB, expose the filtered/total count, provide clear-all and empty states, and must never show a move outside that form's legal learnset. On narrow mobile screens the controls use an explicitly labelled collapsible filter panel with horizontally scrollable chip rows, while results remain a single-column touch-friendly list.
+
+Current-season move, held-item, and ability usage entries are interactive tooltip triggers, not plain text. Move rows include a visible type badge. They resolve through canonical catalog identities, show the same localized descriptions as their database pages, support mouse hover, keyboard focus, and touch tap, and fall back safely to plain upstream text when a row cannot be mapped.
+
 ### 8.3 Tooltips/popovers
 
 Moves, abilities, and items must explain themselves directly.
@@ -688,7 +692,9 @@ Priority:
 
 Tooltips: pointer delay/open/close, keyboard/Escape, touch, edge collision, z-index/clipping, effective override content, locale fallback, accessible relationship, and no hover N+1. Visual snapshots cover light/dark, desktop/mobile, long English/Chinese, and viewport edges.
 
-Filters: name-only search, type OR/AND, regular/Mega, searchable ability, multiple known-move AND, six minimum stats, each move filter and combinations, URL restore where supported, clear all, empty state, API/result count, pagination through the real final page, dynamic totals, and stale-response race.
+Filters: name-only search, type OR/AND, regular/Mega, searchable ability, multiple known-move AND, six minimum stats, each move filter and combinations, URL restore where supported, clear all, empty state, API/result count, pagination through the real final page, dynamic totals, and stale-response race. Repeat the Move DB priority/type/category/target/property combination fixtures inside Pokémon-detail learnsets, including mobile expand/collapse and filtered/total counts.
+
+Battle usage: mapped move/item/ability rows expose their canonical tooltip content; move rows show the correct type badge; pointer, keyboard, and touch activation work; unmapped upstream rows remain readable and never crash the panel.
 
 Reverse lookup: move/ability eligible-form counts, numeric sorting, complete accessible dialog contents, form identity, and current-Regulation exclusion.
 

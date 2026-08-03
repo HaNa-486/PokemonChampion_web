@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { abilityById, moveById } from "../lib/catalog";
-import { formatPriority } from "../lib/domain";
+import { abilityById, abilityIdByUsageName, itemById, itemIdByUsageName, moveById, moveIdByUsageName, usageEntityKey } from "../lib/catalog";
+import { formatPriority, priorityMatches } from "../lib/domain";
 import type { BattleUsage, BattleUsageRow, Move, Pokemon } from "../lib/types";
 import { InfoTooltip } from "./InfoTooltip";
 import { TypeBadge } from "./TypeBadge";
 import { TypeMatchups } from "./TypeMatchups";
 
 type Locale = "en" | "zh-Hant";
+type PriorityClass = "positive" | "zero" | "negative";
 type BattleResponse = { data: { scope: string; singles: BattleUsage | null; doubles: BattleUsage | null } };
 const statKeys = ["hp", "attack", "defense", "specialAttack", "specialDefense", "speed"] as const;
 const statLabels = { hp: "HP", attack: "Atk", defense: "Def", specialAttack: "SpA", specialDefense: "SpD", speed: "Spe" };
@@ -17,6 +18,11 @@ const categoryLabels: Record<string, [string, string]> = {
   move: ["Moves", "招式"], held_item: ["Held items", "持有物"], ability: ["Abilities", "特性"], stat_alignment: ["Natures", "性格"], stat_points: ["AP spreads", "AP 配置"], teammate: ["Teammates", "隊友"],
 };
 const localName = (entry: { name: string; nameZh: string }, locale: Locale) => locale === "zh-Hant" ? entry.nameZh : entry.name;
+const toggleValue = (values: string[], value: string) => values.includes(value) ? values.filter((entry) => entry !== value) : [...values, value];
+
+function FilterGroup({ label, options, selected, onToggle }: { label: string; options: string[]; selected: string[]; onToggle: (value: string) => void }) {
+  return <div className="filter-group"><b>{label}</b><div>{options.map((option) => <button type="button" className="filter-chip" key={option} onClick={() => onToggle(option)} aria-pressed={selected.includes(option)}>{option}</button>)}</div></div>;
+}
 
 function MoveEntry({ move, locale }: { move: Move; locale: Locale }) {
   return <InfoTooltip label={localName(move, locale)}><strong>{localName(move, locale)}</strong><div className="tooltip-meta"><TypeBadge type={move.type} /><span>{move.category}</span><span>Priority {formatPriority(move.priority)}</span></div><div className="tooltip-stats"><span>Power {move.power ?? "—"}</span><span>Acc. {move.accuracy ?? "—"}</span><span>PP {move.pp}</span></div><p>{locale === "zh-Hant" ? move.descriptionZh : move.description}</p></InfoTooltip>;
@@ -28,10 +34,27 @@ function usageName(row: BattleUsageRow) {
   return "—";
 }
 
+function UsageEntry({ category, row, locale }: { category: string; row: BattleUsageRow; locale: Locale }) {
+  const fallback = usageName(row);
+  if (category === "move") {
+    const move = moveById.get(moveIdByUsageName.get(usageEntityKey(row.name)) ?? "");
+    if (move) return <span className="usage-resource"><TypeBadge type={move.type} /><MoveEntry move={move} locale={locale} /></span>;
+  }
+  if (category === "ability") {
+    const ability = abilityById.get(abilityIdByUsageName.get(usageEntityKey(row.name)) ?? "");
+    if (ability) return <InfoTooltip label={localName(ability, locale)}><strong>{localName(ability, locale)}</strong><p>{locale === "zh-Hant" ? ability.descriptionZh : ability.description}</p></InfoTooltip>;
+  }
+  if (category === "held_item") {
+    const item = itemById.get(itemIdByUsageName.get(usageEntityKey(row.name)) ?? "");
+    if (item) return <InfoTooltip label={localName(item, locale)}><strong>{localName(item, locale)}</strong><div className="tooltip-meta"><span>{item.category}</span></div><p>{locale === "zh-Hant" ? item.descriptionZh : item.description}</p></InfoTooltip>;
+  }
+  return <span>{fallback}</span>;
+}
+
 function BattlePanel({ usage, locale }: { usage: BattleUsage | null | undefined; locale: Locale }) {
   if (!usage) return <p className="detail-empty">{locale === "zh-Hant" ? "目前沒有這個賽制的官方資料。" : "No official data is currently available for this format."}</p>;
   const groups = categoryOrder.map((category) => ({ category, rows: usage.rows.filter((row) => row.category === category) })).filter((group) => group.rows.length);
-  return <div className="battle-usage"><p className="battle-source">{usage.season} · {usage.date ?? (locale === "zh-Hant" ? "當前賽季（每日更新）" : "current season (daily cutoff)")} · {usage.source}</p>{groups.map(({ category, rows }) => <section key={category}><h3>{categoryLabels[category]?.[locale === "zh-Hant" ? 1 : 0] ?? category}</h3><div className="usage-table"><div className="usage-head"><span>#</span><span>{locale === "zh-Hant" ? "項目" : "Entry"}</span><span>{locale === "zh-Hant" ? "使用率" : "Usage"}</span></div>{rows.map((row, index) => <div className="usage-row" key={`${category}-${row.rank}-${index}`}><b>{row.rank || index + 1}</b><span>{usageName(row)}</span><strong>{row.percentage || "—"}</strong></div>)}</div></section>)}</div>;
+  return <div className="battle-usage"><p className="battle-source">{usage.season} · {usage.date ?? (locale === "zh-Hant" ? "當前賽季（每日更新）" : "current season (daily cutoff)")} · {usage.source}</p>{groups.map(({ category, rows }) => <section key={category}><h3>{categoryLabels[category]?.[locale === "zh-Hant" ? 1 : 0] ?? category}</h3><div className="usage-table"><div className="usage-head"><span>#</span><span>{locale === "zh-Hant" ? "項目" : "Entry"}</span><span>{locale === "zh-Hant" ? "使用率" : "Usage"}</span></div>{rows.map((row, index) => <div className="usage-row" key={`${category}-${row.rank}-${index}`}><b>{row.rank || index + 1}</b><UsageEntry category={category} row={row} locale={locale} /><strong>{row.percentage || "—"}</strong></div>)}</div></section>)}</div>;
 }
 
 export function PokemonDetailDialog({ pokemon, locale, initialFormat, onClose, onBuild }: { pokemon: Pokemon; locale: Locale; initialFormat: "singles" | "doubles"; onClose: () => void; onBuild: () => void }) {
@@ -39,7 +62,22 @@ export function PokemonDetailDialog({ pokemon, locale, initialFormat, onClose, o
   const [battle, setBattle] = useState<BattleResponse["data"] | null>(null);
   const [error, setError] = useState("");
   const [moveQuery, setMoveQuery] = useState("");
-  const moveEntries = useMemo(() => pokemon.moveIds.map((id) => moveById.get(id)).filter((entry): entry is Move => Boolean(entry)).filter((entry) => `${entry.name} ${entry.nameZh} ${entry.type}`.toLowerCase().includes(moveQuery.toLowerCase())), [pokemon.moveIds, moveQuery]);
+  const [priorities, setPriorities] = useState<PriorityClass[]>([]);
+  const [types, setTypes] = useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
+  const [targets, setTargets] = useState<string[]>([]);
+  const [properties, setProperties] = useState<string[]>([]);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const learnableMoves = useMemo(() => pokemon.moveIds.map((id) => moveById.get(id)).filter((entry): entry is Move => Boolean(entry)), [pokemon.moveIds]);
+  const typeOptions = useMemo(() => [...new Set(learnableMoves.map((move) => move.type))].sort(), [learnableMoves]);
+  const targetOptions = useMemo(() => [...new Set(learnableMoves.map((move) => move.target))].sort(), [learnableMoves]);
+  const propertyOptions = useMemo(() => [...new Set(learnableMoves.flatMap((move) => move.flags))].sort(), [learnableMoves]);
+  const moveEntries = useMemo(() => learnableMoves.filter((move) => {
+    const searchMatch = `${move.name} ${move.nameZh}`.toLowerCase().includes(moveQuery.toLowerCase());
+    return searchMatch && priorityMatches(move, priorities) && (!types.length || types.includes(move.type)) && (!categories.length || categories.includes(move.category)) && (!targets.length || targets.includes(move.target)) && (!properties.length || properties.some((flag) => move.flags.includes(flag)));
+  }), [learnableMoves, moveQuery, priorities, types, categories, targets, properties]);
+  const activeFilterCount = priorities.length + types.length + categories.length + targets.length + properties.length;
+  const clearMoveFilters = () => { setMoveQuery(""); setPriorities([]); setTypes([]); setCategories([]); setTargets([]); setProperties([]); };
   useEffect(() => {
     const controller = new AbortController();
     fetch(`/api/v1/pokemon/battle?pokemonId=${encodeURIComponent(pokemon.id)}`, { signal: controller.signal, headers: { accept: "application/json" } })
@@ -49,5 +87,5 @@ export function PokemonDetailDialog({ pokemon, locale, initialFormat, onClose, o
     return () => controller.abort();
   }, [pokemon.id, locale]);
   const copy = locale === "zh-Hant" ? { close: "關閉", build: "配置並加入", moves: "可學招式", abilities: "可選特性", battle: "當季對戰資料", loading: "正在讀取 Champions Battle Data…", note: "Mega 型態的官方對戰統計以原物種與其 Mega 型態合併提供。" } : { close: "Close", build: "Build & add", moves: "Learnable moves", abilities: "Available abilities", battle: "Current-season battle data", loading: "Loading Champions Battle Data…", note: "For Mega forms, the official source aggregates the base species and its Mega forms." };
-  return <div className="detail-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="pokemon-detail" role="dialog" aria-modal="true" aria-labelledby="pokemon-detail-title" onKeyDown={(event) => { if (event.key === "Escape") onClose(); }}><button className="close-button" onClick={onClose} aria-label={copy.close}>×</button><header className="detail-identity"><img src={pokemon.imageUrl} alt="" width="112" height="112" /><div><p className="eyebrow">POKÉMON INTELLIGENCE</p><h2 id="pokemon-detail-title">{localName(pokemon, locale)}</h2><div className="badge-row">{pokemon.types.map((type) => <TypeBadge key={type} type={type} />)}</div></div><button className="primary-button detail-build" onClick={onBuild}>{copy.build}</button></header><div className="detail-stats">{statKeys.map((key) => <span key={key}><small>{statLabels[key]}</small><b>{pokemon.baseStats[key]}</b></span>)}</div><TypeMatchups types={pokemon.types} locale={locale} /><div className="detail-section"><h3>{copy.abilities} <span>{pokemon.abilityIds.length}</span></h3><div className="detail-abilities">{pokemon.abilityIds.map((id) => { const ability = abilityById.get(id); return ability ? <InfoTooltip key={id} label={localName(ability, locale)}><strong>{localName(ability, locale)}</strong><p>{locale === "zh-Hant" ? ability.descriptionZh : ability.description}</p></InfoTooltip> : null; })}</div></div><div className="detail-section"><div className="detail-section-head"><h3>{copy.moves} <span>{pokemon.moveIds.length}</span></h3><input aria-label="Search learnable moves" value={moveQuery} onChange={(event) => setMoveQuery(event.target.value)} placeholder={locale === "zh-Hant" ? "搜尋可學招式…" : "Search learnable moves…"} /></div><div className="learnable-grid">{moveEntries.map((move) => <article key={move.id}><TypeBadge type={move.type} /><MoveEntry move={move} locale={locale} /><small>{move.category} · P{formatPriority(move.priority)}</small></article>)}</div></div><div className="detail-section"><div className="detail-section-head"><h3>{copy.battle}</h3><div className="segmented"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{locale === "zh-Hant" ? "單打" : "Singles"}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{locale === "zh-Hant" ? "雙打" : "Doubles"}</button></div></div>{pokemon.isMega && <p className="data-scope-note">{copy.note}</p>}{error ? <p className="form-error">{error}</p> : battle ? <BattlePanel usage={format === "singles" ? battle.singles : battle.doubles} locale={locale} /> : <p className="detail-empty">{copy.loading}</p>}</div></section></div>;
+  return <div className="detail-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}><section className="pokemon-detail" role="dialog" aria-modal="true" aria-labelledby="pokemon-detail-title" onKeyDown={(event) => { if (event.key === "Escape") onClose(); }}><button className="close-button" onClick={onClose} aria-label={copy.close}>×</button><header className="detail-identity"><img src={pokemon.imageUrl} alt="" width="112" height="112" /><div><p className="eyebrow">POKÉMON INTELLIGENCE</p><h2 id="pokemon-detail-title">{localName(pokemon, locale)}</h2><div className="badge-row">{pokemon.types.map((type) => <TypeBadge key={type} type={type} />)}</div></div><button className="primary-button detail-build" onClick={onBuild}>{copy.build}</button></header><div className="detail-stats">{statKeys.map((key) => <span key={key}><small>{statLabels[key]}</small><b>{pokemon.baseStats[key]}</b></span>)}</div><TypeMatchups types={pokemon.types} locale={locale} /><div className="detail-section"><h3>{copy.abilities} <span>{pokemon.abilityIds.length}</span></h3><div className="detail-abilities">{pokemon.abilityIds.map((id) => { const ability = abilityById.get(id); return ability ? <InfoTooltip key={id} label={localName(ability, locale)}><strong>{localName(ability, locale)}</strong><p>{locale === "zh-Hant" ? ability.descriptionZh : ability.description}</p></InfoTooltip> : null; })}</div></div><div className="detail-section"><div className="detail-section-head"><h3>{copy.moves} <span>{moveEntries.length} / {pokemon.moveIds.length}</span></h3><input aria-label="Search learnable moves" value={moveQuery} onChange={(event) => setMoveQuery(event.target.value)} placeholder={locale === "zh-Hant" ? "搜尋可學招式…" : "Search learnable moves…"} /></div><button type="button" className="move-filter-toggle filter-chip" aria-expanded={filtersOpen} onClick={() => setFiltersOpen((value) => !value)}>{locale === "zh-Hant" ? "招式篩選" : "Move filters"}{activeFilterCount ? ` (${activeFilterCount})` : ""}</button><div className={`advanced-filters detail-move-filters${filtersOpen ? " open" : ""}`}><FilterGroup label="Priority" options={["+ Positive", "0 Neutral", "− Negative"]} selected={priorities.map((entry) => entry === "positive" ? "+ Positive" : entry === "zero" ? "0 Neutral" : "− Negative")} onToggle={(label) => { const entry = label.startsWith("+") ? "positive" : label.startsWith("0") ? "zero" : "negative"; setPriorities((current) => toggleValue(current, entry) as PriorityClass[]); }} /><FilterGroup label="Type" options={typeOptions} selected={types} onToggle={(entry) => setTypes((current) => toggleValue(current, entry))} /><FilterGroup label="Category" options={["Physical", "Special", "Status"]} selected={categories} onToggle={(entry) => setCategories((current) => toggleValue(current, entry))} /><FilterGroup label="Target" options={targetOptions} selected={targets} onToggle={(entry) => setTargets((current) => toggleValue(current, entry))} /><FilterGroup label="Properties" options={propertyOptions} selected={properties} onToggle={(entry) => setProperties((current) => toggleValue(current, entry))} /><div className="detail-filter-actions"><button type="button" className="filter-chip" onClick={clearMoveFilters}>{locale === "zh-Hant" ? "清除招式篩選" : "Clear move filters"}</button></div></div>{moveEntries.length ? <div className="learnable-grid">{moveEntries.map((move) => <article key={move.id}><TypeBadge type={move.type} /><MoveEntry move={move} locale={locale} /><small>{move.category} · P{formatPriority(move.priority)}</small></article>)}</div> : <p className="detail-empty">{locale === "zh-Hant" ? "沒有符合目前篩選條件的招式。" : "No learnable moves match the current filters."}</p>}</div><div className="detail-section"><div className="detail-section-head"><h3>{copy.battle}</h3><div className="segmented"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{locale === "zh-Hant" ? "單打" : "Singles"}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{locale === "zh-Hant" ? "雙打" : "Doubles"}</button></div></div>{pokemon.isMega && <p className="data-scope-note">{copy.note}</p>}{error ? <p className="form-error">{error}</p> : battle ? <BattlePanel usage={format === "singles" ? battle.singles : battle.doubles} locale={locale} /> : <p className="detail-empty">{copy.loading}</p>}</div></section></div>;
 }

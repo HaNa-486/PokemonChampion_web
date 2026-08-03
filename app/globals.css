@@ -171,6 +171,11 @@ tbody tr:hover { background: #f2fbf7; }
 .detail-section-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
 .detail-section-head input { width: min(320px,100%); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
 .detail-abilities { display: flex; flex-wrap: wrap; gap: 10px 16px; margin-top: 13px; }
+.move-filter-toggle { display: none; margin: 0 0 10px; }
+.detail-move-filters { margin: 0 0 14px; padding: 12px; border: 1px solid var(--line); border-radius: 14px; background: #f7faf9; }
+.detail-move-filters .filter-group { grid-template-columns: 82px minmax(0,1fr); }
+.detail-move-filters .filter-chip { padding: 6px 10px; }
+.detail-filter-actions { display: flex; justify-content: flex-end; padding-top: 4px; }
 .learnable-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 8px; max-height: 330px; overflow-y: auto; padding: 2px; }
 .learnable-grid article { display: grid; grid-template-columns: auto minmax(0,1fr); align-items: center; gap: 6px 9px; padding: 10px; border: 1px solid var(--line); border-radius: 12px; background: #fbfdfc; }
 .learnable-grid article small { grid-column: 2; color: var(--muted); font-size: .68rem; }
@@ -184,6 +189,8 @@ tbody tr:hover { background: #f2fbf7; }
 .usage-row + .usage-row { border-top: 1px solid var(--line); }
 .usage-row b { color: var(--mint-dark); }
 .usage-row strong { text-align: right; font-variant-numeric: tabular-nums; }
+.usage-resource { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.usage-resource .info-trigger { min-width: 0; text-align: left; }
 .detail-empty { padding: 35px 12px; color: var(--muted); text-align: center; }
 .ap-head { display: flex; align-items: center; justify-content: space-between; margin: 24px 0 9px; }
 .ap-head h3 { margin: 0; }
@@ -407,6 +414,14 @@ footer a { color: var(--mint-dark); }
   .detail-build { grid-column: 1 / -1; width: 100%; }
   .detail-stats { grid-template-columns: repeat(3,1fr); }
   .detail-section-head { align-items: stretch; flex-direction: column; }
+  .move-filter-toggle { display: inline-flex; width: 100%; justify-content: center; }
+  .detail-move-filters { display: none; max-height: 42dvh; overflow-y: auto; padding: 10px; }
+  .detail-move-filters.open { display: grid; }
+  .detail-move-filters .filter-group { grid-template-columns: 1fr; gap: 5px; }
+  .detail-move-filters .filter-group > div { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+  .detail-move-filters .filter-chip { flex: 0 0 auto; }
+  .usage-head, .usage-row { grid-template-columns: 34px minmax(0,1fr) 64px; gap: 6px; padding: 9px 8px; }
+  .usage-resource { gap: 5px; }
   .learnable-grid { grid-template-columns: 1fr; }
   .builder-grid, .move-slots, .stat-editor { grid-template-columns: 1fr; }
   .stat-editor label { grid-template-columns: 75px 1fr 28px; }

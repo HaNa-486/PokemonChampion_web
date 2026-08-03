@@ -189,7 +189,10 @@ describe("ChampionsApp", () => {
     vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
       scope: "species",
       singles: { pokemon: "Absol", format: "Singles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rows: [{ category: "move", rank: 1, name: "Sucker Punch", percentage: "70.0%", percentageValue: 70, statUp: "", statDown: "", ap: null }] },
-      doubles: { pokemon: "Absol", format: "Doubles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rows: [{ category: "held_item", rank: 1, name: "Absolite", percentage: "39.5%", percentageValue: 39.5, statUp: "", statDown: "", ap: null }] },
+      doubles: { pokemon: "Absol", format: "Doubles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rows: [
+        { category: "held_item", rank: 1, name: "Absolite", percentage: "39.5%", percentageValue: 39.5, statUp: "", statDown: "", ap: null },
+        { category: "ability", rank: 1, name: "Pressure", percentage: "60.5%", percentageValue: 60.5, statUp: "", statDown: "", ap: null },
+      ] },
     } })));
     const user = userEvent.setup();
     render(<ChampionsApp />);
@@ -199,12 +202,34 @@ describe("ChampionsApp", () => {
     expect(within(dialog).getByText("Learnable moves")).toBeInTheDocument();
     expect(within(dialog).getByText("Available abilities")).toBeInTheDocument();
     expect(await within(dialog).findByText("Absolite")).toBeInTheDocument();
+    const moveFilters = dialog.querySelector<HTMLElement>(".detail-move-filters")!;
+    await user.click(within(moveFilters).getByRole("button", { name: "+ Positive" }));
+    await user.click(within(moveFilters).getByRole("button", { name: "Dark" }));
+    await user.click(within(moveFilters).getByRole("button", { name: "Physical" }));
+    await user.click(within(moveFilters).getByRole("button", { name: "1 target" }));
+    await user.click(within(moveFilters).getByRole("button", { name: "Contact" }));
+    expect(within(dialog).getByRole("button", { name: "Sucker Punch" })).toBeInTheDocument();
+    expect(within(dialog).queryByRole("button", { name: "Calm Mind" })).not.toBeInTheDocument();
+    const mobileFilterToggle = within(dialog).getByRole("button", { name: "Move filters (5)" });
+    expect(mobileFilterToggle).toHaveAttribute("aria-expanded", "false");
+    await user.click(mobileFilterToggle);
+    expect(mobileFilterToggle).toHaveAttribute("aria-expanded", "true");
+    const battleUsage = dialog.querySelector<HTMLElement>(".battle-usage")!;
+    await user.click(within(battleUsage).getByRole("button", { name: "Absolite" }));
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("Allows Absol to Mega Evolve");
+    await user.click(within(battleUsage).getByRole("button", { name: "Absolite" }));
+    fireEvent.focus(within(battleUsage).getByRole("button", { name: "Pressure" }));
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("PP cost");
     const matchups = within(dialog).getByRole("heading", { name: "Defensive type matchups" }).closest("section")!;
     expect(within(matchups).getByText("Weak")).toBeInTheDocument();
     expect(within(matchups).getByText("Psychic")).toBeInTheDocument();
     expect(within(matchups).getByText("0×")).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "Singles" }));
-    expect(within(dialog).getAllByText("Sucker Punch").length).toBeGreaterThan(1);
+    const singlesUsage = dialog.querySelector<HTMLElement>(".battle-usage")!;
+    const usageMove = within(singlesUsage).getByRole("button", { name: "Sucker Punch" });
+    expect(usageMove.closest(".usage-row")).toHaveTextContent("Dark");
+    fireEvent.focus(usageMove);
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("Priority +1");
   });
 
   it("shows all 21 natures with stat effects and keeps matchups on the team card", async () => {

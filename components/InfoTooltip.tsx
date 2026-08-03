@@ -3,16 +3,17 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { autoUpdate, flip, FloatingPortal, offset, shift, useDismiss, useFloating, useFocus, useHover, useInteractions, useRole } from "@floating-ui/react";
+import { autoUpdate, flip, FloatingPortal, offset, shift, useClick, useDismiss, useFloating, useFocus, useHover, useInteractions, useRole } from "@floating-ui/react";
 
 export function InfoTooltip({ label, children, onActivate }: { label: ReactNode; children: ReactNode; onActivate?: () => void }) {
   const [open, setOpen] = useState(false);
   const { refs, floatingStyles, context } = useFloating({ open, onOpenChange: setOpen, placement: "top-start", whileElementsMounted: autoUpdate, middleware: [offset(10), flip(), shift({ padding: 12 })] });
   const hover = useHover(context, { delay: { open: 150, close: 80 }, move: false });
   const focus = useFocus(context);
+  const click = useClick(context, { enabled: !onActivate });
   const dismiss = useDismiss(context);
   const role = useRole(context, { role: "tooltip" });
-  const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, dismiss, role]);
+  const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, click, dismiss, role]);
 
   return (
     <>

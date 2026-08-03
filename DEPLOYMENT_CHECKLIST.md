@@ -80,8 +80,10 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Pokémon name search does not match type text.
 - [ ] Type OR/AND, form, ability, multiple known moves, and minimum-stat filters work in combination.
 - [ ] Move type/category/target/property/priority filters work in combination.
+- [ ] Pokémon-detail learnsets expose the same five move filters, filtered/total count, clear/empty states, and only legal moves for that form.
 - [ ] Move and Ability eligible-Pokémon counts sort numerically and open complete reverse lookup.
 - [ ] Pokémon detail shows form-specific learnsets, abilities, matchups, and both battle formats.
+- [ ] Current-season move/item/ability entries open canonical tooltips; moves show their visible type badge and unmapped rows remain readable.
 - [ ] Singles/Doubles usage defaults apply the highest-ranked legal item, ability, nature, AP spread, and four unique learnable moves.
 - [ ] Illegal, duplicated, or unmapped usage rows are skipped instead of forced into the build.
 
@@ -93,6 +95,7 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] English and Traditional Chinese critical flows do not clip or lose state.
 - [ ] The team tray can scroll through all six complete cards.
 - [ ] Builder and detail dialogs remain within the viewport.
+- [ ] At 390 px, detail move filters expand/collapse cleanly, chip rows scroll horizontally, and battle-usage tooltips open by touch.
 - [ ] The 18×18 type chart is complete.
 - [ ] The floating chart scrolls horizontally and vertically.
 - [ ] The attack column stays sticky during horizontal scrolling.
