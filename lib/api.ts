@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { NEUTRAL_NATURE } from "./domain";
+import snapshot from "../data/generated/champions-snapshot.json";
 
 export const statName = z.enum(["hp", "attack", "defense", "specialAttack", "specialDefense", "speed"]);
 export const nonHpStat = z.enum(["attack", "defense", "specialAttack", "specialDefense", "speed"]);
@@ -11,7 +12,14 @@ export const teamMemberSchema = z.object({ id: z.string().min(1), pokemonId: z.s
 export const validateTeamSchema = z.object({ members: z.array(teamMemberSchema).max(7) });
 export const speedCompareSchema = z.object({ entries: z.array(z.object({ pokemonId: z.string(), ap: apSchema, nature: natureSchema, stage: z.number().int().min(-6).max(6).default(0), multiplier: z.number().positive().max(4).default(1) })).max(12), trickRoom: z.boolean().default(false) });
 
-export const API_META = { ruleset: "champions-m4-current", dataVersion: "20260729090313995", snapshotDate: "2026-07-29", stale: false, attribution: [{ label: "Pokémon Champions Battle Data", url: "https://championsbattledata.com/" }] };
+const championsSource = snapshot.sources.champions;
+export const API_META = {
+  ruleset: "champions-m4-current",
+  dataVersion: championsSource.dataVersion,
+  snapshotDate: championsSource.generatedAt.slice(0, 10),
+  stale: false,
+  attribution: [{ label: "Pokémon Champions Battle Data", url: "https://championsbattledata.com/" }],
+};
 
 export function apiSuccess(data: unknown, init?: ResponseInit) {
   return Response.json({ meta: API_META, data }, { ...init, headers: { "cache-control": "public, max-age=60, s-maxage=3600, stale-while-revalidate=86400", ...init?.headers } });

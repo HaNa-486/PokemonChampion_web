@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { abilities, abilityById, itemById, items, megaPokemonByStoneId, megaStoneIdByPokemonId, moveById, moves, pokemon, pokemonById } from "../lib/catalog";
+import { abilities, abilityById, catalogSnapshotDate, itemById, items, megaPokemonByStoneId, megaStoneIdByPokemonId, moveById, moves, pokemon, pokemonById } from "../lib/catalog";
 import { recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
 import { apTotal, calculateFinalStats, formatPriority, modifiedSpeed, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
@@ -16,9 +16,26 @@ type View = "pokemon" | "moves" | "abilities" | "items" | "speed";
 type PriorityClass = "positive" | "zero" | "negative";
 
 const labels = {
-  en: { pokemon: "Pokémon DB", moves: "Move DB", abilities: "Ability DB", items: "Held Item DB", speed: "Speed Compare", search: "Search Pokémon or type…", current: "Regulation M-4 · Current", add: "Build & add", team: "Selected team", empty: "Choose a Pokémon to start building.", data: "Battle data snapshot: 2026-07-29", doubles: "Doubles", singles: "Singles" },
-  "zh-Hant": { pokemon: "寶可夢資料庫", moves: "招式資料庫", abilities: "特性資料庫", items: "持有物資料庫", speed: "速度比較", search: "搜尋寶可夢或屬性…", current: "規則 M-4 · 當前", add: "配置並加入", team: "已選隊伍", empty: "選擇一隻寶可夢開始配置。", data: "對戰資料快照：2026-07-29", doubles: "雙打", singles: "單打" },
+  en: { pokemon: "Pokémon DB", moves: "Move DB", abilities: "Ability DB", items: "Held Item DB", speed: "Speed Compare", search: "Search Pokémon or type…", current: "Regulation M-4 · Current", add: "Build & add", team: "Selected team", empty: "Choose a Pokémon to start building.", data: "Battle data updated", stale: "cached snapshot", doubles: "Doubles", singles: "Singles" },
+  "zh-Hant": { pokemon: "寶可夢資料庫", moves: "招式資料庫", abilities: "特性資料庫", items: "持有物資料庫", speed: "速度比較", search: "搜尋寶可夢或屬性…", current: "規則 M-4 · 當前", add: "配置並加入", team: "已選隊伍", empty: "選擇一隻寶可夢開始配置。", data: "對戰資料更新", stale: "快取資料", doubles: "雙打", singles: "單打" },
 };
+
+type DataStatusResponse = { data?: { snapshotDate?: string; stale?: boolean } };
+
+function DataFreshness({ locale }: { locale: Locale }) {
+  const [status, setStatus] = useState<{ snapshotDate: string; stale: boolean }>({ snapshotDate: catalogSnapshotDate, stale: true });
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/v1/data-status")
+      .then(async (response) => response.ok ? response.json() as Promise<DataStatusResponse> : Promise.reject(new Error("Data status unavailable")))
+      .then((body) => {
+        if (!cancelled && body.data?.snapshotDate) setStatus({ snapshotDate: body.data.snapshotDate, stale: Boolean(body.data.stale) });
+      })
+      .catch(() => undefined);
+    return () => { cancelled = true; };
+  }, []);
+  return <span>{labels[locale].data}: {status.snapshotDate}{status.stale ? ` (${labels[locale].stale})` : ""}</span>;
+}
 
 const statLabels: Record<keyof Stats, string> = { hp: "HP", attack: "Atk", defense: "Def", specialAttack: "SpA", specialDefense: "SpD", speed: "Spe" };
 const natureStatLabels = { en: statLabels, "zh-Hant": { hp: "HP", attack: "攻擊", defense: "防禦", specialAttack: "特攻", specialDefense: "特防", speed: "速度" } };
@@ -169,5 +186,5 @@ export function ChampionsApp() {
   const hydrate = useTeamStore((state) => state.hydrate);
   useEffect(() => { void hydrate(); }, [hydrate]);
   const copy = labels[locale];
-  return <div className="app-shell"><header className="topbar"><a className="brand" href="#top" aria-label="Champions Lab home"><span className="brand-mark">CL</span><span><b>CHAMPIONS LAB</b><small>Battle intelligence, built clearly.</small></span></a><nav>{(["pokemon","moves","abilities","items","speed"] as View[]).map((entry) => <button key={entry} className={view === entry ? "active" : ""} onClick={() => setView(entry)}>{copy[entry]}</button>)}</nav><div className="header-actions"><span className="regulation-dot">● {copy.current}</span><div className="segmented" role="group" aria-label="Team mode"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{copy.singles}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{copy.doubles}</button></div><button className="locale-button" onClick={() => setLocale(locale === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></header><main id="top">{view === "pokemon" && <PokemonTableV2 locale={locale} format={format} onSelect={setSelected} />}{view === "moves" && <MoveDatabaseV2 locale={locale} />}{view === "abilities" && <ResourceDatabaseV2 kind="abilities" locale={locale} />}{view === "items" && <ResourceDatabaseV2 kind="items" locale={locale} />}{view === "speed" && <SpeedCompareV2 locale={locale} format={format} />}</main><footer><span>Unofficial community tool.</span><a href="https://championsbattledata.com/">Battle data provided by Pokémon Champions Battle Data</a><span>{copy.data}</span></footer><TeamTray locale={locale} format={format} onFormatChange={setFormat} /><BuildEditor selected={selected} locale={locale} format={format} onFormatChange={setFormat} onClose={() => setSelected(null)} /></div>;
+  return <div className="app-shell"><header className="topbar"><a className="brand" href="#top" aria-label="Champions Lab home"><span className="brand-mark">CL</span><span><b>CHAMPIONS LAB</b><small>Battle intelligence, built clearly.</small></span></a><nav>{(["pokemon","moves","abilities","items","speed"] as View[]).map((entry) => <button key={entry} className={view === entry ? "active" : ""} onClick={() => setView(entry)}>{copy[entry]}</button>)}</nav><div className="header-actions"><span className="regulation-dot">● {copy.current}</span><div className="segmented" role="group" aria-label="Team mode"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{copy.singles}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{copy.doubles}</button></div><button className="locale-button" onClick={() => setLocale(locale === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></header><main id="top">{view === "pokemon" && <PokemonTableV2 locale={locale} format={format} onSelect={setSelected} />}{view === "moves" && <MoveDatabaseV2 locale={locale} />}{view === "abilities" && <ResourceDatabaseV2 kind="abilities" locale={locale} />}{view === "items" && <ResourceDatabaseV2 kind="items" locale={locale} />}{view === "speed" && <SpeedCompareV2 locale={locale} format={format} />}</main><footer><span>Unofficial community tool.</span><a href="https://championsbattledata.com/">Battle data provided by Pokémon Champions Battle Data</a><DataFreshness locale={locale} /></footer><TeamTray locale={locale} format={format} onFormatChange={setFormat} /><BuildEditor selected={selected} locale={locale} format={format} onFormatChange={setFormat} onClose={() => setSelected(null)} /></div>;
 }

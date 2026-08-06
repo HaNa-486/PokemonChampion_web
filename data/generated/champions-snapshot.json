@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-01T17:02:38.211Z",
+  "generatedAt": "2026-08-06T10:28:37.236Z",
   "sources": {
     "champions": {
       "url": "https://championsbattledata.com/api/index",
-      "generatedAt": "2026-07-29T09:03:13.995Z",
-      "dataVersion": "20260729090313995"
+      "generatedAt": "2026-08-05T06:46:04.669Z",
+      "dataVersion": "20260805064604669"
     },
     "pokeapi": {
       "repository": "https://github.com/PokeAPI/pokeapi",
@@ -42075,14 +42075,6 @@
       "descriptionZh": "Held: Consumed when struck by a super-effective Ground-type attack to halve the damage."
     },
     {
-      "id": "kasib-berry",
-      "name": "Kasib Berry",
-      "nameZh": "佛柑果",
-      "category": "Berry",
-      "description": "Held: Consumed when struck by a super-effective Ghost-type attack to halve the damage.",
-      "descriptionZh": "Held: Consumed when struck by a super-effective Ghost-type attack to halve the damage."
-    },
-    {
       "id": "colbur-berry",
       "name": "Colbur Berry",
       "nameZh": "刺耳果",
@@ -42147,14 +42139,6 @@
       "descriptionZh": "Doubles Pikachu’s Attack and Special Attack. Breed on Pikachu or Raichu: Pichu Egg will have Volt Tackle."
     },
     {
-      "id": "soft-sand",
-      "name": "Soft Sand",
-      "nameZh": "柔軟沙子",
-      "category": "Item",
-      "description": "Held: Ground-Type moves from holder do 20% more damage.",
-      "descriptionZh": "Held: Ground-Type moves from holder do 20% more damage."
-    },
-    {
       "id": "miracle-seed",
       "name": "Miracle Seed",
       "nameZh": "奇跡種子",
@@ -42169,6 +42153,14 @@
       "category": "Item",
       "description": "Held: Dark-Type moves from holder do 20% more damage.",
       "descriptionZh": "Held: Dark-Type moves from holder do 20% more damage."
+    },
+    {
+      "id": "black-belt",
+      "name": "Black Belt",
+      "nameZh": "黑帶",
+      "category": "Item",
+      "description": "Held: Fighting-Type moves from holder do 20% more damage.",
+      "descriptionZh": "Held: Fighting-Type moves from holder do 20% more damage."
     },
     {
       "id": "mystic-water",
@@ -42217,6 +42209,14 @@
       "category": "Item",
       "description": "Held: Provides a 1/10 (10%) boost in accuracy to the holder.",
       "descriptionZh": "Held: Provides a 1/10 (10%) boost in accuracy to the holder."
+    },
+    {
+      "id": "expert-belt",
+      "name": "Expert Belt",
+      "nameZh": "達人帶",
+      "category": "Item",
+      "description": "Held: Holder’s Super Effective moves do 20% extra damage.",
+      "descriptionZh": "Held: Holder’s Super Effective moves do 20% extra damage."
     },
     {
       "id": "light-clay",

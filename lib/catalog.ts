@@ -1,6 +1,8 @@
 import type { Ability, HeldItem, Move, Pokemon } from "./types";
 import snapshot from "../data/generated/champions-snapshot.json";
 
+export const catalogSnapshotDate = snapshot.sources.champions.generatedAt.slice(0, 10);
+
 const asset = (name: string) => `https://championsbattledata.com/pokemon_champions_assets/pokemon/${encodeURIComponent(name)}.png`;
 const targetById: Record<number, string> = { 3: "Ally", 4: "Ally side", 6: "Opposing side", 7: "Self", 8: "Random foe", 9: "All adjacent", 10: "1 target", 11: "All foes", 12: "Whole field", 13: "User and allies", 14: "All Pokémon", 15: "All allies" };
 

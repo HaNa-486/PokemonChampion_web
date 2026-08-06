@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 
@@ -95,9 +95,9 @@ function collectCategoryNames(value, category, result) {
   for (const child of Object.values(value)) collectCategoryNames(child, category, result);
 }
 
-export async function buildSnapshot() {
+export async function buildSnapshot(championsSource) {
   const [championsText, moveCsv, moveNamesCsv, effectsCsv, moveFlagMapCsv, moveFlagsCsv, abilityCsv, abilityNamesCsv, abilityProseCsv, itemCsv, itemNamesCsv, itemProseCsv] = await Promise.all([
-    fetchText(CHAMPIONS_INDEX),
+    championsSource ? Promise.resolve(JSON.stringify(championsSource)) : fetchText(CHAMPIONS_INDEX),
     fetchText(`${POKEAPI_CSV}/moves.csv`),
     fetchText(`${POKEAPI_CSV}/move_names.csv`),
     fetchText(`${POKEAPI_CSV}/move_effect_prose.csv`),
@@ -233,8 +233,14 @@ export async function buildSnapshot() {
 }
 
 async function main() {
-  const snapshot = await buildSnapshot();
   const output = path.resolve("data/generated/champions-snapshot.json");
+  const championsSource = JSON.parse(await fetchText(CHAMPIONS_INDEX));
+  const existing = await readFile(output, "utf8").then(JSON.parse).catch(() => null);
+  if (existing?.sources?.champions?.dataVersion === championsSource.dataVersion) {
+    console.log(`Champions Battle Data is already current (dataVersion=${championsSource.dataVersion}).`);
+    return;
+  }
+  const snapshot = await buildSnapshot(championsSource);
   await mkdir(path.dirname(output), { recursive: true });
   const body = `${JSON.stringify(snapshot, null, 2)}\n`;
   await writeFile(output, body, "utf8");

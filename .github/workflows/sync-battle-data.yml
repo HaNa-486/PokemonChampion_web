@@ -1,0 +1,64 @@
+name: Sync battle data
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-battle-data
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@11.16.0 --activate
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Synchronize upstream catalogs
+        run: pnpm data:sync
+
+      - name: Stop when the upstream version is unchanged
+        id: changes
+        shell: bash
+        run: |
+          if git diff --quiet -- data/generated/champions-snapshot.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Validate the new snapshot
+        if: steps.changes.outputs.changed == 'true'
+        run: pnpm verify:deploy
+
+      - name: Commit the validated snapshot
+        if: steps.changes.outputs.changed == 'true'
+        shell: bash
+        run: |
+          git config user.name "champions-lab-data-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/generated/champions-snapshot.json
+          git commit -m "chore(data): sync Champions Battle Data"
+          git pull --rebase origin main
+          git push origin HEAD:main

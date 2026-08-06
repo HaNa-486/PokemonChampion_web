@@ -30,6 +30,12 @@ pnpm run dev
 
 `data:sync` writes the normalized, versioned snapshot to `data/generated/champions-snapshot.json`. It is deliberately a build-time sync, not a public mirror endpoint.
 
+### Automated upstream refresh
+
+`.github/workflows/sync-battle-data.yml` checks Champions Battle Data every six hours. The sync exits without changing files when the upstream `dataVersion` is unchanged. When a new version exists, the workflow regenerates the bundled catalog, runs the complete deployment verification suite, and pushes the validated snapshot to `main`. A failed sync or failed test never replaces the last known-good snapshot.
+
+The current Singles and Doubles usage panels continue to use the upstream Current API through the server-side proxy. The footer reads `/api/v1/data-status`, so it reports the upstream generation date instead of a hard-coded date and falls back to the bundled snapshot when upstream is unavailable.
+
 ## Validation
 
 ```bash
