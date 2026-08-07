@@ -18,7 +18,10 @@ export const API_META = {
   dataVersion: championsSource.dataVersion,
   snapshotDate: championsSource.generatedAt.slice(0, 10),
   stale: false,
-  attribution: [{ label: "Pokémon Champions Battle Data", url: "https://championsbattledata.com/" }],
+  attribution: [
+    { label: "Pokémon Champions Battle Data", url: "https://championsbattledata.com/" },
+    { label: "Pokémon Showdown", url: "https://github.com/smogon/pokemon-showdown" },
+  ],
 };
 
 export function apiSuccess(data: unknown, init?: ResponseInit) {

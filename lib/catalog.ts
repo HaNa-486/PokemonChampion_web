@@ -4,8 +4,6 @@ import snapshot from "../data/generated/champions-snapshot.json";
 export const catalogSnapshotDate = snapshot.sources.champions.generatedAt.slice(0, 10);
 
 const asset = (name: string) => `https://championsbattledata.com/pokemon_champions_assets/pokemon/${encodeURIComponent(name)}.png`;
-const targetById: Record<number, string> = { 3: "Ally", 4: "Ally side", 6: "Opposing side", 7: "Self", 8: "Random foe", 9: "All adjacent", 10: "1 target", 11: "All foes", 12: "Whole field", 13: "User and allies", 14: "All Pokémon", 15: "All allies" };
-
 const curatedAbilities: Ability[] = [
   { id: "rough-skin", name: "Rough Skin", nameZh: "粗糙皮膚", description: "Damages an attacker that makes contact.", descriptionZh: "受到接觸類招式攻擊時，會使攻擊者受傷。" },
   { id: "sand-veil", name: "Sand Veil", nameZh: "沙隱", description: "Raises evasiveness during a sandstorm.", descriptionZh: "沙暴天氣時提高閃避率。" },
@@ -67,24 +65,6 @@ export const items: HeldItem[] = [...generatedItemById.values()].map((entry) => 
   descriptionZh: entry.descriptionZh || entry.description || "目前沒有持有物說明。",
 }));
 
-const curatedMoves: Move[] = [
-  { id: "dragon-claw", name: "Dragon Claw", nameZh: "龍爪", type: "Dragon", category: "Physical", power: 80, accuracy: 100, pp: 16, priority: 0, target: "1 Foe", flags: ["Contact"], description: "An ordinary physical attack.", descriptionZh: "用尖銳的巨爪劈開對手。" },
-  { id: "earthquake", name: "Earthquake", nameZh: "地震", type: "Ground", category: "Physical", power: 100, accuracy: 100, pp: 16, priority: 0, target: "All adjacent", flags: [], description: "Hits all adjacent Pokémon.", descriptionZh: "利用地震攻擊周圍所有寶可夢。" },
-  { id: "protect", name: "Protect", nameZh: "守住", type: "Normal", category: "Status", power: null, accuracy: null, pp: 16, priority: 4, target: "Self", flags: [], description: "Protects the user from most moves this turn.", descriptionZh: "在該回合防住大部分招式。" },
-  { id: "quick-attack", name: "Quick Attack", nameZh: "電光一閃", type: "Normal", category: "Physical", power: 40, accuracy: 100, pp: 30, priority: 1, target: "1 Foe", flags: ["Contact"], description: "Usually moves before ordinary attacks.", descriptionZh: "以迅雷不及掩耳之勢攻擊，通常能先制。" },
-  { id: "extreme-speed", name: "Extreme Speed", nameZh: "神速", type: "Normal", category: "Physical", power: 80, accuracy: 100, pp: 8, priority: 2, target: "1 Foe", flags: ["Contact"], description: "A very fast attack with +2 priority.", descriptionZh: "以極快速度攻擊，優先度為 +2。" },
-  { id: "vital-throw", name: "Vital Throw", nameZh: "借力摔", type: "Fighting", category: "Physical", power: 70, accuracy: null, pp: 10, priority: -1, target: "1 Foe", flags: ["Contact"], description: "Always hits, but acts after ordinary moves.", descriptionZh: "必定命中，但優先度為 -1。" },
-  { id: "trick-room", name: "Trick Room", nameZh: "戲法空間", type: "Psychic", category: "Status", power: null, accuracy: null, pp: 8, priority: -7, target: "Whole field", flags: [], description: "Slower Pokémon move first for five turns.", descriptionZh: "在 5 回合內，速度較慢的寶可夢會先行動。" },
-  { id: "flare-blitz", name: "Flare Blitz", nameZh: "閃焰衝鋒", type: "Fire", category: "Physical", power: 120, accuracy: 100, pp: 16, priority: 0, target: "1 Foe", flags: ["Contact"], description: "May burn the target; the user takes recoil.", descriptionZh: "可能使對手灼傷，使用者也會受到反作用力傷害。" },
-  { id: "dragon-dance", name: "Dragon Dance", nameZh: "龍之舞", type: "Dragon", category: "Status", power: null, accuracy: null, pp: 20, priority: 0, target: "Self", flags: ["Dance"], description: "Raises the user's Attack and Speed.", descriptionZh: "提高使用者的攻擊和速度。" },
-  { id: "heat-wave", name: "Heat Wave", nameZh: "熱風", type: "Fire", category: "Special", power: 95, accuracy: 90, pp: 16, priority: 0, target: "All foes", flags: ["Wind"], description: "May burn opposing Pokémon.", descriptionZh: "用炎熱氣息攻擊所有對手，可能使其灼傷。" },
-  { id: "tailwind", name: "Tailwind", nameZh: "順風", type: "Flying", category: "Status", power: null, accuracy: null, pp: 16, priority: 0, target: "Ally side", flags: ["Wind"], description: "Doubles the Speed of the user's side temporarily.", descriptionZh: "暫時讓我方全體速度加倍。" },
-  { id: "moonblast", name: "Moonblast", nameZh: "月亮之力", type: "Fairy", category: "Special", power: 95, accuracy: 100, pp: 16, priority: 0, target: "1 Foe", flags: [], description: "May lower the target's Special Attack.", descriptionZh: "可能降低對手的特攻。" },
-  { id: "fake-out", name: "Fake Out", nameZh: "擊掌奇襲", type: "Normal", category: "Physical", power: 40, accuracy: 100, pp: 16, priority: 3, target: "1 Foe", flags: ["Contact"], description: "Works on the first turn out and makes the target flinch.", descriptionZh: "只能在出場後立刻使用，並使對手畏縮。" },
-  { id: "parting-shot", name: "Parting Shot", nameZh: "拋下狠話", type: "Dark", category: "Status", power: null, accuracy: 100, pp: 20, priority: 0, target: "1 Foe", flags: ["Sound"], description: "Lowers offenses, then switches the user out.", descriptionZh: "降低對手攻擊與特攻後，與後備寶可夢交換。" },
-  { id: "hurricane", name: "Hurricane", nameZh: "暴風", type: "Flying", category: "Special", power: 110, accuracy: 70, pp: 16, priority: 0, target: "1 Foe", flags: ["Wind"], description: "May confuse the target.", descriptionZh: "可能使對手陷入混亂。" },
-];
-
 const curatedPokemon: Pokemon[] = [
   { id: "garchomp", speciesKey: "garchomp", name: "Garchomp", nameZh: "烈咬陸鯊", types: ["Dragon", "Ground"], baseStats: { hp: 108, attack: 130, defense: 95, specialAttack: 80, specialDefense: 85, speed: 102 }, imageUrl: asset("Garchomp"), abilityIds: ["sand-veil", "rough-skin"], moveIds: ["dragon-claw", "earthquake", "protect", "dragon-dance"], usageSingles: 1, usageDoubles: 1 },
   { id: "mega-charizard-x", speciesKey: "charizard", name: "Mega Charizard X", nameZh: "超級噴火龍Ｘ", types: ["Fire", "Dragon"], baseStats: { hp: 78, attack: 130, defense: 111, specialAttack: 130, specialDefense: 85, speed: 100 }, imageUrl: asset("Mega Charizard X"), abilityIds: ["tough-claws"], moveIds: ["flare-blitz", "dragon-claw", "dragon-dance", "protect"], usageSingles: 5, usageDoubles: 5, isMega: true },
@@ -96,8 +76,6 @@ const curatedPokemon: Pokemon[] = [
   { id: "staraptor", speciesKey: "staraptor", name: "Staraptor", nameZh: "姆克鷹", types: ["Normal", "Flying"], baseStats: { hp: 85, attack: 120, defense: 70, specialAttack: 50, specialDefense: 60, speed: 100 }, imageUrl: asset("Staraptor"), abilityIds: ["intimidate"], moveIds: ["quick-attack", "tailwind", "protect"], usageSingles: 11, usageDoubles: 11 },
 ];
 
-const curatedMoveById = new Map(curatedMoves.map((entry) => [entry.id, entry]));
-const slicingMoveIds = new Set(["air-cutter", "air-slash", "aqua-cutter", "behemoth-blade", "bitter-blade", "ceaseless-edge", "cross-poison", "cut", "fury-cutter", "kowtow-cleave", "leaf-blade", "mighty-cleave", "night-slash", "psycho-cut", "razor-leaf", "razor-shell", "sacred-sword", "secret-sword", "slash", "solar-blade", "stone-axe", "tachyon-cutter", "x-scissor"]);
 const generatedMoves: Move[] = snapshot.moves.map((entry) => ({
   id: entry.id,
   name: entry.name,
@@ -108,13 +86,13 @@ const generatedMoves: Move[] = snapshot.moves.map((entry) => ({
   accuracy: entry.accuracy,
   pp: entry.pp ?? 0,
   priority: entry.priority,
-  target: targetById[entry.targetId] ?? "Varies",
-  flags: [...(entry.flags ?? []), ...(slicingMoveIds.has(entry.id) ? ["Slicing"] : [])],
+  target: entry.target ?? "Varies",
+  flags: entry.flags ?? [],
   description: entry.description || "No effect description is available.",
   descriptionZh: entry.descriptionZh || entry.description || "目前沒有招式說明。",
 }));
 
-export const moves: Move[] = generatedMoves.map((entry) => curatedMoveById.get(entry.id) ?? entry);
+export const moves: Move[] = generatedMoves;
 const generatedMoveIdByName = new Map(snapshot.moves.map((entry) => [entry.name, entry.id]));
 const curatedPokemonById = new Map(curatedPokemon.map((entry) => [entry.id, entry]));
 const curatedPokemonNameZh = new Map(curatedPokemon.map((entry) => [entry.id, entry.nameZh]));

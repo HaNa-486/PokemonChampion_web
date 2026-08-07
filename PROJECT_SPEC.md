@@ -20,6 +20,8 @@ Reference sites and data sources:
 - Champions Battle Data: <https://championsbattledata.com/>
 - API guide: <https://championsbattledata.com/api_guide.html>
 - API rules: <https://championsbattledata.com/api-rules/>
+- Pokémon Showdown source: <https://github.com/smogon/pokemon-showdown>
+- Pokémon Showdown Champions moves: <https://github.com/smogon/pokemon-showdown/blob/master/data/mods/champions/moves.ts>
 - PokeAPI docs: <https://pokeapi.co/docs/v2>
 - PokeAPI source: <https://github.com/PokeAPI/pokeapi>
 
@@ -91,16 +93,26 @@ GET /api/metadata/:name
 
 API routes use Showdown-like identifiers; asset paths may use human-readable `saved_name` values.
 
-### 4.2 PokeAPI is used to enrich
+### 4.2 Pokémon Showdown is authoritative for move mechanics
+
+For every move that Champions Battle Data marks legal, merge the following pinned-revision sources in this order:
+
+1. `data/moves.ts` for base move structure and mechanics.
+2. `data/text/moves.ts` for complete base English descriptions.
+3. `data/mods/champions/moves.ts` for Champions-specific overrides.
+4. `data/mods/champions/scripts.ts` for reviewed global Champions rules, including the PP cap and calculation.
+
+The importer MUST parse these TypeScript data tables without executing downloaded source. Champions overrides win over base fields. Champions PP is calculated with the reviewed Champions rule, not copied from a main-series dataset. A missing legal move, missing English description, invalid mechanic, or changed global PP rule rejects the snapshot for review.
+
+### 4.3 PokeAPI is used to enrich
 
 - Stable IDs and taxonomy
-- Move type, class, power, accuracy, PP, priority, target, flags, and descriptions
 - Ability and held-item descriptions/categories
 - Localization and alias mapping
 
-PokeAPI must never overwrite a confirmed active-Regulation Champions value.
+PokeAPI must never supply or overwrite authoritative Champions move power, accuracy, PP, priority, target, properties, availability, or behavior. A localized PokeAPI effect may be used only when no Champions-specific description changes that move; otherwise the verified Showdown English description remains the explicit locale fallback until a reviewed translation exists.
 
-### 4.3 Manual overrides
+### 4.4 Manual overrides
 
 Published admin overrides have highest precedence for mapping fixes, reviewed translations, Champions corrections, availability fixes, and temporarily disabling bad records.
 
@@ -108,25 +120,27 @@ Display precedence:
 
 ```text
 published manual override
-→ active Champions Regulation value
-→ normalized PokeAPI value
+→ active Champions Regulation legality, form data, and usage
+→ Pokémon Showdown Champions move override/global rule
+→ Pokémon Showdown base move data and English text
+→ normalized PokeAPI ID/localization supplement
 → English fallback
 → explicit “Data unavailable”
 ```
 
 Never fabricate missing data.
 
-### 4.4 Volatility and attribution
+### 4.5 Volatility and attribution
 
 Live observations already show that API guide examples may differ from current responses in counts, stats, forms, dates, and fields. Therefore never hard-code current counts/example values. Accept unknown optional fields, reject/quarantine invalid required fields, record versions/checksums/source URLs, import through staging, and atomically publish immutable snapshots. If import fails, keep serving the last valid snapshot.
 
-Public attribution must include a linked notice similar to: “Battle data provided by Pokémon Champions Battle Data.” Reasonable caching is allowed, but do not expose raw responses as a permanent mirror, dump, bulk-download product, or competing API. Cache PokeAPI responsibly and preserve BSD-3-Clause notices where applicable.
+Public attribution must link Pokémon Champions Battle Data and Pokémon Showdown where their data is displayed or used. Reasonable caching is allowed, but do not expose raw responses as a permanent mirror, dump, bulk-download product, or competing API. Cache PokeAPI responsibly and preserve all applicable upstream license notices.
 
 ## 5. Architecture: shipped v1 and scale target
 
 ### 5.1 Shipped v1 architecture
 
-The existing repository is authoritative for v1 implementation shape. It uses pnpm, Next.js/React, strict TypeScript, vinext, Cloudflare-compatible Sites output, Zustand plus versioned IndexedDB, Floating UI, Vitest/Testing Library, and a committed generated Champions/PokeAPI snapshot. API/BFF routes live in the same application. Preserve `.openai/hosting.json`, the current lockfile, build pipeline, and Sites deployment packaging.
+The existing repository is authoritative for v1 implementation shape. It uses pnpm, Next.js/React, strict TypeScript, vinext, Cloudflare-compatible Sites output, Zustand plus versioned IndexedDB, Floating UI, Vitest/Testing Library, and a committed generated Champions/Showdown/PokeAPI snapshot. API/BFF routes live in the same application. Preserve `.openai/hosting.json`, the current lockfile, build pipeline, and Sites deployment packaging.
 
 Domain calculations, legality, normalization, and recommendation mapping MUST remain deterministic and independently testable outside React components. External boundaries must be validated and must not become arbitrary upstream proxies.
 
@@ -595,7 +609,7 @@ Champions job:
 8. Invalidate cache only after commit.
 9. Record metrics/report and alert on rejection.
 
-PokeAPI job caches/normalizes needed resources, preserves localization/provenance, updates incrementally, runs less often, and never overwrites Champions values.
+Showdown move job pins a commit, statically parses base moves/text plus the Champions move/script overrides, merges base then Champions, calculates Champions PP, records per-record provenance, and rejects missing legal moves/descriptions or unreviewed global-rule changes. PokeAPI job caches/normalizes only needed IDs/localization and ability/item resources, preserves provenance, updates incrementally, and never overwrites Champions or Showdown mechanic values.
 
 Import checks: required IDs; every directly indexed form's `battleDataKey` equals its Champions `showdownId`; regional/gender/breed/appliance forms do not inherit a sibling's battle source; metadata rows map to exactly one index entry or an explicitly allowed metadata-only Mega fallback; percentages `[0,100]` or true null; blank not zero; scoped rank uniqueness where promised; mapped references or quarantine; unexpected count collapse; AP values valid; allowlisted assets; recorded version/date; unknown optionals tolerated; required missing fields rejected according to severity. The Ninetales/Alolan Ninetales pair is a permanent golden mapping fixture covering different keys, types, abilities, learnsets, battle sources, and usage-based defaults.
 
@@ -725,6 +739,9 @@ The committed offline form-integrity audit runs on every deployment. A live audi
 - Mapping collision/count collapse/invalid asset host reported.
 - Every form has non-empty `id`, `speciesKey`, `battleDataKey`, and `savedName`; directly indexed forms equal their live `showdownId`.
 - Regional/gender/breed/appliance mappings remain form-specific; Ninetales and Alolan Ninetales retain distinct types, abilities, learnsets, sources, and format defaults.
+- Every current-Regulation move resolves to pinned Showdown mechanics and a non-empty English description; no legal move silently falls back to PokeAPI mechanics.
+- Apple Acid is a permanent Champions move golden fixture: Power 90, Accuracy 100, PP 12, and a 100% one-stage Special Defense reduction description.
+- Champions-description overrides cannot reuse potentially contradictory main-series localized effect prose; they use reviewed localization or explicit English fallback.
 - Ambiguous shared metadata mapping fails instead of overwriting a whole family.
 - Cache invalidates after commit only.
 - Handle timeout, malformed JSON/CSV, wrong type, oversized response, and 5xx.

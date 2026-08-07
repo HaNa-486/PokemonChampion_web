@@ -36,6 +36,7 @@ export function auditSnapshot(snapshot) {
   const errors = [];
   const warnings = [];
   const pokemon = Array.isArray(snapshot?.pokemon) ? snapshot.pokemon : [];
+  const moves = Array.isArray(snapshot?.moves) ? snapshot.moves : [];
   const byId = new Map();
 
   for (const entry of pokemon) {
@@ -66,7 +67,28 @@ export function auditSnapshot(snapshot) {
     if (snapshot?.counts?.[key] !== actual) errors.push(`${key} count metadata ${snapshot?.counts?.[key]} does not match array length ${actual}`);
   }
 
+  const moveIds = new Set();
+  for (const move of moves) {
+    if (!move?.id || !move?.showdownId || !move?.name) errors.push(`Move record is missing an identity key: ${move?.name ?? move?.id ?? "unknown"}`);
+    if (moveIds.has(move?.id)) errors.push(`Duplicate move id: ${move.id}`);
+    moveIds.add(move?.id);
+    if (!move?.description?.trim()) errors.push(`Move is missing its Pokémon Showdown description: ${move?.name ?? move?.id}`);
+    if (!move?.descriptionZh?.trim()) errors.push(`Move is missing its localized description fallback: ${move?.name ?? move?.id}`);
+    if (!Number.isFinite(move?.pp) || move.pp <= 0) errors.push(`Move has invalid Champions PP: ${move?.name ?? move?.id}`);
+    if (!Number.isFinite(move?.priority) || !move?.target || !Array.isArray(move?.flags)) errors.push(`Move mechanics are incomplete: ${move?.name ?? move?.id}`);
+  }
+
+  const appleAcid = moves.find((move) => move.id === "apple-acid");
+  if (!appleAcid) errors.push("Apple Acid is missing from the legal move catalog.");
+  else {
+    if (appleAcid.power !== 90 || appleAcid.accuracy !== 100 || appleAcid.pp !== 12) errors.push("Apple Acid does not match the Pokémon Showdown Champions contract (Power 90, Accuracy 100, PP 12).");
+    if (!/Special Defense by 1 stage/i.test(appleAcid.description)) errors.push("Apple Acid is missing its verified Special Defense effect description.");
+  }
+
+  if (snapshot?.schemaVersion !== 4) errors.push(`Snapshot schemaVersion ${snapshot?.schemaVersion} is not the Champions move schema v4.`);
   if (!snapshot?.sources?.champions?.dataVersion) errors.push("Champions dataVersion is missing.");
+  if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.showdown?.revision ?? "")) errors.push("Pokémon Showdown source revision is missing or unpinned.");
+  if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.pokeapi?.revision ?? "")) errors.push("PokeAPI source revision is missing or unpinned.");
   if (!snapshot?.generatedAt) warnings.push("Snapshot generatedAt is missing.");
   return { errors, warnings, checkedPokemon: pokemon.length };
 }
