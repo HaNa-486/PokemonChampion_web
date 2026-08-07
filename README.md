@@ -1,6 +1,6 @@
 # Champions Lab
 
-An unofficial Pokémon Champions team-building database for the current regulation. It combines legality and usage from [Pokémon Champions Battle Data](https://championsbattledata.com/), Champions-specific move mechanics and English text from [Pokémon Showdown](https://github.com/smogon/pokemon-showdown), and IDs plus localization supplements from [PokeAPI](https://github.com/PokeAPI/pokeapi).
+An unofficial Pokémon Champions team-building database for the current regulation. It combines legality and usage from [Pokémon Champions Battle Data](https://championsbattledata.com/), Champions-specific move, ability, and held-item mechanics plus English text from [Pokémon Showdown](https://github.com/smogon/pokemon-showdown), and IDs plus localization supplements from [PokeAPI](https://github.com/PokeAPI/pokeapi).
 
 The implementation contract, data model, security boundaries, acceptance criteria, and full test design live in [PROJECT_SPEC.md](./PROJECT_SPEC.md). Release work follows [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md).
 
@@ -62,4 +62,4 @@ The initial migration is in `drizzle/0000_flippant_wendigo.sql`.
 
 ## Data and legal notes
 
-This project is an unofficial community tool. Battle data and sprites are attributed to Pokémon Champions Battle Data. Champions move mechanics and English text are derived from Pokémon Showdown's open-source base data and Champions mod at a pinned revision. PokeAPI supplies IDs and localization supplements at a pinned revision. Preserve the applicable upstream notices; do not expose bulk-download, dump, or mirror endpoints for the upstream Champions dataset; consult upstream terms before commercial release. Pokémon and related names are trademarks of their respective owners.
+This project is an unofficial community tool. Battle data and sprites are attributed to Pokémon Champions Battle Data. Champions move, ability, and held-item mechanics plus English text are derived from Pokémon Showdown's open-source base data and Champions mod at a pinned revision. PokeAPI supplies IDs and localization supplements at a pinned revision. Preserve the applicable upstream notices; do not expose bulk-download, dump, or mirror endpoints for the upstream Champions dataset; consult upstream terms before commercial release. Pokémon and related names are trademarks of their respective owners.

@@ -175,6 +175,13 @@ describe("normalized current-regulation catalog", () => {
     expect(itemEffectCategories(items.find((item) => item.id === "leftovers")!)).toContain("HP Recovery");
   });
 
+  it("uses Champions-specific ability and held-item descriptions", () => {
+    expect(abilities.find((ability) => ability.id === "healer")?.description).toContain("50% chance");
+    expect(abilities.find((ability) => ability.id === "unseen-fist")?.description).toContain("1/4 the usual damage");
+    expect(items.find((item) => item.id === "fairy-feather")?.description).toContain("1.2x power");
+    expect(items.find((item) => item.id === "slowbronite")?.description).toContain("not Galarian Slowbro");
+  });
+
   it("builds reverse move and ability indexes from legal forms", () => {
     expect(pokemonByMoveId.get("dragon-claw")?.map((entry) => entry.id)).toEqual(expect.arrayContaining(["garchomp", "mega-charizard-x"]));
     expect(pokemonByAbilityId.get("rough-skin")?.map((entry) => entry.id)).toContain("garchomp");

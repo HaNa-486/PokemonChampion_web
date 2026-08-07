@@ -37,6 +37,8 @@ export function auditSnapshot(snapshot) {
   const warnings = [];
   const pokemon = Array.isArray(snapshot?.pokemon) ? snapshot.pokemon : [];
   const moves = Array.isArray(snapshot?.moves) ? snapshot.moves : [];
+  const abilities = Array.isArray(snapshot?.abilities) ? snapshot.abilities : [];
+  const items = Array.isArray(snapshot?.items) ? snapshot.items : [];
   const byId = new Map();
 
   for (const entry of pokemon) {
@@ -85,7 +87,28 @@ export function auditSnapshot(snapshot) {
     if (!/Special Defense by 1 stage/i.test(appleAcid.description)) errors.push("Apple Acid is missing its verified Special Defense effect description.");
   }
 
-  if (snapshot?.schemaVersion !== 4) errors.push(`Snapshot schemaVersion ${snapshot?.schemaVersion} is not the Champions move schema v4.`);
+  for (const [kind, entries] of [["Ability", abilities], ["Held item", items]]) {
+    const ids = new Set();
+    for (const entry of entries) {
+      if (!entry?.id || !entry?.showdownId || !entry?.name) errors.push(`${kind} record is missing an identity key: ${entry?.name ?? entry?.id ?? "unknown"}`);
+      if (ids.has(entry?.id)) errors.push(`Duplicate ${kind.toLowerCase()} id: ${entry.id}`);
+      ids.add(entry?.id);
+      if (!entry?.description?.trim()) errors.push(`${kind} is missing its Pokémon Showdown description: ${entry?.name ?? entry?.id}`);
+      if (!entry?.descriptionZh?.trim()) errors.push(`${kind} is missing its localized description fallback: ${entry?.name ?? entry?.id}`);
+      if (!entry?.mechanicsSource || !entry?.descriptionSource || !entry?.localizationSource) errors.push(`${kind} provenance is incomplete: ${entry?.name ?? entry?.id}`);
+    }
+  }
+
+  const healer = abilities.find((entry) => entry.id === "healer");
+  if (!healer || !/50% chance/i.test(healer.description)) errors.push("Healer does not use the Champions 50% cure chance description.");
+  const unseenFist = abilities.find((entry) => entry.id === "unseen-fist");
+  if (!unseenFist || !/1\/4 the usual damage/i.test(unseenFist.description)) errors.push("Unseen Fist is missing its Champions protection damage restriction.");
+  const fairyFeather = items.find((entry) => entry.id === "fairy-feather");
+  if (!fairyFeather?.description?.trim()) errors.push("Fairy Feather is missing its held-item description.");
+  const slowbronite = items.find((entry) => entry.id === "slowbronite");
+  if (!slowbronite || !/not Galarian Slowbro/i.test(slowbronite.description)) errors.push("Slowbronite is missing its Champions form restriction.");
+
+  if (snapshot?.schemaVersion !== 5) errors.push(`Snapshot schemaVersion ${snapshot?.schemaVersion} is not the Champions entity schema v5.`);
   if (!snapshot?.sources?.champions?.dataVersion) errors.push("Champions dataVersion is missing.");
   if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.showdown?.revision ?? "")) errors.push("Pokémon Showdown source revision is missing or unpinned.");
   if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.pokeapi?.revision ?? "")) errors.push("PokeAPI source revision is missing or unpinned.");

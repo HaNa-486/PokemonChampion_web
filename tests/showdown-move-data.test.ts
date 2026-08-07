@@ -15,6 +15,18 @@ describe("Pokémon Showdown Champions move adapter", () => {
     });
   });
 
+  it("records method overrides and nested Champions text without executing code", () => {
+    const abilities = parseShowdownTable(`export const Abilities = {
+      healer: { inherit: true, onResidual(pokemon) { pokemon.cureStatus(); }, shortDesc: "Champions effect" },
+    };`, "Abilities");
+    const text = parseShowdownTable(`export const AbilitiesText = {
+      healer: { shortDesc: "Base effect", champions: { shortDesc: "50% Champions effect" } },
+    };`, "AbilitiesText");
+    expect(abilities.get("healer")?._explicitKeys).toEqual(["inherit", "onResidual", "shortDesc"]);
+    expect(abilities.get("healer")?.onResidual).toBeUndefined();
+    expect(text.get("healer")?.champions?.shortDesc).toBe("50% Champions effect");
+  });
+
   it("applies the Champions PP rule and cap", () => {
     expect(championsPp({ name: "Apple Acid", pp: 10 })).toBe(12);
     expect(championsPp({ name: "Protect", pp: 5 })).toBe(8);

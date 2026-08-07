@@ -4,32 +4,11 @@ import snapshot from "../data/generated/champions-snapshot.json";
 export const catalogSnapshotDate = snapshot.sources.champions.generatedAt.slice(0, 10);
 
 const asset = (name: string) => `https://championsbattledata.com/pokemon_champions_assets/pokemon/${encodeURIComponent(name)}.png`;
-const curatedAbilities: Ability[] = [
-  { id: "rough-skin", name: "Rough Skin", nameZh: "粗糙皮膚", description: "Damages an attacker that makes contact.", descriptionZh: "受到接觸類招式攻擊時，會使攻擊者受傷。" },
-  { id: "sand-veil", name: "Sand Veil", nameZh: "沙隱", description: "Raises evasiveness during a sandstorm.", descriptionZh: "沙暴天氣時提高閃避率。" },
-  { id: "drought", name: "Drought", nameZh: "日照", description: "Creates harsh sunlight when entering battle.", descriptionZh: "出場時會讓天氣變為大晴天。" },
-  { id: "tough-claws", name: "Tough Claws", nameZh: "硬爪", description: "Boosts contact moves by 30%.", descriptionZh: "接觸類招式的威力提高 30%。" },
-  { id: "prankster", name: "Prankster", nameZh: "惡作劇之心", description: "Gives priority to status moves.", descriptionZh: "使用變化招式時優先度提高。" },
-  { id: "intimidate", name: "Intimidate", nameZh: "威嚇", description: "Lowers opposing Pokémon's Attack on entry.", descriptionZh: "出場時降低對手的攻擊。" },
-  { id: "inner-focus", name: "Inner Focus", nameZh: "精神力", description: "Prevents flinching and ignores Intimidate.", descriptionZh: "不會畏縮，並不受威嚇影響。" },
-  { id: "multiscale", name: "Multiscale", nameZh: "多重鱗片", description: "Reduces damage while at full HP.", descriptionZh: "HP 全滿時，受到的傷害會減少。" },
-];
-
-const curatedAbilityById = new Map(curatedAbilities.map((entry) => [entry.id, entry]));
-export const abilities: Ability[] = snapshot.abilities.map((entry) => curatedAbilityById.get(entry.id) ?? {
+export const abilities: Ability[] = snapshot.abilities.map((entry) => ({
   id: entry.id, name: entry.name, nameZh: entry.nameZh || entry.name,
   description: entry.description || "No ability description is available.",
   descriptionZh: entry.descriptionZh || entry.description || "目前沒有特性說明。",
-});
-
-const curatedItems: HeldItem[] = [
-  { id: "life-orb", name: "Life Orb", nameZh: "生命寶珠", category: "Item", description: "Boosts move damage by 30%, but costs 1/10 max HP after a successful attack.", descriptionZh: "招式威力提高 30%，但命中後會失去最大 HP 的 1/10。" },
-  { id: "choice-scarf", name: "Choice Scarf", nameZh: "講究圍巾", category: "Item", description: "Boosts Speed by 50%, but locks the holder into its first selected move.", descriptionZh: "速度提高 50%，但只能使出首次選擇的招式。" },
-  { id: "focus-sash", name: "Focus Sash", nameZh: "氣勢披帶", category: "Item", description: "At full HP, survives a knockout with 1 HP once.", descriptionZh: "HP 全滿時，受到致命傷害會以 1 HP 撐住一次。" },
-  { id: "sitrus-berry", name: "Sitrus Berry", nameZh: "文柚果", category: "Berry", description: "Restores HP when the holder's HP falls low.", descriptionZh: "HP 降低時會回復 HP。" },
-  { id: "leftovers", name: "Leftovers", nameZh: "吃剩的東西", category: "Item", description: "Restores 1/16 max HP at the end of every turn.", descriptionZh: "每回合結束時回復最大 HP 的 1/16。" },
-  { id: "charizardite-x", name: "Charizardite X", nameZh: "噴火龍進化石Ｘ", category: "Mega Stone", description: "Enables Mega Evolution into Mega Charizard X.", descriptionZh: "讓噴火龍超級進化為超級噴火龍Ｘ。" },
-];
+}));
 
 // Names verified against the current Champions Battle Data held-item distributions.
 const megaStoneNameByPokemonId: Record<string, string> = {
@@ -52,8 +31,7 @@ const megaStoneNameByPokemonId: Record<string, string> = {
 const itemId = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const megaStoneIdByPokemonId = new Map(Object.entries(megaStoneNameByPokemonId).map(([pokemonId, name]) => [pokemonId, itemId(name)]));
 
-const generatedItemById = new Map(snapshot.items.map((entry) => [entry.id, entry]));
-for (const entry of curatedItems) generatedItemById.set(entry.id, entry);
+const generatedItemById = new Map<string, HeldItem>(snapshot.items.map((entry) => [entry.id, entry] as [string, HeldItem]));
 for (const [pokemonId, name] of Object.entries(megaStoneNameByPokemonId)) {
   const id = itemId(name);
   if (!generatedItemById.has(id)) generatedItemById.set(id, { id, name, nameZh: name, category: "Mega Stone", description: `Required for ${pokemonId.replaceAll("-", " ").replace(/^mega /, "Mega ")} to Mega Evolve.`, descriptionZh: `此超級石為 ${name}，是該寶可夢進行超級進化時的必備持有物。` });

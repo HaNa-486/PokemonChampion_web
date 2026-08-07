@@ -60,11 +60,11 @@ export function parseShowdownTable(source, exportName = "Moves") {
     const entry = {};
     const explicitKeys = [];
     for (const field of initializer.properties) {
-      if (!ts.isPropertyAssignment(field) && !ts.isShorthandPropertyAssignment(field)) continue;
+      if (!ts.isPropertyAssignment(field) && !ts.isShorthandPropertyAssignment(field) && !ts.isMethodDeclaration(field) && !ts.isGetAccessorDeclaration(field) && !ts.isSetAccessorDeclaration(field)) continue;
       const name = propertyName(field.name);
       if (!name) continue;
       explicitKeys.push(name);
-      entry[name] = ts.isShorthandPropertyAssignment(field) ? undefined : literalValue(field.initializer);
+      entry[name] = ts.isPropertyAssignment(field) ? literalValue(field.initializer) : undefined;
     }
     Object.defineProperty(entry, "_explicitKeys", { value: explicitKeys, enumerable: false });
     result.set(id, entry);

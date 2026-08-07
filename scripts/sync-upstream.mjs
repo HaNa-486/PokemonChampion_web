@@ -101,16 +101,30 @@ function collectCategoryNames(value, category, result) {
   for (const child of Object.values(value)) collectCategoryNames(child, category, result);
 }
 
+function resolveShowdownDescription(text, override) {
+  const championsDescription = override?.desc ?? text?.champions?.desc ?? override?.shortDesc ?? text?.champions?.shortDesc ?? "";
+  return {
+    championsDescription,
+    description: championsDescription || text?.desc || text?.shortDesc || "",
+  };
+}
+
 export async function buildSnapshot(championsSource, revisions = {}) {
   const showdownRevision = revisions.showdown ?? await githubRevision(SHOWDOWN_REPOSITORY);
   const pokeapiRevision = revisions.pokeapi ?? await githubRevision(POKEAPI_REPOSITORY);
   const showdownRaw = `https://raw.githubusercontent.com/${SHOWDOWN_REPOSITORY}/${showdownRevision}`;
   const pokeapiCsv = `https://raw.githubusercontent.com/${POKEAPI_REPOSITORY}/${pokeapiRevision}/data/v2/csv`;
-  const [championsText, showdownMoveSource, showdownTextSource, championsMoveSource, championsScriptSource, moveCsv, moveNamesCsv, effectsCsv, abilityCsv, abilityNamesCsv, abilityProseCsv, itemCsv, itemNamesCsv, itemProseCsv] = await Promise.all([
+  const [championsText, showdownMoveSource, showdownTextSource, championsMoveSource, showdownAbilitySource, showdownAbilityTextSource, championsAbilitySource, showdownItemSource, showdownItemTextSource, championsItemSource, championsScriptSource, moveCsv, moveNamesCsv, effectsCsv, abilityCsv, abilityNamesCsv, abilityProseCsv, itemCsv, itemNamesCsv, itemProseCsv] = await Promise.all([
     championsSource ? Promise.resolve(JSON.stringify(championsSource)) : fetchText(CHAMPIONS_INDEX),
     fetchText(`${showdownRaw}/data/moves.ts`),
     fetchText(`${showdownRaw}/data/text/moves.ts`),
     fetchText(`${showdownRaw}/data/mods/champions/moves.ts`),
+    fetchText(`${showdownRaw}/data/abilities.ts`),
+    fetchText(`${showdownRaw}/data/text/abilities.ts`),
+    fetchText(`${showdownRaw}/data/mods/champions/abilities.ts`),
+    fetchText(`${showdownRaw}/data/items.ts`),
+    fetchText(`${showdownRaw}/data/text/items.ts`),
+    fetchText(`${showdownRaw}/data/mods/champions/items.ts`),
     fetchText(`${showdownRaw}/data/mods/champions/scripts.ts`),
     fetchText(`${pokeapiCsv}/moves.csv`),
     fetchText(`${pokeapiCsv}/move_names.csv`),
@@ -145,7 +159,6 @@ export async function buildSnapshot(championsSource, revisions = {}) {
   const abilityProseRows = parseCsv(abilityProseCsv);
   const abilityNamesEn = byLanguage(abilityNameRows, "ability_id", 9);
   const abilityNamesZhHant = byLanguage(abilityNameRows, "ability_id", 4);
-  const abilityProseEn = byLanguage(abilityProseRows, "ability_id", 9);
   const abilityProseZhHant = byLanguage(abilityProseRows, "ability_id", 4);
   const abilityIdByName = new Map(abilityRows.map((row) => [abilityNamesEn.get(row.id)?.name, row.identifier]).filter(([name]) => Boolean(name)));
   const pokemonMap = new Map();
@@ -200,8 +213,7 @@ export async function buildSnapshot(championsSource, revisions = {}) {
     if (!base && (!override || override.inherit)) { missingMechanics.push(legalName); return []; }
     const move = { ...(base ?? {}), ...(override ?? {}) };
     const text = showdownText.get(showdownId) ?? {};
-    const championsDescription = override?.desc ?? override?.shortDesc ?? "";
-    const description = championsDescription || text.desc || text.shortDesc || "";
+    const { championsDescription, description } = resolveShowdownDescription(text, override);
     if (!description.trim()) { missingDescriptions.push(legalName); return []; }
     const pokeRow = pokeRowByShowdownId.get(showdownId);
     const localizedEffect = pokeRow ? effectZhHant.get(pokeRow.effect_id)?.short_effect ?? "" : "";
@@ -235,11 +247,32 @@ export async function buildSnapshot(championsSource, revisions = {}) {
   if (missingMechanics.length) throw new Error(`Pokémon Showdown mechanics are missing for legal Champions moves: ${missingMechanics.join(", ")}`);
   if (missingDescriptions.length) throw new Error(`Pokémon Showdown descriptions are missing for legal Champions moves: ${missingDescriptions.join(", ")}`);
   const wantedAbilities = new Set(pokemon.flatMap((entry) => entry.abilityIds));
+  const showdownAbilities = parseShowdownTable(showdownAbilitySource, "Abilities");
+  const showdownAbilityText = parseShowdownTable(showdownAbilityTextSource, "AbilitiesText");
+  const championsAbilities = parseShowdownTable(championsAbilitySource, "Abilities");
+  const missingAbilityDescriptions = [];
   const abilities = abilityRows.flatMap((row) => {
     if (!wantedAbilities.has(row.identifier)) return [];
     const name = abilityNamesEn.get(row.id)?.name ?? row.identifier;
-    return [{ id: row.identifier, name, nameZh: abilityNamesZhHant.get(row.id)?.name ?? name, description: abilityProseEn.get(row.id)?.short_effect ?? "", descriptionZh: abilityProseZhHant.get(row.id)?.short_effect ?? abilityProseEn.get(row.id)?.short_effect ?? "" }];
+    const showdownId = toShowdownId(name);
+    const base = showdownAbilities.get(showdownId);
+    const override = championsAbilities.get(showdownId);
+    const text = showdownAbilityText.get(showdownId) ?? {};
+    const { championsDescription, description } = resolveShowdownDescription(text, override);
+    if (!base || !description.trim()) { missingAbilityDescriptions.push(name); return []; }
+    const overrideKeys = override?._explicitKeys ?? [];
+    const hasChampionsMechanicOverride = overrideKeys.some((key) => !["inherit", "isNonstandard", "desc", "shortDesc"].includes(key));
+    const localizedDescription = abilityProseZhHant.get(row.id)?.short_effect ?? "";
+    const useLocalizedDescription = !championsDescription && !hasChampionsMechanicOverride && Boolean(localizedDescription);
+    return [{
+      id: row.identifier, showdownId, name: String(base.name ?? text.name ?? name), nameZh: abilityNamesZhHant.get(row.id)?.name ?? name,
+      description, descriptionZh: useLocalizedDescription ? localizedDescription : description,
+      mechanicsSource: hasChampionsMechanicOverride ? "showdown-champions" : "showdown-base",
+      descriptionSource: championsDescription ? "showdown-champions" : "showdown-text",
+      localizationSource: useLocalizedDescription ? "pokeapi" : "english-fallback",
+    }];
   });
+  if (missingAbilityDescriptions.length) throw new Error(`Pokémon Showdown data is missing for legal Champions abilities: ${missingAbilityDescriptions.join(", ")}`);
   const wantedItems = new Set();
   for (const entry of source.pokemon) collectCategoryNames(entry?.summary?.battleSummary, "held_item", wantedItems);
   const itemRows = parseCsv(itemCsv);
@@ -247,20 +280,41 @@ export async function buildSnapshot(championsSource, revisions = {}) {
   const itemProseRows = parseCsv(itemProseCsv);
   const itemNamesEn = byLanguage(itemNameRows, "item_id", 9);
   const itemNamesZhHant = byLanguage(itemNameRows, "item_id", 4);
-  const itemProseEn = byLanguage(itemProseRows, "item_id", 9);
   const itemProseZhHant = byLanguage(itemProseRows, "item_id", 4);
+  const showdownItems = parseShowdownTable(showdownItemSource, "Items");
+  const showdownItemText = parseShowdownTable(showdownItemTextSource, "ItemsText");
+  const championsItems = parseShowdownTable(championsItemSource, "Items");
+  const missingItemDescriptions = [];
   const items = itemRows.flatMap((row) => {
     const name = itemNamesEn.get(row.id)?.name;
     if (!name || !wantedItems.has(name)) return [];
-    const category = row.identifier.endsWith("-berry") ? "Berry" : /ite(?:-x|-y)?$/.test(row.identifier) ? "Mega Stone" : "Item";
-    return [{ id: row.identifier, name, nameZh: itemNamesZhHant.get(row.id)?.name ?? name, category, description: itemProseEn.get(row.id)?.short_effect ?? "", descriptionZh: itemProseZhHant.get(row.id)?.short_effect ?? itemProseEn.get(row.id)?.short_effect ?? "" }];
+    const showdownId = toShowdownId(name);
+    const base = showdownItems.get(showdownId);
+    const override = championsItems.get(showdownId);
+    const text = showdownItemText.get(showdownId) ?? {};
+    const { championsDescription, description } = resolveShowdownDescription(text, override);
+    if (!base || !description.trim()) { missingItemDescriptions.push(name); return []; }
+    const item = { ...base, ...(override ?? {}) };
+    const overrideKeys = override?._explicitKeys ?? [];
+    const hasChampionsMechanicOverride = overrideKeys.some((key) => !["inherit", "isNonstandard", "desc", "shortDesc"].includes(key));
+    const localizedDescription = itemProseZhHant.get(row.id)?.short_effect ?? "";
+    const useLocalizedDescription = !championsDescription && !hasChampionsMechanicOverride && Boolean(localizedDescription);
+    const category = item.megaStone ? "Mega Stone" : item.isBerry || row.identifier.endsWith("-berry") ? "Berry" : "Item";
+    return [{
+      id: row.identifier, showdownId, name: String(item.name ?? text.name ?? name), nameZh: itemNamesZhHant.get(row.id)?.name ?? name, category,
+      description, descriptionZh: useLocalizedDescription ? localizedDescription : description,
+      mechanicsSource: hasChampionsMechanicOverride ? "showdown-champions" : "showdown-base",
+      descriptionSource: championsDescription ? "showdown-champions" : "showdown-text",
+      localizationSource: useLocalizedDescription ? "pokeapi" : "english-fallback",
+    }];
   });
+  if (missingItemDescriptions.length) throw new Error(`Pokémon Showdown data is missing for legal Champions held items: ${missingItemDescriptions.join(", ")}`);
   return {
-    schemaVersion: 4,
+    schemaVersion: 5,
     generatedAt: new Date().toISOString(),
     sources: {
       champions: { url: CHAMPIONS_INDEX, generatedAt: source.generatedAt, dataVersion: source.dataVersion },
-      showdown: { repository: `https://github.com/${SHOWDOWN_REPOSITORY}`, revision: showdownRevision, mod: "champions", datasets: ["data/moves.ts", "data/text/moves.ts", "data/mods/champions/moves.ts", "data/mods/champions/scripts.ts"] },
+      showdown: { repository: `https://github.com/${SHOWDOWN_REPOSITORY}`, revision: showdownRevision, mod: "champions", datasets: ["data/moves.ts", "data/text/moves.ts", "data/mods/champions/moves.ts", "data/abilities.ts", "data/text/abilities.ts", "data/mods/champions/abilities.ts", "data/items.ts", "data/text/items.ts", "data/mods/champions/items.ts", "data/mods/champions/scripts.ts"] },
       pokeapi: { repository: `https://github.com/${POKEAPI_REPOSITORY}`, revision: pokeapiRevision, purpose: "IDs and localization", datasets: ["moves.csv", "move_names.csv", "move_effect_prose.csv", "abilities.csv", "ability_names.csv", "ability_prose.csv", "items.csv", "item_names.csv", "item_prose.csv"] },
     },
     ruleset: { defaultSeason: source.defaultSeason, seasons: source.seasons ?? [] },
@@ -280,8 +334,8 @@ async function main() {
     githubRevision(POKEAPI_REPOSITORY),
   ]);
   const existing = await readFile(output, "utf8").then(JSON.parse).catch(() => null);
-  if (existing?.schemaVersion === 4 && existing?.sources?.champions?.dataVersion === championsSource.dataVersion && existing?.sources?.showdown?.revision === showdownRevision && existing?.sources?.pokeapi?.revision === pokeapiRevision) {
-    console.log(`All upstream move sources are already current (Champions=${championsSource.dataVersion}, Showdown=${showdownRevision.slice(0, 12)}, PokeAPI=${pokeapiRevision.slice(0, 12)}).`);
+  if (existing?.schemaVersion === 5 && existing?.sources?.champions?.dataVersion === championsSource.dataVersion && existing?.sources?.showdown?.revision === showdownRevision && existing?.sources?.pokeapi?.revision === pokeapiRevision) {
+    console.log(`All upstream entity sources are already current (Champions=${championsSource.dataVersion}, Showdown=${showdownRevision.slice(0, 12)}, PokeAPI=${pokeapiRevision.slice(0, 12)}).`);
     return;
   }
   const snapshot = await buildSnapshot(championsSource, { showdown: showdownRevision, pokeapi: pokeapiRevision });
