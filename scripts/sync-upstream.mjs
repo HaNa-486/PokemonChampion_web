@@ -94,13 +94,6 @@ function byLanguage(rows, idKey, languageId) {
   return new Map(rows.filter((row) => row.local_language_id === String(languageId)).map((row) => [row[idKey], row]));
 }
 
-function collectCategoryNames(value, category, result) {
-  if (Array.isArray(value)) { for (const entry of value) collectCategoryNames(entry, category, result); return; }
-  if (!value || typeof value !== "object") return;
-  if (value.category === category && typeof value.name === "string" && value.name) result.add(value.name);
-  for (const child of Object.values(value)) collectCategoryNames(child, category, result);
-}
-
 function resolveShowdownDescription(text, override) {
   const championsDescription = override?.desc ?? text?.champions?.desc ?? override?.shortDesc ?? text?.champions?.shortDesc ?? "";
   return {
@@ -273,8 +266,6 @@ export async function buildSnapshot(championsSource, revisions = {}) {
     }];
   });
   if (missingAbilityDescriptions.length) throw new Error(`Pokémon Showdown data is missing for legal Champions abilities: ${missingAbilityDescriptions.join(", ")}`);
-  const wantedItems = new Set();
-  for (const entry of source.pokemon) collectCategoryNames(entry?.summary?.battleSummary, "held_item", wantedItems);
   const itemRows = parseCsv(itemCsv);
   const itemNameRows = parseCsv(itemNamesCsv);
   const itemProseRows = parseCsv(itemProseCsv);
@@ -284,24 +275,30 @@ export async function buildSnapshot(championsSource, revisions = {}) {
   const showdownItems = parseShowdownTable(showdownItemSource, "Items");
   const showdownItemText = parseShowdownTable(showdownItemTextSource, "ItemsText");
   const championsItems = parseShowdownTable(championsItemSource, "Items");
-  const missingItemDescriptions = [];
-  const items = itemRows.flatMap((row) => {
+  const itemRowByShowdownId = new Map(itemRows.flatMap((row) => {
     const name = itemNamesEn.get(row.id)?.name;
-    if (!name || !wantedItems.has(name)) return [];
-    const showdownId = toShowdownId(name);
+    return name ? [[toShowdownId(name), row]] : [];
+  }));
+  const missingItemDescriptions = [];
+  const itemIds = new Set([...showdownItems.keys(), ...championsItems.keys()]);
+  const items = [...itemIds].sort((left, right) => left.localeCompare(right, "en")).flatMap((showdownId) => {
     const base = showdownItems.get(showdownId);
     const override = championsItems.get(showdownId);
+    const item = { ...(base ?? {}), ...(override ?? {}) };
+    if (item.isNonstandard != null) return [];
     const text = showdownItemText.get(showdownId) ?? {};
     const { championsDescription, description } = resolveShowdownDescription(text, override);
-    if (!base || !description.trim()) { missingItemDescriptions.push(name); return []; }
-    const item = { ...base, ...(override ?? {}) };
+    const name = String(item.name ?? text.name ?? showdownId);
+    if ((!base && override?.inherit) || !description.trim()) { missingItemDescriptions.push(name); return []; }
+    const row = itemRowByShowdownId.get(showdownId);
     const overrideKeys = override?._explicitKeys ?? [];
     const hasChampionsMechanicOverride = overrideKeys.some((key) => !["inherit", "isNonstandard", "desc", "shortDesc"].includes(key));
-    const localizedDescription = itemProseZhHant.get(row.id)?.short_effect ?? "";
+    const localizedDescription = row ? itemProseZhHant.get(row.id)?.short_effect ?? "" : "";
     const useLocalizedDescription = !championsDescription && !hasChampionsMechanicOverride && Boolean(localizedDescription);
-    const category = item.megaStone ? "Mega Stone" : item.isBerry || row.identifier.endsWith("-berry") ? "Berry" : "Item";
+    const id = row?.identifier ?? slugify(name);
+    const category = item.megaStone ? "Mega Stone" : item.isBerry || id.endsWith("-berry") ? "Berry" : "Item";
     return [{
-      id: row.identifier, showdownId, name: String(item.name ?? text.name ?? name), nameZh: itemNamesZhHant.get(row.id)?.name ?? name, category,
+      id, showdownId, name, nameZh: (row ? itemNamesZhHant.get(row.id)?.name : null) ?? name, category,
       description, descriptionZh: useLocalizedDescription ? localizedDescription : description,
       mechanicsSource: hasChampionsMechanicOverride ? "showdown-champions" : "showdown-base",
       descriptionSource: championsDescription ? "showdown-champions" : "showdown-text",
@@ -310,7 +307,7 @@ export async function buildSnapshot(championsSource, revisions = {}) {
   });
   if (missingItemDescriptions.length) throw new Error(`Pokémon Showdown data is missing for legal Champions held items: ${missingItemDescriptions.join(", ")}`);
   return {
-    schemaVersion: 5,
+    schemaVersion: 6,
     generatedAt: new Date().toISOString(),
     sources: {
       champions: { url: CHAMPIONS_INDEX, generatedAt: source.generatedAt, dataVersion: source.dataVersion },
@@ -334,7 +331,7 @@ async function main() {
     githubRevision(POKEAPI_REPOSITORY),
   ]);
   const existing = await readFile(output, "utf8").then(JSON.parse).catch(() => null);
-  if (existing?.schemaVersion === 5 && existing?.sources?.champions?.dataVersion === championsSource.dataVersion && existing?.sources?.showdown?.revision === showdownRevision && existing?.sources?.pokeapi?.revision === pokeapiRevision) {
+  if (existing?.schemaVersion === 6 && existing?.sources?.champions?.dataVersion === championsSource.dataVersion && existing?.sources?.showdown?.revision === showdownRevision && existing?.sources?.pokeapi?.revision === pokeapiRevision) {
     console.log(`All upstream entity sources are already current (Champions=${championsSource.dataVersion}, Showdown=${showdownRevision.slice(0, 12)}, PokeAPI=${pokeapiRevision.slice(0, 12)}).`);
     return;
   }

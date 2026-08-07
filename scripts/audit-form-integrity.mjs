@@ -30,7 +30,8 @@ const FORM_KEY_CONTRACT = {
   rotom: "rotom",
 };
 
-const MINIMUM_COUNTS = { pokemon: 300, moves: 500, abilities: 150, items: 50 };
+const MINIMUM_COUNTS = { pokemon: 300, moves: 500, abilities: 150, items: 148 };
+const REVIEWED_LEGAL_ITEM_COUNT = 148;
 
 export function auditSnapshot(snapshot) {
   const errors = [];
@@ -107,8 +108,12 @@ export function auditSnapshot(snapshot) {
   if (!fairyFeather?.description?.trim()) errors.push("Fairy Feather is missing its held-item description.");
   const slowbronite = items.find((entry) => entry.id === "slowbronite");
   if (!slowbronite || !/not Galarian Slowbro/i.test(slowbronite.description)) errors.push("Slowbronite is missing its Champions form restriction.");
+  if (items.length !== REVIEWED_LEGAL_ITEM_COUNT) errors.push(`Champions legal held-item catalog has ${items.length} entries; expected the reviewed pinned-source count ${REVIEWED_LEGAL_ITEM_COUNT}.`);
+  for (const requiredId of ["big-root", "focus-band", "hard-stone", "icy-rock", "iron-ball"]) {
+    if (!items.some((entry) => entry.id === requiredId)) errors.push(`Legal low-usage held item is missing: ${requiredId}`);
+  }
 
-  if (snapshot?.schemaVersion !== 5) errors.push(`Snapshot schemaVersion ${snapshot?.schemaVersion} is not the Champions entity schema v5.`);
+  if (snapshot?.schemaVersion !== 6) errors.push(`Snapshot schemaVersion ${snapshot?.schemaVersion} is not the complete Champions entity schema v6.`);
   if (!snapshot?.sources?.champions?.dataVersion) errors.push("Champions dataVersion is missing.");
   if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.showdown?.revision ?? "")) errors.push("Pokémon Showdown source revision is missing or unpinned.");
   if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.pokeapi?.revision ?? "")) errors.push("PokeAPI source revision is missing or unpinned.");

@@ -104,7 +104,7 @@ For every move that Champions Battle Data marks legal, merge the following pinne
 3. `data/mods/champions/moves.ts` for Champions-specific overrides.
 4. `data/mods/champions/scripts.ts` for reviewed global Champions rules, including the PP cap and calculation.
 
-Abilities and held items use the equivalent pinned base data, text, and `data/mods/champions` override tables. The importer MUST parse these TypeScript data tables without executing downloaded source. Champions overrides and nested Champions text win over base fields. Champions PP is calculated with the reviewed Champions rule, not copied from a main-series dataset. A missing legal entity, missing English description, invalid mechanic, or changed global rule rejects the snapshot for review.
+Abilities and held items use the equivalent pinned base data, text, and `data/mods/champions` override tables. The complete held-item catalog is the merged Showdown base/Champions set whose effective `isNonstandard` value is null; battle usage determines rankings and defaults only and MUST NOT determine catalog membership. The importer MUST parse these TypeScript data tables without executing downloaded source. Champions overrides and nested Champions text win over base fields. Champions PP is calculated with the reviewed Champions rule, not copied from a main-series dataset. A missing legal entity, missing English description, invalid mechanic, incomplete legal item set, or changed global rule rejects the snapshot for review.
 
 ### 4.3 PokeAPI is used to enrich
 
@@ -610,7 +610,7 @@ Champions job:
 8. Invalidate cache only after commit.
 9. Record metrics/report and alert on rejection.
 
-Showdown entity job pins a commit; statically parses base and Champions move, ability, item, text, and script tables; merges base then Champions; calculates Champions PP; records per-record provenance; and rejects missing legal entities/descriptions or unreviewed global-rule changes. PokeAPI job caches/normalizes only needed IDs and localization, preserves provenance, updates incrementally, and never overwrites Champions or Showdown mechanic values.
+Showdown entity job pins a commit; statically parses base and Champions move, ability, item, text, and script tables; merges base then Champions; calculates Champions PP; derives the complete legal held-item set independently from usage; records per-record provenance; and rejects missing legal entities/descriptions or unreviewed global-rule changes. PokeAPI job caches/normalizes only needed IDs and localization, preserves provenance, updates incrementally, and never overwrites Champions or Showdown mechanic values.
 
 Import checks: required IDs; every directly indexed form's `battleDataKey` equals its Champions `showdownId`; regional/gender/breed/appliance forms do not inherit a sibling's battle source; metadata rows map to exactly one index entry or an explicitly allowed metadata-only Mega fallback; percentages `[0,100]` or true null; blank not zero; scoped rank uniqueness where promised; mapped references or quarantine; unexpected count collapse; AP values valid; allowlisted assets; recorded version/date; unknown optionals tolerated; required missing fields rejected according to severity. The Ninetales/Alolan Ninetales pair is a permanent golden mapping fixture covering different keys, types, abilities, learnsets, battle sources, and usage-based defaults.
 

@@ -158,16 +158,17 @@ describe("admin allowlist", () => {
 });
 
 describe("normalized current-regulation catalog", () => {
-  it("includes expanded forms, mapped abilities, and observed held items", () => {
+  it("includes expanded forms, mapped abilities, and every legal held item", () => {
     expect(pokemon.length).toBeGreaterThanOrEqual(300);
     expect(abilities.length).toBeGreaterThanOrEqual(190);
-    expect(items.length).toBeGreaterThanOrEqual(60);
+    expect(items).toHaveLength(148);
     expect(pokemonById.get("garchomp")?.abilityIds).toEqual(expect.arrayContaining(["rough-skin", "sand-veil"]));
     expect(pokemonById.get("mega-charizard-y")?.abilityIds).toContain("drought");
     expect(moves.find((move) => move.id === "fire-punch")?.flags).toContain("Contact");
     expect(moves.find((move) => move.id === "parting-shot")?.flags).toContain("Sound");
     expect(moves.find((move) => move.id === "air-slash")?.flags).toContain("Slicing");
     expect(items.find((item) => item.id === "charizardite-x")?.category).toBe("Mega Stone");
+    expect(items.map((item) => item.id)).toEqual(expect.arrayContaining(["big-root", "focus-band", "hard-stone", "icy-rock", "iron-ball"]));
   });
 
   it("derives useful ability and item effect facets without inventing upstream fields", () => {
