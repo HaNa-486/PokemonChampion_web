@@ -34,11 +34,15 @@ pnpm run dev
 
 `.github/workflows/sync-battle-data.yml` checks Champions Battle Data, Pokémon Showdown, and PokeAPI every six hours. The sync exits without changing files when all three pinned upstream revisions are unchanged. When any source changes, the workflow regenerates the bundled catalog, runs the complete deployment verification suite, and pushes the validated snapshot to `main`. A failed sync or failed test never replaces the last known-good snapshot.
 
+Every synchronization run writes an Actions Summary with the check time, upstream Champions date and version, whether data changed, validation and commit outcomes, and whether production deployment is required. This makes successful no-change checks visible without reading raw step logs.
+
 After a validated snapshot is pushed, the workflow creates or updates one `deployment-required` GitHub Issue assigned to the repository owner. Repeated updates reuse that open Issue instead of creating notification spam. A failed workflow similarly creates or updates one `sync-failed` Issue, and the next successful run closes that failure notification automatically. ChatGPT Sites deployment remains an explicit production-promotion step; close the deployment Issue only after the exact validated commit is published and smoke-tested.
 
 The current Singles and Doubles usage panels continue to use the upstream Current API through the server-side proxy. The footer reads `/api/v1/data-status`, so it reports the upstream generation date instead of a hard-coded date and falls back to the bundled snapshot when upstream is unavailable.
 
 ## Validation
+
+Pull requests targeting `main` run `.github/workflows/pull-request-validation.yml`, which installs the frozen dependency graph and executes the same `verify:deploy` gate used before release. Because the private repository's current GitHub plan does not enforce branch protection, maintainers must still wait for this check to pass before merging.
 
 ```bash
 pnpm run verify:deploy

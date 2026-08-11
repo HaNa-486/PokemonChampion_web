@@ -37,6 +37,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Synchronize upstream catalogs
+        id: synchronize
         run: pnpm data:sync
 
       - name: Stop when the upstream version is unchanged
@@ -50,6 +51,7 @@ jobs:
           fi
 
       - name: Validate the new snapshot
+        id: validation
         if: steps.changes.outputs.changed == 'true'
         run: pnpm verify:deploy
 
@@ -67,6 +69,7 @@ jobs:
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Notify that production deployment is required
+        id: deployment_notification
         if: steps.changes.outputs.changed == 'true' && success()
         uses: actions/github-script@v9
         env:
@@ -207,3 +210,62 @@ jobs:
               const { data: created } = await github.rest.issues.create({ owner, repo, title, body, assignees: [owner], labels: [label.name] });
               core.notice(`Created sync failure issue #${created.number}.`);
             }
+
+      - name: Publish synchronization summary
+        if: always()
+        uses: actions/github-script@v9
+        env:
+          SYNC_CHANGED: ${{ steps.changes.outputs.changed || 'unknown' }}
+          SYNC_OUTCOME: ${{ steps.synchronize.outcome || 'not_run' }}
+          VALIDATION_OUTCOME: ${{ steps.validation.outcome || 'not_run' }}
+          COMMIT_OUTCOME: ${{ steps.commit.outcome || 'not_run' }}
+          DEPLOYMENT_NOTIFICATION_OUTCOME: ${{ steps.deployment_notification.outcome || 'not_run' }}
+          JOB_STATUS: ${{ job.status }}
+        with:
+          script: |
+            const fs = await import('node:fs/promises');
+
+            let snapshot;
+            try {
+              snapshot = JSON.parse(await fs.readFile('data/generated/champions-snapshot.json', 'utf8'));
+            } catch (error) {
+              core.warning(`Could not read the generated snapshot for the run summary: ${error.message}`);
+            }
+
+            const changed = process.env.SYNC_CHANGED;
+            const result = process.env.JOB_STATUS;
+            const statusText = changed === 'true' && process.env.COMMIT_OUTCOME === 'success'
+              ? 'Upstream changes were found and the validated snapshot was pushed to `main`.'
+              : changed === 'true'
+                ? 'Upstream changes were found, but the new snapshot was not pushed to `main`.'
+              : changed === 'false'
+                ? 'The upstream sources were checked and no data changes were found.'
+                : 'The workflow stopped before it could determine whether upstream data changed.';
+            const deploymentStatus = changed === 'true' && process.env.DEPLOYMENT_NOTIFICATION_OUTCOME === 'success'
+              ? 'Required: see the open `deployment-required` Issue.'
+              : changed === 'true' && process.env.COMMIT_OUTCOME === 'success'
+                ? 'The snapshot was pushed, but the deployment notification failed; inspect this run.'
+              : changed === 'false' && result === 'success'
+                ? 'Not required.'
+                : 'Not created; investigate this workflow run.';
+            const sourceDate = snapshot?.sources?.champions?.generatedAt?.slice(0, 10) ?? 'Unavailable';
+            const dataVersion = snapshot?.sources?.champions?.dataVersion ?? 'Unavailable';
+
+            await core.summary
+              .addHeading('Champions battle data synchronization')
+              .addRaw(statusText)
+              .addTable([
+                [{ data: 'Field', header: true }, { data: 'Result', header: true }],
+                ['Checked at (UTC)', new Date().toISOString()],
+                ['Workflow result', result],
+                ['Upstream Champions date', sourceDate],
+                ['Upstream data version', String(dataVersion)],
+                ['Changes detected', changed],
+                ['Synchronization step', process.env.SYNC_OUTCOME],
+                ['Validation step', process.env.VALIDATION_OUTCOME],
+                ['Commit step', process.env.COMMIT_OUTCOME],
+                ['Deployment notification step', process.env.DEPLOYMENT_NOTIFICATION_OUTCOME],
+                ['Production deployment', deploymentStatus],
+              ])
+              .addLink('Open this workflow run', `${process.env.GITHUB_SERVER_URL}/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}`)
+              .write();

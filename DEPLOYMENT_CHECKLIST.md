@@ -31,6 +31,7 @@ This MUST pass without errors. It currently includes:
 - Built-output SSR and API tests
 
 - [ ] `pnpm verify:deploy` passed against the exact release source.
+- [ ] The pull request `Deployment verification` GitHub Actions check passed before merge.
 - [ ] Warnings were reviewed and no new high-risk warning was introduced.
 - [ ] No test was skipped, focused, or weakened to make the gate pass.
 
