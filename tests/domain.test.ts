@@ -158,21 +158,29 @@ describe("admin allowlist", () => {
 });
 
 describe("normalized current-regulation catalog", () => {
-  it("includes expanded forms, mapped abilities, and observed held items", () => {
+  it("includes expanded forms, mapped abilities, and every legal held item", () => {
     expect(pokemon.length).toBeGreaterThanOrEqual(300);
     expect(abilities.length).toBeGreaterThanOrEqual(190);
-    expect(items.length).toBeGreaterThanOrEqual(60);
+    expect(items).toHaveLength(148);
     expect(pokemonById.get("garchomp")?.abilityIds).toEqual(expect.arrayContaining(["rough-skin", "sand-veil"]));
     expect(pokemonById.get("mega-charizard-y")?.abilityIds).toContain("drought");
     expect(moves.find((move) => move.id === "fire-punch")?.flags).toContain("Contact");
     expect(moves.find((move) => move.id === "parting-shot")?.flags).toContain("Sound");
     expect(moves.find((move) => move.id === "air-slash")?.flags).toContain("Slicing");
     expect(items.find((item) => item.id === "charizardite-x")?.category).toBe("Mega Stone");
+    expect(items.map((item) => item.id)).toEqual(expect.arrayContaining(["big-root", "focus-band", "hard-stone", "icy-rock", "iron-ball"]));
   });
 
   it("derives useful ability and item effect facets without inventing upstream fields", () => {
     expect(abilityCategories(abilities.find((ability) => ability.id === "drought")!)).toContain("Weather");
     expect(itemEffectCategories(items.find((item) => item.id === "leftovers")!)).toContain("HP Recovery");
+  });
+
+  it("uses Champions-specific ability and held-item descriptions", () => {
+    expect(abilities.find((ability) => ability.id === "healer")?.description).toContain("50% chance");
+    expect(abilities.find((ability) => ability.id === "unseen-fist")?.description).toContain("1/4 the usual damage");
+    expect(items.find((item) => item.id === "fairy-feather")?.description).toContain("1.2x power");
+    expect(items.find((item) => item.id === "slowbronite")?.description).toContain("not Galarian Slowbro");
   });
 
   it("builds reverse move and ability indexes from legal forms", () => {

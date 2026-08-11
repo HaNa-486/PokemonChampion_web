@@ -254,10 +254,10 @@ describe("ChampionsApp", () => {
     expect(mobileFilterToggle).toHaveAttribute("aria-expanded", "true");
     const battleUsage = dialog.querySelector<HTMLElement>(".battle-usage")!;
     await user.click(within(battleUsage).getByRole("button", { name: "Absolite" }));
-    expect(await screen.findByRole("tooltip")).toHaveTextContent("Allows Absol to Mega Evolve");
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("allows it to Mega Evolve into Mega Absol");
     await user.click(within(battleUsage).getByRole("button", { name: "Absolite" }));
     fireEvent.focus(within(battleUsage).getByRole("button", { name: "Pressure" }));
-    expect(await screen.findByRole("tooltip")).toHaveTextContent("PP cost");
+    expect(await screen.findByRole("tooltip")).toHaveTextContent("loses one additional PP");
     const matchups = within(dialog).getByRole("heading", { name: "Defensive type matchups" }).closest("section")!;
     expect(within(matchups).getByText("Weak")).toBeInTheDocument();
     expect(within(matchups).getByText("Psychic")).toBeInTheDocument();

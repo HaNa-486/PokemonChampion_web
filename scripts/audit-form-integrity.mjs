@@ -30,12 +30,16 @@ const FORM_KEY_CONTRACT = {
   rotom: "rotom",
 };
 
-const MINIMUM_COUNTS = { pokemon: 300, moves: 500, abilities: 150, items: 50 };
+const MINIMUM_COUNTS = { pokemon: 300, moves: 500, abilities: 150, items: 148 };
+const REVIEWED_LEGAL_ITEM_COUNT = 148;
 
 export function auditSnapshot(snapshot) {
   const errors = [];
   const warnings = [];
   const pokemon = Array.isArray(snapshot?.pokemon) ? snapshot.pokemon : [];
+  const moves = Array.isArray(snapshot?.moves) ? snapshot.moves : [];
+  const abilities = Array.isArray(snapshot?.abilities) ? snapshot.abilities : [];
+  const items = Array.isArray(snapshot?.items) ? snapshot.items : [];
   const byId = new Map();
 
   for (const entry of pokemon) {
@@ -66,7 +70,53 @@ export function auditSnapshot(snapshot) {
     if (snapshot?.counts?.[key] !== actual) errors.push(`${key} count metadata ${snapshot?.counts?.[key]} does not match array length ${actual}`);
   }
 
+  const moveIds = new Set();
+  for (const move of moves) {
+    if (!move?.id || !move?.showdownId || !move?.name) errors.push(`Move record is missing an identity key: ${move?.name ?? move?.id ?? "unknown"}`);
+    if (moveIds.has(move?.id)) errors.push(`Duplicate move id: ${move.id}`);
+    moveIds.add(move?.id);
+    if (!move?.description?.trim()) errors.push(`Move is missing its Pokémon Showdown description: ${move?.name ?? move?.id}`);
+    if (!move?.descriptionZh?.trim()) errors.push(`Move is missing its localized description fallback: ${move?.name ?? move?.id}`);
+    if (!Number.isFinite(move?.pp) || move.pp <= 0) errors.push(`Move has invalid Champions PP: ${move?.name ?? move?.id}`);
+    if (!Number.isFinite(move?.priority) || !move?.target || !Array.isArray(move?.flags)) errors.push(`Move mechanics are incomplete: ${move?.name ?? move?.id}`);
+  }
+
+  const appleAcid = moves.find((move) => move.id === "apple-acid");
+  if (!appleAcid) errors.push("Apple Acid is missing from the legal move catalog.");
+  else {
+    if (appleAcid.power !== 90 || appleAcid.accuracy !== 100 || appleAcid.pp !== 12) errors.push("Apple Acid does not match the Pokémon Showdown Champions contract (Power 90, Accuracy 100, PP 12).");
+    if (!/Special Defense by 1 stage/i.test(appleAcid.description)) errors.push("Apple Acid is missing its verified Special Defense effect description.");
+  }
+
+  for (const [kind, entries] of [["Ability", abilities], ["Held item", items]]) {
+    const ids = new Set();
+    for (const entry of entries) {
+      if (!entry?.id || !entry?.showdownId || !entry?.name) errors.push(`${kind} record is missing an identity key: ${entry?.name ?? entry?.id ?? "unknown"}`);
+      if (ids.has(entry?.id)) errors.push(`Duplicate ${kind.toLowerCase()} id: ${entry.id}`);
+      ids.add(entry?.id);
+      if (!entry?.description?.trim()) errors.push(`${kind} is missing its Pokémon Showdown description: ${entry?.name ?? entry?.id}`);
+      if (!entry?.descriptionZh?.trim()) errors.push(`${kind} is missing its localized description fallback: ${entry?.name ?? entry?.id}`);
+      if (!entry?.mechanicsSource || !entry?.descriptionSource || !entry?.localizationSource) errors.push(`${kind} provenance is incomplete: ${entry?.name ?? entry?.id}`);
+    }
+  }
+
+  const healer = abilities.find((entry) => entry.id === "healer");
+  if (!healer || !/50% chance/i.test(healer.description)) errors.push("Healer does not use the Champions 50% cure chance description.");
+  const unseenFist = abilities.find((entry) => entry.id === "unseen-fist");
+  if (!unseenFist || !/1\/4 the usual damage/i.test(unseenFist.description)) errors.push("Unseen Fist is missing its Champions protection damage restriction.");
+  const fairyFeather = items.find((entry) => entry.id === "fairy-feather");
+  if (!fairyFeather?.description?.trim()) errors.push("Fairy Feather is missing its held-item description.");
+  const slowbronite = items.find((entry) => entry.id === "slowbronite");
+  if (!slowbronite || !/not Galarian Slowbro/i.test(slowbronite.description)) errors.push("Slowbronite is missing its Champions form restriction.");
+  if (items.length !== REVIEWED_LEGAL_ITEM_COUNT) errors.push(`Champions legal held-item catalog has ${items.length} entries; expected the reviewed pinned-source count ${REVIEWED_LEGAL_ITEM_COUNT}.`);
+  for (const requiredId of ["big-root", "focus-band", "hard-stone", "icy-rock", "iron-ball"]) {
+    if (!items.some((entry) => entry.id === requiredId)) errors.push(`Legal low-usage held item is missing: ${requiredId}`);
+  }
+
+  if (snapshot?.schemaVersion !== 6) errors.push(`Snapshot schemaVersion ${snapshot?.schemaVersion} is not the complete Champions entity schema v6.`);
   if (!snapshot?.sources?.champions?.dataVersion) errors.push("Champions dataVersion is missing.");
+  if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.showdown?.revision ?? "")) errors.push("Pokémon Showdown source revision is missing or unpinned.");
+  if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.pokeapi?.revision ?? "")) errors.push("PokeAPI source revision is missing or unpinned.");
   if (!snapshot?.generatedAt) warnings.push("Snapshot generatedAt is missing.");
   return { errors, warnings, checkedPokemon: pokemon.length };
 }
