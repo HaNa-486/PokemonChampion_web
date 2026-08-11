@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: sync-battle-data
@@ -18,12 +19,12 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
 
@@ -53,6 +54,7 @@ jobs:
         run: pnpm verify:deploy
 
       - name: Commit the validated snapshot
+        id: commit
         if: steps.changes.outputs.changed == 'true'
         shell: bash
         run: |
@@ -62,3 +64,146 @@ jobs:
           git commit -m "chore(data): sync Champions data sources"
           git pull --rebase origin main
           git push origin HEAD:main
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Notify that production deployment is required
+        if: steps.changes.outputs.changed == 'true' && success()
+        uses: actions/github-script@v9
+        env:
+          DEPLOY_COMMIT: ${{ steps.commit.outputs.sha }}
+        with:
+          script: |
+            const fs = await import('node:fs/promises');
+            const snapshot = JSON.parse(await fs.readFile('data/generated/champions-snapshot.json', 'utf8'));
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const runUrl = `${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+            const sourceDate = snapshot.sources?.champions?.generatedAt?.slice(0, 10) ?? 'unknown';
+            const dataVersion = snapshot.sources?.champions?.dataVersion ?? 'unknown';
+            const commit = process.env.DEPLOY_COMMIT;
+
+            const labels = [
+              { name: 'deployment-required', color: 'FBCA04', description: 'Validated changes are waiting for production deployment.' },
+              { name: 'automated-data-sync', color: '1D76DB', description: 'Created or updated by the Champions data synchronization workflow.' },
+            ];
+            for (const label of labels) {
+              try {
+                await github.rest.issues.createLabel({ owner, repo, ...label });
+              } catch (error) {
+                if (error.status !== 422) throw error;
+              }
+            }
+
+            const title = `[Deploy required] Champions battle data updated to ${sourceDate}`;
+            const body = [
+              'A new upstream Champions snapshot passed every automated validation and was pushed to `main`.',
+              '',
+              `- Battle data date: ${sourceDate}`,
+              `- Data version: ${dataVersion}`,
+              `- Pokémon forms: ${snapshot.counts.pokemon}`,
+              `- Moves: ${snapshot.counts.moves}`,
+              `- Abilities: ${snapshot.counts.abilities}`,
+              `- Held items: ${snapshot.counts.items}`,
+              '- Validation: Passed',
+              `- Commit: ${commit}`,
+              `- Workflow run: ${runUrl}`,
+              '',
+              '## Next action',
+              '',
+              '- Deploy this exact commit to ChatGPT Sites.',
+              '- Run the production smoke test.',
+              '- Add the deployed URL and close this issue after deployment.',
+            ].join('\n');
+
+            const { data: openIssues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: 'deployment-required',
+              per_page: 100,
+            });
+            const existing = openIssues.find((issue) => !issue.pull_request);
+            const issue = {
+              owner,
+              repo,
+              title,
+              body,
+              assignees: [owner],
+              labels: labels.map((label) => label.name),
+            };
+            if (existing) {
+              await github.rest.issues.update({ ...issue, issue_number: existing.number });
+              core.notice(`Updated deployment issue #${existing.number}.`);
+            } else {
+              const { data: created } = await github.rest.issues.create(issue);
+              core.notice(`Created deployment issue #${created.number}.`);
+            }
+
+      - name: Resolve a previous sync failure notification
+        if: success()
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const { data: openIssues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: 'sync-failed',
+              per_page: 100,
+            });
+            for (const issue of openIssues.filter((entry) => !entry.pull_request)) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: issue.number,
+                body: `A later synchronization run succeeded: ${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/actions/runs/${process.env.GITHUB_RUN_ID}`,
+              });
+              await github.rest.issues.update({ owner, repo, issue_number: issue.number, state: 'closed' });
+            }
+
+      - name: Notify that synchronization failed
+        if: failure()
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const runUrl = `${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/actions/runs/${process.env.GITHUB_RUN_ID}`;
+            const label = {
+              name: 'sync-failed',
+              color: 'D73A4A',
+              description: 'The automated Champions data synchronization requires attention.',
+            };
+            try {
+              await github.rest.issues.createLabel({ owner, repo, ...label });
+            } catch (error) {
+              if (error.status !== 422) throw error;
+            }
+
+            const title = '[Sync failed] Champions battle data refresh needs attention';
+            const body = [
+              'The automated Champions data synchronization did not complete successfully.',
+              '',
+              `- Branch: ${process.env.GITHUB_REF_NAME}`,
+              `- Commit: ${context.sha}`,
+              `- Workflow run: ${runUrl}`,
+              '',
+              'The currently deployed site and last validated snapshot were not replaced.',
+            ].join('\n');
+            const { data: openIssues } = await github.rest.issues.listForRepo({
+              owner,
+              repo,
+              state: 'open',
+              labels: label.name,
+              per_page: 100,
+            });
+            const existing = openIssues.find((issue) => !issue.pull_request);
+            if (existing) {
+              await github.rest.issues.update({ owner, repo, issue_number: existing.number, title, body, assignees: [owner], labels: [label.name] });
+              core.notice(`Updated sync failure issue #${existing.number}.`);
+            } else {
+              const { data: created } = await github.rest.issues.create({ owner, repo, title, body, assignees: [owner], labels: [label.name] });
+              core.notice(`Created sync failure issue #${created.number}.`);
+            }

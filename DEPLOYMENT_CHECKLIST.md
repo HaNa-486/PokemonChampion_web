@@ -130,6 +130,7 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] Build/package only from that commit; do not edit source afterward.
 - [ ] Save one immutable Sites version and deploy that saved version.
 - [ ] Wait for an explicit `succeeded` deployment status.
+- [ ] For automated data refreshes, update the open `deployment-required` Issue with the deployed URL and close it only after the smoke test passes.
 - [ ] Verify the production URL with an authenticated browser or authorized smoke-test credential when the site is access-controlled; anonymous HTTP 401 alone is not a valid functional smoke test.
 
 Production smoke test:
