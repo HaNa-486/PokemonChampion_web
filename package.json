@@ -9,6 +9,8 @@
   "scripts": {
     "dev": "vinext dev",
     "build": "vinext build",
+    "build:dev": "node scripts/build-sites-environment.mjs dev",
+    "build:production": "node scripts/build-sites-environment.mjs production",
     "start": "vinext start",
     "test": "vitest run && pnpm run build && node --test tests/rendered-html.test.mjs",
     "test:unit": "vitest run",
@@ -18,6 +20,7 @@
     "data:audit": "node scripts/audit-form-integrity.mjs",
     "data:audit:live": "node scripts/audit-form-integrity.mjs --live",
     "verify:deploy": "pnpm run lint && pnpm run typecheck && pnpm run data:audit && pnpm test",
+    "verify:dev": "pnpm verify:deploy && pnpm build:dev && node scripts/assert-sites-build.mjs dev",
     "db:generate": "drizzle-kit generate",
     "data:sync": "node scripts/sync-upstream.mjs"
   },

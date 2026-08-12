@@ -1,6 +1,7 @@
 import { access, cp, mkdir, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import type { Plugin } from "vite";
+import { sitesManifestPath } from "./sites-environment";
 
 async function exists(path: string): Promise<boolean> {
   try {
@@ -26,7 +27,7 @@ export function sites(): Plugin {
     },
     async closeBundle() {
       const outputDirectory = resolve(root, "dist", ".openai");
-      const hostingConfig = resolve(root, ".openai", "hosting.json");
+      const hostingConfig = sitesManifestPath(root);
       const drizzleSource = resolve(root, "drizzle");
 
       await rm(outputDirectory, { recursive: true, force: true });

@@ -8,7 +8,7 @@
 
 This file is the source of truth for the shipped v1 behavior and its commercial-scale target. Before changing code, read it completely and inspect the repository. For the existing repository, preserve its working Next.js/vinext/Sites architecture unless a separately approved migration milestone explicitly replaces it. Preserve unrelated user changes, treat every **MUST** as an acceptance requirement, and never invent game formulas, Regulation rules, translations, source data, or licensing rights.
 
-Before handing work to the product owner for UAT, run every applicable automated quality gate in this document. Deliver the exact tested version, reports, known limitations, migration notes, and UAT checklist. If this file marks something unresolved, validate it with reliable Pokémon Champions examples before enabling that production feature.
+Before handing work to the product owner for UAT, run every applicable automated quality gate in this document and deploy the exact checked pull-request head commit to the isolated, owner-only **Champions Lab Dev** Sites project. Deliver the Dev URL, exact commit, reports, known limitations, migration notes, and UAT checklist. Merge only after UAT approval. Production deployment is a separate promotion requiring explicit product-owner approval. If this file marks something unresolved, validate it with reliable Pokémon Champions examples before enabling that production feature.
 
 ## 1. Product objective
 
@@ -801,11 +801,11 @@ For the shipped repository, `pnpm verify:deploy` is the minimum local deployment
 Promotion:
 
 ```text
-PR gates → merge → staging migration/deploy → smoke/E2E/security/performance
-→ immutable release artifact → explicit production promotion
+PR gates → exact PR-head Dev deployment → smoke/E2E/security/performance → product-owner UAT
+→ merge → immutable approved release artifact → separate explicit production promotion
 ```
 
-UAT and production must use the exact artifact/commit that passed gates.
+UAT and production must use the exact artifact/commit that passed gates. UAT uses the separate `.openai/hosting.dev.json` project and isolated D1 database; production uses `.openai/hosting.json`. Never use the production project as a branch preview or share its database with Dev.
 
 ## 15. Observability and operations
 
