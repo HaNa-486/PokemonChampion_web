@@ -2,7 +2,7 @@
 
 > Purpose: prevent regressions before product-owner UAT or a Sites production deployment.  
 > Applies to: every release from this repository.  
-> Last updated: 2026-08-03 (Asia/Taipei)
+> Last updated: 2026-08-12 (Asia/Taipei)
 
 ## 1. Release identity and scope
 
@@ -34,6 +34,19 @@ This MUST pass without errors. It currently includes:
 - [ ] The pull request `Deployment verification` GitHub Actions check passed before merge.
 - [ ] Warnings were reviewed and no new high-risk warning was introduced.
 - [ ] No test was skipped, focused, or weakened to make the gate pass.
+
+## 2A. Dev/UAT promotion gate
+
+- [ ] Work exists on a `codex/*` branch and a pull request targets `main`.
+- [ ] An independent review agent found no unresolved material issue.
+- [ ] GitHub's `Deployment verification` check passed for the exact pull-request head commit.
+- [ ] `pnpm verify:dev` passed and `dist/.openai/hosting.json` contains the Dev project ID, never the production project ID.
+- [ ] Build and save a Sites version from that exact commit using `.openai/hosting.dev.json`.
+- [ ] Deploy only to **Champions Lab Dev** while UAT is pending; keep the Dev site owner-only unless the product owner explicitly approves broader access.
+- [ ] Confirm the Dev and production project IDs differ and their D1 databases remain isolated.
+- [ ] Record the Dev URL, Sites version, commit SHA, test evidence, and known limitations.
+- [ ] Product-owner UAT passed before merging the pull request.
+- [ ] Do not interpret merge approval as production-deployment approval; obtain explicit production approval separately.
 
 ## 3. Data and upstream mapping gate
 
@@ -127,6 +140,7 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 ## 8. Exact artifact and production promotion
 
 - [ ] Commit the exact source that passed all applicable gates.
+- [ ] Confirm `.openai/hosting.json` is selected for production and `.openai/hosting.dev.json` was not packaged accidentally.
 - [ ] Push that exact commit to the Sites source branch.
 - [ ] Build/package only from that commit; do not edit source afterward.
 - [ ] Save one immutable Sites version and deploy that saved version.

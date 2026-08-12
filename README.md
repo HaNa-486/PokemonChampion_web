@@ -4,6 +4,15 @@ An unofficial Pokémon Champions team-building database for the current regulati
 
 The implementation contract, data model, security boundaries, acceptance criteria, and full test design live in [PROJECT_SPEC.md](./PROJECT_SPEC.md). Release work follows [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md).
 
+## Deployment environments
+
+The project uses two isolated ChatGPT Sites projects. `pnpm verify:dev` fails unless the final built artifact contains the Dev manifest:
+
+- **Champions Lab Dev** is the owner-only UAT environment. After local verification, independent review, and a successful pull-request check, the exact pull-request head commit is deployed here for product-owner UI testing.
+- **Champions Lab** is production. A pull request is merged only after Dev UAT approval, and production promotion then requires separate explicit approval.
+
+The production project is identified by `.openai/hosting.json`; Dev/UAT is identified by `.openai/hosting.dev.json`. Both expose the same logical `DB` binding but Sites provisions them as separate databases. Never swap the manifests, copy production data into Dev, or use production to preview a branch. The persistent contributor rules are in [AGENTS.md](./AGENTS.md).
+
 ## Features
 
 - Current-regulation Pokémon database using Champions sprites and stats
@@ -32,11 +41,11 @@ pnpm run dev
 
 ### Automated upstream refresh
 
-`.github/workflows/sync-battle-data.yml` checks Champions Battle Data, Pokémon Showdown, and PokeAPI every six hours. The sync exits without changing files when all three pinned upstream revisions are unchanged. When any source changes, the workflow regenerates the bundled catalog, runs the complete deployment verification suite, and pushes the validated snapshot to `main`. A failed sync or failed test never replaces the last known-good snapshot.
+`.github/workflows/sync-battle-data.yml` checks Champions Battle Data, Pokémon Showdown, and PokeAPI every six hours. The sync exits without changing files when all three pinned upstream revisions are unchanged. When any source changes, the workflow regenerates the bundled catalog, runs the complete Dev/UAT verification suite, and updates the isolated `automation/battle-data-sync` candidate branch. It never pushes a new snapshot directly to `main`. The notification Issue contains a comparison link; Codex then opens the pull request using the owner's authenticated GitHub session so normal PR checks trigger without granting GitHub Actions permission to create pull requests. A failed sync or failed test never replaces the last known-good snapshot. If a later sync changes the candidate branch while UAT is pending, the previous UAT result is invalid: deploy the new head to Dev and repeat UAT.
 
 Every synchronization run writes an Actions Summary with the check time, upstream Champions date and version, whether data changed, validation and commit outcomes, and whether production deployment is required. This makes successful no-change checks visible without reading raw step logs.
 
-After a validated snapshot is pushed, the workflow creates or updates one `deployment-required` GitHub Issue assigned to the repository owner. Repeated updates reuse that open Issue instead of creating notification spam. A failed workflow similarly creates or updates one `sync-failed` Issue, and the next successful run closes that failure notification automatically. ChatGPT Sites deployment remains an explicit production-promotion step; close the deployment Issue only after the exact validated commit is published and smoke-tested.
+After a validated snapshot is pushed, the workflow creates or updates one `deployment-required` GitHub Issue assigned to the repository owner. Repeated updates reuse that open Issue instead of creating notification spam. A failed workflow similarly creates or updates one `sync-failed` Issue, and the next successful run closes that failure notification automatically. ChatGPT Sites deployment remains an explicit promotion step: verify the candidate on Champions Lab Dev first, then close the deployment Issue only after the approved commit is published to production and smoke-tested.
 
 The current Singles and Doubles usage panels continue to use the upstream Current API through the server-side proxy. The footer reads `/api/v1/data-status`, so it reports the upstream generation date instead of a hard-coded date and falls back to the bundled snapshot when upstream is unavailable.
 

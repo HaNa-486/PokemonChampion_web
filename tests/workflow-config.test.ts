@@ -5,10 +5,14 @@ const workflow = readFileSync(".github/workflows/sync-battle-data.yml", "utf8");
 const pullRequestWorkflow = readFileSync(".github/workflows/pull-request-validation.yml", "utf8");
 
 describe("battle-data synchronization workflow", () => {
-  it("can update main and manage notification Issues", () => {
+  it("updates an automation branch and manages notification Issues", () => {
     expect(workflow).toContain("contents: write");
     expect(workflow).toContain("issues: write");
-    expect(workflow).toContain("git push origin HEAD:main");
+    expect(workflow).not.toContain("pull-requests: write");
+    expect(workflow).not.toContain("git push origin HEAD:main");
+    expect(workflow).toContain("automation/battle-data-sync");
+    expect(workflow).toContain("compare/main...${process.env.SYNC_BRANCH}?expand=1");
+    expect(workflow).toContain("create a pull request through Codex or GitHub");
     expect(workflow).toContain('echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"');
   });
 
@@ -38,10 +42,11 @@ describe("battle-data synchronization workflow", () => {
     expect(workflow).toContain("Publish synchronization summary");
     expect(workflow).toContain("if: always()");
     expect(workflow).toContain("The upstream sources were checked and no data changes were found.");
-    expect(workflow).toContain("the new snapshot was not pushed to `main`");
+    expect(workflow).toContain("the new snapshot was not pushed to the automation branch");
     expect(workflow).toContain("DEPLOYMENT_NOTIFICATION_OUTCOME");
     expect(workflow).toContain("Changes detected");
     expect(workflow).toContain("Production deployment");
+    expect(workflow).not.toContain("github.rest.pulls.create");
   });
 });
 
@@ -52,7 +57,7 @@ describe("pull-request validation workflow", () => {
     expect(pullRequestWorkflow).toContain("contents: read");
     expect(pullRequestWorkflow).toContain("persist-credentials: false");
     expect(pullRequestWorkflow).toContain("pnpm install --frozen-lockfile");
-    expect(pullRequestWorkflow).toContain("pnpm verify:deploy");
+    expect(pullRequestWorkflow).toContain("pnpm verify:dev");
   });
 
   it("cancels superseded runs and uses current official actions", () => {

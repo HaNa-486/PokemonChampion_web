@@ -53,19 +53,22 @@ jobs:
       - name: Validate the new snapshot
         id: validation
         if: steps.changes.outputs.changed == 'true'
-        run: pnpm verify:deploy
+        run: pnpm verify:dev
 
-      - name: Commit the validated snapshot
+      - name: Commit and push the validated snapshot branch
         id: commit
         if: steps.changes.outputs.changed == 'true'
         shell: bash
         run: |
+          branch="automation/battle-data-sync"
           git config user.name "champions-lab-data-bot"
           git config user.email "actions@users.noreply.github.com"
           git add data/generated/champions-snapshot.json
           git commit -m "chore(data): sync Champions data sources"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          git checkout -B "$branch"
+          git fetch origin "$branch:refs/remotes/origin/$branch" || true
+          git push --force-with-lease origin "HEAD:$branch"
+          echo "branch=$branch" >> "$GITHUB_OUTPUT"
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Notify that production deployment is required
@@ -74,6 +77,7 @@ jobs:
         uses: actions/github-script@v9
         env:
           DEPLOY_COMMIT: ${{ steps.commit.outputs.sha }}
+          SYNC_BRANCH: ${{ steps.commit.outputs.branch }}
         with:
           script: |
             const fs = await import('node:fs/promises');
@@ -84,9 +88,10 @@ jobs:
             const sourceDate = snapshot.sources?.champions?.generatedAt?.slice(0, 10) ?? 'unknown';
             const dataVersion = snapshot.sources?.champions?.dataVersion ?? 'unknown';
             const commit = process.env.DEPLOY_COMMIT;
+            const compareUrl = `${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/compare/main...${process.env.SYNC_BRANCH}?expand=1`;
 
             const labels = [
-              { name: 'deployment-required', color: 'FBCA04', description: 'Validated changes are waiting for production deployment.' },
+              { name: 'deployment-required', color: 'FBCA04', description: 'Validated changes are waiting for Dev UAT and production promotion.' },
               { name: 'automated-data-sync', color: '1D76DB', description: 'Created or updated by the Champions data synchronization workflow.' },
             ];
             for (const label of labels) {
@@ -99,7 +104,7 @@ jobs:
 
             const title = `[Deploy required] Champions battle data updated to ${sourceDate}`;
             const body = [
-              'A new upstream Champions snapshot passed every automated validation and was pushed to `main`.',
+              'A new upstream Champions snapshot passed every automated validation and was pushed to the protected candidate branch.',
               '',
               `- Battle data date: ${sourceDate}`,
               `- Data version: ${dataVersion}`,
@@ -109,13 +114,17 @@ jobs:
               `- Held items: ${snapshot.counts.items}`,
               '- Validation: Passed',
               `- Commit: ${commit}`,
+              `- Candidate branch: ${process.env.SYNC_BRANCH}`,
+              `- Open pull request: ${compareUrl}`,
               `- Workflow run: ${runUrl}`,
               '',
               '## Next action',
               '',
-              '- Deploy this exact commit to ChatGPT Sites.',
-              '- Run the production smoke test.',
-              '- Add the deployed URL and close this issue after deployment.',
+              '- Use the linked candidate branch to create a pull request through Codex or GitHub.',
+              '- Deploy that exact checked pull-request head to Champions Lab Dev.',
+              '- Complete product-owner UAT before merge.',
+              '- Obtain separate approval before production promotion.',
+              '- Add the production URL and close this issue after the approved deployment and smoke test.',
             ].join('\n');
 
             const { data: openIssues } = await github.rest.issues.listForRepo({
@@ -235,16 +244,16 @@ jobs:
             const changed = process.env.SYNC_CHANGED;
             const result = process.env.JOB_STATUS;
             const statusText = changed === 'true' && process.env.COMMIT_OUTCOME === 'success'
-              ? 'Upstream changes were found and the validated snapshot was pushed to `main`.'
+              ? 'Upstream changes were found and the validated snapshot was pushed to the candidate branch.'
               : changed === 'true'
-                ? 'Upstream changes were found, but the new snapshot was not pushed to `main`.'
+                ? 'Upstream changes were found, but the new snapshot was not pushed to the automation branch.'
               : changed === 'false'
                 ? 'The upstream sources were checked and no data changes were found.'
                 : 'The workflow stopped before it could determine whether upstream data changed.';
             const deploymentStatus = changed === 'true' && process.env.DEPLOYMENT_NOTIFICATION_OUTCOME === 'success'
-              ? 'Required: see the open `deployment-required` Issue.'
+              ? 'Dev UAT required: see the open `deployment-required` Issue and create a pull request from the candidate branch.'
               : changed === 'true' && process.env.COMMIT_OUTCOME === 'success'
-                ? 'The snapshot was pushed, but the deployment notification failed; inspect this run.'
+                ? 'The snapshot branch was pushed, but the deployment notification failed; inspect this run.'
               : changed === 'false' && result === 'success'
                 ? 'Not required.'
                 : 'Not created; investigate this workflow run.';
