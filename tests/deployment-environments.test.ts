@@ -16,6 +16,8 @@ const dev = JSON.parse(
   readFileSync(".openai/hosting.dev.json", "utf8"),
 ) as HostingManifest;
 const contributorRules = readFileSync("AGENTS.md", "utf8");
+const environmentBadge = readFileSync("components/DevEnvironmentBanner.tsx", "utf8");
+const globalStyles = readFileSync("app/globals.css", "utf8");
 
 describe("deployment environment boundaries", () => {
   it("uses distinct Sites projects with the same logical bindings", () => {
@@ -35,6 +37,18 @@ describe("deployment environment boundaries", () => {
   it("shows the warning only on the Dev hostname", () => {
     expect(isDevHostname("champions-lab-dev.eddy8613.chatgpt.site")).toBe(true);
     expect(isDevHostname("champions-lab.eddy8613.chatgpt.site")).toBe(false);
+    expect(environmentBadge).toContain('document.querySelector(".brand")');
+    expect(environmentBadge).toContain("document.body");
+    expect(environmentBadge).toContain("const pathname = usePathname()");
+    expect(environmentBadge).toContain("useEffect(() =>");
+    expect(environmentBadge).toContain("window.requestAnimationFrame");
+    expect(environmentBadge).toContain("DEV / UAT");
+    expect(environmentBadge).not.toContain("NOT PRODUCTION");
+    expect(globalStyles).not.toContain(".dev-environment-badge { position: fixed");
+    expect(globalStyles).toContain(".brand > span:nth-child(2) { display: none; }");
+    expect(globalStyles).toContain(".dev-environment-fallback { position: fixed");
+    expect(globalStyles).toContain("@media (max-width: 1100px)");
+    expect(globalStyles).toContain(".topbar nav { order: 3; width: 100%; height: 42px; }");
   });
 
   it("selects environment manifests explicitly and rejects unknown values", () => {

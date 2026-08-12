@@ -1,6 +1,8 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
+import { usePathname } from "next/navigation";
 
 export function isDevHostname(hostname: string) {
   return hostname === "champions-lab-dev.eddy8613.chatgpt.site"
@@ -8,17 +10,29 @@ export function isDevHostname(hostname: string) {
 }
 
 export function DevEnvironmentBanner() {
+  const pathname = usePathname();
+  const [target, setTarget] = useState<Element | null>(null);
   const visible = useSyncExternalStore(
     () => () => undefined,
     () => isDevHostname(window.location.hostname),
     () => false,
   );
 
-  if (!visible) return null;
+  useEffect(() => {
+    if (!visible) return;
+    const frame = window.requestAnimationFrame(() => {
+      setTarget(document.querySelector(".brand") ?? document.body);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [pathname, visible]);
 
-  return (
-    <div className="dev-environment-banner" role="status">
-      DEV / UAT · NOT PRODUCTION
-    </div>
+  if (!visible || !target) return null;
+  const inBrand = target.matches(".brand");
+
+  return createPortal(
+    <span className={`dev-environment-badge${inBrand ? "" : " dev-environment-fallback"}`} role="status">
+      DEV / UAT
+    </span>,
+    target,
   );
 }
