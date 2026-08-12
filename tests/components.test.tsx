@@ -121,10 +121,13 @@ describe("reference filters", () => {
 
   it("filters held items by real category", async () => {
     const user = userEvent.setup();
-    render(<ResourceDatabaseV2 kind="items" locale="en" />);
+    const { container } = render(<ResourceDatabaseV2 kind="items" locale="en" />);
     await user.click(screen.getByRole("button", { name: "Mega Stone" }));
-    expect(screen.getByRole("button", { name: "Charizardite X" })).toBeInTheDocument();
+    const charizardite = screen.getByRole("button", { name: "Charizardite X" });
+    expect(charizardite).toBeInTheDocument();
+    expect(charizardite.querySelector("img")).toHaveAttribute("src", "/items/charizardite-x.png");
     expect(screen.queryByRole("button", { name: "Choice Scarf" })).not.toBeInTheDocument();
+    expect(container.querySelectorAll("tbody img.item-icon").length).toBeGreaterThan(0);
   });
 
   it("sorts abilities by user count and opens all eligible Pokémon", async () => {
@@ -240,6 +243,7 @@ describe("ChampionsApp", () => {
     expect(within(dialog).getByText("Learnable moves")).toBeInTheDocument();
     expect(within(dialog).getByText("Available abilities")).toBeInTheDocument();
     expect(await within(dialog).findByText("Absolite")).toBeInTheDocument();
+    expect(within(dialog).getByRole("button", { name: "Absolite" }).querySelector("img")).toHaveAttribute("src", "/items/absolite.png");
     const moveFilters = dialog.querySelector<HTMLElement>(".detail-move-filters")!;
     await user.click(within(moveFilters).getByRole("button", { name: "+ Positive" }));
     await user.click(within(moveFilters).getByRole("button", { name: "Dark" }));
@@ -288,12 +292,13 @@ describe("ChampionsApp", () => {
 
   it("preselects and locks the dedicated stone for a Mega build", async () => {
     const user = userEvent.setup();
-    render(<ChampionsApp />);
+    const { container } = render(<ChampionsApp />);
     await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Mega Absol");
     await user.click(screen.getByRole("button", { name: "Configure Mega Absol" }));
     const item = screen.getByRole("combobox", { name: /Held item/ });
     expect(item).toBeDisabled();
     expect(item).toHaveValue("absolite");
+    expect(container.querySelector(".selected-item-preview img")).toHaveAttribute("src", "/items/absolite.png");
     expect(screen.getByText("This Mega form must hold its dedicated Mega Stone.")).toBeInTheDocument();
   });
 

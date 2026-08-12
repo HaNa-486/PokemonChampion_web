@@ -1,11 +1,15 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import path from "node:path";
 import { championsPp, parseShowdownTable, showdownFlags, showdownTarget, toShowdownId } from "./showdown-move-data.mjs";
+import { auditItemSpriteAssets, createItemSpriteManifest, fetchItemSpritePaths, ITEM_SPRITES_REPOSITORY, manifestMatchesItems, publishStagedPathsAtomically, stageItemSpriteAssets } from "./item-sprites.mjs";
 
 const CHAMPIONS_INDEX = "https://championsbattledata.com/api/index";
 const SHOWDOWN_REPOSITORY = "smogon/pokemon-showdown";
 const POKEAPI_REPOSITORY = "PokeAPI/pokeapi";
+const REQUEST_TIMEOUT_MS = 20_000;
+const MAX_TEXT_BYTES = 32 * 1024 * 1024;
+const MAX_JSON_BYTES = 16 * 1024 * 1024;
 const slugify = (value) => value.normalize("NFKD").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 export function parseCsv(source) {
@@ -69,14 +73,30 @@ export function matchChampionsSourceForForm(form, entries) {
   return null;
 }
 
-async function fetchText(url) {
-  const response = await fetch(url, { headers: { "user-agent": "ChampionsLabSync/0.1 (+https://championsbattledata.com/)" } });
+async function fetchText(url, { maxBytes = MAX_TEXT_BYTES, requireJson = false } = {}) {
+  const response = await fetch(url, {
+    headers: { accept: requireJson ? "application/json" : "text/plain, text/csv, application/json", "user-agent": "ChampionsLabSync/0.1 (+https://championsbattledata.com/)" },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+  });
   if (!response.ok) throw new Error(`${response.status} ${response.statusText}: ${url}`);
-  return response.text();
+  const contentType = (response.headers.get("content-type") ?? "").toLowerCase();
+  const acceptedType = requireJson
+    ? contentType.includes("json")
+    : contentType.startsWith("text/") || contentType.includes("json") || contentType.includes("octet-stream");
+  if (!acceptedType) throw new Error(`Unexpected content type ${contentType || "unknown"}: ${url}`);
+  const declaredLength = Number(response.headers.get("content-length") ?? 0);
+  if (declaredLength > maxBytes) throw new Error(`Response is too large (${declaredLength} bytes): ${url}`);
+  const buffer = Buffer.from(await response.arrayBuffer());
+  if (buffer.length > maxBytes) throw new Error(`Response is too large (${buffer.length} bytes): ${url}`);
+  return buffer.toString("utf8");
+}
+
+async function fetchJson(url) {
+  return JSON.parse(await fetchText(url, { maxBytes: MAX_JSON_BYTES, requireJson: true }));
 }
 
 async function githubRevision(repository) {
-  const source = JSON.parse(await fetchText(`https://api.github.com/repos/${repository}/git/ref/heads/master`));
+  const source = await fetchJson(`https://api.github.com/repos/${repository}/git/ref/heads/master`);
   if (!/^[0-9a-f]{40}$/.test(source?.object?.sha ?? "")) throw new Error(`Could not resolve the ${repository} master revision.`);
   return source.object.sha;
 }
@@ -325,23 +345,84 @@ export async function buildSnapshot(championsSource, revisions = {}) {
 
 async function main() {
   const output = path.resolve("data/generated/champions-snapshot.json");
-  const [championsSource, showdownRevision, pokeapiRevision] = await Promise.all([
-    fetchText(CHAMPIONS_INDEX).then(JSON.parse),
+  const itemSpriteOutput = path.resolve("data/generated/item-sprites.json");
+  const itemsOnly = process.argv.includes("--items-only");
+  if (itemsOnly) {
+    const existing = await readFile(output, "utf8").then(JSON.parse).catch(() => null);
+    if (!Array.isArray(existing?.items)) throw new Error("A valid generated Champions snapshot is required before syncing item sprites.");
+    const spriteRevision = await githubRevision(ITEM_SPRITES_REPOSITORY);
+    const previousManifest = await readFile(itemSpriteOutput, "utf8").then(JSON.parse).catch(() => null);
+    if (manifestMatchesItems(existing.items, previousManifest, spriteRevision)) {
+      const audit = await auditItemSpriteAssets(previousManifest);
+      if (audit.valid) {
+        console.log(`All ${previousManifest.counts.available} held-item sprites are already current (PokeAPI sprites=${spriteRevision.slice(0, 12)}).`);
+        return;
+      }
+    }
+    const availablePaths = await fetchItemSpritePaths(spriteRevision);
+    const manifest = createItemSpriteManifest(existing.items, spriteRevision, availablePaths);
+    const stagedAssets = await stageItemSpriteAssets(manifest, { force: previousManifest?.source?.revision !== spriteRevision });
+    await publishGeneratedUpdate(stagedAssets, [{ destination: itemSpriteOutput, body: `${JSON.stringify(manifest, null, 2)}\n` }]);
+    const stats = stagedAssets.stats;
+    console.log(`Synced ${manifest.counts.available}/${manifest.counts.items} held-item sprites (${stats.downloaded} downloaded, ${stats.unchanged} unchanged, ${stats.unavailable} unavailable).`);
+    return;
+  }
+  const [championsSource, showdownRevision, pokeapiRevision, spriteRevision] = await Promise.all([
+    fetchJson(CHAMPIONS_INDEX),
     githubRevision(SHOWDOWN_REPOSITORY),
     githubRevision(POKEAPI_REPOSITORY),
+    githubRevision(ITEM_SPRITES_REPOSITORY),
   ]);
   const existing = await readFile(output, "utf8").then(JSON.parse).catch(() => null);
-  if (existing?.schemaVersion === 6 && existing?.sources?.champions?.dataVersion === championsSource.dataVersion && existing?.sources?.showdown?.revision === showdownRevision && existing?.sources?.pokeapi?.revision === pokeapiRevision) {
-    console.log(`All upstream entity sources are already current (Champions=${championsSource.dataVersion}, Showdown=${showdownRevision.slice(0, 12)}, PokeAPI=${pokeapiRevision.slice(0, 12)}).`);
+  const previousManifest = await readFile(itemSpriteOutput, "utf8").then(JSON.parse).catch(() => null);
+  const entitiesCurrent = existing?.schemaVersion === 6 && existing?.sources?.champions?.dataVersion === championsSource.dataVersion && existing?.sources?.showdown?.revision === showdownRevision && existing?.sources?.pokeapi?.revision === pokeapiRevision;
+  if (entitiesCurrent && manifestMatchesItems(existing.items, previousManifest, spriteRevision)) {
+    const audit = await auditItemSpriteAssets(previousManifest);
+    if (audit.valid) {
+      console.log(`All upstream sources are already current (Champions=${championsSource.dataVersion}, Showdown=${showdownRevision.slice(0, 12)}, PokeAPI=${pokeapiRevision.slice(0, 12)}, PokeAPI sprites=${spriteRevision.slice(0, 12)}).`);
+      return;
+    }
+  }
+  if (entitiesCurrent) {
+    const availablePaths = await fetchItemSpritePaths(spriteRevision);
+    const manifest = createItemSpriteManifest(existing.items, spriteRevision, availablePaths);
+    const stagedAssets = await stageItemSpriteAssets(manifest, { force: previousManifest?.source?.revision !== spriteRevision });
+    await publishGeneratedUpdate(stagedAssets, [{ destination: itemSpriteOutput, body: `${JSON.stringify(manifest, null, 2)}\n` }]);
+    const stats = stagedAssets.stats;
+    console.log(`Entity sources are current; synced ${manifest.counts.available}/${manifest.counts.items} held-item sprites (${stats.downloaded} downloaded, ${stats.unchanged} unchanged, ${stats.unavailable} unavailable).`);
     return;
   }
   const snapshot = await buildSnapshot(championsSource, { showdown: showdownRevision, pokeapi: pokeapiRevision });
-  await mkdir(path.dirname(output), { recursive: true });
+  const availablePaths = await fetchItemSpritePaths(spriteRevision);
+  const manifest = createItemSpriteManifest(snapshot.items, spriteRevision, availablePaths);
+  const stagedAssets = await stageItemSpriteAssets(manifest, { force: previousManifest?.source?.revision !== spriteRevision });
   const body = `${JSON.stringify(snapshot, null, 2)}\n`;
-  await writeFile(output, body, "utf8");
+  await publishGeneratedUpdate(stagedAssets, [
+    { destination: output, body },
+    { destination: itemSpriteOutput, body: `${JSON.stringify(manifest, null, 2)}\n` },
+  ]);
+  const stats = stagedAssets.stats;
   const digest = createHash("sha256").update(body).digest("hex");
   console.log(`Synced ${snapshot.counts.pokemon} Pokémon forms, ${snapshot.counts.moves} moves, ${snapshot.counts.abilities} abilities, and ${snapshot.counts.items} items.`);
+  console.log(`Synced ${manifest.counts.available}/${manifest.counts.items} held-item sprites (${stats.downloaded} downloaded, ${stats.unchanged} unchanged, ${stats.unavailable} unavailable).`);
   console.log(`dataVersion=${snapshot.sources.champions.dataVersion} sha256=${digest}`);
+}
+
+async function publishGeneratedUpdate(stagedAssets, files) {
+  const transactionId = `${process.pid}-${Date.now()}`;
+  const entries = [stagedAssets];
+  try {
+    for (const [index, file] of files.entries()) {
+      await mkdir(path.dirname(file.destination), { recursive: true });
+      const staged = `${file.destination}.stage-${transactionId}-${index}`;
+      await writeFile(staged, file.body, { encoding: "utf8", flag: "wx" });
+      entries.push({ destination: file.destination, staged });
+    }
+    await publishStagedPathsAtomically(entries);
+  } catch (error) {
+    await Promise.all(entries.map((entry) => rm(entry.staged, { recursive: true, force: true })));
+    throw error;
+  }
 }
 
 if (process.argv[1] && import.meta.url === new URL(`file:///${process.argv[1].replaceAll("\\", "/")}`).href) {

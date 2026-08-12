@@ -8,7 +8,7 @@
 
 This file is the source of truth for the shipped v1 behavior and its commercial-scale target. Before changing code, read it completely and inspect the repository. For the existing repository, preserve its working Next.js/vinext/Sites architecture unless a separately approved migration milestone explicitly replaces it. Preserve unrelated user changes, treat every **MUST** as an acceptance requirement, and never invent game formulas, Regulation rules, translations, source data, or licensing rights.
 
-Before handing work to the product owner for UAT, run every applicable automated quality gate in this document and deploy the exact checked pull-request head commit to the isolated, owner-only **Champions Lab Dev** Sites project. Deliver the Dev URL, exact commit, reports, known limitations, migration notes, and UAT checklist. Merge only after UAT approval. Production deployment is a separate promotion requiring explicit product-owner approval. If this file marks something unresolved, validate it with reliable Pokémon Champions examples before enabling that production feature.
+Before handing work to the product owner for UAT, run every applicable local automated quality gate in this document, commit the exact candidate on a `codex/*` branch, and deploy that commit to the isolated, owner-only **Champions Lab Dev** Sites project before opening a pull request. Deliver the Dev URL, exact commit, reports, known limitations, migration notes, and UAT checklist. After UAT approval, open the pull request, run its checks plus an independent sub-agent auto review, address material findings, and merge only when those gates are clean. Production deployment is a separate promotion requiring explicit product-owner approval. If this file marks something unresolved, validate it with reliable Pokémon Champions examples before enabling that production feature.
 
 ## 1. Product objective
 
@@ -26,6 +26,7 @@ Reference sites and data sources:
 - Pokémon Showdown Champions items: <https://github.com/smogon/pokemon-showdown/blob/master/data/mods/champions/items.ts>
 - PokeAPI docs: <https://pokeapi.co/docs/v2>
 - PokeAPI source: <https://github.com/PokeAPI/pokeapi>
+- PokeAPI sprites source: <https://github.com/PokeAPI/sprites>
 
 GameWith may inspire interaction patterns only. **Do not copy** its CSS, layout, wording, recommendations, images, proprietary data, or branding. The product must state that it is unofficial and not affiliated with or endorsed by Pokémon, Nintendo, GAME FREAK, Creatures Inc., or The Pokémon Company.
 
@@ -45,7 +46,7 @@ GameWith may inspire interaction patterns only. **Do not copy** its CSS, layout,
 | Nature | One non-HP stat may receive +10%, another -10%; neutral nature changes none |
 | Anonymous users | Team stored locally in versioned IndexedDB |
 | Accounts | Cloud sync/cross-device teams are phase 2, not v1 |
-| Images | Champions Battle Data assets first |
+| Images | Champions Battle Data for Pokémon/form assets; pinned PokeAPI sprites for locally bundled held-item thumbnails |
 | Included | Complete paginated catalogs, details, tooltips, reverse lookup, advanced filters, type chart, usage-based build defaults, builder/tray, speed comparison, admin overrides |
 | Excluded | Damage calculator, AI/strategy recommendations, team analysis, tier lists, community content |
 | Commercial intent | Yes; privacy, consent, attribution, security, and legal-review readiness are required |
@@ -110,8 +111,9 @@ Abilities and held items use the equivalent pinned base data, text, and `data/mo
 
 - Stable IDs and taxonomy
 - Localization and alias mapping
+- Held-item sprite assets selected from the separate PokeAPI sprites repository at a fixed commit
 
-PokeAPI must never supply or overwrite authoritative Champions move, ability, or held-item mechanics, availability, or behavior. A localized PokeAPI effect may be used only when no Champions-specific behavior changes that entity; otherwise the verified Showdown English description remains the explicit locale fallback until a reviewed translation exists.
+Only catalog-matched held-item PNGs are bundled locally; the application must not fetch a third-party item image during hover or rendering. PokeAPI must never supply or overwrite authoritative Champions move, ability, or held-item mechanics, availability, or behavior. A localized PokeAPI effect may be used only when no Champions-specific behavior changes that entity; otherwise the verified Showdown English description remains the explicit locale fallback until a reviewed translation exists.
 
 ### 4.4 Manual overrides
 
@@ -135,7 +137,7 @@ Never fabricate missing data.
 
 Live observations already show that API guide examples may differ from current responses in counts, stats, forms, dates, and fields. Therefore never hard-code current counts/example values. Accept unknown optional fields, reject/quarantine invalid required fields, record versions/checksums/source URLs, import through staging, and atomically publish immutable snapshots. If import fails, keep serving the last valid snapshot.
 
-Public attribution must link Pokémon Champions Battle Data and Pokémon Showdown where their data is displayed or used. Reasonable caching is allowed, but do not expose raw responses as a permanent mirror, dump, bulk-download product, or competing API. Cache PokeAPI responsibly and preserve all applicable upstream license notices.
+Public attribution must link Pokémon Champions Battle Data and Pokémon Showdown where their data is displayed or used, and must identify PokeAPI sprites as the held-item image source. Reasonable caching is allowed, but do not expose raw responses as a permanent mirror, dump, bulk-download product, or competing API. Cache PokeAPI responsibly and preserve all applicable upstream license notices. Confirm the image-rights position before commercial release rather than inferring rights from repository availability.
 
 ## 5. Architecture: shipped v1 and scale target
 
@@ -374,6 +376,8 @@ assets(
 
 Fetch only from explicit allowlists with timeout/size/type limits. Normalize path separators and URL-encode segments. Broken assets show accessible placeholders.
 
+The shipped v1 keeps a generated held-item sprite manifest separate from the gameplay snapshot. It records the fixed PokeAPI sprites commit, each catalog item ID, selected repository path, local public URL, and an explicit unavailable state. Item PNGs are validated before atomic publication, and a missing or broken asset falls back to a neutral local icon without removing the item name.
+
 ### 6.8 Teams
 
 The same versioned Team DTO is used by IndexedDB and future server persistence.
@@ -473,13 +477,13 @@ Results show sprite, name/form, types, Champions stats, abilities, and usage ran
 
 The form-specific learnset inside Pokémon detail reuses the Move DB search plus priority-sign, type, category, target, and property filters. Filter combinations use the same semantics as Move DB, expose the filtered/total count, provide clear-all and empty states, and must never show a move outside that form's legal learnset. Its deterministic default order is category (`Physical`, `Special`, `Status`) → type → priority descending → normalized properties → target → name as the final tie-breaker; filtering preserves this order. On narrow mobile screens the controls use an explicitly labelled collapsible filter panel with horizontally scrollable chip rows, while results remain a single-column touch-friendly list.
 
-Current-season move, held-item, and ability usage entries are interactive tooltip triggers, not plain text. Move rows include a visible type badge. They resolve through canonical catalog identities, show the same localized descriptions as their database pages, support mouse hover, keyboard focus, and touch tap, and fall back safely to plain upstream text when a row cannot be mapped.
+Current-season move, held-item, and ability usage entries are interactive tooltip triggers, not plain text. Move rows include a visible type badge. Held-item entries show the recognizable local thumbnail next to the localized item name; unmapped entries retain readable upstream text and a neutral fallback icon. They resolve through canonical catalog identities, show the same localized descriptions as their database pages, support mouse hover, keyboard focus, and touch tap, and fall back safely when a row cannot be mapped.
 
 ### 8.3 Tooltips/popovers
 
 Moves, abilities, and items must explain themselves directly.
 
-Move content: localized name, type, physical/special/status, power, accuracy, PP, signed priority (`+1`, `0`, `-1`), target, flags, short effect, details action. Ability/item content uses the effective Champions text and indicates ruleset overrides; items also show category and acquisition/regulation info when known.
+Move content: localized name, type, physical/special/status, power, accuracy, PP, signed priority (`+1`, `0`, `-1`), target, flags, short effect, details action. Ability/item content uses the effective Champions text and indicates ruleset overrides; item triggers and tooltip headings repeat the same held-item thumbnail, and items also show category and acquisition/regulation info when known.
 
 Behavior:
 
@@ -507,7 +511,7 @@ Move and ability tables also show the total number of current-Regulation Pokémo
 
 ### 8.5 Floating team tray
 
-Persist across relevant pages. Singles and Doubles each own an independent versioned team of up to six members and can be switched without losing either group. Each member shows sprite/name/form, types, weaknesses/resistances/immunities, four moves with type badges, validated final stats, AP/nature, ability, item, completion/legal state, and edit/remove actions.
+Persist across relevant pages. Singles and Doubles each own an independent versioned team of up to six members and can be switched without losing either group. Each member shows sprite/name/form, types, weaknesses/resistances/immunities, four moves with type badges, validated final stats, AP/nature, ability, item thumbnail/name, completion/legal state, and edit/remove actions.
 
 Adding a seventh never silently overwrites; open replacement selection. Duplicate attempts show domain errors. Incomplete members are allowed and marked. Desktop uses a collapsible floating panel whose internal scroll area makes all six complete cards reachable; mobile uses a fixed bottom bar and accessible bottom sheet. Persist with versioned IndexedDB; LocalStorage only for tiny preferences/migration flags. Navigation/refresh preserves state. Corrupt/old data migrates or quarantines without crashing.
 
@@ -529,7 +533,7 @@ Name the page **Speed Compare**, not a full turn simulator. State unsupported me
 
 ### 8.7 Usage-based build defaults and Mega transformation
 
-Opening the Build Workbench immediately requests current usage for the selected form's `battleDataKey` in both formats. The currently selected Singles/Doubles mode deterministically applies the highest-ranked legal held item, ability, nature, valid AP spread, and up to four unique learnable moves. A format switch reapplies that format's defaults. Missing, unmapped, duplicated, or illegal upstream rows are skipped; the UI clearly falls back to catalog defaults rather than fabricating a value. Every field remains user-editable except a required Mega Stone.
+Opening the Build Workbench immediately requests current usage for the selected form's `battleDataKey` in both formats. The currently selected Singles/Doubles mode deterministically applies the highest-ranked legal held item, ability, nature, valid AP spread, and up to four unique learnable moves. A format switch reapplies that format's defaults. Missing, unmapped, duplicated, or illegal upstream rows are skipped; the UI clearly falls back to catalog defaults rather than fabricating a value. Every field remains user-editable except a required Mega Stone. Native item selects remain usable, while the current held item is repeated immediately beside the control with its thumbnail and localized name.
 
 All 21 supported Champions natures appear with explicit increased/decreased stat labels; neutral natures state that no stat changes. AP defaults must pass the same `[0,32]` per-stat and total `≤66` validator as manual edits.
 
@@ -610,7 +614,7 @@ Champions job:
 8. Invalidate cache only after commit.
 9. Record metrics/report and alert on rejection.
 
-Showdown entity job pins a commit; statically parses base and Champions move, ability, item, text, and script tables; merges base then Champions; calculates Champions PP; derives the complete legal held-item set independently from usage; records per-record provenance; and rejects missing legal entities/descriptions or unreviewed global-rule changes. PokeAPI job caches/normalizes only needed IDs and localization, preserves provenance, updates incrementally, and never overwrites Champions or Showdown mechanic values.
+Showdown entity job pins a commit; statically parses base and Champions move, ability, item, text, and script tables; merges base then Champions; calculates Champions PP; derives the complete legal held-item set independently from usage; records per-record provenance; and rejects missing legal entities/descriptions or unreviewed global-rule changes. PokeAPI job caches/normalizes only needed IDs and localization, preserves provenance, updates incrementally, and never overwrites Champions or Showdown mechanic values. The separate item-sprite job pins a PokeAPI sprites commit, resolves only exact catalog IDs from the allowed item directories, validates bounded PNG responses, writes through temporary files, and publishes the manifest only after the complete requested asset set has been processed.
 
 Import checks: required IDs; every directly indexed form's `battleDataKey` equals its Champions `showdownId`; regional/gender/breed/appliance forms do not inherit a sibling's battle source; metadata rows map to exactly one index entry or an explicitly allowed metadata-only Mega fallback; percentages `[0,100]` or true null; blank not zero; scoped rank uniqueness where promised; mapped references or quarantine; unexpected count collapse; AP values valid; allowlisted assets; recorded version/date; unknown optionals tolerated; required missing fields rejected according to severity. The Ninetales/Alolan Ninetales pair is a permanent golden mapping fixture covering different keys, types, abilities, learnsets, battle sources, and usage-based defaults.
 
@@ -709,7 +713,7 @@ Tooltips: pointer delay/open/close, keyboard/Escape, touch, edge collision, z-in
 
 Filters: name-only search, type OR/AND, regular/Mega, searchable ability, multiple known-move AND, six minimum stats, each move filter and combinations, URL restore where supported, clear all, empty state, API/result count, pagination through the real final page, dynamic totals, and stale-response race. Repeat the Move DB priority/type/category/target/property combination fixtures inside Pokémon-detail learnsets, including mobile expand/collapse and filtered/total counts.
 
-Battle usage: mapped move/item/ability rows expose their canonical tooltip content; move rows show the correct type badge; pointer, keyboard, and touch activation work; unmapped upstream rows remain readable and never crash the panel.
+Battle usage: mapped move/item/ability rows expose their canonical tooltip content; move rows show the correct type badge; mapped held items show the same local thumbnail in the trigger and tooltip; pointer, keyboard, and touch activation work; unmapped upstream rows remain readable with a neutral fallback and never crash the panel.
 
 Reverse lookup: move/ability eligible-form counts, numeric sorting, complete accessible dialog contents, form identity, current-Regulation exclusion, Pokémon DB-equivalent filter combinations, stat/name/type/ability sort keys in both directions, synchronized table headers/select controls, move-type-first default ordering, filtered/total counts, clear/empty states, desktop table density, and mobile filter collapse/horizontal table scrolling/sticky Pokémon column.
 
@@ -744,6 +748,8 @@ The committed offline form-integrity audit runs on every deployment. A live audi
 - Apple Acid is a permanent Champions move golden fixture: Power 90, Accuracy 100, PP 12, and a 100% one-stage Special Defense reduction description.
 - Champions-description overrides cannot reuse potentially contradictory main-series localized effect prose; they use reviewed localization or explicit English fallback.
 - Healer (50%), Unseen Fist (protection plus 1/4 damage), Fairy Feather (non-empty effect), and Slowbronite (not Galarian Slowbro) are permanent ability/item golden fixtures.
+- Every held item in the committed catalog has either one exact local PNG mapping or an explicit unavailable entry; all 75 Mega Stones have local PNGs; file signatures and manifest counts agree.
+- Unknown item IDs never become repository or runtime URLs, and a broken or unavailable thumbnail renders the neutral fallback without hiding the localized item name.
 - Ambiguous shared metadata mapping fails instead of overwriting a whole family.
 - Cache invalidates after commit only.
 - Handle timeout, malformed JSON/CSV, wrong type, oversized response, and 5xx.
@@ -801,11 +807,11 @@ For the shipped repository, `pnpm verify:deploy` is the minimum local deployment
 Promotion:
 
 ```text
-PR gates → exact PR-head Dev deployment → smoke/E2E/security/performance → product-owner UAT
+local gates → exact committed Dev deployment → smoke/E2E/product-owner UAT → PR gates + independent sub-agent review → merge
 → merge → immutable approved release artifact → separate explicit production promotion
 ```
 
-UAT and production must use the exact artifact/commit that passed gates. UAT uses the separate `.openai/hosting.dev.json` project and isolated D1 database; production uses `.openai/hosting.json`. Never use the production project as a branch preview or share its database with Dev.
+UAT and production must use exact recorded artifacts/commits. UAT uses the separate `.openai/hosting.dev.json` project and isolated D1 database; production uses `.openai/hosting.json`. Never use the production project as a branch preview or share its database with Dev. A UAT-approved candidate proceeds to PR checks and independent review; any material code change after UAT invalidates that approval and requires a new Dev deployment and UAT pass.
 
 ## 15. Observability and operations
 

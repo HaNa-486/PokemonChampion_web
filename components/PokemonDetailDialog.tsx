@@ -5,6 +5,7 @@ import { abilityById, abilityIdByUsageName, itemById, itemIdByUsageName, moveByI
 import { formatPriority, priorityMatches } from "../lib/domain";
 import type { BattleUsage, BattleUsageRow, Move, Pokemon } from "../lib/types";
 import { InfoTooltip } from "./InfoTooltip";
+import { ItemDisplay, ItemTooltip } from "./ItemDisplay";
 import { TypeBadge } from "./TypeBadge";
 import { TypeMatchups } from "./TypeMatchups";
 
@@ -56,7 +57,8 @@ function UsageEntry({ category, row, locale }: { category: string; row: BattleUs
   }
   if (category === "held_item") {
     const item = itemById.get(itemIdByUsageName.get(usageEntityKey(row.name)) ?? "");
-    if (item) return <InfoTooltip label={localName(item, locale)}><strong>{localName(item, locale)}</strong><div className="tooltip-meta"><span>{item.category}</span></div><p>{locale === "zh-Hant" ? item.descriptionZh : item.description}</p></InfoTooltip>;
+    if (item) return <span className="usage-resource"><ItemTooltip item={item} locale={locale} /></span>;
+    return <span className="usage-resource"><ItemDisplay locale={locale} fallbackName={fallback} /></span>;
   }
   return <span>{fallback}</span>;
 }

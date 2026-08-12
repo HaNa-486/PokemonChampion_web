@@ -1,6 +1,6 @@
 # Champions Lab
 
-An unofficial Pokémon Champions team-building database for the current regulation. It combines legality and usage from [Pokémon Champions Battle Data](https://championsbattledata.com/), Champions-specific move, ability, and held-item mechanics plus English text from [Pokémon Showdown](https://github.com/smogon/pokemon-showdown), and IDs plus localization supplements from [PokeAPI](https://github.com/PokeAPI/pokeapi).
+An unofficial Pokémon Champions team-building database for the current regulation. It combines legality and usage from [Pokémon Champions Battle Data](https://championsbattledata.com/), Champions-specific move, ability, and held-item mechanics plus English text from [Pokémon Showdown](https://github.com/smogon/pokemon-showdown), IDs plus localization supplements from [PokeAPI](https://github.com/PokeAPI/pokeapi), and locally bundled held-item sprites from the pinned [PokeAPI sprites repository](https://github.com/PokeAPI/sprites).
 
 The implementation contract, data model, security boundaries, acceptance criteria, and full test design live in [PROJECT_SPEC.md](./PROJECT_SPEC.md). Release work follows [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md).
 
@@ -8,8 +8,8 @@ The implementation contract, data model, security boundaries, acceptance criteri
 
 The project uses two isolated ChatGPT Sites projects. `pnpm verify:dev` fails unless the final built artifact contains the Dev manifest:
 
-- **Champions Lab Dev** is the owner-only UAT environment. After local verification, independent review, and a successful pull-request check, the exact pull-request head commit is deployed here for product-owner UI testing.
-- **Champions Lab** is production. A pull request is merged only after Dev UAT approval, and production promotion then requires separate explicit approval.
+- **Champions Lab Dev** is the owner-only UAT environment. After local verification, the exact committed `codex/*` candidate is deployed here before a pull request so the product owner can test the product rather than review code.
+- **Champions Lab** is production. After Dev UAT approval, Codex opens the pull request, waits for its checks, runs an independent sub-agent auto review, addresses material findings, and merges when clean. Production promotion then requires separate explicit approval.
 
 The production project is identified by `.openai/hosting.json`; Dev/UAT is identified by `.openai/hosting.dev.json`. Both expose the same logical `DB` binding but Sites provisions them as separate databases. Never swap the manifests, copy production data into Dev, or use production to preview a branch. The persistent contributor rules are in [AGENTS.md](./AGENTS.md).
 
@@ -19,6 +19,7 @@ The production project is identified by `.openai/hosting.json`; Dev/UAT is ident
 - Complete paginated Pokémon and move catalogs with advanced filters, sorting, and move/ability reverse lookup
 - Positive, zero, and negative move-priority filters
 - Accessible hover, focus, and click explanations for moves, abilities, and held items
+- Recognizable local held-item thumbnails everywhere held items are presented, with a neutral fallback when an asset is unavailable
 - Independent Singles/Doubles six-member teams with family and held-item clause validation
 - Four selected moves with type badges, ability, item, AP, nature, and calculated final stats
 - Format-specific usage defaults and dedicated Mega Stone transformation
@@ -37,11 +38,11 @@ pnpm run data:sync
 pnpm run dev
 ```
 
-`data:sync` writes the normalized, versioned snapshot to `data/generated/champions-snapshot.json`. It is deliberately a build-time sync, not a public mirror endpoint.
+`data:sync` writes the normalized, versioned snapshot to `data/generated/champions-snapshot.json`, pins a PokeAPI sprites revision in `data/generated/item-sprites.json`, and stores only the 148 catalog-matched held-item PNGs in `public/items`. Use `pnpm data:sync:items` to refresh only that sprite manifest and asset set. Both flows are build-time synchronization; neither exposes a public mirror endpoint.
 
 ### Automated upstream refresh
 
-`.github/workflows/sync-battle-data.yml` checks Champions Battle Data, Pokémon Showdown, and PokeAPI every six hours. The sync exits without changing files when all three pinned upstream revisions are unchanged. When any source changes, the workflow regenerates the bundled catalog, runs the complete Dev/UAT verification suite, and updates the isolated `automation/battle-data-sync` candidate branch. It never pushes a new snapshot directly to `main`. The notification Issue contains a comparison link; Codex then opens the pull request using the owner's authenticated GitHub session so normal PR checks trigger without granting GitHub Actions permission to create pull requests. A failed sync or failed test never replaces the last known-good snapshot. If a later sync changes the candidate branch while UAT is pending, the previous UAT result is invalid: deploy the new head to Dev and repeat UAT.
+`.github/workflows/sync-battle-data.yml` checks Champions Battle Data, Pokémon Showdown, PokeAPI, and the PokeAPI sprites repository every six hours. The sync exits without changing files when all pinned upstream revisions and the selected item assets are unchanged. When a source changes, the workflow regenerates the bundled catalog and/or held-item sprite set, runs the complete Dev/UAT verification suite, and updates the isolated `automation/battle-data-sync` candidate branch. It never pushes generated data directly to `main`. Codex deploys that exact candidate to Dev for UAT before opening the pull request; after approval, it opens the PR using the owner's authenticated GitHub session so normal checks trigger without granting GitHub Actions permission to create pull requests. A failed sync or failed test never replaces the last known-good catalog or assets. If a later sync changes the candidate branch while UAT is pending, the previous UAT result is invalid: deploy the new head to Dev and repeat UAT.
 
 Every synchronization run writes an Actions Summary with the check time, upstream Champions date and version, whether data changed, validation and commit outcomes, and whether production deployment is required. This makes successful no-change checks visible without reading raw step logs.
 
@@ -77,4 +78,4 @@ The initial migration is in `drizzle/0000_flippant_wendigo.sql`.
 
 ## Data and legal notes
 
-This project is an unofficial community tool. Battle data and sprites are attributed to Pokémon Champions Battle Data. Champions move, ability, and held-item mechanics plus English text are derived from Pokémon Showdown's open-source base data and Champions mod at a pinned revision. PokeAPI supplies IDs and localization supplements at a pinned revision. Preserve the applicable upstream notices; do not expose bulk-download, dump, or mirror endpoints for the upstream Champions dataset; consult upstream terms before commercial release. Pokémon and related names are trademarks of their respective owners.
+This project is an unofficial community tool. Battle data and Pokémon/form sprites are attributed to Pokémon Champions Battle Data. Champions move, ability, and held-item mechanics plus English text are derived from Pokémon Showdown's open-source base data and Champions mod at a pinned revision. PokeAPI supplies IDs and localization supplements, while its separate sprites repository supplies the locally bundled held-item PNGs, each at a pinned revision. Preserve the applicable upstream notices; do not expose bulk-download, dump, or mirror endpoints; confirm the image-rights position before commercial release. Pokémon and related names are trademarks of their respective owners.
