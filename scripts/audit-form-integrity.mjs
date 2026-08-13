@@ -96,7 +96,7 @@ export function auditSnapshot(snapshot) {
       ids.add(entry?.id);
       if (!entry?.description?.trim()) errors.push(`${kind} is missing its Pokémon Showdown description: ${entry?.name ?? entry?.id}`);
       if (!entry?.descriptionZh?.trim()) errors.push(`${kind} is missing its localized description fallback: ${entry?.name ?? entry?.id}`);
-      if (!entry?.mechanicsSource || !entry?.descriptionSource || !entry?.localizationSource) errors.push(`${kind} provenance is incomplete: ${entry?.name ?? entry?.id}`);
+      if (!entry?.mechanicsSource || !entry?.descriptionSource || !entry?.localizationSource || !entry?.nameLocalizationSource) errors.push(`${kind} provenance is incomplete: ${entry?.name ?? entry?.id}`);
     }
   }
 

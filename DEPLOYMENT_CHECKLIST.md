@@ -120,6 +120,9 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] English and Traditional Chinese critical flows do not clip or lose state.
 - [ ] In `zh-Hant`, every listed Pokémon/form name is the official Traditional Chinese name; no Pokémon name is machine translated or left in English.
 - [ ] In `zh-Hant`, all move, ability, and held-item names and descriptions are Chinese on database rows, detail dialogs, battle-usage rows, and tooltips; none silently reuse the English description.
+- [ ] `pnpm data:audit:zh` confirms every Chinese description is derived from the exact effective Champions English mechanic, preserves every numeric token, multiplier, rounding rule, trigger threshold, and single-use condition, and contains no broken placeholder or unapproved English residue.
+- [ ] Official PokeAPI `zh-Hant` names and reviewed Champions-only/form names retain per-record provenance; machine translation is limited to descriptions and every semantic override is explicitly identified.
+- [ ] Chinese descriptions and fixed UI terms contain no Simplified Chinese; official Traditional Chinese entity spellings are not rewritten merely to satisfy OpenCC lexical preferences.
 - [ ] Type, category, target, property, ability-category, item-category, effect-class, and sortable table labels switch to Chinese without changing filter semantics.
 - [ ] Localization completeness tests fail when a legal catalog entry lacks Chinese content or when a Chinese description equals its English source.
 - [ ] The team tray can scroll through all six complete cards.

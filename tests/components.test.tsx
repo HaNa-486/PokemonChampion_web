@@ -14,6 +14,16 @@ beforeEach(() => useTeamStore.setState({ teams: { singles: [], doubles: [] }, hy
 afterEach(() => vi.unstubAllGlobals());
 
 describe("Move Database", () => {
+  it("localizes move properties in Traditional Chinese mode", async () => {
+    const user = userEvent.setup();
+    render(<MoveDatabaseV2 locale="zh-Hant" />);
+    await user.type(screen.getByPlaceholderText("搜尋招式…"), "Accelerock");
+    const row = screen.getByRole("button", { name: "衝岩" }).closest("tr");
+    expect(row).toHaveTextContent("接觸");
+    expect(row).toHaveTextContent("可被守住");
+    expect(row).not.toHaveTextContent("Contact");
+  });
+
   it("filters positive and negative priority independently", async () => {
     const user = userEvent.setup();
     render(<MoveDatabaseV2 locale="en" />);
@@ -111,6 +121,27 @@ describe("Move Database", () => {
 });
 
 describe("reference filters", () => {
+  it("localizes ability category values in Traditional Chinese mode", async () => {
+    const user = userEvent.setup();
+    render(<ResourceDatabaseV2 kind="abilities" locale="zh-Hant" />);
+    await user.type(screen.getByPlaceholderText("搜尋特性…"), "Blaze");
+    const row = screen.getByRole("button", { name: "猛火" }).closest("tr");
+    expect(row).toHaveTextContent("攻擊");
+    expect(row).not.toHaveTextContent("Offense");
+  });
+
+  it("localizes held-item controls, headers, classes, and single-use mechanics", async () => {
+    const user = userEvent.setup();
+    render(<ResourceDatabaseV2 kind="items" locale="zh-Hant" />);
+    expect(screen.getByText("所有項目皆來自目前的 Pokémon Champions 規則資料。")).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "名稱" })).toBeInTheDocument();
+    expect(screen.getByRole("columnheader", { name: "效果分類" })).toBeInTheDocument();
+    await user.type(screen.getByPlaceholderText("搜尋持有物…"), "Sitrus Berry");
+    const row = screen.getByRole("button", { name: "文柚果" }).closest("tr");
+    expect(row).toHaveTextContent("HP 回復");
+    expect(row).toHaveTextContent("使用後消失");
+  });
+
   it("filters abilities by derived battle category", async () => {
     const user = userEvent.setup();
     render(<ResourceDatabaseV2 kind="abilities" locale="en" />);
