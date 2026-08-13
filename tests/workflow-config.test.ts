@@ -12,8 +12,16 @@ describe("battle-data synchronization workflow", () => {
     expect(workflow).not.toContain("git push origin HEAD:main");
     expect(workflow).toContain("automation/battle-data-sync");
     expect(workflow).toContain("compare/main...${process.env.SYNC_BRANCH}?expand=1");
-    expect(workflow).toContain("create a pull request through Codex or GitHub");
+    expect(workflow).toContain("Deploy this exact candidate commit to Champions Lab Dev before opening a pull request");
+    expect(workflow).toContain("After UAT approval, create a pull request through Codex or GitHub");
+    expect(workflow.indexOf("Deploy this exact candidate commit to Champions Lab Dev before opening a pull request"))
+      .toBeLessThan(workflow.indexOf("After UAT approval, create a pull request through Codex or GitHub"));
     expect(workflow).toContain('echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"');
+    expect(workflow).toContain("data/generated/item-sprites.json");
+    expect(workflow).toContain("public/items");
+    expect(workflow).toContain("Held-item sprites");
+    expect(workflow).toContain("run: pnpm data:audit:live");
+    expect(workflow.indexOf("run: pnpm data:audit:live")).toBeLessThan(workflow.indexOf("run: pnpm verify:dev"));
   });
 
   it("only requests deployment after a changed snapshot passes validation", () => {
@@ -42,8 +50,10 @@ describe("battle-data synchronization workflow", () => {
     expect(workflow).toContain("Publish synchronization summary");
     expect(workflow).toContain("if: always()");
     expect(workflow).toContain("The upstream sources were checked and no data changes were found.");
-    expect(workflow).toContain("the new snapshot was not pushed to the automation branch");
+    expect(workflow).toContain("the new catalogs or assets were not pushed to the automation branch");
     expect(workflow).toContain("DEPLOYMENT_NOTIFICATION_OUTCOME");
+    expect(workflow).toContain("LIVE_AUDIT_OUTCOME");
+    expect(workflow).toContain("create the pull request only after product-owner approval");
     expect(workflow).toContain("Changes detected");
     expect(workflow).toContain("Production deployment");
     expect(workflow).not.toContain("github.rest.pulls.create");

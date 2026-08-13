@@ -22,7 +22,8 @@
     "verify:deploy": "pnpm run lint && pnpm run typecheck && pnpm run data:audit && pnpm test",
     "verify:dev": "pnpm verify:deploy && pnpm build:dev && node scripts/assert-sites-build.mjs dev",
     "db:generate": "drizzle-kit generate",
-    "data:sync": "node scripts/sync-upstream.mjs"
+    "data:sync": "node scripts/sync-upstream.mjs",
+    "data:sync:items": "node scripts/sync-upstream.mjs --items-only"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.20",

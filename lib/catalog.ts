@@ -1,5 +1,6 @@
 import type { Ability, HeldItem, Move, Pokemon } from "./types";
 import snapshot from "../data/generated/champions-snapshot.json";
+import itemSprites from "../data/generated/item-sprites.json";
 
 export const catalogSnapshotDate = snapshot.sources.champions.generatedAt.slice(0, 10);
 
@@ -31,16 +32,18 @@ const megaStoneNameByPokemonId: Record<string, string> = {
 const itemId = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 export const megaStoneIdByPokemonId = new Map(Object.entries(megaStoneNameByPokemonId).map(([pokemonId, name]) => [pokemonId, itemId(name)]));
 
-const generatedItemById = new Map<string, HeldItem>(snapshot.items.map((entry) => [entry.id, entry] as [string, HeldItem]));
+const itemSpriteById = itemSprites.items as Record<string, { imageUrl: string; sourcePath: string }>;
+const generatedItemById = new Map<string, HeldItem>(snapshot.items.map((entry) => [entry.id, { ...entry, imageUrl: itemSpriteById[entry.id]?.imageUrl ?? null }]));
 for (const [pokemonId, name] of Object.entries(megaStoneNameByPokemonId)) {
   const id = itemId(name);
-  if (!generatedItemById.has(id)) generatedItemById.set(id, { id, name, nameZh: name, category: "Mega Stone", description: `Required for ${pokemonId.replaceAll("-", " ").replace(/^mega /, "Mega ")} to Mega Evolve.`, descriptionZh: `此超級石為 ${name}，是該寶可夢進行超級進化時的必備持有物。` });
+  if (!generatedItemById.has(id)) generatedItemById.set(id, { id, name, nameZh: name, category: "Mega Stone", description: `Required for ${pokemonId.replaceAll("-", " ").replace(/^mega /, "Mega ")} to Mega Evolve.`, descriptionZh: `此超級石為 ${name}，是該寶可夢進行超級進化時的必備持有物。`, imageUrl: null });
 }
 export const items: HeldItem[] = [...generatedItemById.values()].map((entry) => ({
   id: entry.id, name: entry.name, nameZh: entry.nameZh || entry.name,
   category: entry.category || "Held item",
   description: entry.description || "No held item description is available.",
   descriptionZh: entry.descriptionZh || entry.description || "目前沒有持有物說明。",
+  imageUrl: entry.imageUrl,
 }));
 
 const curatedPokemon: Pokemon[] = [

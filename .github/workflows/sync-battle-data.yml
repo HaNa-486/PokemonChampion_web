@@ -40,22 +40,27 @@ jobs:
         id: synchronize
         run: pnpm data:sync
 
-      - name: Stop when the upstream version is unchanged
+      - name: Stop when the upstream catalogs and assets are unchanged
         id: changes
         shell: bash
         run: |
-          if git diff --quiet -- data/generated/champions-snapshot.json; then
+          if git diff --quiet -- data/generated/champions-snapshot.json data/generated/item-sprites.json public/items; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Validate the new snapshot
+      - name: Audit live upstream mappings
+        id: live_audit
+        if: steps.changes.outputs.changed == 'true'
+        run: pnpm data:audit:live
+
+      - name: Validate the synchronized catalogs and assets
         id: validation
         if: steps.changes.outputs.changed == 'true'
         run: pnpm verify:dev
 
-      - name: Commit and push the validated snapshot branch
+      - name: Commit and push the validated data branch
         id: commit
         if: steps.changes.outputs.changed == 'true'
         shell: bash
@@ -63,8 +68,8 @@ jobs:
           branch="automation/battle-data-sync"
           git config user.name "champions-lab-data-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data/generated/champions-snapshot.json
-          git commit -m "chore(data): sync Champions data sources"
+          git add data/generated/champions-snapshot.json data/generated/item-sprites.json public/items
+          git commit -m "chore(data): sync Champions data and item sprites"
           git checkout -B "$branch"
           git fetch origin "$branch:refs/remotes/origin/$branch" || true
           git push --force-with-lease origin "HEAD:$branch"
@@ -82,6 +87,7 @@ jobs:
           script: |
             const fs = await import('node:fs/promises');
             const snapshot = JSON.parse(await fs.readFile('data/generated/champions-snapshot.json', 'utf8'));
+            const itemSprites = JSON.parse(await fs.readFile('data/generated/item-sprites.json', 'utf8'));
             const owner = context.repo.owner;
             const repo = context.repo.repo;
             const runUrl = `${process.env.GITHUB_SERVER_URL}/${owner}/${repo}/actions/runs/${process.env.GITHUB_RUN_ID}`;
@@ -102,9 +108,9 @@ jobs:
               }
             }
 
-            const title = `[Deploy required] Champions battle data updated to ${sourceDate}`;
+            const title = `[Deploy required] Champions catalogs or assets updated (${sourceDate})`;
             const body = [
-              'A new upstream Champions snapshot passed every automated validation and was pushed to the protected candidate branch.',
+              'Updated Champions catalogs or held-item assets passed every automated validation and were pushed to the protected candidate branch.',
               '',
               `- Battle data date: ${sourceDate}`,
               `- Data version: ${dataVersion}`,
@@ -112,6 +118,8 @@ jobs:
               `- Moves: ${snapshot.counts.moves}`,
               `- Abilities: ${snapshot.counts.abilities}`,
               `- Held items: ${snapshot.counts.items}`,
+              `- Held-item sprites: ${itemSprites.counts.available}/${itemSprites.counts.items}`,
+              `- Sprite revision: ${itemSprites.source.revision}`,
               '- Validation: Passed',
               `- Commit: ${commit}`,
               `- Candidate branch: ${process.env.SYNC_BRANCH}`,
@@ -120,9 +128,9 @@ jobs:
               '',
               '## Next action',
               '',
-              '- Use the linked candidate branch to create a pull request through Codex or GitHub.',
-              '- Deploy that exact checked pull-request head to Champions Lab Dev.',
-              '- Complete product-owner UAT before merge.',
+              '- Deploy this exact candidate commit to Champions Lab Dev before opening a pull request.',
+              '- Complete product-owner UAT for that exact Dev commit.',
+              '- After UAT approval, create a pull request through Codex or GitHub and run the normal PR checks and independent review.',
               '- Obtain separate approval before production promotion.',
               '- Add the production URL and close this issue after the approved deployment and smoke test.',
             ].join('\n');
@@ -226,6 +234,7 @@ jobs:
         env:
           SYNC_CHANGED: ${{ steps.changes.outputs.changed || 'unknown' }}
           SYNC_OUTCOME: ${{ steps.synchronize.outcome || 'not_run' }}
+          LIVE_AUDIT_OUTCOME: ${{ steps.live_audit.outcome || 'not_run' }}
           VALIDATION_OUTCOME: ${{ steps.validation.outcome || 'not_run' }}
           COMMIT_OUTCOME: ${{ steps.commit.outcome || 'not_run' }}
           DEPLOYMENT_NOTIFICATION_OUTCOME: ${{ steps.deployment_notification.outcome || 'not_run' }}
@@ -235,23 +244,25 @@ jobs:
             const fs = await import('node:fs/promises');
 
             let snapshot;
+            let itemSprites;
             try {
               snapshot = JSON.parse(await fs.readFile('data/generated/champions-snapshot.json', 'utf8'));
+              itemSprites = JSON.parse(await fs.readFile('data/generated/item-sprites.json', 'utf8'));
             } catch (error) {
-              core.warning(`Could not read the generated snapshot for the run summary: ${error.message}`);
+              core.warning(`Could not read the generated catalogs for the run summary: ${error.message}`);
             }
 
             const changed = process.env.SYNC_CHANGED;
             const result = process.env.JOB_STATUS;
             const statusText = changed === 'true' && process.env.COMMIT_OUTCOME === 'success'
-              ? 'Upstream changes were found and the validated snapshot was pushed to the candidate branch.'
+              ? 'Upstream changes were found and the validated catalogs and assets were pushed to the candidate branch.'
               : changed === 'true'
-                ? 'Upstream changes were found, but the new snapshot was not pushed to the automation branch.'
+                ? 'Upstream changes were found, but the new catalogs or assets were not pushed to the automation branch.'
               : changed === 'false'
                 ? 'The upstream sources were checked and no data changes were found.'
                 : 'The workflow stopped before it could determine whether upstream data changed.';
             const deploymentStatus = changed === 'true' && process.env.DEPLOYMENT_NOTIFICATION_OUTCOME === 'success'
-              ? 'Dev UAT required: see the open `deployment-required` Issue and create a pull request from the candidate branch.'
+              ? 'Dev UAT required: deploy the exact candidate commit first; create the pull request only after product-owner approval.'
               : changed === 'true' && process.env.COMMIT_OUTCOME === 'success'
                 ? 'The snapshot branch was pushed, but the deployment notification failed; inspect this run.'
               : changed === 'false' && result === 'success'
@@ -259,6 +270,10 @@ jobs:
                 : 'Not created; investigate this workflow run.';
             const sourceDate = snapshot?.sources?.champions?.generatedAt?.slice(0, 10) ?? 'Unavailable';
             const dataVersion = snapshot?.sources?.champions?.dataVersion ?? 'Unavailable';
+            const itemSpriteRevision = itemSprites?.source?.revision ?? 'Unavailable';
+            const itemSpriteCount = itemSprites?.counts
+              ? `${itemSprites.counts.available}/${itemSprites.counts.items}`
+              : 'Unavailable';
 
             await core.summary
               .addHeading('Champions battle data synchronization')
@@ -269,8 +284,11 @@ jobs:
                 ['Workflow result', result],
                 ['Upstream Champions date', sourceDate],
                 ['Upstream data version', String(dataVersion)],
+                ['Held-item sprites', itemSpriteCount],
+                ['Item sprite revision', itemSpriteRevision],
                 ['Changes detected', changed],
                 ['Synchronization step', process.env.SYNC_OUTCOME],
+                ['Live mapping audit', process.env.LIVE_AUDIT_OUTCOME],
                 ['Validation step', process.env.VALIDATION_OUTCOME],
                 ['Commit step', process.env.COMMIT_OUTCOME],
                 ['Deployment notification step', process.env.DEPLOYMENT_NOTIFICATION_OUTCOME],

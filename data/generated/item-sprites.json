@@ -1,0 +1,613 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-12T08:38:32.563Z",
+  "source": {
+    "repository": "https://github.com/PokeAPI/sprites",
+    "revision": "c10459b9b0129eaca5c5d9b1cac65336debb1d08",
+    "purpose": "Held-item sprites",
+    "directories": [
+      "sprites/items/",
+      "sprites/items/gen9/"
+    ]
+  },
+  "counts": {
+    "items": 148,
+    "available": 148,
+    "missing": 0
+  },
+  "items": {
+    "abomasite": {
+      "imageUrl": "/items/abomasite.png",
+      "sourcePath": "sprites/items/abomasite.png"
+    },
+    "absolite": {
+      "imageUrl": "/items/absolite.png",
+      "sourcePath": "sprites/items/absolite.png"
+    },
+    "aerodactylite": {
+      "imageUrl": "/items/aerodactylite.png",
+      "sourcePath": "sprites/items/aerodactylite.png"
+    },
+    "aggronite": {
+      "imageUrl": "/items/aggronite.png",
+      "sourcePath": "sprites/items/aggronite.png"
+    },
+    "alakazite": {
+      "imageUrl": "/items/alakazite.png",
+      "sourcePath": "sprites/items/alakazite.png"
+    },
+    "altarianite": {
+      "imageUrl": "/items/altarianite.png",
+      "sourcePath": "sprites/items/altarianite.png"
+    },
+    "ampharosite": {
+      "imageUrl": "/items/ampharosite.png",
+      "sourcePath": "sprites/items/ampharosite.png"
+    },
+    "aspear-berry": {
+      "imageUrl": "/items/aspear-berry.png",
+      "sourcePath": "sprites/items/aspear-berry.png"
+    },
+    "audinite": {
+      "imageUrl": "/items/audinite.png",
+      "sourcePath": "sprites/items/audinite.png"
+    },
+    "babiri-berry": {
+      "imageUrl": "/items/babiri-berry.png",
+      "sourcePath": "sprites/items/babiri-berry.png"
+    },
+    "banettite": {
+      "imageUrl": "/items/banettite.png",
+      "sourcePath": "sprites/items/banettite.png"
+    },
+    "barbaracite": {
+      "imageUrl": "/items/barbaracite.png",
+      "sourcePath": "sprites/items/gen9/barbaracite.png"
+    },
+    "beedrillite": {
+      "imageUrl": "/items/beedrillite.png",
+      "sourcePath": "sprites/items/beedrillite.png"
+    },
+    "big-root": {
+      "imageUrl": "/items/big-root.png",
+      "sourcePath": "sprites/items/big-root.png"
+    },
+    "black-belt": {
+      "imageUrl": "/items/black-belt.png",
+      "sourcePath": "sprites/items/black-belt.png"
+    },
+    "black-glasses": {
+      "imageUrl": "/items/black-glasses.png",
+      "sourcePath": "sprites/items/black-glasses.png"
+    },
+    "blastoisinite": {
+      "imageUrl": "/items/blastoisinite.png",
+      "sourcePath": "sprites/items/blastoisinite.png"
+    },
+    "blazikenite": {
+      "imageUrl": "/items/blazikenite.png",
+      "sourcePath": "sprites/items/blazikenite.png"
+    },
+    "bright-powder": {
+      "imageUrl": "/items/bright-powder.png",
+      "sourcePath": "sprites/items/bright-powder.png"
+    },
+    "cameruptite": {
+      "imageUrl": "/items/cameruptite.png",
+      "sourcePath": "sprites/items/cameruptite.png"
+    },
+    "chandelurite": {
+      "imageUrl": "/items/chandelurite.png",
+      "sourcePath": "sprites/items/gen9/chandelurite.png"
+    },
+    "charcoal": {
+      "imageUrl": "/items/charcoal.png",
+      "sourcePath": "sprites/items/charcoal.png"
+    },
+    "charizardite-x": {
+      "imageUrl": "/items/charizardite-x.png",
+      "sourcePath": "sprites/items/charizardite-x.png"
+    },
+    "charizardite-y": {
+      "imageUrl": "/items/charizardite-y.png",
+      "sourcePath": "sprites/items/charizardite-y.png"
+    },
+    "charti-berry": {
+      "imageUrl": "/items/charti-berry.png",
+      "sourcePath": "sprites/items/charti-berry.png"
+    },
+    "cheri-berry": {
+      "imageUrl": "/items/cheri-berry.png",
+      "sourcePath": "sprites/items/cheri-berry.png"
+    },
+    "chesnaughtite": {
+      "imageUrl": "/items/chesnaughtite.png",
+      "sourcePath": "sprites/items/gen9/chesnaughtite.png"
+    },
+    "chesto-berry": {
+      "imageUrl": "/items/chesto-berry.png",
+      "sourcePath": "sprites/items/chesto-berry.png"
+    },
+    "chilan-berry": {
+      "imageUrl": "/items/chilan-berry.png",
+      "sourcePath": "sprites/items/chilan-berry.png"
+    },
+    "chimechite": {
+      "imageUrl": "/items/chimechite.png",
+      "sourcePath": "sprites/items/gen9/chimechite.png"
+    },
+    "choice-scarf": {
+      "imageUrl": "/items/choice-scarf.png",
+      "sourcePath": "sprites/items/choice-scarf.png"
+    },
+    "chople-berry": {
+      "imageUrl": "/items/chople-berry.png",
+      "sourcePath": "sprites/items/chople-berry.png"
+    },
+    "clefablite": {
+      "imageUrl": "/items/clefablite.png",
+      "sourcePath": "sprites/items/gen9/clefablite.png"
+    },
+    "coba-berry": {
+      "imageUrl": "/items/coba-berry.png",
+      "sourcePath": "sprites/items/coba-berry.png"
+    },
+    "colbur-berry": {
+      "imageUrl": "/items/colbur-berry.png",
+      "sourcePath": "sprites/items/colbur-berry.png"
+    },
+    "crabominite": {
+      "imageUrl": "/items/crabominite.png",
+      "sourcePath": "sprites/items/gen9/crabominite.png"
+    },
+    "damp-rock": {
+      "imageUrl": "/items/damp-rock.png",
+      "sourcePath": "sprites/items/damp-rock.png"
+    },
+    "delphoxite": {
+      "imageUrl": "/items/delphoxite.png",
+      "sourcePath": "sprites/items/gen9/delphoxite.png"
+    },
+    "dragalgite": {
+      "imageUrl": "/items/dragalgite.png",
+      "sourcePath": "sprites/items/gen9/dragalgite.png"
+    },
+    "dragon-fang": {
+      "imageUrl": "/items/dragon-fang.png",
+      "sourcePath": "sprites/items/dragon-fang.png"
+    },
+    "dragoninite": {
+      "imageUrl": "/items/dragoninite.png",
+      "sourcePath": "sprites/items/gen9/dragoninite.png"
+    },
+    "drampanite": {
+      "imageUrl": "/items/drampanite.png",
+      "sourcePath": "sprites/items/gen9/drampanite.png"
+    },
+    "eelektrossite": {
+      "imageUrl": "/items/eelektrossite.png",
+      "sourcePath": "sprites/items/gen9/eelektrossite.png"
+    },
+    "emboarite": {
+      "imageUrl": "/items/emboarite.png",
+      "sourcePath": "sprites/items/gen9/emboarite.png"
+    },
+    "excadrite": {
+      "imageUrl": "/items/excadrite.png",
+      "sourcePath": "sprites/items/gen9/excadrite.png"
+    },
+    "expert-belt": {
+      "imageUrl": "/items/expert-belt.png",
+      "sourcePath": "sprites/items/expert-belt.png"
+    },
+    "fairy-feather": {
+      "imageUrl": "/items/fairy-feather.png",
+      "sourcePath": "sprites/items/gen9/fairy-feather.png"
+    },
+    "falinksite": {
+      "imageUrl": "/items/falinksite.png",
+      "sourcePath": "sprites/items/gen9/falinksite.png"
+    },
+    "feraligite": {
+      "imageUrl": "/items/feraligite.png",
+      "sourcePath": "sprites/items/gen9/feraligite.png"
+    },
+    "floettite": {
+      "imageUrl": "/items/floettite.png",
+      "sourcePath": "sprites/items/gen9/floettite.png"
+    },
+    "focus-band": {
+      "imageUrl": "/items/focus-band.png",
+      "sourcePath": "sprites/items/focus-band.png"
+    },
+    "focus-sash": {
+      "imageUrl": "/items/focus-sash.png",
+      "sourcePath": "sprites/items/focus-sash.png"
+    },
+    "froslassite": {
+      "imageUrl": "/items/froslassite.png",
+      "sourcePath": "sprites/items/gen9/froslassite.png"
+    },
+    "galladite": {
+      "imageUrl": "/items/galladite.png",
+      "sourcePath": "sprites/items/galladite.png"
+    },
+    "garchompite": {
+      "imageUrl": "/items/garchompite.png",
+      "sourcePath": "sprites/items/garchompite.png"
+    },
+    "gardevoirite": {
+      "imageUrl": "/items/gardevoirite.png",
+      "sourcePath": "sprites/items/gardevoirite.png"
+    },
+    "gengarite": {
+      "imageUrl": "/items/gengarite.png",
+      "sourcePath": "sprites/items/gengarite.png"
+    },
+    "glalitite": {
+      "imageUrl": "/items/glalitite.png",
+      "sourcePath": "sprites/items/glalitite.png"
+    },
+    "glimmoranite": {
+      "imageUrl": "/items/glimmoranite.png",
+      "sourcePath": "sprites/items/gen9/glimmoranite.png"
+    },
+    "golurkite": {
+      "imageUrl": "/items/golurkite.png",
+      "sourcePath": "sprites/items/gen9/golurkite.png"
+    },
+    "greninjite": {
+      "imageUrl": "/items/greninjite.png",
+      "sourcePath": "sprites/items/gen9/greninjite.png"
+    },
+    "gyaradosite": {
+      "imageUrl": "/items/gyaradosite.png",
+      "sourcePath": "sprites/items/gyaradosite.png"
+    },
+    "haban-berry": {
+      "imageUrl": "/items/haban-berry.png",
+      "sourcePath": "sprites/items/haban-berry.png"
+    },
+    "hard-stone": {
+      "imageUrl": "/items/hard-stone.png",
+      "sourcePath": "sprites/items/hard-stone.png"
+    },
+    "hawluchanite": {
+      "imageUrl": "/items/hawluchanite.png",
+      "sourcePath": "sprites/items/gen9/hawluchanite.png"
+    },
+    "heat-rock": {
+      "imageUrl": "/items/heat-rock.png",
+      "sourcePath": "sprites/items/heat-rock.png"
+    },
+    "heracronite": {
+      "imageUrl": "/items/heracronite.png",
+      "sourcePath": "sprites/items/heracronite.png"
+    },
+    "houndoominite": {
+      "imageUrl": "/items/houndoominite.png",
+      "sourcePath": "sprites/items/houndoominite.png"
+    },
+    "icy-rock": {
+      "imageUrl": "/items/icy-rock.png",
+      "sourcePath": "sprites/items/icy-rock.png"
+    },
+    "iron-ball": {
+      "imageUrl": "/items/iron-ball.png",
+      "sourcePath": "sprites/items/iron-ball.png"
+    },
+    "kangaskhanite": {
+      "imageUrl": "/items/kangaskhanite.png",
+      "sourcePath": "sprites/items/kangaskhanite.png"
+    },
+    "kasib-berry": {
+      "imageUrl": "/items/kasib-berry.png",
+      "sourcePath": "sprites/items/kasib-berry.png"
+    },
+    "kebia-berry": {
+      "imageUrl": "/items/kebia-berry.png",
+      "sourcePath": "sprites/items/kebia-berry.png"
+    },
+    "kings-rock": {
+      "imageUrl": "/items/kings-rock.png",
+      "sourcePath": "sprites/items/kings-rock.png"
+    },
+    "leftovers": {
+      "imageUrl": "/items/leftovers.png",
+      "sourcePath": "sprites/items/leftovers.png"
+    },
+    "leppa-berry": {
+      "imageUrl": "/items/leppa-berry.png",
+      "sourcePath": "sprites/items/leppa-berry.png"
+    },
+    "life-orb": {
+      "imageUrl": "/items/life-orb.png",
+      "sourcePath": "sprites/items/life-orb.png"
+    },
+    "light-ball": {
+      "imageUrl": "/items/light-ball.png",
+      "sourcePath": "sprites/items/light-ball.png"
+    },
+    "light-clay": {
+      "imageUrl": "/items/light-clay.png",
+      "sourcePath": "sprites/items/light-clay.png"
+    },
+    "lopunnite": {
+      "imageUrl": "/items/lopunnite.png",
+      "sourcePath": "sprites/items/lopunnite.png"
+    },
+    "lucarionite": {
+      "imageUrl": "/items/lucarionite.png",
+      "sourcePath": "sprites/items/lucarionite.png"
+    },
+    "lum-berry": {
+      "imageUrl": "/items/lum-berry.png",
+      "sourcePath": "sprites/items/lum-berry.png"
+    },
+    "magnet": {
+      "imageUrl": "/items/magnet.png",
+      "sourcePath": "sprites/items/magnet.png"
+    },
+    "malamarite": {
+      "imageUrl": "/items/malamarite.png",
+      "sourcePath": "sprites/items/gen9/malamarite.png"
+    },
+    "manectite": {
+      "imageUrl": "/items/manectite.png",
+      "sourcePath": "sprites/items/manectite.png"
+    },
+    "mawilite": {
+      "imageUrl": "/items/mawilite.png",
+      "sourcePath": "sprites/items/mawilite.png"
+    },
+    "medichamite": {
+      "imageUrl": "/items/medichamite.png",
+      "sourcePath": "sprites/items/medichamite.png"
+    },
+    "meganiumite": {
+      "imageUrl": "/items/meganiumite.png",
+      "sourcePath": "sprites/items/gen9/meganiumite.png"
+    },
+    "mental-herb": {
+      "imageUrl": "/items/mental-herb.png",
+      "sourcePath": "sprites/items/mental-herb.png"
+    },
+    "meowsticite": {
+      "imageUrl": "/items/meowsticite.png",
+      "sourcePath": "sprites/items/gen9/meowsticite.png"
+    },
+    "metagrossite": {
+      "imageUrl": "/items/metagrossite.png",
+      "sourcePath": "sprites/items/metagrossite.png"
+    },
+    "metal-coat": {
+      "imageUrl": "/items/metal-coat.png",
+      "sourcePath": "sprites/items/metal-coat.png"
+    },
+    "metronome": {
+      "imageUrl": "/items/metronome.png",
+      "sourcePath": "sprites/items/metronome.png"
+    },
+    "miracle-seed": {
+      "imageUrl": "/items/miracle-seed.png",
+      "sourcePath": "sprites/items/miracle-seed.png"
+    },
+    "muscle-band": {
+      "imageUrl": "/items/muscle-band.png",
+      "sourcePath": "sprites/items/muscle-band.png"
+    },
+    "mystic-water": {
+      "imageUrl": "/items/mystic-water.png",
+      "sourcePath": "sprites/items/mystic-water.png"
+    },
+    "never-melt-ice": {
+      "imageUrl": "/items/never-melt-ice.png",
+      "sourcePath": "sprites/items/never-melt-ice.png"
+    },
+    "occa-berry": {
+      "imageUrl": "/items/occa-berry.png",
+      "sourcePath": "sprites/items/occa-berry.png"
+    },
+    "oran-berry": {
+      "imageUrl": "/items/oran-berry.png",
+      "sourcePath": "sprites/items/oran-berry.png"
+    },
+    "passho-berry": {
+      "imageUrl": "/items/passho-berry.png",
+      "sourcePath": "sprites/items/passho-berry.png"
+    },
+    "payapa-berry": {
+      "imageUrl": "/items/payapa-berry.png",
+      "sourcePath": "sprites/items/payapa-berry.png"
+    },
+    "pecha-berry": {
+      "imageUrl": "/items/pecha-berry.png",
+      "sourcePath": "sprites/items/pecha-berry.png"
+    },
+    "persim-berry": {
+      "imageUrl": "/items/persim-berry.png",
+      "sourcePath": "sprites/items/persim-berry.png"
+    },
+    "pidgeotite": {
+      "imageUrl": "/items/pidgeotite.png",
+      "sourcePath": "sprites/items/pidgeotite.png"
+    },
+    "pinsirite": {
+      "imageUrl": "/items/pinsirite.png",
+      "sourcePath": "sprites/items/pinsirite.png"
+    },
+    "poison-barb": {
+      "imageUrl": "/items/poison-barb.png",
+      "sourcePath": "sprites/items/poison-barb.png"
+    },
+    "pyroarite": {
+      "imageUrl": "/items/pyroarite.png",
+      "sourcePath": "sprites/items/gen9/pyroarite.png"
+    },
+    "quick-claw": {
+      "imageUrl": "/items/quick-claw.png",
+      "sourcePath": "sprites/items/quick-claw.png"
+    },
+    "raichunite-x": {
+      "imageUrl": "/items/raichunite-x.png",
+      "sourcePath": "sprites/items/gen9/raichunite-x.png"
+    },
+    "raichunite-y": {
+      "imageUrl": "/items/raichunite-y.png",
+      "sourcePath": "sprites/items/gen9/raichunite-y.png"
+    },
+    "rawst-berry": {
+      "imageUrl": "/items/rawst-berry.png",
+      "sourcePath": "sprites/items/rawst-berry.png"
+    },
+    "rindo-berry": {
+      "imageUrl": "/items/rindo-berry.png",
+      "sourcePath": "sprites/items/rindo-berry.png"
+    },
+    "roseli-berry": {
+      "imageUrl": "/items/roseli-berry.png",
+      "sourcePath": "sprites/items/roseli-berry.png"
+    },
+    "sablenite": {
+      "imageUrl": "/items/sablenite.png",
+      "sourcePath": "sprites/items/sablenite.png"
+    },
+    "sceptilite": {
+      "imageUrl": "/items/sceptilite.png",
+      "sourcePath": "sprites/items/sceptilite.png"
+    },
+    "scizorite": {
+      "imageUrl": "/items/scizorite.png",
+      "sourcePath": "sprites/items/scizorite.png"
+    },
+    "scolipite": {
+      "imageUrl": "/items/scolipite.png",
+      "sourcePath": "sprites/items/gen9/scolipite.png"
+    },
+    "scope-lens": {
+      "imageUrl": "/items/scope-lens.png",
+      "sourcePath": "sprites/items/scope-lens.png"
+    },
+    "scovillainite": {
+      "imageUrl": "/items/scovillainite.png",
+      "sourcePath": "sprites/items/gen9/scovillainite.png"
+    },
+    "scraftinite": {
+      "imageUrl": "/items/scraftinite.png",
+      "sourcePath": "sprites/items/gen9/scraftinite.png"
+    },
+    "sharp-beak": {
+      "imageUrl": "/items/sharp-beak.png",
+      "sourcePath": "sprites/items/sharp-beak.png"
+    },
+    "sharpedonite": {
+      "imageUrl": "/items/sharpedonite.png",
+      "sourcePath": "sprites/items/sharpedonite.png"
+    },
+    "shed-shell": {
+      "imageUrl": "/items/shed-shell.png",
+      "sourcePath": "sprites/items/shed-shell.png"
+    },
+    "shell-bell": {
+      "imageUrl": "/items/shell-bell.png",
+      "sourcePath": "sprites/items/shell-bell.png"
+    },
+    "shuca-berry": {
+      "imageUrl": "/items/shuca-berry.png",
+      "sourcePath": "sprites/items/shuca-berry.png"
+    },
+    "silk-scarf": {
+      "imageUrl": "/items/silk-scarf.png",
+      "sourcePath": "sprites/items/silk-scarf.png"
+    },
+    "silver-powder": {
+      "imageUrl": "/items/silver-powder.png",
+      "sourcePath": "sprites/items/silver-powder.png"
+    },
+    "sitrus-berry": {
+      "imageUrl": "/items/sitrus-berry.png",
+      "sourcePath": "sprites/items/sitrus-berry.png"
+    },
+    "skarmorite": {
+      "imageUrl": "/items/skarmorite.png",
+      "sourcePath": "sprites/items/gen9/skarmorite.png"
+    },
+    "slowbronite": {
+      "imageUrl": "/items/slowbronite.png",
+      "sourcePath": "sprites/items/slowbronite.png"
+    },
+    "smooth-rock": {
+      "imageUrl": "/items/smooth-rock.png",
+      "sourcePath": "sprites/items/smooth-rock.png"
+    },
+    "soft-sand": {
+      "imageUrl": "/items/soft-sand.png",
+      "sourcePath": "sprites/items/soft-sand.png"
+    },
+    "spell-tag": {
+      "imageUrl": "/items/spell-tag.png",
+      "sourcePath": "sprites/items/spell-tag.png"
+    },
+    "staraptite": {
+      "imageUrl": "/items/staraptite.png",
+      "sourcePath": "sprites/items/gen9/staraptite.png"
+    },
+    "starminite": {
+      "imageUrl": "/items/starminite.png",
+      "sourcePath": "sprites/items/gen9/starminite.png"
+    },
+    "steelixite": {
+      "imageUrl": "/items/steelixite.png",
+      "sourcePath": "sprites/items/steelixite.png"
+    },
+    "swampertite": {
+      "imageUrl": "/items/swampertite.png",
+      "sourcePath": "sprites/items/swampertite.png"
+    },
+    "tanga-berry": {
+      "imageUrl": "/items/tanga-berry.png",
+      "sourcePath": "sprites/items/tanga-berry.png"
+    },
+    "twisted-spoon": {
+      "imageUrl": "/items/twisted-spoon.png",
+      "sourcePath": "sprites/items/twisted-spoon.png"
+    },
+    "tyranitarite": {
+      "imageUrl": "/items/tyranitarite.png",
+      "sourcePath": "sprites/items/tyranitarite.png"
+    },
+    "venusaurite": {
+      "imageUrl": "/items/venusaurite.png",
+      "sourcePath": "sprites/items/venusaurite.png"
+    },
+    "victreebelite": {
+      "imageUrl": "/items/victreebelite.png",
+      "sourcePath": "sprites/items/gen9/victreebelite.png"
+    },
+    "wacan-berry": {
+      "imageUrl": "/items/wacan-berry.png",
+      "sourcePath": "sprites/items/wacan-berry.png"
+    },
+    "white-herb": {
+      "imageUrl": "/items/white-herb.png",
+      "sourcePath": "sprites/items/white-herb.png"
+    },
+    "wide-lens": {
+      "imageUrl": "/items/wide-lens.png",
+      "sourcePath": "sprites/items/wide-lens.png"
+    },
+    "wise-glasses": {
+      "imageUrl": "/items/wise-glasses.png",
+      "sourcePath": "sprites/items/wise-glasses.png"
+    },
+    "yache-berry": {
+      "imageUrl": "/items/yache-berry.png",
+      "sourcePath": "sprites/items/yache-berry.png"
+    },
+    "zoom-lens": {
+      "imageUrl": "/items/zoom-lens.png",
+      "sourcePath": "sprites/items/zoom-lens.png"
+    }
+  },
+  "missing": []
+}

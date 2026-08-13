@@ -31,21 +31,21 @@ This MUST pass without errors. It currently includes:
 - Built-output SSR and API tests
 
 - [ ] `pnpm verify:deploy` passed against the exact release source.
-- [ ] The pull request `Deployment verification` GitHub Actions check passed before merge.
+- [ ] After Dev UAT approval, the pull request `Deployment verification` GitHub Actions check passed before merge.
 - [ ] Warnings were reviewed and no new high-risk warning was introduced.
 - [ ] No test was skipped, focused, or weakened to make the gate pass.
 
 ## 2A. Dev/UAT promotion gate
 
-- [ ] Work exists on a `codex/*` branch and a pull request targets `main`.
-- [ ] An independent review agent found no unresolved material issue.
-- [ ] GitHub's `Deployment verification` check passed for the exact pull-request head commit.
+- [ ] Work exists as an exact committed candidate on a `codex/*` branch; a pull request is intentionally deferred until Dev UAT approval.
 - [ ] `pnpm verify:dev` passed and `dist/.openai/hosting.json` contains the Dev project ID, never the production project ID.
 - [ ] Build and save a Sites version from that exact commit using `.openai/hosting.dev.json`.
 - [ ] Deploy only to **Champions Lab Dev** while UAT is pending; keep the Dev site owner-only unless the product owner explicitly approves broader access.
 - [ ] Confirm the Dev and production project IDs differ and their D1 databases remain isolated.
 - [ ] Record the Dev URL, Sites version, commit SHA, test evidence, and known limitations.
-- [ ] Product-owner UAT passed before merging the pull request.
+- [ ] Product-owner UAT passed before opening the pull request.
+- [ ] After UAT approval, open the PR, wait for `Deployment verification`, and run an independent sub-agent auto review.
+- [ ] Every material review finding is addressed and required checks are repeated before automatic merge.
 - [ ] Do not interpret merge approval as production-deployment approval; obtain explicit production approval separately.
 
 ## 3. Data and upstream mapping gate
@@ -53,8 +53,11 @@ This MUST pass without errors. It currently includes:
 Required when any of these change:
 
 - `scripts/sync-upstream.mjs`
+- `scripts/item-sprites.mjs`
 - `scripts/audit-form-integrity.mjs`
 - `data/generated/champions-snapshot.json`
+- `data/generated/item-sprites.json`
+- `public/items/*.png`
 - form IDs, `speciesKey`, `battleDataKey`, `savedName`, learnsets, abilities, or usage mapping
 
 Run:
@@ -68,6 +71,8 @@ pnpm data:audit:live
 - [ ] Regional, gender, breed, and Rotom/appliance forms use their own battle keys.
 - [ ] Ambiguous shared metadata fails instead of applying last-write-wins.
 - [ ] Pokémon, move, ability, and item counts did not unexpectedly collapse.
+- [ ] Held-item sprite manifest count matches the catalog; every available path is an exact catalog ID and a valid local PNG.
+- [ ] All current Mega Stones resolve to a local thumbnail; unavailable items are explicit rather than fabricated.
 - [ ] Ninetales and Alolan Ninetales have different battle keys, sources, types, abilities, learnsets, and Singles/Doubles defaults.
 - [ ] Missing/invalid upstream data falls back to the last valid snapshot or an explicit unavailable state; it is never fabricated.
 
@@ -102,6 +107,8 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Reverse results use the Pokémon DB-style table; header sorting and sort controls stay synchronized, and mobile horizontal scrolling keeps the Pokémon column sticky.
 - [ ] Pokémon detail shows form-specific learnsets, abilities, matchups, and both battle formats.
 - [ ] Current-season move/item/ability entries open canonical tooltips; moves show their visible type badge and unmapped rows remain readable.
+- [ ] Held-item thumbnails appear beside item names in the Item DB, Pokémon battle usage, builder selection preview, Mega transformation message, floating team tray, and Speed Compare selection preview.
+- [ ] The same held-item thumbnail appears in both a tooltip trigger and its tooltip heading; a failed image remains readable through the neutral fallback.
 - [ ] Singles/Doubles usage defaults apply the highest-ranked legal item, ability, nature, AP spread, and four unique learnable moves.
 - [ ] Illegal, duplicated, or unmapped usage rows are skipped instead of forced into the build.
 
@@ -114,6 +121,7 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] The team tray can scroll through all six complete cards.
 - [ ] Builder and detail dialogs remain within the viewport.
 - [ ] At 390 px, detail move filters expand/collapse cleanly, chip rows scroll horizontally, and battle-usage tooltips open by touch.
+- [ ] At 390, 768, and 1440 px, item thumbnails do not clip, distort, obscure labels, or create unintended horizontal page scrolling.
 - [ ] The 18×18 type chart is complete.
 - [ ] The floating chart scrolls horizontally and vertically.
 - [ ] The attack column stays sticky during horizontal scrolling.
@@ -126,6 +134,8 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 
 - [ ] Unknown IDs cannot become arbitrary upstream URLs.
 - [ ] Upstream calls use a fixed host, an explicit timeout, and a bounded response body.
+- [ ] Item sprite downloads use the pinned PokeAPI sprites revision, validate PNG type/signature/size, and publish atomically.
+- [ ] Runtime item rendering uses local `/items/...` assets only and never fetches a third-party URL per render or hover.
 - [ ] JSON write endpoints reject non-JSON and oversized request bodies before schema validation.
 - [ ] Authenticated write endpoints reject missing or cross-origin `Origin` headers.
 - [ ] Admin APIs reject unauthenticated and unauthorized requests before database access.
