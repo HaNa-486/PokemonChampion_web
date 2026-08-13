@@ -185,12 +185,16 @@ function commonParentDirectory(destinations) {
   return candidate;
 }
 
-export async function publishStagedPathsAtomically(entries, { cleanupBackups = (target) => rm(target, { recursive: true, force: true }) } = {}) {
+export async function publishStagedPathsAtomically(entries, {
+  cleanupBackups = (target) => rm(target, { recursive: true, force: true }),
+  restoreBackup = (backup, destination) => rename(backup, destination),
+} = {}) {
   if (!entries.length) return;
   const transactionId = `${process.pid}-${Date.now()}`;
   const backupRoot = path.join(commonParentDirectory(entries.map((entry) => entry.destination)), `.generated-data-backup-${transactionId}`);
   await mkdir(backupRoot, { recursive: false });
   const activated = [];
+  let restoreFailed = false;
   try {
     for (const [index, entry] of entries.entries()) {
       const destination = path.resolve(entry.destination);
@@ -205,8 +209,11 @@ export async function publishStagedPathsAtomically(entries, { cleanupBackups = (
         await rename(staged, destination);
       } catch (error) {
         if (hadPrevious) {
-          try { await rename(backup, destination); }
-          catch (restoreError) { throw new AggregateError([error, restoreError], `Could not publish or restore ${destination}.`); }
+          try { await restoreBackup(backup, destination); }
+          catch (restoreError) {
+            restoreFailed = true;
+            throw new AggregateError([error, restoreError], `Could not publish or restore ${destination}.`);
+          }
         }
         throw error;
       }
@@ -217,11 +224,14 @@ export async function publishStagedPathsAtomically(entries, { cleanupBackups = (
     for (const entry of activated.reverse()) {
       try {
         await rm(entry.destination, { recursive: true, force: true });
-        if (entry.hadPrevious) await rename(entry.backup, entry.destination);
-      } catch (rollbackError) { rollbackErrors.push(rollbackError); }
+        if (entry.hadPrevious) await restoreBackup(entry.backup, entry.destination);
+      } catch (rollbackError) {
+        restoreFailed = true;
+        rollbackErrors.push(rollbackError);
+      }
     }
     await Promise.all(entries.map((entry) => rm(entry.staged, { recursive: true, force: true }).catch((cleanupError) => rollbackErrors.push(cleanupError))));
-    if (rollbackErrors.length === 1) await rm(backupRoot, { recursive: true, force: true });
+    if (!restoreFailed && rollbackErrors.length === 1) await rm(backupRoot, { recursive: true, force: true });
     else throw new AggregateError(rollbackErrors, `Generated data publication failed and rollback was incomplete; recovery files remain in ${backupRoot}.`);
     throw error;
   }

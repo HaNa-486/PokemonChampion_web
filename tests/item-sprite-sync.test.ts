@@ -97,6 +97,22 @@ describe("held-item sprite publication", () => {
     expect(warning).toHaveBeenCalledWith(expect.stringContaining("backup cleanup must be retried"));
     warning.mockRestore();
   });
+
+  it("preserves recovery files when activation and immediate restore both fail", async () => {
+    const root = await temporaryRoot();
+    const destination = path.join(root, "catalog.json");
+    await writeFile(destination, "last known good catalog");
+    const missingStaged = path.join(root, "missing.stage.json");
+
+    await expect(publishStagedPathsAtomically(
+      [{ destination, staged: missingStaged }],
+      { restoreBackup: async () => { throw new Error("restore blocked"); } },
+    )).rejects.toThrow(/recovery files remain/);
+
+    const recoveryRoot = (await readdir(root)).find((name) => name.startsWith(".generated-data-backup-"));
+    expect(recoveryRoot).toBeTruthy();
+    expect(await readFile(path.join(root, recoveryRoot!, "0"), "utf8")).toBe("last known good catalog");
+  });
 });
 
 describe("held-item sprite audit", () => {

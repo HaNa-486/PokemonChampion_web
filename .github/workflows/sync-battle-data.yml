@@ -128,9 +128,9 @@ jobs:
               '',
               '## Next action',
               '',
-              '- Use the linked candidate branch to create a pull request through Codex or GitHub.',
-              '- Deploy that exact checked pull-request head to Champions Lab Dev.',
-              '- Complete product-owner UAT before merge.',
+              '- Deploy this exact candidate commit to Champions Lab Dev before opening a pull request.',
+              '- Complete product-owner UAT for that exact Dev commit.',
+              '- After UAT approval, create a pull request through Codex or GitHub and run the normal PR checks and independent review.',
               '- Obtain separate approval before production promotion.',
               '- Add the production URL and close this issue after the approved deployment and smoke test.',
             ].join('\n');
@@ -262,7 +262,7 @@ jobs:
                 ? 'The upstream sources were checked and no data changes were found.'
                 : 'The workflow stopped before it could determine whether upstream data changed.';
             const deploymentStatus = changed === 'true' && process.env.DEPLOYMENT_NOTIFICATION_OUTCOME === 'success'
-              ? 'Dev UAT required: see the open `deployment-required` Issue and create a pull request from the candidate branch.'
+              ? 'Dev UAT required: deploy the exact candidate commit first; create the pull request only after product-owner approval.'
               : changed === 'true' && process.env.COMMIT_OUTCOME === 'success'
                 ? 'The snapshot branch was pushed, but the deployment notification failed; inspect this run.'
               : changed === 'false' && result === 'success'

@@ -14,4 +14,7 @@ export function manifestMatchesItems(items: Array<{ id: string }>, manifest: Ite
 export function auditItemSpriteAssets(manifest: unknown, projectRoot?: string): Promise<{ valid: boolean; missing: string[]; invalid: string[] }>;
 export type StagedPath = { destination: string; staged: string };
 export function stageItemSpriteAssets(manifest: ItemSpriteManifest, options?: { projectRoot?: string; force?: boolean }): Promise<StagedPath & { stats: { downloaded: number; unchanged: number; unavailable: number } }>;
-export function publishStagedPathsAtomically(entries: StagedPath[], options?: { cleanupBackups?: (target: string) => Promise<void> }): Promise<void>;
+export function publishStagedPathsAtomically(entries: StagedPath[], options?: {
+  cleanupBackups?: (target: string) => Promise<void>;
+  restoreBackup?: (backup: string, destination: string) => Promise<void>;
+}): Promise<void>;
