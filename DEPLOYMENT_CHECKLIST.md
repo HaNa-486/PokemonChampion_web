@@ -118,6 +118,10 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 
 - [ ] Keyboard focus, Escape, mouse, and touch behavior work for tooltips and dialogs.
 - [ ] English and Traditional Chinese critical flows do not clip or lose state.
+- [ ] In `zh-Hant`, every listed Pokémon/form name is the official Traditional Chinese name; no Pokémon name is machine translated or left in English.
+- [ ] In `zh-Hant`, all move, ability, and held-item names and descriptions are Chinese on database rows, detail dialogs, battle-usage rows, and tooltips; none silently reuse the English description.
+- [ ] Type, category, target, property, ability-category, item-category, effect-class, and sortable table labels switch to Chinese without changing filter semantics.
+- [ ] Localization completeness tests fail when a legal catalog entry lacks Chinese content or when a Chinese description equals its English source.
 - [ ] The team tray can scroll through all six complete cards.
 - [ ] Builder and detail dialogs remain within the viewport.
 - [ ] At 390 px, detail move filters expand/collapse cleanly, chip rows scroll horizontally, and battle-usage tooltips open by touch.

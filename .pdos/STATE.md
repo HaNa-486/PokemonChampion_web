@@ -3,41 +3,41 @@
 Keep this file concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.3.0
-- State revision: 5
-- Updated: 2026-08-13T05:20:35Z
+- State revision: 6
+- Updated: 2026-08-13T06:52:00Z
 - State confidence: high
-- Phase: post-review remediation and repeat Dev UAT
+- Phase: verified candidate awaiting isolated Dev/UAT deployment
 
 ## Repository identity
 
-- Branch: codex/item-thumbnails
+- Branch: codex/traditional-chinese-localization
 - Worktree: C:\Users\091\codex_workspace\BDWP\PokemonChampion
-- Commit: eff15daaf15c0cd11d17e94d291e88eadfeb29bb
+- Base commit: 29bea4dbb81b4630a2636756113b379fad41e8f3
 
 ## Product anchors
 
-- Primary user: Competitive Champions Lab users scanning held items in catalogs, usage data, and team builds.
-- Product outcome: Every user-visible held-item name is paired with a consistent local thumbnail when the UI can render one, with a safe fallback when it cannot.
-- Critical journey: inspect held-item data -> recognize the item visually -> choose or verify it in a build -> see the same icon in usage data and the team tray.
-- Non-goals: replacing native selects with custom comboboxes; mirroring all PokeAPI sprites; changing Pokemon sprite sourcing.
+- Primary user: Traditional Chinese Champions Lab users comparing current-Regulation Pokémon, moves, abilities, and held items.
+- Product outcome: Switching to Traditional Chinese produces a genuinely Chinese catalog and interaction flow, without English descriptions masquerading as localized data.
+- Critical journey: switch to zh-Hant -> browse/filter catalogs -> inspect Pokémon/forms -> read move/ability/item tooltips and current-season usage -> build a team.
+- Non-goals: full Admin publish/revert workflow; human copy-editing of every machine-translated Champions-specific sentence in this release.
 
 ## Current work
 
-- Current slice: Post-UAT PR review found two P2 issues; fixes are verified and must replace the Dev candidate for repeat product-owner UAT before merge.
-- Active workstreams: `workstreams/2026-08-12-item-thumbnails.md`
-- Blocking dependencies: The updated commit requires a new `verify:dev`, Champions Lab Dev deployment, and explicit product-owner UAT approval. PR #5 remains unmerged.
-- Consequential open decisions: Product owner explicitly changed the durable release order to Dev UAT before PR. Production promotion remains a separate decision after post-UAT PR review and merge.
+- Current slice: Complete zh-Hant catalog and UI taxonomy localization.
+- Active workstream: `workstreams/2026-08-13-traditional-chinese-localization.md`
+- Blocking dependency: Exact commit must pass `pnpm verify:dev`, be deployed privately to Champions Lab Dev, and receive explicit product-owner UAT before PR.
+- Consequential open decision: Production promotion remains a separate approval after PR checks, independent review, and merge.
 
 ## Handoff
 
-- What changed: Added a pinned PokeAPI item-sprite manifest and 148 local PNGs; shared item icon/display/tooltip UI; coverage in the item catalog, battle usage, builder, Mega notice, team tray, and Speed Compare; bounded and rollback-safe synchronization; workflow gates, attribution, documentation, and tests. Updated the durable release workflow: exact committed candidate goes to Dev UAT before PR; after owner approval Codex opens the PR, runs checks plus independent sub-agent auto review, addresses findings, and merges; production is separately approved.
-- Verification evidence: Original Dev UAT was approved and PR #5's GitHub Deployment verification passed. Post-UAT sub-agent review found two P2 issues; both are fixed. The updated source passes `pnpm verify:deploy` with 16 test files / 94 tests plus 10 built-worker tests, and `pnpm data:audit:live` passes 358 snapshot forms / 236 live forms across 18 groups.
-- Not verified: The updated commit has not yet passed `pnpm verify:dev`, repeat Dev deployment, repeat owner UAT, or final sub-agent confirmation. Original UAT is invalid because the candidate changed.
-- Residual risks: PokeAPI sprites has no clearly declared image-content license in current project evidence; existing Pokemon IP/trademark legal review remains required.
-- Next safe action: Commit and push the remediation to PR #5, rerun GitHub verification and independent review, run `pnpm verify:dev`, deploy the exact updated commit privately to Champions Lab Dev, then wait for repeat owner UAT approval before merge.
+- What changed: Complete names/descriptions for 358 Pokémon forms, 539 moves, 200 abilities, and 148 items; official Pokémon naming source; committed translation provenance; localized filters/table taxonomy/tooltips; fail-closed localization synchronization and tests.
+- Verification evidence: `pnpm verify:deploy` passed (17 files / 99 tests plus 10 built-worker checks); `pnpm data:audit:live` passed 358 snapshot / 236 live forms across 18 groups.
+- Not verified: Dev artifact, Dev deployment, and product-owner visual UAT.
+- Residual risks: Machine translations require progressive editorial review; Admin approval/audit/revert remains a separate P1 workstream.
+- Next safe action: Commit exact source, run `pnpm verify:dev`, deploy exact commit to Champions Lab Dev, and provide focused UAT steps.
 
 ## Read next
 
-- `plans/active.md` - current item-thumbnail implementation slices
-- `workstreams/2026-08-12-item-thumbnails.md` - scoped progress and verification
-- `../PROJECT_SPEC.md` - product behavior and release requirements
+- `workstreams/2026-08-13-traditional-chinese-localization.md`
+- `../PROJECT_SPEC.md`
+- `../DEPLOYMENT_CHECKLIST.md`

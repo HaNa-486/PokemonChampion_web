@@ -113,7 +113,7 @@ Abilities and held items use the equivalent pinned base data, text, and `data/mo
 - Localization and alias mapping
 - Held-item sprite assets selected from the separate PokeAPI sprites repository at a fixed commit
 
-Only catalog-matched held-item PNGs are bundled locally; the application must not fetch a third-party item image during hover or rendering. PokeAPI must never supply or overwrite authoritative Champions move, ability, or held-item mechanics, availability, or behavior. A localized PokeAPI effect may be used only when no Champions-specific behavior changes that entity; otherwise the verified Showdown English description remains the explicit locale fallback until a reviewed translation exists.
+Only catalog-matched held-item PNGs are bundled locally; the application must not fetch a third-party item image during hover or rendering. PokeAPI must never supply or overwrite authoritative Champions move, ability, or held-item mechanics, availability, or behavior. PokeAPI supplies official Traditional Chinese names and may supply localized prose only when no Champions-specific behavior changes that entity. Champions-specific or otherwise missing prose is translated from the effective Showdown Champions description, committed with provenance, and reviewed independently. A `zh-Hant` catalog build must fail closed rather than silently publish an English description as Chinese.
 
 ### 4.4 Manual overrides
 
@@ -126,8 +126,9 @@ published manual override
 → active Champions Regulation legality, form data, and usage
 → Pokémon Showdown Champions entity override/global rule
 → Pokémon Showdown base entity data and English text
-→ normalized PokeAPI ID/localization supplement
-→ English fallback
+→ normalized PokeAPI official Traditional Chinese name/localization supplement
+→ committed, provenance-recorded translation of effective Champions mechanics
+→ import failure when required `zh-Hant` content is still missing
 → explicit “Data unavailable”
 ```
 
@@ -547,7 +548,7 @@ Desktop also provides a collapsible lower-left floating chart because the team t
 
 ### 8.9 i18n/accessibility
 
-Support `en` and `zh-Hant`; Chinese falls back to English. Locale changes preserve team/filters/format/page. Search accepts localized names/aliases. Identifiers never use translated names.
+Support `en` and `zh-Hant`. Every legal Pokémon form, move, ability, and held item has a non-empty Traditional Chinese display name; every move, ability, and item has a non-English Traditional Chinese description. Pokémon species names must come from official Traditional Chinese data and must never be machine translated. Fixed taxonomy and interface labels—including types, move categories, targets, properties, ability categories, and item/effect categories—also follow the active locale. Locale changes preserve team/filters/format/page. Search accepts localized names/aliases. Identifiers never use translated names. Missing required Chinese catalog content fails the generated-data build instead of falling back silently to English.
 
 Meet WCAG 2.2 AA: keyboard operation, visible focus, semantic headings/tables/forms/dialogs, tooltip focus support, focus trap/restoration, 200% zoom, reduced motion, compliant contrast, no color-only meaning, and screen-reader labels such as “Priority plus one.”
 
@@ -746,7 +747,8 @@ The committed offline form-integrity audit runs on every deployment. A live audi
 - Regional/gender/breed/appliance mappings remain form-specific; Ninetales and Alolan Ninetales retain distinct types, abilities, learnsets, sources, and format defaults.
 - Every current-Regulation move resolves to pinned Showdown mechanics and a non-empty English description; no legal move silently falls back to PokeAPI mechanics.
 - Apple Acid is a permanent Champions move golden fixture: Power 90, Accuracy 100, PP 12, and a 100% one-stage Special Defense reduction description.
-- Champions-description overrides cannot reuse potentially contradictory main-series localized effect prose; they use reviewed localization or explicit English fallback.
+- Champions-description overrides cannot reuse potentially contradictory main-series localized effect prose; they use a provenance-recorded translation of the effective Champions description. A Chinese build cannot use an English fallback.
+- All current-Regulation Pokémon forms have official Traditional Chinese species names and reviewed form labels; all move/ability/item Chinese names and descriptions are non-empty and are not equal to their English counterparts.
 - Healer (50%), Unseen Fist (protection plus 1/4 damage), Fairy Feather (non-empty effect), and Slowbronite (not Galarian Slowbro) are permanent ability/item golden fixtures.
 - Every held item in the committed catalog has either one exact local PNG mapping or an explicit unavailable entry; all 75 Mega Stones have local PNGs; file signatures and manifest counts agree.
 - Unknown item IDs never become repository or runtime URLs, and a broken or unavailable thumbnail renders the neutral fallback without hiding the localized item name.
