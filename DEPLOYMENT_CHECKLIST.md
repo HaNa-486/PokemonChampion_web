@@ -121,7 +121,8 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] In `zh-Hant`, every listed Pokémon/form name is the official Traditional Chinese name; no Pokémon name is machine translated or left in English.
 - [ ] In `zh-Hant`, all move, ability, and held-item names and descriptions are Chinese on database rows, detail dialogs, battle-usage rows, and tooltips; none silently reuse the English description.
 - [ ] `pnpm data:audit:zh` confirms every Chinese description is derived from the exact effective Champions English mechanic, preserves every numeric token, multiplier, rounding rule, trigger threshold, and single-use condition, and contains no broken placeholder or unapproved English residue.
-- [ ] Official PokeAPI `zh-Hant` names and reviewed Champions-only/form names retain per-record provenance; machine translation is limited to descriptions and every semantic override is explicitly identified.
+- [ ] Every legal move name exactly matches the pinned Traditional Chinese game-string source; PokeAPI locale labels are treated only as community-maintained candidates, and every entity name retains per-record provenance.
+- [ ] The known Gen 8/9 regressions—including `毒千針`, `秘劍・千重濤`, `潑冷水`, `噴射拳`, `掃墓`, `鎧農炮`, and `下壓踢`—contain no Simplified Chinese characters.
 - [ ] Chinese descriptions and fixed UI terms contain no Simplified Chinese; official Traditional Chinese entity spellings are not rewritten merely to satisfy OpenCC lexical preferences.
 - [ ] Type, category, target, property, ability-category, item-category, effect-class, and sortable table labels switch to Chinese without changing filter semantics.
 - [ ] Localization completeness tests fail when a legal catalog entry lacks Chinese content or when a Chinese description equals its English source.

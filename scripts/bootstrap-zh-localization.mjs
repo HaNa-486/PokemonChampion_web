@@ -5,6 +5,8 @@ import { parseCsv } from "./sync-upstream.mjs";
 
 const REVISION = "0d8fe2bf23d53f44456dc8dd2c861c5dab827146";
 const CSV_ROOT = `https://raw.githubusercontent.com/PokeAPI/pokeapi/${REVISION}/data/v2/csv`;
+const PKHEX_REVISION = "146172f61866f80aefc1f2993cb0a87080769b7b";
+const PKHEX_MOVE_NAMES_URL = `https://raw.githubusercontent.com/kwsch/PKHeX/${PKHEX_REVISION}/PKHeX.Core/Resources/text/other/zh-Hant/text_Moves_zh-Hant.txt`;
 const OUTPUT = path.resolve("data/localization/zh-Hant.json");
 const nodeName = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, "");
 const toTaiwanTraditional = OpenCC.Converter({ from: "cn", to: "twp" });
@@ -62,7 +64,6 @@ async function fetchText(url) {
   return response.text();
 }
 
-const manualMoveNames = { "matcha-gotcha": "刷刷茶炮", "syrup-bomb": "糖漿炸彈" };
 const manualAbilityNames = { eelevate: "電氣升空", "fire-mane": "火焰鬃毛" };
 const itemBaseNames = {
   barbaracite: "龜足巨鎧", chandelurite: "水晶燈火靈", chesnaughtite: "布里卡隆", chimechite: "風鈴鈴",
@@ -110,8 +111,8 @@ function officialPokemonName(entry, speciesZh) {
 
 function pokemonNameSource(entry) {
   if (formNames[entry.name]) return "reviewed-official-form-name";
-  if (/^Mega /.test(entry.name) || /^(Alolan|Galarian|Hisuian) /.test(entry.name)) return "pokeapi-official-species-plus-reviewed-form-composition";
-  return "pokeapi-official-zh-hant";
+  if (/^Mega /.test(entry.name) || /^(Alolan|Galarian|Hisuian) /.test(entry.name)) return "pokeapi-community-species-plus-reviewed-form-composition";
+  return "pokeapi-community-zh-hant";
 }
 
 async function translate(text) {
@@ -156,16 +157,25 @@ async function translateMap(entries, existing = {}, existingSources = {}) {
 async function main() {
   const snapshot = JSON.parse(await readFile("data/generated/champions-snapshot.json", "utf8"));
   const existing = await readFile(OUTPUT, "utf8").then(JSON.parse).catch(() => ({}));
-  const [speciesCsv, speciesNamesCsv, moveCsv, moveNamesCsv, abilityCsv, abilityNamesCsv, itemCsv, itemNamesCsv] = await Promise.all([
+  const [speciesCsv, speciesNamesCsv, moveCsv, moveNamesCsv, abilityCsv, abilityNamesCsv, itemCsv, itemNamesCsv, pkhexMoveNamesText] = await Promise.all([
     fetchText(`${CSV_ROOT}/pokemon_species.csv`), fetchText(`${CSV_ROOT}/pokemon_species_names.csv`),
     fetchText(`${CSV_ROOT}/moves.csv`), fetchText(`${CSV_ROOT}/move_names.csv`),
     fetchText(`${CSV_ROOT}/abilities.csv`), fetchText(`${CSV_ROOT}/ability_names.csv`),
     fetchText(`${CSV_ROOT}/items.csv`), fetchText(`${CSV_ROOT}/item_names.csv`),
+    fetchText(PKHEX_MOVE_NAMES_URL),
   ]);
   const species = parseCsv(speciesCsv); const names = parseCsv(speciesNamesCsv);
   const zhById = new Map(names.filter((row) => row.local_language_id === "4").map((row) => [row.pokemon_species_id, row.name]));
   const speciesZh = new Map(species.map((row) => [nodeName(row.identifier), zhById.get(row.id)]).filter(([, name]) => name));
   const pokemonNames = Object.fromEntries(snapshot.pokemon.map((entry) => [entry.id, officialPokemonName(entry, speciesZh)]));
+  const pkhexMoveNames = pkhexMoveNamesText.replace(/^\uFEFF/u, "").split(/\r?\n/u);
+  const moveRowsByIdentifier = new Map(parseCsv(moveCsv).map((row) => [row.identifier, row]));
+  const moveNames = Object.fromEntries(snapshot.moves.map((entry) => {
+    const row = moveRowsByIdentifier.get(entry.id);
+    const name = row ? pkhexMoveNames[Number(row.id)]?.trim() : "";
+    if (!name || name === "---" || name === "？？？") throw new Error(`Missing pinned PKHeX zh-Hant move name for ${entry.name} (${entry.id})`);
+    return [entry.id, name];
+  }));
   const officialPairs = (entityCsv, namesCsv, foreignKey) => {
     const identifiers = new Set(parseCsv(entityCsv).map((row) => row.id));
     const english = new Map(parseCsv(namesCsv).filter((row) => row.local_language_id === "9" && identifiers.has(row[foreignKey])).map((row) => [row[foreignKey], row.name]));
@@ -177,7 +187,7 @@ async function main() {
     ...officialPairs(abilityCsv, abilityNamesCsv, "ability_id"),
     ...officialPairs(itemCsv, itemNamesCsv, "item_id"),
     ...snapshot.pokemon.map((entry) => [entry.name, pokemonNames[entry.id]]),
-    ...snapshot.moves.map((entry) => [entry.name, entry.nameZh]),
+    ...snapshot.moves.map((entry) => [entry.name, moveNames[entry.id]]),
     ...snapshot.abilities.map((entry) => [entry.name, entry.nameZh]),
     ...snapshot.items.map((entry) => [entry.name, entry.nameZh]),
     ["Special Defense", "特防"], ["Special Attack", "特攻"],
@@ -202,9 +212,9 @@ async function main() {
   ].filter(([english, traditional]) => english && traditional && english !== traditional).sort((left, right) => right[0].length - left[0].length);
   const nameSources = {
     pokemon: Object.fromEntries(snapshot.pokemon.map((entry) => [entry.id, pokemonNameSource(entry)])),
-    moves: Object.fromEntries(snapshot.moves.map((entry) => [entry.id, manualMoveNames[entry.id] ? "reviewed-champions-name" : "pokeapi-official-zh-hant"])),
-    abilities: Object.fromEntries(snapshot.abilities.map((entry) => [entry.id, manualAbilityNames[entry.id] ? "reviewed-champions-name" : "pokeapi-official-zh-hant"])),
-    items: Object.fromEntries(snapshot.items.map((entry) => [entry.id, manualItemNames[entry.id] ? "reviewed-champions-name" : "pokeapi-official-zh-hant"])),
+    moves: Object.fromEntries(snapshot.moves.map((entry) => [entry.id, "pkhex-game-string-zh-hant"])),
+    abilities: Object.fromEntries(snapshot.abilities.map((entry) => [entry.id, manualAbilityNames[entry.id] ? "reviewed-champions-name" : "pokeapi-community-zh-hant"])),
+    items: Object.fromEntries(snapshot.items.map((entry) => [entry.id, manualItemNames[entry.id] ? "reviewed-champions-name" : "pokeapi-community-zh-hant"])),
   };
   const sourceDescriptions = {
     moves: Object.fromEntries(snapshot.moves.map((entry) => [entry.id, entry.description])),
@@ -222,15 +232,16 @@ async function main() {
     translationVersion: TRANSLATION_VERSION,
     locale: "zh-Hant",
     provenance: {
-      pokemonNames: "PokeAPI official Traditional Chinese species names plus reviewed official form naming; never machine translated",
-      resourceNames: "PokeAPI official Traditional Chinese move, ability, and item names plus reviewed mappings for Champions-only entities",
+      pokemonNames: "PokeAPI community-maintained Traditional Chinese species-name candidates plus reviewed official form naming; never machine translated",
+      moveNames: `Traditional Chinese game strings mirrored by PKHeX at pinned revision ${PKHEX_REVISION}; complete legal move coverage and never machine translated`,
+      resourceNames: "PokeAPI community-maintained Traditional Chinese ability and item name candidates plus reviewed mappings for Champions-only entities",
       descriptions: "Machine translation of the complete effective Pokémon Showdown Champions English mechanics, normalized to Taiwan Traditional Chinese with OpenCC; requires editorial review",
       reviewedDescriptionOverrides: "Human-reviewed Traditional Chinese overrides for entries that failed semantic parity or critical golden checks",
       generatedAt: new Date().toISOString(),
     },
     pokemonNames,
     nameSources,
-    names: { moves: manualMoveNames, abilities: manualAbilityNames, items: manualItemNames },
+    names: { moves: moveNames, abilities: manualAbilityNames, items: manualItemNames },
     descriptions,
     reviewedDescriptionIds: Object.fromEntries(Object.entries(reviewedDescriptionOverrides).map(([section, values]) => [section, Object.keys(values)])),
     descriptionSources: Object.fromEntries(["moves", "abilities", "items"].map((section) => {

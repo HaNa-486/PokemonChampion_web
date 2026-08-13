@@ -3,10 +3,10 @@
 Keep this file concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.3.0
-- State revision: 7
-- Updated: 2026-08-13T08:20:00Z
+- State revision: 8
+- Updated: 2026-08-13T10:15:00Z
 - State confidence: high
-- Phase: verified candidate awaiting exact commit and isolated Dev/UAT deployment
+- Phase: corrected move-name source verified; awaiting exact commit and replacement Dev/UAT deployment
 
 ## Repository identity
 
@@ -35,6 +35,13 @@ Keep this file concise. Every fresh PDOS context reads it first.
 - Not verified: Dev artifact, Dev deployment, and product-owner visual UAT. Local in-app browser binding was unavailable, so visual QA moves to the isolated Dev deployment.
 - Residual risks: Raw machine translations remain clearly identified and require progressive editorial review; Admin approval/audit/revert remains a separate P1 workstream.
 - Next safe action: Commit the exact verified candidate, run `pnpm verify:dev`, deploy that commit to Champions Lab Dev, and provide focused UAT checks.
+
+## Move-name correction addendum
+
+- Replaced the mislabeled PokeAPI move-name feed with pinned PKHeX Traditional Chinese game strings for all 539 legal moves.
+- Corrected 34 mixed-Simplified names and added exact provenance, seven golden regressions, and a fail-closed Simplified-character guard.
+- Current evidence: `pnpm verify:deploy` passed 17 files / 105 tests plus 10 built-worker checks; `pnpm data:audit:zh` passed 539 moves / 200 abilities / 148 items; `pnpm data:audit:live` passed 358 snapshot / 236 live forms across 18 groups.
+- The previous Dev UAT result is invalid because the candidate changed. Next safe action is exact commit, `pnpm verify:dev`, and a replacement private Dev deployment.
 
 ## Read next
 

@@ -33,6 +33,20 @@ describe("Traditional Chinese catalog completeness", () => {
     }
   });
 
+  it("uses pinned Traditional Chinese game strings for every legal move name", () => {
+    const expectedNames = {
+      "armor-cannon": "鎧農炮",
+      "axe-kick": "下壓踢",
+      "barb-barrage": "毒千針",
+      "ceaseless-edge": "秘劍・千重濤",
+      "chilling-water": "潑冷水",
+      "jet-punch": "噴射拳",
+      "last-respects": "掃墓",
+    } as const;
+    for (const move of snapshot.moves) expect(move.nameLocalizationSource, move.id).toBe("pkhex-game-string-zh-hant");
+    for (const [id, name] of Object.entries(expectedNames)) expect(snapshot.moves.find((move) => move.id === id)?.nameZh).toBe(name);
+  });
+
   it("localizes fixed taxonomy without changing stored filter keys", () => {
     expect(localizedTerm("Fire", "zh-Hant")).toBe("火");
     expect(localizedTerm("Physical", "zh-Hant")).toBe("物理");

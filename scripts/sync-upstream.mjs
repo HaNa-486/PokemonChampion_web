@@ -326,7 +326,7 @@ export async function buildSnapshot(championsSource, revisions = {}) {
     sources: {
       champions: { url: CHAMPIONS_INDEX, generatedAt: source.generatedAt, dataVersion: source.dataVersion },
       showdown: { repository: `https://github.com/${SHOWDOWN_REPOSITORY}`, revision: showdownRevision, mod: "champions", datasets: ["data/moves.ts", "data/text/moves.ts", "data/mods/champions/moves.ts", "data/abilities.ts", "data/text/abilities.ts", "data/mods/champions/abilities.ts", "data/items.ts", "data/text/items.ts", "data/mods/champions/items.ts", "data/mods/champions/scripts.ts"] },
-      pokeapi: { repository: `https://github.com/${POKEAPI_REPOSITORY}`, revision: pokeapiRevision, purpose: "IDs and official Traditional Chinese names", datasets: ["moves.csv", "move_names.csv", "abilities.csv", "ability_names.csv", "items.csv", "item_names.csv", "pokemon_species.csv", "pokemon_species_names.csv"] },
+      pokeapi: { repository: `https://github.com/${POKEAPI_REPOSITORY}`, revision: pokeapiRevision, purpose: "IDs, aliases, and community-maintained localization candidates; not an authoritative game-string source", datasets: ["moves.csv", "move_names.csv", "abilities.csv", "ability_names.csv", "items.csv", "item_names.csv", "pokemon_species.csv", "pokemon_species_names.csv"] },
       localization: { locale: "zh-Hant", schemaVersion: zhLocalization.schemaVersion, sha256: localizationDigest, provenance: zhLocalization.provenance },
     },
     ruleset: { defaultSeason: source.defaultSeason, seasons: source.seasons ?? [] },

@@ -113,7 +113,7 @@ Abilities and held items use the equivalent pinned base data, text, and `data/mo
 - Localization and alias mapping
 - Held-item sprite assets selected from the separate PokeAPI sprites repository at a fixed commit
 
-Only catalog-matched held-item PNGs are bundled locally; the application must not fetch a third-party item image during hover or rendering. PokeAPI must never supply or overwrite authoritative Champions move, ability, or held-item mechanics, availability, or behavior. PokeAPI supplies official Traditional Chinese names and may supply localized prose only when no Champions-specific behavior changes that entity. Champions-specific or otherwise missing prose is translated from the effective Showdown Champions description, committed with provenance, and reviewed independently. A `zh-Hant` catalog build must fail closed rather than silently publish an English description as Chinese.
+Only catalog-matched held-item PNGs are bundled locally; the application must not fetch a third-party item image during hover or rendering. PokeAPI must never supply or overwrite authoritative Champions move, ability, or held-item mechanics, availability, or behavior. PokeAPI supplies IDs, aliases, and community-maintained localization candidates; its locale label is not proof that a string is authoritative or even correctly Traditional Chinese. Move names use a pinned Traditional Chinese game-string source mirrored by PKHeX and must match it exactly. Champions-specific or otherwise missing prose is translated from the effective Showdown Champions description, committed with provenance, and reviewed independently. A `zh-Hant` catalog build must fail closed rather than silently publish English or Simplified Chinese as Traditional Chinese.
 
 ### 4.4 Manual overrides
 
@@ -126,7 +126,8 @@ published manual override
 → active Champions Regulation legality, form data, and usage
 → Pokémon Showdown Champions entity override/global rule
 → Pokémon Showdown base entity data and English text
-→ normalized PokeAPI official Traditional Chinese name/localization supplement
+→ pinned Traditional Chinese game-string name when available
+→ reviewed PokeAPI localization candidate or explicit reviewed mapping otherwise
 → committed, provenance-recorded translation of effective Champions mechanics
 → import failure when required `zh-Hant` content is still missing
 → explicit “Data unavailable”
@@ -550,7 +551,7 @@ Desktop also provides a collapsible lower-left floating chart because the team t
 
 Support `en` and `zh-Hant`. Every legal Pokémon form, move, ability, and held item has a non-empty Traditional Chinese display name; every move, ability, and item has a non-English Traditional Chinese description. Pokémon species names must come from official Traditional Chinese data and must never be machine translated. Fixed taxonomy and interface labels—including types, move categories, targets, properties, ability categories, and item/effect categories—also follow the active locale. Locale changes preserve team/filters/format/page. Search accepts localized names/aliases. Identifiers never use translated names. Missing required Chinese catalog content fails the generated-data build instead of falling back silently to English.
 
-Traditional Chinese localization preserves provenance per record. Pokémon, move, ability, and held-item names use PokeAPI official `zh-Hant` names when available; reviewed mappings cover Champions-only resources and form composition. Names are never machine translated. Descriptions are machine translations of the complete effective Pokémon Showdown Champions English mechanics, normalized to Taiwan Traditional Chinese, with reviewed semantic overrides for entries that fail parity. The localization audit must compare against the exact current English source, preserve all numbers, fractions, percentages, multipliers, rounding rules, trigger thresholds, and single-use conditions, reject Simplified Chinese, broken placeholders, and unapproved English residue, and record whether each result is raw machine translation or a reviewed semantic override.
+Traditional Chinese localization preserves provenance per record. Move names must match the pinned Traditional Chinese game strings mirrored by PKHeX; PokeAPI `zh-Hant` values are community-maintained candidates and must never be trusted solely because of their locale label. Reviewed mappings cover Champions-only resources and form composition. Names are never machine translated. Descriptions are machine translations of the complete effective Pokémon Showdown Champions English mechanics, normalized to Taiwan Traditional Chinese, with reviewed semantic overrides for entries that fail parity. The localization audit must compare against the exact current English source, preserve all numbers, fractions, percentages, multipliers, rounding rules, trigger thresholds, and single-use conditions, reject Simplified Chinese, broken placeholders, and unapproved English residue, and record whether each result is raw machine translation or a reviewed semantic override.
 
 Meet WCAG 2.2 AA: keyboard operation, visible focus, semantic headings/tables/forms/dialogs, tooltip focus support, focus trap/restoration, 200% zoom, reduced motion, compliant contrast, no color-only meaning, and screen-reader labels such as “Priority plus one.”
 

@@ -6,6 +6,7 @@ const snapshot = JSON.parse(await readFile("data/generated/champions-snapshot.js
 const localization = JSON.parse(await readFile("data/localization/zh-Hant.json", "utf8"));
 const errors = [];
 const allowedLatinTerms = /\b(?:HP|PP|STAB|kg)\b/g;
+const unambiguousSimplifiedNameCharacters = /[铠农压针剑涛泼话报变锤飞扑乱喷扫冲转风数虫愤盐腌断闭华发连双动]/u;
 
 function numericTokens(value) {
   return [...value.matchAll(/\d+(?:\.\d+)?(?:\s*\/\s*\d+(?:\.\d+)?)?%?/g)].map((match) => match[0].replaceAll(" ", ""));
@@ -46,7 +47,24 @@ for (const [section, entries] of Object.entries({
     // preferences; OpenCC may rewrite valid official spellings even when no
     // Simplified Chinese is present.
     if (!source) errors.push(`${section}:${entry.id} has no name provenance`);
+    if (unambiguousSimplifiedNameCharacters.test(name)) errors.push(`${section}:${entry.id} contains an unambiguous Simplified Chinese character: ${name}`);
+    if (section === "moves") {
+      if (entry.nameZh !== localization.names?.moves?.[entry.id]) errors.push(`moves:${entry.id} snapshot name differs from the pinned game-string localization artifact`);
+      if (source !== "pkhex-game-string-zh-hant") errors.push(`moves:${entry.id} does not use the pinned zh-Hant game-string source`);
+    }
   }
+}
+
+for (const [id, expected] of Object.entries({
+  "armor-cannon": "鎧農炮",
+  "axe-kick": "下壓踢",
+  "barb-barrage": "毒千針",
+  "ceaseless-edge": "秘劍・千重濤",
+  "chilling-water": "潑冷水",
+  "jet-punch": "噴射拳",
+  "last-respects": "掃墓",
+})) {
+  if (localization.names.moves[id] !== expected) errors.push(`golden: ${id} must use the reviewed Traditional Chinese game-string name ${expected}`);
 }
 
 const blaze = localization.descriptions.abilities.blaze;
