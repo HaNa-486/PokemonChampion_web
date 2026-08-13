@@ -76,7 +76,6 @@ const generatedMoves: Move[] = snapshot.moves.map((entry) => ({
 export const moves: Move[] = generatedMoves;
 const generatedMoveIdByName = new Map(snapshot.moves.map((entry) => [entry.name, entry.id]));
 const curatedPokemonById = new Map(curatedPokemon.map((entry) => [entry.id, entry]));
-const curatedPokemonNameZh = new Map(curatedPokemon.map((entry) => [entry.id, entry.nameZh]));
 
 const generatedPokemon: Pokemon[] = snapshot.pokemon.map((entry, index) => {
   const curated = curatedPokemonById.get(entry.id);
@@ -85,7 +84,7 @@ const generatedPokemon: Pokemon[] = snapshot.pokemon.map((entry, index) => {
     speciesKey: entry.speciesKey,
     battleDataKey: entry.battleDataKey ?? entry.speciesKey,
     name: entry.name,
-    nameZh: curatedPokemonNameZh.get(entry.id) ?? entry.name,
+    nameZh: entry.nameZh || curated?.nameZh || entry.name,
     types: entry.types as Pokemon["types"],
     baseStats: entry.baseStats,
     imageUrl: entry.imageUrl,

@@ -96,7 +96,7 @@ export function auditSnapshot(snapshot) {
       ids.add(entry?.id);
       if (!entry?.description?.trim()) errors.push(`${kind} is missing its Pokémon Showdown description: ${entry?.name ?? entry?.id}`);
       if (!entry?.descriptionZh?.trim()) errors.push(`${kind} is missing its localized description fallback: ${entry?.name ?? entry?.id}`);
-      if (!entry?.mechanicsSource || !entry?.descriptionSource || !entry?.localizationSource) errors.push(`${kind} provenance is incomplete: ${entry?.name ?? entry?.id}`);
+      if (!entry?.mechanicsSource || !entry?.descriptionSource || !entry?.localizationSource || !entry?.nameLocalizationSource) errors.push(`${kind} provenance is incomplete: ${entry?.name ?? entry?.id}`);
     }
   }
 
@@ -113,7 +113,7 @@ export function auditSnapshot(snapshot) {
     if (!items.some((entry) => entry.id === requiredId)) errors.push(`Legal low-usage held item is missing: ${requiredId}`);
   }
 
-  if (snapshot?.schemaVersion !== 6) errors.push(`Snapshot schemaVersion ${snapshot?.schemaVersion} is not the complete Champions entity schema v6.`);
+  if (snapshot?.schemaVersion !== 7) errors.push(`Snapshot schemaVersion ${snapshot?.schemaVersion} is not the complete Champions entity and localization schema v7.`);
   if (!snapshot?.sources?.champions?.dataVersion) errors.push("Champions dataVersion is missing.");
   if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.showdown?.revision ?? "")) errors.push("Pokémon Showdown source revision is missing or unpinned.");
   if (!/^[0-9a-f]{40}$/.test(snapshot?.sources?.pokeapi?.revision ?? "")) errors.push("PokeAPI source revision is missing or unpinned.");
