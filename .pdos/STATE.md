@@ -1,50 +1,48 @@
 # PDOS state
 
-Keep this file concise. Every fresh PDOS context reads it first.
+Keep this concise. Every fresh PDOS context reads it first.
 
-- Protocol version: 0.3.0
-- State revision: 8
-- Updated: 2026-08-13T10:15:00Z
-- State confidence: high
-- Phase: corrected move-name source verified; awaiting exact commit and replacement Dev/UAT deployment
+- Protocol version: 0.4.0-alpha.1
+- State revision: 3
+- Updated: 2026-08-20T07:32:00Z
+- State confidence: reconciled with current branch, user request, repository evidence, and tests
+- Phase: team-builder UX remediation locally verified; exact commit and Dev/UAT deployment pending
 
 ## Repository identity
 
-- Branch: codex/traditional-chinese-localization
-- Worktree: C:\Users\091\codex_workspace\BDWP\PokemonChampion
-- Base commit: 29bea4dbb81b4630a2636756113b379fad41e8f3
+- Branch: codex/team-member-edit-move-picker
+- Observed commit: 9322332253ed67cf6318b6e2c8515375aa661f1b
 
 ## Product anchors
 
-- Primary user: Traditional Chinese Champions Lab users comparing current-Regulation Pokémon, moves, abilities, and held items.
-- Product outcome: Switching to Traditional Chinese produces a genuinely Chinese catalog and interaction flow, without English descriptions masquerading as localized data.
-- Critical journey: switch to zh-Hant -> browse/filter catalogs -> inspect Pokémon/forms -> read move/ability/item tooltips and current-season usage -> build a team.
-- Non-goals: full Admin publish/revert workflow; human copy-editing of every machine-translated Champions-specific sentence in this release.
+- Primary user: competitive and new Pokémon Champions players building legal Singles/Doubles teams.
+- Product outcome: Existing members are editable in place, and move selection is searchable and understandable without external lookup.
+- Critical journey: open selected team -> edit member -> search/read/select legal moves -> adjust fields -> save -> same team slot updates.
+- Non-goals: strategic move recommendations, drag-reordering, or automatic production promotion.
 
 ## Current work
 
-- Current slice: Complete zh-Hant catalog and UI taxonomy localization.
-- Active workstream: `workstreams/2026-08-13-traditional-chinese-localization.md`
-- Blocking dependency: Exact commit must pass `pnpm verify:deploy` and `pnpm data:audit:live`, then pass `pnpm verify:dev` and be deployed privately to Champions Lab Dev for product-owner UAT before PR.
-- Consequential open decision: Production promotion remains a separate approval after PR checks, independent review, and merge.
+- Current slice: In-place team member editing and beginner-friendly searchable move picker.
+- Active workstreams: `workstreams/2026-08-20-team-member-edit-move-picker.md`
+- Active review: `reviews/REV-20260820-team-builder-ux.md`
+- Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`
+- Blocking dependencies: exact commit, Dev verification/deploy, product-owner UAT.
+- Consequential open decisions: production deployment remains human-only and is outside the pre-UAT phase.
 
 ## Handoff
 
-- What changed: Rebuilt zh-Hant descriptions from complete effective Champions mechanics; protected official entity names; added per-record provenance, semantic/numeric/no-English/no-placeholder audits, reviewed critical overrides, and completed Chinese taxonomy/table/filter/item-single-use UI coverage.
-- Verification evidence: `pnpm verify:deploy` passed 17 files / 104 tests plus 10 built-worker checks; `pnpm data:audit:zh` passed 539 moves / 200 abilities / 148 items; `pnpm data:audit:live` passed 358 snapshot / 236 live forms across 18 groups.
-- Not verified: Dev artifact, Dev deployment, and product-owner visual UAT. Local in-app browser binding was unavailable, so visual QA moves to the isolated Dev deployment.
-- Residual risks: Raw machine translations remain clearly identified and require progressive editorial review; Admin approval/audit/revert remains a separate P1 workstream.
-- Next safe action: Commit the exact verified candidate, run `pnpm verify:dev`, deploy that commit to Champions Lab Dev, and provide focused UAT checks.
-
-## Move-name correction addendum
-
-- Replaced the mislabeled PokeAPI move-name feed with pinned PKHeX Traditional Chinese game strings for all 539 legal moves.
-- Corrected 34 mixed-Simplified names and added exact provenance, seven golden regressions, and a fail-closed Simplified-character guard.
-- Current evidence: `pnpm verify:deploy` passed 17 files / 105 tests plus 10 built-worker checks; `pnpm data:audit:zh` passed 539 moves / 200 abilities / 148 items; `pnpm data:audit:live` passed 358 snapshot / 236 live forms across 18 groups.
-- The previous Dev UAT result is invalid because the candidate changed. Next safe action is exact commit, `pnpm verify:dev`, and a replacement private Dev deployment.
+- What changed: Team store can replace a member without changing its ID/position; every team card has Edit; builder edit mode restores saved fields and validates the full replacement team; four native move selects were replaced with localized searchable rich comboboxes.
+- Verification evidence: `pnpm verify:deploy` passed, including lint (pre-existing warnings only), typecheck, 358-form integrity audit, Traditional Chinese semantic audit for 539 moves/200 abilities/148 items, 17 unit-test files / 107 tests, production build, and 10 rendered/API tests.
+- Not verified: exact Dev build/deploy and real responsive/touch UAT.
+- Residual risks: Move-result panel geometry and touch feel must be checked on the isolated Dev site at 390, 768, and 1440 px.
+- Next safe action: Commit the exact candidate, run `pnpm verify:dev`, and deploy that commit to Champions Lab Dev for UAT.
 
 ## Read next
 
-- `workstreams/2026-08-13-traditional-chinese-localization.md`
+- `AUTONOMY.md`
+- `workstreams/2026-08-20-team-member-edit-move-picker.md`
+- `reviews/REV-20260820-team-builder-ux.md`
+- `remediations/REM-20260820-team-builder-ux-F001.md`
+- `remediations/REM-20260820-team-builder-ux-F002.md`
 - `../PROJECT_SPEC.md`
 - `../DEPLOYMENT_CHECKLIST.md`

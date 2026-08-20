@@ -356,7 +356,7 @@ describe("ChampionsApp", () => {
     expect(screen.getByRole("slider", { name: /Spe/ })).toHaveValue("32");
     expect(screen.getByText("0 / 66 remaining")).toBeInTheDocument();
     expect(screen.getByText(/transforms this build into Mega Blastoise/)).toBeInTheDocument();
-    const moveValues = screen.getAllByRole("combobox", { name: /Move [1-4]/ }).map((entry) => (entry as HTMLSelectElement).value);
+    const moveValues = screen.getAllByRole("combobox", { name: /Move [1-4]/ }).map((entry) => entry.getAttribute("data-move-id"));
     expect(moveValues).toEqual(["aura-sphere", "dark-pulse", "dragon-pulse", "water-pulse"]);
     const buildMode = screen.getAllByRole("group", { name: "Team mode" }).at(-1)!;
     await user.click(within(buildMode).getByRole("button", { name: "Singles" }));
@@ -374,6 +374,65 @@ describe("ChampionsApp", () => {
     await user.click(within(tray).getByRole("button", { name: "Singles 1/6" }));
     expect(within(tray).getByText("Absol")).toBeInTheDocument();
     expect(within(tray).queryByText("Garchomp")).not.toBeInTheDocument();
+  });
+
+  it("edits an existing team member in place without removing or reordering it", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const existing: TeamMember = {
+      id: "editable-absol",
+      pokemonId: "absol",
+      abilityId: "pressure",
+      itemId: "life-orb",
+      moveIds: ["sucker-punch", "protect"],
+      ap: { ...ZERO_STATS, attack: 32, speed: 32 },
+      nature: { name: "Adamant", nameZh: "固執", up: "attack", down: "specialAttack" },
+    };
+    const teammate: TeamMember = { ...existing, id: "teammate", pokemonId: "garchomp", abilityId: "rough-skin", itemId: "sitrus-berry", moveIds: ["dragon-claw"] };
+    useTeamStore.setState({ teams: { singles: [], doubles: [existing, teammate] }, hydrated: true });
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    await user.click(within(tray).getByRole("button", { name: "Edit Absol" }));
+    expect(screen.getByRole("button", { name: "Save changes" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Move 1" })).toHaveValue("Sucker Punch");
+    expect(screen.getByRole("combobox", { name: "Nature" })).toHaveValue("Adamant");
+    const teamMode = screen.getAllByRole("group", { name: "Team mode" }).at(-1)!;
+    expect(within(teamMode).getByRole("button", { name: "Doubles" })).toBeDisabled();
+    const firstMove = screen.getByRole("combobox", { name: "Move 1" });
+    await user.click(firstMove);
+    fireEvent.change(firstMove, { target: { value: "Close Combat" } });
+    await user.click(screen.getByRole("option", { name: /Close Combat/ }));
+    await user.selectOptions(screen.getByRole("combobox", { name: "Nature" }), "Jolly");
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    const saved = useTeamStore.getState().teams.doubles;
+    expect(saved).toHaveLength(2);
+    expect(saved.map((member) => member.id)).toEqual(["editable-absol", "teammate"]);
+    expect(saved[0].moveIds[0]).toBe("close-combat");
+    expect(saved[0].nature.name).toBe("Jolly");
+  });
+
+  it("searches learnable moves by effect, shows useful mechanics, and prevents duplicate selections", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    const firstMove = screen.getByRole("combobox", { name: "Move 1" });
+    await user.click(firstMove);
+    fireEvent.change(firstMove, { target: { value: "Me First" } });
+    const suckerPunch = screen.getByRole("option", { name: /Sucker Punch/ });
+    expect(suckerPunch).toHaveTextContent("Dark");
+    expect(suckerPunch).toHaveTextContent("Physical");
+    expect(suckerPunch).toHaveTextContent("Power 70");
+    expect(suckerPunch).toHaveTextContent("Priority +1");
+    await user.click(suckerPunch);
+    const secondMove = screen.getByRole("combobox", { name: "Move 2" });
+    await user.click(secondMove);
+    fireEvent.change(secondMove, { target: { value: "Sucker Punch" } });
+    expect(screen.getByRole("option", { name: /Sucker Punch/ })).toBeDisabled();
+    expect(screen.getByText("Already selected")).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(secondMove).toHaveAttribute("aria-expanded", "false");
   });
 
   it("switches language without losing navigation", async () => {

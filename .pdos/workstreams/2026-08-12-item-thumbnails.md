@@ -1,10 +1,9 @@
 # Workstream: Item thumbnails
 
-- Status: post-review remediation; repeat Dev UAT required
+- Status: completed
 - Started: 2026-08-12T08:32:45Z
 - Updated: 2026-08-13T05:20:35Z
 - Branch: codex/item-thumbnails
-- Worktree: C:\Users\091\codex_workspace\BDWP\PokemonChampion
 - Base commit: eff15daaf15c0cd11d17e94d291e88eadfeb29bb
 - Scope: Add locally synchronized item thumbnails everywhere user-visible held-item names appear, with fallback, tests, and attribution.
 - Files or areas at risk: data sync, item catalog, tooltips, team builder, battle usage, responsive UI, tests, docs.

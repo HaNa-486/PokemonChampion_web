@@ -515,6 +515,8 @@ Move and ability tables also show the total number of current-Regulation Pokémo
 
 Persist across relevant pages. Singles and Doubles each own an independent versioned team of up to six members and can be switched without losing either group. Each member shows sprite/name/form, types, weaknesses/resistances/immunities, four moves with type badges, validated final stats, AP/nature, ability, item thumbnail/name, completion/legal state, and edit/remove actions.
 
+Edit opens the Build Workbench with that exact member's saved form, moves, ability, item, nature, and AP. Saving replaces the member in the same team slot and keeps its stable member ID; it never appends a duplicate or changes order. Team legality is evaluated against the complete replacement team while excluding the member's old values from duplicate checks. The member's Singles/Doubles team is fixed during editing.
+
 Adding a seventh never silently overwrites; open replacement selection. Duplicate attempts show domain errors. Incomplete members are allowed and marked. Desktop uses a collapsible floating panel whose internal scroll area makes all six complete cards reachable; mobile uses a fixed bottom bar and accessible bottom sheet. Persist with versioned IndexedDB; LocalStorage only for tiny preferences/migration flags. Navigation/refresh preserves state. Corrupt/old data migrates or quarantines without crashing.
 
 ### 8.6 Speed comparison
@@ -536,6 +538,8 @@ Name the page **Speed Compare**, not a full turn simulator. State unsupported me
 ### 8.7 Usage-based build defaults and Mega transformation
 
 Opening the Build Workbench immediately requests current usage for the selected form's `battleDataKey` in both formats. The currently selected Singles/Doubles mode deterministically applies the highest-ranked legal held item, ability, nature, valid AP spread, and up to four unique learnable moves. A format switch reapplies that format's defaults. Missing, unmapped, duplicated, or illegal upstream rows are skipped; the UI clearly falls back to catalog defaults rather than fabricating a value. Every field remains user-editable except a required Mega Stone. Native item selects remain usable, while the current held item is repeated immediately beside the control with its thumbnail and localized name.
+
+Each move slot uses an accessible searchable combobox rather than a native long select. Search matches localized and English move names plus effect text. Results keep current-format common moves first, then use deterministic category, type, descending priority, and localized-name ordering. Every option shows localized type, category, Power, Accuracy, priority, and a short effect explanation; an already selected move is visibly disabled. Keyboard, mouse, and touch users can open, search, choose, clear, or dismiss a slot. On mobile, the result panel stays inside the dialog viewport with its own scroll area.
 
 All 21 supported Champions natures appear with explicit increased/decreased stat labels; neutral natures state that no stat changes. AP defaults must pass the same `[0,32]` per-stat and total `≤66` validator as manual edits.
 
