@@ -92,6 +92,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Selecting a Mega Stone on a base form updates sprite, name, types, abilities, base stats, matchups, final stats, and legality identity.
 - [ ] Singles and Doubles teams remain independent and persist through switching.
 - [ ] Editing a team member restores its exact saved fields, saves in the same slot with the same member ID, does not change the team count, and does not falsely conflict with its own Pokémon or held item.
+- [ ] Changing only an ordinary held item preserves the member's saved moves and ability; a Mega form change reconciles only choices that become illegal.
 - [ ] Editing cannot move a member between Singles and Doubles; genuine duplicate-family, duplicate-item, Mega-Stone, move, ability, and AP errors still block save.
 
 ## 5. Catalog and recommendation regression
@@ -131,7 +132,7 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] Localization completeness tests fail when a legal catalog entry lacks Chinese content or when a Chinese description equals its English source.
 - [ ] The team tray can scroll through all six complete cards.
 - [ ] Builder and detail dialogs remain within the viewport.
-- [ ] Builder move pickers work by keyboard, mouse, and touch; only one field menu needs focus at a time, Escape closes it, and its independently scrollable results are not clipped at 390, 768, or 1440 px.
+- [ ] Builder move pickers work by keyboard, mouse, and touch; Arrow Up/Down and Home/End move through enabled results, Enter selects, duplicate-disabled results are skipped, Escape closes, focus is restored, and only one field menu needs focus at a time.
 - [ ] At 390 px, detail move filters expand/collapse cleanly, chip rows scroll horizontally, and battle-usage tooltips open by touch.
 - [ ] At 390, 768, and 1440 px, item thumbnails do not clip, distort, obscure labels, or create unintended horizontal page scrolling.
 - [ ] The 18×18 type chart is complete.

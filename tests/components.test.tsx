@@ -399,16 +399,40 @@ describe("ChampionsApp", () => {
     const teamMode = screen.getAllByRole("group", { name: "Team mode" }).at(-1)!;
     expect(within(teamMode).getByRole("button", { name: "Doubles" })).toBeDisabled();
     const firstMove = screen.getByRole("combobox", { name: "Move 1" });
-    await user.click(firstMove);
+    fireEvent.click(firstMove);
     fireEvent.change(firstMove, { target: { value: "Close Combat" } });
-    await user.click(screen.getByRole("option", { name: /Close Combat/ }));
-    await user.selectOptions(screen.getByRole("combobox", { name: "Nature" }), "Jolly");
-    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    fireEvent.click(screen.getByRole("option", { name: /Close Combat/ }));
+    fireEvent.change(screen.getByRole("combobox", { name: "Nature" }), { target: { value: "Jolly" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
     const saved = useTeamStore.getState().teams.doubles;
     expect(saved).toHaveLength(2);
     expect(saved.map((member) => member.id)).toEqual(["editable-absol", "teammate"]);
     expect(saved[0].moveIds[0]).toBe("close-combat");
     expect(saved[0].nature.name).toBe("Jolly");
+  });
+
+  it("preserves saved moves and ability when an edited member changes only its ordinary held item", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const existing: TeamMember = {
+      id: "item-edit-absol",
+      pokemonId: "absol",
+      abilityId: "super-luck",
+      itemId: "life-orb",
+      moveIds: ["sucker-punch", "protect"],
+      ap: { ...ZERO_STATS, attack: 32, speed: 32 },
+      nature: { name: "Adamant", nameZh: "固執", up: "attack", down: "specialAttack" },
+    };
+    useTeamStore.setState({ teams: { singles: [], doubles: [existing] }, hydrated: true });
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    await user.click(within(tray).getByRole("button", { name: "Edit Absol" }));
+    await user.selectOptions(screen.getByRole("combobox", { name: /Held item/ }), "sitrus-berry");
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    const saved = useTeamStore.getState().teams.doubles[0];
+    expect(saved.itemId).toBe("sitrus-berry");
+    expect(saved.moveIds).toEqual(["sucker-punch", "protect"]);
+    expect(saved.abilityId).toBe("super-luck");
   });
 
   it("searches learnable moves by effect, shows useful mechanics, and prevents duplicate selections", async () => {
@@ -433,6 +457,28 @@ describe("ChampionsApp", () => {
     expect(screen.getByText("Already selected")).toBeInTheDocument();
     await user.keyboard("{Escape}");
     expect(secondMove).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("selects a searched move with arrow keys and Enter while skipping disabled duplicates", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    const firstMove = screen.getByRole("combobox", { name: "Move 1" });
+    await user.click(firstMove);
+    fireEvent.change(firstMove, { target: { value: "Sucker Punch" } });
+    await user.keyboard("{ArrowDown}{Enter}");
+    expect(firstMove).toHaveValue("Sucker Punch");
+    expect(firstMove).toHaveAttribute("aria-expanded", "false");
+
+    const secondMove = screen.getByRole("combobox", { name: "Move 2" });
+    await user.click(secondMove);
+    fireEvent.change(secondMove, { target: { value: "Sucker Punch" } });
+    expect(screen.getByRole("option", { name: /Sucker Punch/ })).toBeDisabled();
+    await user.keyboard("{ArrowDown}{Enter}");
+    expect(secondMove).not.toHaveValue("Sucker Punch");
+    expect(secondMove).toHaveFocus();
   });
 
   it("switches language without losing navigation", async () => {

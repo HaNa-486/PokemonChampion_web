@@ -5,7 +5,7 @@
 - Status: in_progress
 - Created: 2026-08-20T07:05:00Z
 - Scope: floating team tray, Build Workbench, team persistence, move selection, responsive accessibility
-- Release assessment: not-ready
+- Release assessment: not-ready; independent PR review findings implemented locally and awaiting renewed Dev UAT
 
 ## Findings
 
@@ -21,8 +21,8 @@
 - Alternatives and tradeoffs: Remove/re-add is simpler technically but loses position and creates unnecessary work and mistakes.
 - Affected areas: `components/ChampionsApp.tsx`, `lib/team-store.ts`, team component tests.
 - Acceptance criteria: Exact fields restore; save preserves ID, slot, count, and format; normal legality checks remain active.
-- Verification: Store/component regressions and `pnpm verify:deploy` passed; Dev responsive UAT remains pending.
-- Residual risk: Responsive placement requires Dev UAT at required widths.
+- Verification: Store/component regressions and `pnpm verify:deploy` passed. Independent PR review found and the candidate now fixes item-only edits overwriting unrelated saved fields; renewed Dev UAT remains pending.
+- Residual risk: Renewed Dev UAT must confirm an ordinary item-only edit preserves moves and ability.
 - Autonomy class: auto-decide
 - Remediation: remediations/REM-20260820-team-builder-ux-F001.md
 
@@ -38,7 +38,7 @@
 - Alternatives and tradeoffs: A datalist is smaller but cannot present rich mechanics or reliably disable duplicates.
 - Affected areas: `components/ChampionsApp.tsx`, `app/globals.css`, component tests.
 - Acceptance criteria: Search by name/effect; option context is visible; selected duplicates are blocked; keyboard/mouse/touch and mobile dialog remain usable.
-- Verification: Search/mechanics/duplicate component regression and `pnpm verify:deploy` passed; Dev responsive/touch UAT remains pending.
-- Residual risk: Final popover geometry and touch feel require Dev UAT.
+- Verification: Search/mechanics/duplicate component regression and `pnpm verify:deploy` passed. Independent PR review found and the candidate now implements active-option keyboard navigation, disabled-option skipping, Enter selection, and focus retention; renewed Dev UAT remains pending.
+- Residual risk: Renewed Dev UAT must confirm keyboard navigation and final popover geometry.
 - Autonomy class: auto-decide
 - Remediation: remediations/REM-20260820-team-builder-ux-F002.md

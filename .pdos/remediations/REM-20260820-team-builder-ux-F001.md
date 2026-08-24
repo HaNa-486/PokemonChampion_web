@@ -6,7 +6,7 @@
 - Severity: medium
 - Autonomy class: auto-decide
 - Owner: Codex
-- Updated: 2026-08-20T07:32:00Z
+- Updated: 2026-08-24T04:00:00Z
 - Decision authority: product owner request
 - Reason: Directly requested in the current task.
 - Revisit condition: Reopen if a saved edit changes count/order/format or bypasses legality.
@@ -21,11 +21,12 @@
 ## Evidence
 
 - Implementation: `TeamState.update`, edit action on each team card, edit-aware builder initialization and replacement validation.
-- Verification: Exact-field restoration, stable ID/order/count, save-in-place, and format-lock component regression passed; full `pnpm verify:deploy` passed.
-- Residual risk: Dev responsive UAT pending.
+- Verification: Exact-field restoration, stable ID/order/count, save-in-place, format-lock, and item-only preservation regressions passed; full `pnpm verify:deploy` passed with 109 tests.
+- Residual risk: Renewed exact-candidate Dev UAT pending after the independent review fix.
 
 ## History
 
 - 2026-08-20T07:05:00Z open: created from user-reported finding.
 - 2026-08-20T07:20:00Z implemented: local implementation completed; verification pending.
 - 2026-08-20T07:32:00Z verification: automated local acceptance and deployment gate passed; Dev UAT pending.
+- 2026-08-24T04:00:00Z independent review: item-only edits could overwrite moves and ability; implementation corrected and regression verified locally.

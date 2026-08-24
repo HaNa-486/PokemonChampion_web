@@ -73,8 +73,10 @@ function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, recommendedMov
   onChange: (moveId: string | null) => void;
 }) {
   const listId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [activeValue, setActiveValue] = useState<string>(value ?? "__clear__");
   const current = value ? moveById.get(value) ?? null : null;
   const commonRank = useMemo(() => new Map(commonMoveIds.map((id, index) => [id, index + 1])), [commonMoveIds]);
   const availableMoves = useMemo(() => legalMoveIds
@@ -90,8 +92,29 @@ function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, recommendedMov
     }), [commonRank, legalMoveIds, locale]);
   const normalizedQuery = query.trim().toLocaleLowerCase(locale);
   const filteredMoves = normalizedQuery ? availableMoves.filter((move) => `${move.name} ${move.nameZh} ${move.type} ${move.category} ${move.description} ${move.descriptionZh}`.toLocaleLowerCase(locale).includes(normalizedQuery)) : availableMoves;
+  const navigableValues = ["__clear__", ...filteredMoves.filter((move) => !selectedMoveIds.includes(move.id) || move.id === value).map((move) => move.id)];
   const fieldLabel = locale === "zh-Hant" ? `招式 ${slot + 1}` : `Move ${slot + 1}`;
+  useEffect(() => {
+    if (!open) return;
+    const activeOption = document.getElementById(`${listId}-option-${activeValue}`);
+    if (activeOption && "scrollIntoView" in activeOption) activeOption.scrollIntoView({ block: "nearest" });
+  }, [activeValue, listId, open]);
   const close = () => { setOpen(false); setQuery(""); };
+  const openMenu = () => {
+    setOpen(true);
+    setActiveValue((value && navigableValues.includes(value)) ? value : navigableValues[0] ?? "__clear__");
+  };
+  const chooseActive = () => {
+    if (activeValue === "__clear__") onChange(null);
+    else if (navigableValues.includes(activeValue)) onChange(activeValue);
+    close();
+  };
+  const moveActive = (direction: 1 | -1) => {
+    const currentIndex = navigableValues.indexOf(activeValue);
+    const startIndex = currentIndex < 0 ? (direction > 0 ? -1 : 0) : currentIndex;
+    const nextIndex = (startIndex + direction + navigableValues.length) % navigableValues.length;
+    setActiveValue(navigableValues[nextIndex] ?? "__clear__");
+  };
   return <div className="move-picker-field" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) close(); }}>
     <label htmlFor={`${listId}-input`}>{fieldLabel}</label>
     <div className={`move-combobox ${open ? "open" : ""}`}>
@@ -102,30 +125,36 @@ function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, recommendedMov
         aria-label={fieldLabel}
         aria-expanded={open}
         aria-controls={listId}
+        aria-activedescendant={open ? `${listId}-option-${activeValue}` : undefined}
         aria-autocomplete="list"
         autoComplete="off"
         data-move-id={value ?? ""}
         value={open ? query : current ? localName(current, locale) : ""}
         placeholder={locale === "zh-Hant" ? "輸入名稱或效果搜尋…" : "Search name or effect…"}
-        onFocus={() => { setOpen(true); setQuery(""); }}
-        onChange={(event) => { setOpen(true); setQuery(event.target.value); }}
+        ref={inputRef}
+        onFocus={() => { openMenu(); setQuery(""); }}
+        onChange={(event) => { setOpen(true); setQuery(event.target.value); setActiveValue("__clear__"); }}
         onKeyDown={(event) => {
           if (event.key === "Escape") { event.preventDefault(); close(); }
-          if (event.key === "ArrowDown") setOpen(true);
+          else if (event.key === "ArrowDown") { event.preventDefault(); if (open) moveActive(1); else openMenu(); }
+          else if (event.key === "ArrowUp") { event.preventDefault(); if (open) moveActive(-1); else openMenu(); }
+          else if (event.key === "Home" && open) { event.preventDefault(); setActiveValue(navigableValues[0] ?? "__clear__"); }
+          else if (event.key === "End" && open) { event.preventDefault(); setActiveValue(navigableValues.at(-1) ?? "__clear__"); }
+          else if (event.key === "Enter" && open) { event.preventDefault(); chooseActive(); }
         }}
       />
-      <button type="button" className="move-picker-toggle" aria-label={locale === "zh-Hant" ? `開啟${fieldLabel}選單` : `Open ${fieldLabel} menu`} onClick={() => open ? close() : setOpen(true)}>⌄</button>
+      <button type="button" className="move-picker-toggle" aria-label={locale === "zh-Hant" ? `開啟${fieldLabel}選單` : `Open ${fieldLabel} menu`} onClick={() => { if (open) close(); else openMenu(); inputRef.current?.focus(); }}>⌄</button>
     </div>
     {open && <div className="move-picker-popover">
       <div className="move-picker-help">{locale === "zh-Hant" ? "常用招式優先；可搜尋名稱或效果。" : "Common moves first. Search by name or effect."}</div>
       <div id={listId} role="listbox" aria-label={`${fieldLabel} options`} className="move-picker-options">
-        <button type="button" role="option" aria-selected={!value} className="move-option clear-option" onMouseDown={(event) => event.preventDefault()} onClick={() => { onChange(null); close(); }}>
+        <button id={`${listId}-option-__clear__`} type="button" role="option" aria-selected={!value} className={`move-option clear-option ${activeValue === "__clear__" ? "active" : ""}`} onMouseEnter={() => setActiveValue("__clear__")} onMouseDown={(event) => event.preventDefault()} onClick={() => { onChange(null); close(); inputRef.current?.focus(); }}>
           {locale === "zh-Hant" ? "— 清除此欄" : "— Clear this slot"}
         </button>
         {filteredMoves.map((move) => {
           const selectedElsewhere = selectedMoveIds.includes(move.id) && move.id !== value;
           const rank = commonRank.get(move.id);
-          return <button type="button" role="option" aria-selected={move.id === value} disabled={selectedElsewhere} className="move-option" key={move.id} onMouseDown={(event) => event.preventDefault()} onClick={() => { onChange(move.id); close(); }}>
+          return <button id={`${listId}-option-${move.id}`} type="button" role="option" aria-selected={move.id === value} disabled={selectedElsewhere} className={`move-option ${activeValue === move.id ? "active" : ""}`} key={move.id} onMouseEnter={() => { if (!selectedElsewhere) setActiveValue(move.id); }} onMouseDown={(event) => event.preventDefault()} onClick={() => { onChange(move.id); close(); inputRef.current?.focus(); }}>
             <span className="move-option-heading"><TypeBadge type={move.type} locale={locale} /><strong>{localName(move, locale)}</strong>{rank && <em>{locale === "zh-Hant" ? `常用 #${rank}` : `Common #${rank}`}</em>}</span>
             <span className="move-option-meta">{localizedTerm(move.category, locale)} · {localizedTerm("Power", locale)} {move.power ?? "—"} · {localizedTerm("Acc.", locale)} {move.accuracy ?? "—"} · {localizedTerm("Priority", locale)} {formatPriority(move.priority)}</span>
             <span className="move-option-description">{locale === "zh-Hant" ? move.descriptionZh : move.description}</span>
@@ -209,7 +238,20 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     setAppFormat(nextFormat);
     applyRecommendations(nextFormat, battleData);
   };
-  const changeItem = (nextItem: string | null) => applyRecommendations(format, battleData, nextItem);
+  const changeItem = (nextItem: string | null) => {
+    const nextMega = !selected.isMega && nextItem ? megaPokemonByStoneId.get(nextItem) : null;
+    const nextSelected = nextMega?.speciesKey === selected.speciesKey ? nextMega : selected;
+    rawSetItemId(nextItem);
+    if (nextSelected.id === effectiveSelected.id) return;
+    const nextUsage = battleData?.[format] ?? null;
+    const legalMoves = new Set(nextSelected.moveIds);
+    const retainedMoves = moveIds.filter((id) => legalMoves.has(id));
+    const fallbackMoves = recommendedMoveIds(nextUsage, nextSelected).filter((id) => !retainedMoves.includes(id));
+    setMoveIds([...retainedMoves, ...fallbackMoves].slice(0, 4));
+    if (!abilityId || !nextSelected.abilityIds.includes(abilityId)) {
+      setAbilityId(recommendedAbilityId(nextUsage, nextSelected) ?? nextSelected.abilityIds[0] ?? null);
+    }
+  };
   const onFormatChange = changeFormat;
   const setItemId = changeItem;
 
