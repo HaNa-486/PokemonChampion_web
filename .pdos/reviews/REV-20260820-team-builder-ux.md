@@ -59,3 +59,20 @@
 - Residual risk: Responsive popover geometry and all modal/locale journeys need exact-candidate Dev UAT.
 - Autonomy class: auto-decide
 - Remediation: remediations/REM-20260820-team-builder-ux-F003.md
+
+### F-004
+
+- Severity: medium
+- Confidence: high
+- Status: implemented
+- Evidence: Builder move choices exposed only the four automatically selected recommendations; ability, item, and nature choices did not expose their actual top-ten usage order. Live Clefable Doubles API and CSV both start move data at rank 6, while the UI had no missing-rank explanation. Type matchup groups retained canonical type order instead of severity order.
+- User impact: Players could not quickly find the full current top ten, could misread incomplete upstream rankings as a website display bug, and could miss the strongest weakness or resistance at a glance.
+- Root cause: Recommendation helpers intentionally truncated moves to four and returned only one choice for other resources; battle normalization did not model rank gaps; matchup grouping filtered without multiplier sorting.
+- Recommended solution: Preserve rank-aware top-ten choices separately from four-move defaults, detect and disclose upstream rank gaps without fabrication, and sort defensive matchups by multiplier severity.
+- Alternatives and tradeoffs: Filling Clefable ranks 1–5 from another source would look complete but would fabricate or mix incompatible data, violating the product data contract.
+- Affected areas: battle recommendation mapping, builder selectors, battle normalization/detail UI, type matchups, tests, specification, generated Gallade form mapping.
+- Acceptance criteria: Every mapped legal rank 1–10 is pinned with its actual rank in move/ability/item/nature selectors; Clefable preserves ranks 6–10 and names missing ranks 1–5; 4× precedes 2× and ¼× precedes ½×.
+- Verification: Unit/component regressions and the full exact-candidate deployment gate are required; live form audit must pass.
+- Residual risk: Real responsive selector geometry and the live Clefable disclosure require Dev UAT.
+- Autonomy class: auto-decide
+- Remediation: remediations/REM-20260825-team-builder-ux-F004.md

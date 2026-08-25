@@ -5,7 +5,7 @@ import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
 import { abilityCategories, itemEffectCategories } from "../lib/filtering";
 import { defensiveMatchups, formatMultiplier, typeEffectiveness } from "../lib/type-chart";
-import { recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
+import { rankedAbilityChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
 import { migrateSavedTeams } from "../lib/team-store";
 import type { BattleUsage } from "../lib/types";
 
@@ -32,6 +32,19 @@ describe("battle-data build recommendations", () => {
   it("rejects invalid upstream AP spreads", () => {
     const usage = usageFixture([{ ...usageRow("stat_points", 1, ""), ap: { hp: 3, attack: 32, defense: 0, specialAttack: 0, specialDefense: 0, speed: 32 } }]);
     expect(recommendedAp(usage)).toBeNull();
+  });
+
+  it("preserves the upstream rank while exposing every legal top-ten choice", () => {
+    const selected = pokemonById.get("blastoise")!;
+    const usage = usageFixture([
+      usageRow("move", 6, "Aqua Jet"), usageRow("move", 10, "Aura Sphere"),
+      usageRow("ability", 3, "Torrent"), usageRow("held_item", 2, "Blastoisinite"),
+      { ...usageRow("stat_alignment", 4, "Modest"), statUp: "Sp. Atk", statDown: "Attack" },
+    ]);
+    expect(rankedMoveChoices(usage, selected)).toEqual([{ id: "aqua-jet", rank: 6 }, { id: "aura-sphere", rank: 10 }]);
+    expect(rankedAbilityChoices(usage, selected)).toEqual([{ id: "torrent", rank: 3 }]);
+    expect(rankedItemChoices(usage)).toEqual([{ id: "blastoisinite", rank: 2 }]);
+    expect(rankedNatureChoices(usage)).toEqual([{ nature: expect.objectContaining({ name: "Modest" }), rank: 4 }]);
   });
 });
 
@@ -80,11 +93,16 @@ describe("defensive type matchups", () => {
     expect(aggron.weak).toEqual(expect.arrayContaining([{ type: "Fighting", multiplier: 4 }, { type: "Ground", multiplier: 4 }, { type: "Water", multiplier: 2 }]));
     expect(aggron.immune).toContainEqual({ type: "Poison", multiplier: 0 });
     expect(aggron.resistant).toContainEqual({ type: "Normal", multiplier: .25 });
+    expect(aggron.weak.map((entry) => entry.multiplier)).toEqual([4, 4, 2]);
+    expect(aggron.resistant[0].multiplier).toBe(.25);
     expect(formatMultiplier(.25)).toBe("¼×");
 
     const aerodactyl = defensiveMatchups(["Rock", "Flying"]);
     expect(aerodactyl.immune).toContainEqual({ type: "Ground", multiplier: 0 });
     expect(aerodactyl.weak).toContainEqual({ type: "Electric", multiplier: 2 });
+
+    const megaCharizardX = defensiveMatchups(["Fire", "Dragon"]);
+    expect(megaCharizardX.resistant[0]).toEqual({ type: "Fire", multiplier: .25 });
   });
 
   it("exposes every single-type attack/defense multiplier for the full chart", () => {

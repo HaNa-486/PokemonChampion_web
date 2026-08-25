@@ -32,6 +32,7 @@ export type BattleUsageRow = {
 export type BattleUsage = {
   pokemon: string; format: "Singles" | "Doubles"; season: string;
   date: string | null; source: string; rows: BattleUsageRow[];
+  rankGaps?: Array<{ category: string; missingRanks: number[] }>;
 };
 
 export type TeamMember = {

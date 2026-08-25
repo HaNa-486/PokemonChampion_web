@@ -75,6 +75,7 @@ pnpm data:audit:live
 - [ ] All current Mega Stones resolve to a local thumbnail; unavailable items are explicit rather than fabricated.
 - [ ] Ninetales and Alolan Ninetales have different battle keys, sources, types, abilities, learnsets, and Singles/Doubles defaults.
 - [ ] Missing/invalid upstream data falls back to the last valid snapshot or an explicit unavailable state; it is never fabricated.
+- [ ] A category with missing upstream ranks reports the exact missing ranks, preserves the reported numbers, and does not relabel rank 6 as rank 1.
 
 The live probe depends on a third party. A network outage blocks data-related production promotion but must not be “fixed” by weakening deterministic unit tests.
 
@@ -116,6 +117,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Singles/Doubles usage defaults apply the highest-ranked legal item, ability, nature, AP spread, and four unique learnable moves.
 - [ ] Illegal, duplicated, or unmapped usage rows are skipped instead of forced into the build.
 - [ ] Each builder move slot supports localized/English name and effect-text search, common-move-first ordering, visible type/category/Power/Accuracy/priority/effect information, clearing, and duplicate-move prevention.
+- [ ] Move, ability, held-item, and nature selectors pin every mapped legal current-format rank 1–10 in the exact source-rank order and display the real rank, including gaps.
 - [ ] Builder ability and item fields support name/effect search, localized rich descriptions, keyboard/mouse/touch selection, and independent Detailed/Compact preferences that default to Detailed and persist.
 - [ ] Held-item options are grouped by effect class, expose Other, and place the selected family’s dedicated stone first in the Mega Stone group.
 - [ ] Learnable move cards show Power, Accuracy, and PP without requiring hover.
@@ -139,6 +141,7 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] Builder and detail dialogs remain within the viewport.
 - [ ] Builder move pickers work by keyboard, mouse, and touch; Arrow Up/Down and Home/End move through enabled results, Enter selects, duplicate-disabled results are skipped, Escape closes, focus is restored, and only one field menu needs focus at a time.
 - [ ] Team cards make each non-zero AP addition and nature-raised/lowered stat visible without reopening the editor.
+- [ ] Pokémon detail and team cards order weaknesses from highest multiplier to lowest and resistances from lowest multiplier to highest.
 - [ ] At 390 px, detail move filters expand/collapse cleanly, chip rows scroll horizontally, and battle-usage tooltips open by touch.
 - [ ] At 390, 768, and 1440 px, item thumbnails do not clip, distort, obscure labels, or create unintended horizontal page scrolling.
 - [ ] The 18×18 type chart is complete.

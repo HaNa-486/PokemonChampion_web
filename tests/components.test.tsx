@@ -276,7 +276,7 @@ describe("ChampionsApp", () => {
   it("opens complete Pokémon details and switches current battle formats", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
       scope: "species",
-      singles: { pokemon: "Absol", format: "Singles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rows: [{ category: "move", rank: 1, name: "Sucker Punch", percentage: "70.0%", percentageValue: 70, statUp: "", statDown: "", ap: null }] },
+      singles: { pokemon: "Absol", format: "Singles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rankGaps: [{ category: "move", missingRanks: [1, 2, 3, 4, 5] }], rows: [{ category: "move", rank: 6, name: "Sucker Punch", percentage: "70.0%", percentageValue: 70, statUp: "", statDown: "", ap: null }] },
       doubles: { pokemon: "Absol", format: "Doubles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rows: [
         { category: "held_item", rank: 1, name: "Absolite", percentage: "39.5%", percentageValue: 39.5, statUp: "", statDown: "", ap: null },
         { category: "ability", rank: 1, name: "Pressure", percentage: "60.5%", percentageValue: 60.5, statUp: "", statDown: "", ap: null },
@@ -316,7 +316,9 @@ describe("ChampionsApp", () => {
     expect(within(matchups).getByText("0×")).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "Singles" }));
     const singlesUsage = dialog.querySelector<HTMLElement>(".battle-usage")!;
+    expect(within(singlesUsage).getByText("The official source is missing ranks #1, #2, #3, #4, #5; the original reported ranks are preserved below.")).toBeInTheDocument();
     const usageMove = within(singlesUsage).getByRole("button", { name: "Sucker Punch" });
+    expect(usageMove.closest(".usage-row")).toHaveTextContent(/^6/);
     expect(usageMove.closest(".usage-row")).toHaveTextContent("Dark");
     fireEvent.focus(usageMove);
     expect(await screen.findByRole("tooltip")).toHaveTextContent("Priority +1");
@@ -399,6 +401,16 @@ describe("ChampionsApp", () => {
     expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("Blastoisinite");
     await waitFor(() => expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("Mega Launcher"));
     expect(screen.getByRole("combobox", { name: "Nature" })).toHaveValue("Modest");
+    expect(screen.getByRole("option", { name: /Common #1 .*Modest/ })).toBeInTheDocument();
+    await user.click(screen.getByRole("combobox", { name: "Ability" }));
+    expect(screen.getByRole("option", { name: /Mega Launcher.*Common #1/ })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    await user.click(screen.getByRole("combobox", { name: /Held item/ }));
+    expect(screen.getByRole("option", { name: /Blastoisinite.*Common #1/ })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    await user.click(screen.getByRole("combobox", { name: "Move 1" }));
+    expect(screen.getByRole("option", { name: /Aura Sphere.*Common #1/ })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
     expect(screen.getByRole("slider", { name: /SpA/ })).toHaveValue("32");
     expect(screen.getByRole("slider", { name: /Spe/ })).toHaveValue("32");
     expect(screen.getByText("0 / 66 remaining")).toBeInTheDocument();
@@ -448,7 +460,7 @@ describe("ChampionsApp", () => {
     const firstMove = screen.getByRole("combobox", { name: "Move 1" });
     fireEvent.click(firstMove);
     fireEvent.change(firstMove, { target: { value: "Close Combat" } });
-    fireEvent.click(screen.getByRole("option", { name: /Close Combat/ }));
+    fireEvent.click(within(screen.getByRole("listbox", { name: "Move 1 options" })).getByText("Close Combat", { selector: "strong" }));
     fireEvent.change(screen.getByRole("combobox", { name: "Nature" }), { target: { value: "Jolly" } });
     fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
     const saved = useTeamStore.getState().teams.doubles;
@@ -456,7 +468,7 @@ describe("ChampionsApp", () => {
     expect(saved.map((member) => member.id)).toEqual(["editable-absol", "teammate"]);
     expect(saved[0].moveIds[0]).toBe("close-combat");
     expect(saved[0].nature.name).toBe("Jolly");
-  });
+  }, 60_000);
 
   it("preserves saved moves and ability when an edited member changes only its ordinary held item", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));

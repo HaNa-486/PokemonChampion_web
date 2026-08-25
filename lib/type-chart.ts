@@ -31,10 +31,11 @@ export type TypeMatchup = { type: PokemonType; multiplier: number };
 
 export function defensiveMatchups(defenderTypes: PokemonType[]) {
   const values = ALL_TYPES.map((type) => ({ type, multiplier: defenderTypes.reduce((result, defender) => result * typeEffectiveness(type, defender), 1) }));
+  const byTypeOrder = (left: TypeMatchup, right: TypeMatchup) => ALL_TYPES.indexOf(left.type) - ALL_TYPES.indexOf(right.type);
   return {
     immune: values.filter((entry) => entry.multiplier === 0),
-    resistant: values.filter((entry) => entry.multiplier > 0 && entry.multiplier < 1),
-    weak: values.filter((entry) => entry.multiplier > 1),
+    resistant: values.filter((entry) => entry.multiplier > 0 && entry.multiplier < 1).sort((left, right) => left.multiplier - right.multiplier || byTypeOrder(left, right)),
+    weak: values.filter((entry) => entry.multiplier > 1).sort((left, right) => right.multiplier - left.multiplier || byTypeOrder(left, right)),
   };
 }
 

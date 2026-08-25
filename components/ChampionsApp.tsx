@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { abilities, abilityById, catalogSnapshotDate, itemById, items, megaPokemonByStoneId, megaStoneIdByPokemonId, moveById, moves, pokemon, pokemonById } from "../lib/catalog";
-import { recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
+import { rankedAbilityChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature, type RankedChoice } from "../lib/battle-recommendations";
 import { apTotal, calculateFinalStats, formatPriority, modifiedSpeed, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
 import { localizedTerm, localizedTerms } from "../lib/localization";
@@ -23,7 +23,7 @@ type BuilderDisplayModes = Record<"move" | "ability" | "item", DisplayMode>;
 
 const BUILDER_DISPLAY_KEY = "champions-lab-builder-display-v1";
 const LOCALE_STORAGE_KEY = "champions-lab-locale-v1";
-const ITEM_GROUP_ORDER = ["Mega Stone", "HP Recovery", "Status Cure", "PP Recovery", "Damage Halving", "Other"];
+const ITEM_GROUP_ORDER = ["Common", "Mega Stone", "HP Recovery", "Status Cure", "PP Recovery", "Damage Halving", "Other"];
 const defaultDisplayModes: BuilderDisplayModes = { move: "detailed", ability: "detailed", item: "detailed" };
 
 const labels = {
@@ -80,6 +80,7 @@ type ResourcePickerOption = {
   meta?: ReactNode;
   icon?: ReactNode;
   group?: string;
+  rank?: number;
 };
 
 function ResourcePicker({ label, value, options, locale, detailed, onChange }: {
@@ -130,19 +131,19 @@ function ResourcePicker({ label, value, options, locale, detailed, onChange }: {
       <button id={`${listId}-option-__clear__`} type="button" role="option" aria-selected={!value} className={`resource-option clear-option ${activeValue === "__clear__" ? "active" : ""}`} onMouseEnter={() => setActiveValue("__clear__")} onMouseDown={(event) => event.preventDefault()} onClick={() => choose(null)}>{locale === "zh-Hant" ? "— 不選擇" : "— None"}</button>
       {filtered.map((option, index) => {
         const showGroup = Boolean(option.group && option.group !== filtered[index - 1]?.group);
-        return <div className="resource-option-wrap" key={option.id}>{showGroup && <div className="resource-option-group">{localizedTerm(option.group!, locale)}</div>}<button id={`${listId}-option-${option.id}`} type="button" role="option" aria-selected={option.id === value} className={`resource-option ${activeValue === option.id ? "active" : ""}`} onMouseEnter={() => setActiveValue(option.id)} onMouseDown={(event) => event.preventDefault()} onClick={() => choose(option.id)}><span className="resource-option-heading">{option.icon}<strong>{option.name}</strong></span>{option.meta && <span className="resource-option-meta">{option.meta}</span>}{detailed && <span className="resource-option-description">{option.description}</span>}</button></div>;
+        return <div className="resource-option-wrap" key={option.id}>{showGroup && <div className="resource-option-group">{option.group === "Common" ? (locale === "zh-Hant" ? "當季常用前十" : "Current top 10") : localizedTerm(option.group!, locale)}</div>}<button id={`${listId}-option-${option.id}`} type="button" role="option" aria-selected={option.id === value} className={`resource-option ${activeValue === option.id ? "active" : ""}`} onMouseEnter={() => setActiveValue(option.id)} onMouseDown={(event) => event.preventDefault()} onClick={() => choose(option.id)}><span className="resource-option-heading">{option.icon}<strong>{option.name}</strong>{option.rank && <em>{locale === "zh-Hant" ? `常用 #${option.rank}` : `Common #${option.rank}`}</em>}</span>{option.meta && <span className="resource-option-meta">{option.meta}</span>}{detailed && <span className="resource-option-description">{option.description}</span>}</button></div>;
       })}
       {!filtered.length && <p className="move-picker-empty">{locale === "zh-Hant" ? "找不到符合的選項。" : "No matching option."}</p>}
     </div></div>}
   </div>;
 }
 
-function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, recommendedMoveIds: commonMoveIds, locale, detailed, onChange }: {
+function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, commonMoves, locale, detailed, onChange }: {
   slot: number;
   value: string | null;
   legalMoveIds: string[];
   selectedMoveIds: string[];
-  recommendedMoveIds: string[];
+  commonMoves: RankedChoice[];
   locale: Locale;
   detailed: boolean;
   onChange: (moveId: string | null) => void;
@@ -153,7 +154,7 @@ function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, recommendedMov
   const [query, setQuery] = useState("");
   const [activeValue, setActiveValue] = useState<string>(value ?? "__clear__");
   const current = value ? moveById.get(value) ?? null : null;
-  const commonRank = useMemo(() => new Map(commonMoveIds.map((id, index) => [id, index + 1])), [commonMoveIds]);
+  const commonRank = useMemo(() => new Map(commonMoves.map((choice) => [choice.id, choice.rank])), [commonMoves]);
   const availableMoves = useMemo(() => legalMoveIds
     .map((id) => moveById.get(id))
     .filter((move): move is Move => Boolean(move))
@@ -310,7 +311,10 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     return mega?.speciesKey === selected.speciesKey ? mega : baseSelected;
   }, [baseSelected, itemId, selected.speciesKey]);
   const usage = battleData?.[format] ?? null;
-  const commonMoveIds = useMemo(() => recommendedMoveIds(usage, effectiveSelected), [effectiveSelected, usage]);
+  const commonMoves = useMemo(() => rankedMoveChoices(usage, effectiveSelected, 10), [effectiveSelected, usage]);
+  const commonAbilities = useMemo(() => rankedAbilityChoices(usage, effectiveSelected, 10), [effectiveSelected, usage]);
+  const commonItems = useMemo(() => rankedItemChoices(usage, 10), [usage]);
+  const commonNatures = useMemo(() => rankedNatureChoices(usage, 10), [usage]);
   const finalStats = calculateFinalStats(effectiveSelected.baseStats, ap, nature);
   const remaining = 66 - apTotal(ap);
   const applyRecommendations = (nextFormat: BattleFormat, data: BattleApiResponse["data"] | null, chosenItem?: string | null) => {
@@ -352,7 +356,10 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     .filter((entry) => entry.speciesKey === selected.speciesKey && entry.isMega)
     .map((entry) => megaStoneIdByPokemonId.get(entry.id))
     .filter((id): id is string => Boolean(id)), [selected.speciesKey]);
+  const commonItemRank = useMemo(() => new Map(commonItems.map((choice) => [choice.id, choice.rank])), [commonItems]);
   const selectableItems = useMemo(() => [...items].sort((left, right) => {
+    const usageDifference = (commonItemRank.get(left.id) ?? 999) - (commonItemRank.get(right.id) ?? 999);
+    if (usageDifference) return usageDifference;
     const leftGroup = left.category === "Mega Stone" ? "Mega Stone" : itemEffectCategories(left)[0] ?? "Other";
     const rightGroup = right.category === "Mega Stone" ? "Mega Stone" : itemEffectCategories(right)[0] ?? "Other";
     const leftDedicated = familyStoneIds.indexOf(left.id);
@@ -363,8 +370,12 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
       if (leftDedicated !== rightDedicated) return leftDedicated - rightDedicated;
     }
     return ITEM_GROUP_ORDER.indexOf(leftGroup) - ITEM_GROUP_ORDER.indexOf(rightGroup) || localName(left, locale).localeCompare(localName(right, locale));
-  }), [familyStoneIds, locale]);
-  const abilityOptions = useMemo<ResourcePickerOption[]>(() => effectiveSelected.abilityIds.map((id) => abilityById.get(id)).filter((entry): entry is NonNullable<typeof entry> => Boolean(entry)).map((entry) => ({ id: entry.id, name: localName(entry, locale), searchText: `${entry.name} ${entry.nameZh} ${entry.description} ${entry.descriptionZh}`, description: locale === "zh-Hant" ? entry.descriptionZh : entry.description })), [effectiveSelected.abilityIds, locale]);
+  }), [commonItemRank, familyStoneIds, locale]);
+  const commonAbilityRank = useMemo(() => new Map(commonAbilities.map((choice) => [choice.id, choice.rank])), [commonAbilities]);
+  const abilityOptions = useMemo<ResourcePickerOption[]>(() => effectiveSelected.abilityIds
+    .map((id) => abilityById.get(id)).filter((entry): entry is NonNullable<typeof entry> => Boolean(entry))
+    .sort((left, right) => (commonAbilityRank.get(left.id) ?? 999) - (commonAbilityRank.get(right.id) ?? 999) || localName(left, locale).localeCompare(localName(right, locale)))
+    .map((entry) => ({ id: entry.id, name: localName(entry, locale), searchText: `${entry.name} ${entry.nameZh} ${entry.description} ${entry.descriptionZh}`, description: locale === "zh-Hant" ? entry.descriptionZh : entry.description, rank: commonAbilityRank.get(entry.id) })), [commonAbilityRank, effectiveSelected.abilityIds, locale]);
   const itemOptions = useMemo<ResourcePickerOption[]>(() => selectableItems.map((item) => ({
     id: item.id,
     name: localName(item, locale),
@@ -372,8 +383,11 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     description: locale === "zh-Hant" ? item.descriptionZh : item.description,
     icon: item.imageUrl ? <img className="item-icon" src={item.imageUrl} alt="" width="24" height="24" /> : null,
     meta: localizedTerm(item.category, locale),
-    group: item.category === "Mega Stone" ? "Mega Stone" : itemEffectCategories(item)[0] ?? "Other",
-  })), [locale, selectableItems]);
+    group: commonItemRank.has(item.id) ? "Common" : item.category === "Mega Stone" ? "Mega Stone" : itemEffectCategories(item)[0] ?? "Other",
+    rank: commonItemRank.get(item.id),
+  })), [commonItemRank, locale, selectableItems]);
+  const commonNatureRank = useMemo(() => new Map(commonNatures.map((choice) => [choice.nature.name, choice.rank])), [commonNatures]);
+  const selectableNatures = useMemo(() => [...NATURES].sort((left, right) => (commonNatureRank.get(left.name) ?? 999) - (commonNatureRank.get(right.name) ?? 999) || natureLabel(left, locale).localeCompare(natureLabel(right, locale))), [commonNatureRank, locale]);
 
   useEffect(() => { formatRef.current = format; }, [format]);
 
@@ -407,11 +421,11 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
       <div className="builder-display-preferences" aria-label={locale === "zh-Hant" ? "選單顯示方式" : "Picker display modes"}>{(["move", "ability", "item"] as const).map((kind) => <div key={kind}><span>{locale === "zh-Hant" ? kind === "move" ? "招式" : kind === "ability" ? "特性" : "持有物" : kind}</span><div className="segmented"><button className={displayModes[kind] === "detailed" ? "active" : ""} onClick={() => changeDisplayMode(kind, "detailed")}>{locale === "zh-Hant" ? "詳細" : "Detailed"}</button><button className={displayModes[kind] === "compact" ? "active" : ""} onClick={() => changeDisplayMode(kind, "compact")}>{locale === "zh-Hant" ? "精簡" : "Compact"}</button></div></div>)}</div>
       {effectiveSelected.id !== selected.id && <p className="mega-transform-note">{locale === "zh-Hant" ? <>{selectedItem ? <>選擇 <ItemDisplay item={selectedItem} locale={locale} size={22} /> 後</> : "移除專屬超級石後"}，目前型態為 {localName(effectiveSelected, locale)}。</> : <>{selectedItem ? <><ItemDisplay item={selectedItem} locale={locale} size={22} /> selected; </> : "Dedicated Mega Stone removed; "}current form is {localName(effectiveSelected, locale)}.</>}</p>}
       <div className="builder-grid">
-        <label>{locale === "zh-Hant" ? "性格" : "Nature"}<select value={nature.name} onChange={(event) => setNature(NATURES.find((entry) => entry.name === event.target.value) ?? NEUTRAL_NATURE)}>{NATURES.map((entry) => <option value={entry.name} key={entry.name}>{natureLabel(entry, locale)}</option>)}</select></label>
+        <label>{locale === "zh-Hant" ? "性格" : "Nature"}<select value={nature.name} onChange={(event) => setNature(NATURES.find((entry) => entry.name === event.target.value) ?? NEUTRAL_NATURE)}>{selectableNatures.map((entry) => <option value={entry.name} key={entry.name}>{commonNatureRank.has(entry.name) ? `${locale === "zh-Hant" ? "常用" : "Common"} #${commonNatureRank.get(entry.name)} · ` : ""}{natureLabel(entry, locale)}</option>)}</select></label>
         <ResourcePicker label={locale === "zh-Hant" ? "特性" : "Ability"} value={abilityId} options={abilityOptions} locale={locale} detailed={displayModes.ability === "detailed"} onChange={setAbilityId} />
         <ResourcePicker label={locale === "zh-Hant" ? "持有物" : "Held item"} value={itemId} options={itemOptions} locale={locale} detailed={displayModes.item === "detailed"} onChange={setItemId} />
       </div>
-      <div className="move-slots">{[0,1,2,3].map((slot) => <MovePicker key={slot} slot={slot} value={moveIds[slot] ?? null} legalMoveIds={effectiveSelected.moveIds} selectedMoveIds={moveIds} recommendedMoveIds={commonMoveIds} locale={locale} detailed={displayModes.move === "detailed"} onChange={(moveId) => setMoveIds((current) => { const next = [...current]; if (moveId) next[slot] = moveId; else next.splice(slot, 1); return next.filter(Boolean).slice(0, 4); })} />)}</div>
+      <div className="move-slots">{[0,1,2,3].map((slot) => <MovePicker key={slot} slot={slot} value={moveIds[slot] ?? null} legalMoveIds={effectiveSelected.moveIds} selectedMoveIds={moveIds} commonMoves={commonMoves} locale={locale} detailed={displayModes.move === "detailed"} onChange={(moveId) => setMoveIds((current) => { const next = [...current]; if (moveId) next[slot] = moveId; else next.splice(slot, 1); return next.filter(Boolean).slice(0, 4); })} />)}</div>
       <div className="ap-head"><h3>{locale === "zh-Hant" ? "能力值與 AP" : "Stats & AP"}</h3><span className={remaining < 0 ? "remaining bad" : "remaining"}>{remaining} / 66 {locale === "zh-Hant" ? "剩餘" : "remaining"}</span></div>
       <div className="stat-editor">{(Object.keys(statLabels) as Array<keyof Stats>).map((stat) => <label key={stat}><span>{statLabels[stat]}{nature.up === stat && <em className="nature-up" title="+10%">↑</em>}{nature.down === stat && <em className="nature-down" title="−10%">↓</em>} <b>{finalStats[stat]}</b></span><input type="range" min="0" max="32" value={ap[stat]} onChange={(event) => { const value = Number(event.target.value); setAp((current) => apTotal({ ...current, [stat]: value }) <= 66 ? { ...current, [stat]: value } : current); }} /><output>{ap[stat]}</output></label>)}</div>
       {error && <p className="form-error" role="alert">{error}</p>}<button className="primary-button" onClick={submit}>{isEditing ? labels[locale].save : labels[locale].add}</button>

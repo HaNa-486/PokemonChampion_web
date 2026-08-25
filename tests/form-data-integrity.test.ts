@@ -24,6 +24,8 @@ const expectedBattleKeys: Record<string, string> = {
   "rotom-frost": "rotomfrost",
   "rotom-fan": "rotomfan",
   rotom: "rotom",
+  gallade: "gallade",
+  "mega-gallade": "gallademega",
 };
 
 describe("form-specific catalog integrity", () => {
