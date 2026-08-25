@@ -4,6 +4,7 @@ import type { BattleUsage, Nature, NonHpStat, Pokemon, Stats } from "./types";
 
 export type RankedChoice = { id: string; rank: number };
 export type RankedNatureChoice = { nature: Nature; rank: number };
+export type RankedApChoice = { ap: Stats; rank: number; percentage: string; percentageValue: number | null };
 
 const rankedRows = (usage: BattleUsage | null | undefined, category: string) => (usage?.rows ?? [])
   .filter((row) => row.category === category)
@@ -81,10 +82,14 @@ export function rankedNatureChoices(usage: BattleUsage | null | undefined, maxRa
 }
 
 export function recommendedAp(usage: BattleUsage | null | undefined): Stats | null {
-  for (const row of rankedRows(usage, "stat_points")) {
-    if (!row.ap) continue;
+  return rankedApChoices(usage, 10)[0]?.ap ?? null;
+}
+
+export function rankedApChoices(usage: BattleUsage | null | undefined, maxRank = 10): RankedApChoice[] {
+  return rankedRows(usage, "stat_points").flatMap((row) => {
+    if (!row.ap || row.rank < 1 || row.rank > maxRank) return [];
     const values = Object.values(row.ap);
-    if (values.every((value) => Number.isInteger(value) && value >= 0 && value <= 32) && apTotal(row.ap) <= 66) return { ...row.ap };
-  }
-  return null;
+    if (!values.every((value) => Number.isInteger(value) && value >= 0 && value <= 32) || apTotal(row.ap) > 66) return [];
+    return [{ ap: { ...row.ap }, rank: row.rank, percentage: row.percentage, percentageValue: row.percentageValue }];
+  });
 }

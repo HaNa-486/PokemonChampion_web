@@ -118,6 +118,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Illegal, duplicated, or unmapped usage rows are skipped instead of forced into the build.
 - [ ] Each builder move slot supports localized/English name and effect-text search, common-move-first ordering, visible type/category/Power/Accuracy/priority/effect information, clearing, and duplicate-move prevention.
 - [ ] Move, ability, held-item, and nature selectors pin every mapped legal current-format rank 1–10 in the exact source-rank order and display the real rank, including gaps.
+- [ ] The AP selector exposes every valid reported current-format rank 1–10 with rank, six-stat allocation, and usage percentage; applying a spread updates all sliders, exact saved spreads are recognized, and a manual adjustment changes the selector to Custom.
 - [ ] Builder ability and item fields support name/effect search, localized rich descriptions, keyboard/mouse/touch selection, and independent Detailed/Compact preferences that default to Detailed and persist.
 - [ ] Held-item options are grouped by effect class, expose Other, and place the selected family’s dedicated stone first in the Mega Stone group.
 - [ ] Learnable move cards show Power, Accuracy, and PP without requiring hover.

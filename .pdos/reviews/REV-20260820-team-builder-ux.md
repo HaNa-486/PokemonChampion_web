@@ -2,7 +2,7 @@
 
 - Review ID: REV-20260820-team-builder-ux
 - Mode: review-and-fix
-- Status: in_progress
+- Status: implemented
 - Created: 2026-08-20T07:05:00Z
 - Scope: floating team tray, Build Workbench, team persistence, move selection, responsive accessibility
 - Release assessment: not-ready; expanded product-owner UAT findings implemented locally and awaiting exact-candidate verification and renewed Dev UAT
@@ -76,3 +76,20 @@
 - Residual risk: Real responsive selector geometry and the live Clefable disclosure require Dev UAT.
 - Autonomy class: auto-decide
 - Remediation: remediations/REM-20260825-team-builder-ux-F004.md
+
+### F-005
+
+- Severity: medium
+- Confidence: high
+- Status: in_progress
+- Evidence: The Pokémon detail dialog listed AP usage ranks 1–10, but Build Workbench only applied the first valid spread and exposed no way to inspect or apply ranks 2–10 without leaving the editor.
+- User impact: Players comparing common spreads had to move between dialogs and manually reproduce six values, making mistakes and in-place edits unnecessarily likely.
+- Root cause: `recommendedAp` intentionally returned one spread and the builder rendered only six sliders, unlike the rank-aware move, ability, item, and nature controls.
+- Recommended solution: Expose valid current-format AP ranks 1–10 in the builder with real rank, allocation, and usage; apply a choice atomically and mark any accepted slider edit as Custom.
+- Alternatives and tradeoffs: A second AP modal would preserve the current layout but retains the context-switching problem; copying values manually is rejected as error-prone.
+- Affected areas: battle recommendation mapping, Build Workbench, responsive styles, component/domain tests, specification.
+- Acceptance criteria: Singles/Doubles choices remain isolated; ranks and gaps are preserved; a choice updates all six values; exact saved spreads are recognized; manual adjustment changes to Custom; invalid spreads are excluded.
+- Verification: Domain/component regressions and `pnpm verify:deploy` pass with 17 test files / 118 tests, production build, and 10 rendered-output/API checks; exact committed Dev packaging and Dev UAT remain required.
+- Residual risk: Long localized option labels and mobile layout need real Dev UAT.
+- Autonomy class: auto-decide
+- Remediation: remediations/REM-20260825-team-builder-ux-F005.md

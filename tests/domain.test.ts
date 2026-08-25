@@ -5,7 +5,7 @@ import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
 import { abilityCategories, itemEffectCategories } from "../lib/filtering";
 import { defensiveMatchups, formatMultiplier, typeEffectiveness } from "../lib/type-chart";
-import { rankedAbilityChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
+import { rankedAbilityChoices, rankedApChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
 import { migrateSavedTeams } from "../lib/team-store";
 import type { BattleUsage } from "../lib/types";
 
@@ -40,11 +40,18 @@ describe("battle-data build recommendations", () => {
       usageRow("move", 6, "Aqua Jet"), usageRow("move", 10, "Aura Sphere"),
       usageRow("ability", 3, "Torrent"), usageRow("held_item", 2, "Blastoisinite"),
       { ...usageRow("stat_alignment", 4, "Modest"), statUp: "Sp. Atk", statDown: "Attack" },
+      { ...usageRow("stat_points", 2, ""), percentage: "35.6%", percentageValue: 35.6, ap: { hp: 32, attack: 0, defense: 32, specialAttack: 0, specialDefense: 2, speed: 0 } },
+      { ...usageRow("stat_points", 10, ""), percentage: "1.4%", percentageValue: 1.4, ap: { hp: 2, attack: 32, defense: 0, specialAttack: 0, specialDefense: 32, speed: 0 } },
+      { ...usageRow("stat_points", 11, ""), ap: { hp: 2, attack: 0, defense: 0, specialAttack: 32, specialDefense: 0, speed: 32 } },
     ]);
     expect(rankedMoveChoices(usage, selected)).toEqual([{ id: "aqua-jet", rank: 6 }, { id: "aura-sphere", rank: 10 }]);
     expect(rankedAbilityChoices(usage, selected)).toEqual([{ id: "torrent", rank: 3 }]);
     expect(rankedItemChoices(usage)).toEqual([{ id: "blastoisinite", rank: 2 }]);
     expect(rankedNatureChoices(usage)).toEqual([{ nature: expect.objectContaining({ name: "Modest" }), rank: 4 }]);
+    expect(rankedApChoices(usage)).toEqual([
+      { rank: 2, percentage: "35.6%", percentageValue: 35.6, ap: { hp: 32, attack: 0, defense: 32, specialAttack: 0, specialDefense: 2, speed: 0 } },
+      { rank: 10, percentage: "1.4%", percentageValue: 1.4, ap: { hp: 2, attack: 32, defense: 0, specialAttack: 0, specialDefense: 32, speed: 0 } },
+    ]);
   });
 });
 

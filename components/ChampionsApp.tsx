@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { abilities, abilityById, catalogSnapshotDate, itemById, items, megaPokemonByStoneId, megaStoneIdByPokemonId, moveById, moves, pokemon, pokemonById } from "../lib/catalog";
-import { rankedAbilityChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature, type RankedChoice } from "../lib/battle-recommendations";
+import { rankedAbilityChoices, rankedApChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature, type RankedChoice } from "../lib/battle-recommendations";
 import { apTotal, calculateFinalStats, formatPriority, modifiedSpeed, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
 import { localizedTerm, localizedTerms } from "../lib/localization";
@@ -271,6 +271,14 @@ function BuildEditor({ selected, editingMember, locale, format, onFormatChange, 
 
 type BattleApiResponse = { data: { singles: BattleUsage | null; doubles: BattleUsage | null } };
 
+const sameAp = (left: Stats, right: Stats) => (Object.keys(left) as Array<keyof Stats>).every((stat) => left[stat] === right[stat]);
+const apChoiceLabel = (choice: ReturnType<typeof rankedApChoices>[number], locale: Locale) => {
+  const stats = locale === "zh-Hant"
+    ? [["HP", choice.ap.hp], ["攻擊", choice.ap.attack], ["防禦", choice.ap.defense], ["特攻", choice.ap.specialAttack], ["特防", choice.ap.specialDefense], ["速度", choice.ap.speed]]
+    : [["HP", choice.ap.hp], ["Atk", choice.ap.attack], ["Def", choice.ap.defense], ["SpA", choice.ap.specialAttack], ["SpD", choice.ap.specialDefense], ["Spe", choice.ap.speed]];
+  return `${locale === "zh-Hant" ? "常用" : "Common"} #${choice.rank} · ${stats.map(([label, value]) => `${label} ${value}`).join(" / ")} · ${choice.percentage || "—"}`;
+};
+
 function BuildEditorContent({ selected, editingMember, locale, format, onFormatChange: setAppFormat, onClose }: { selected: Pokemon; editingMember: TeamMember | null; locale: Locale; format: BattleFormat; onFormatChange: (format: BattleFormat) => void; onClose: () => void }) {
   useDialogEscape(onClose);
   const members = useTeamStore((state) => state.teams[format]);
@@ -286,6 +294,7 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
   const [recommendationsLoading, setRecommendationsLoading] = useState(true);
   const formatRef = useRef(format);
   const [ap, setAp] = useState<Stats>(editingMember ? { ...editingMember.ap } : { ...ZERO_STATS });
+  const [apPresetRank, setApPresetRank] = useState<number | null>(null);
   const [nature, setNature] = useState<Nature>(editingMember?.nature ?? NEUTRAL_NATURE);
   const [error, setError] = useState("");
   const [displayModes, setDisplayModes] = useState<BuilderDisplayModes>(defaultDisplayModes);
@@ -315,6 +324,7 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
   const commonAbilities = useMemo(() => rankedAbilityChoices(usage, effectiveSelected, 10), [effectiveSelected, usage]);
   const commonItems = useMemo(() => rankedItemChoices(usage, 10), [usage]);
   const commonNatures = useMemo(() => rankedNatureChoices(usage, 10), [usage]);
+  const commonApChoices = useMemo(() => rankedApChoices(usage, 10), [usage]);
   const finalStats = calculateFinalStats(effectiveSelected.baseStats, ap, nature);
   const remaining = 66 - apTotal(ap);
   const applyRecommendations = (nextFormat: BattleFormat, data: BattleApiResponse["data"] | null, chosenItem?: string | null) => {
@@ -329,6 +339,7 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     if (chosenItem === undefined) {
       setNature(recommendedNature(nextUsage) ?? NEUTRAL_NATURE);
       setAp(recommendedAp(nextUsage) ?? { ...ZERO_STATS });
+      setApPresetRank(rankedApChoices(nextUsage, 10)[0]?.rank ?? null);
     }
   };
   const changeFormat = (nextFormat: BattleFormat) => {
@@ -395,7 +406,11 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     let cancelled = false;
     fetch(`/api/v1/pokemon/battle?pokemonId=${encodeURIComponent(selected.id)}`)
       .then(async (response) => response.ok ? response.json() as Promise<BattleApiResponse> : Promise.reject(new Error("Battle data unavailable")))
-      .then((response) => { if (!cancelled) { setBattleData(response.data); if (!editingMember) applyRecommendations(formatRef.current, response.data); } })
+      .then((response) => { if (!cancelled) {
+        setBattleData(response.data);
+        if (!editingMember) applyRecommendations(formatRef.current, response.data);
+        else setApPresetRank(rankedApChoices(response.data[formatRef.current], 10).find((choice) => sameAp(choice.ap, editingMember.ap))?.rank ?? null);
+      } })
       .catch(() => { if (!cancelled) { setBattleData(null); if (!editingMember) applyRecommendations(formatRef.current, null); } })
       .finally(() => { if (!cancelled) setRecommendationsLoading(false); });
     return () => { cancelled = true; };
@@ -426,8 +441,12 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
         <ResourcePicker label={locale === "zh-Hant" ? "持有物" : "Held item"} value={itemId} options={itemOptions} locale={locale} detailed={displayModes.item === "detailed"} onChange={setItemId} />
       </div>
       <div className="move-slots">{[0,1,2,3].map((slot) => <MovePicker key={slot} slot={slot} value={moveIds[slot] ?? null} legalMoveIds={effectiveSelected.moveIds} selectedMoveIds={moveIds} commonMoves={commonMoves} locale={locale} detailed={displayModes.move === "detailed"} onChange={(moveId) => setMoveIds((current) => { const next = [...current]; if (moveId) next[slot] = moveId; else next.splice(slot, 1); return next.filter(Boolean).slice(0, 4); })} />)}</div>
-      <div className="ap-head"><h3>{locale === "zh-Hant" ? "能力值與 AP" : "Stats & AP"}</h3><span className={remaining < 0 ? "remaining bad" : "remaining"}>{remaining} / 66 {locale === "zh-Hant" ? "剩餘" : "remaining"}</span></div>
-      <div className="stat-editor">{(Object.keys(statLabels) as Array<keyof Stats>).map((stat) => <label key={stat}><span>{statLabels[stat]}{nature.up === stat && <em className="nature-up" title="+10%">↑</em>}{nature.down === stat && <em className="nature-down" title="−10%">↓</em>} <b>{finalStats[stat]}</b></span><input type="range" min="0" max="32" value={ap[stat]} onChange={(event) => { const value = Number(event.target.value); setAp((current) => apTotal({ ...current, [stat]: value }) <= 66 ? { ...current, [stat]: value } : current); }} /><output>{ap[stat]}</output></label>)}</div>
+      <div className="ap-head"><h3>{locale === "zh-Hant" ? "能力值與 AP" : "Stats & AP"}</h3><label className="ap-preset-field"><span>{locale === "zh-Hant" ? "AP 配置" : "AP spread"}</span><select aria-label={locale === "zh-Hant" ? "AP 配置" : "AP spread"} value={apPresetRank === null ? "custom" : String(apPresetRank)} onChange={(event) => {
+        if (event.target.value === "custom") { setApPresetRank(null); return; }
+        const choice = commonApChoices.find((entry) => entry.rank === Number(event.target.value));
+        if (choice) { setAp({ ...choice.ap }); setApPresetRank(choice.rank); }
+      }}><option value="custom">{locale === "zh-Hant" ? "客製化" : "Custom"}</option>{commonApChoices.map((choice) => <option key={choice.rank} value={choice.rank}>{apChoiceLabel(choice, locale)}</option>)}</select></label><span className={remaining < 0 ? "remaining bad" : "remaining"}>{remaining} / 66 {locale === "zh-Hant" ? "剩餘" : "remaining"}</span></div>
+      <div className="stat-editor">{(Object.keys(statLabels) as Array<keyof Stats>).map((stat) => <label key={stat}><span>{statLabels[stat]}{nature.up === stat && <em className="nature-up" title="+10%">↑</em>}{nature.down === stat && <em className="nature-down" title="−10%">↓</em>} <b>{finalStats[stat]}</b></span><input type="range" min="0" max="32" value={ap[stat]} onChange={(event) => { const next = { ...ap, [stat]: Number(event.target.value) }; if (apTotal(next) <= 66) { setAp(next); setApPresetRank(null); } }} /><output>{ap[stat]}</output></label>)}</div>
       {error && <p className="form-error" role="alert">{error}</p>}<button className="primary-button" onClick={submit}>{isEditing ? labels[locale].save : labels[locale].add}</button>
     </section>
   </div>;

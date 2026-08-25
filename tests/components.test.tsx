@@ -390,6 +390,7 @@ describe("ChampionsApp", () => {
         { category: "ability", rank: 1, name: "Mega Launcher", percentage: "100%", percentageValue: 100, statUp: "", statDown: "", ap: null },
         { category: "stat_alignment", rank: 1, name: "Modest", percentage: "75%", percentageValue: 75, statUp: "Sp. Atk", statDown: "Attack", ap: null },
         { category: "stat_points", rank: 1, name: "", percentage: "60%", percentageValue: 60, statUp: "", statDown: "", ap: { hp: 2, attack: 0, defense: 0, specialAttack: 32, specialDefense: 0, speed: 32 } },
+        { category: "stat_points", rank: 2, name: "", percentage: "25%", percentageValue: 25, statUp: "", statDown: "", ap: { hp: 32, attack: 0, defense: 32, specialAttack: 0, specialDefense: 2, speed: 0 } },
         ...["Aura Sphere", "Dark Pulse", "Dragon Pulse", "Water Pulse"].map((name, index) => ({ category: "move", rank: index + 1, name, percentage: `${90 - index}%`, percentageValue: 90 - index, statUp: "", statDown: "", ap: null })),
       ] },
     } })));
@@ -414,6 +415,15 @@ describe("ChampionsApp", () => {
     expect(screen.getByRole("slider", { name: /SpA/ })).toHaveValue("32");
     expect(screen.getByRole("slider", { name: /Spe/ })).toHaveValue("32");
     expect(screen.getByText("0 / 66 remaining")).toBeInTheDocument();
+    const apSpread = screen.getByRole("combobox", { name: "AP spread" });
+    expect(apSpread).toHaveValue("1");
+    expect(screen.getByRole("option", { name: /Common #2 .*HP 32 .*Def 32 .*SpD 2 .*25%/ })).toBeInTheDocument();
+    await user.selectOptions(apSpread, "2");
+    expect(screen.getByRole("slider", { name: /HP/ })).toHaveValue("32");
+    expect(screen.getByRole("slider", { name: /Def/ })).toHaveValue("32");
+    expect(screen.getByRole("slider", { name: /SpD/ })).toHaveValue("2");
+    fireEvent.change(screen.getByRole("slider", { name: /HP/ }), { target: { value: "31" } });
+    expect(apSpread).toHaveValue("custom");
     expect(screen.getByText(/current form is Mega Blastoise/)).toBeInTheDocument();
     const moveValues = screen.getAllByRole("combobox", { name: /Move [1-4]/ }).map((entry) => entry.getAttribute("data-move-id"));
     expect(moveValues).toEqual(["aura-sphere", "dark-pulse", "dragon-pulse", "water-pulse"]);
@@ -469,6 +479,29 @@ describe("ChampionsApp", () => {
     expect(saved[0].moveIds[0]).toBe("close-combat");
     expect(saved[0].nature.name).toBe("Jolly");
   }, 60_000);
+
+  it("recognizes a saved AP spread and switches it to Custom after a manual adjustment", async () => {
+    const existing: TeamMember = {
+      id: "ranked-ap-absol", pokemonId: "absol", abilityId: "pressure", itemId: "life-orb",
+      moveIds: ["sucker-punch", "protect"], ap: { ...ZERO_STATS, attack: 32, speed: 32 },
+      nature: { name: "Jolly", nameZh: "爽朗", up: "speed", down: "specialAttack" },
+    };
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
+      singles: null,
+      doubles: { pokemon: "Absol", format: "Doubles", season: "Current", date: null, source: "test", rows: [
+        { category: "stat_points", rank: 3, name: "", percentage: "18.5%", percentageValue: 18.5, statUp: "", statDown: "", ap: { ...ZERO_STATS, attack: 32, speed: 32 } },
+      ] },
+    } })));
+    useTeamStore.setState({ teams: { singles: [], doubles: [existing] }, hydrated: true });
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.click(screen.getByRole("button", { name: "Edit Absol" }));
+    const apSpread = await screen.findByRole("combobox", { name: "AP spread" });
+    await waitFor(() => expect(apSpread).toHaveValue("3"));
+    expect(screen.getByRole("option", { name: /Common #3 .*18.5%/ })).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("slider", { name: /Def/ }), { target: { value: "1" } });
+    expect(apSpread).toHaveValue("custom");
+  });
 
   it("preserves saved moves and ability when an edited member changes only its ordinary held item", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
