@@ -91,6 +91,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Mega Pokémon from different species families remain legal together.
 - [ ] Every submitted Mega form holds its dedicated stone; removing/replacing the stone in the editor returns the build to its regular form.
 - [ ] Selecting a Mega Stone on a base form updates sprite, name, types, abilities, base stats, matchups, final stats, and legality identity.
+- [ ] A Mega Stone transforms only its explicit compatible regular form; a regional sibling sharing `speciesKey` (for example Galarian Slowbro) remains unchanged.
 - [ ] Singles and Doubles teams remain independent and persist through switching.
 - [ ] Editing a team member restores its exact saved fields, saves in the same slot with the same member ID, does not change the team count, and does not falsely conflict with its own Pokémon or held item.
 - [ ] Changing only an ordinary held item preserves the member's saved moves and ability; a Mega form change reconciles only choices that become illegal.
@@ -115,6 +116,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Held-item thumbnails appear beside item names in the Item DB, Pokémon battle usage, builder selection preview, Mega transformation message, floating team tray, and Speed Compare selection preview.
 - [ ] The same held-item thumbnail appears in both a tooltip trigger and its tooltip heading; a failed image remains readable through the neutral fallback.
 - [ ] Singles/Doubles usage defaults apply the highest-ranked legal item, ability, nature, AP spread, and four unique learnable moves.
+- [ ] Base/Mega forms sharing one `battleDataKey` reuse one recommendation request; a genuinely distinct Mega key (currently Gallade) loads its own ranks after transformation.
 - [ ] Illegal, duplicated, or unmapped usage rows are skipped instead of forced into the build.
 - [ ] Each builder move slot supports localized/English name and effect-text search, common-move-first ordering, visible type/category/Power/Accuracy/priority/effect information, clearing, and duplicate-move prevention.
 - [ ] Move, ability, held-item, and nature selectors pin every mapped legal current-format rank 1–10 in the exact source-rank order and display the real rank, including gaps.

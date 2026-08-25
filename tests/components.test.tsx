@@ -383,7 +383,9 @@ describe("ChampionsApp", () => {
   });
 
   it("applies current-format usage and transforms a base Pokémon when its Mega Stone is selected", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      void input;
+      return Response.json({ data: {
       singles: { pokemon: "Blastoise", format: "Singles", season: "Current", date: null, source: "test", rows: [{ category: "held_item", rank: 1, name: "Leftovers", percentage: "40%", percentageValue: 40, statUp: "", statDown: "", ap: null }] },
       doubles: { pokemon: "Blastoise", format: "Doubles", season: "Current", date: null, source: "test", rows: [
         { category: "held_item", rank: 1, name: "Blastoisinite", percentage: "80%", percentageValue: 80, statUp: "", statDown: "", ap: null },
@@ -393,12 +395,17 @@ describe("ChampionsApp", () => {
         { category: "stat_points", rank: 2, name: "", percentage: "25%", percentageValue: 25, statUp: "", statDown: "", ap: { hp: 32, attack: 0, defense: 32, specialAttack: 0, specialDefense: 2, speed: 0 } },
         ...["Aura Sphere", "Dark Pulse", "Dragon Pulse", "Water Pulse"].map((name, index) => ({ category: "move", rank: index + 1, name, percentage: `${90 - index}%`, percentageValue: 90 - index, statUp: "", statDown: "", ap: null })),
       ] },
-    } })));
+      } });
+    });
+    vi.stubGlobal("fetch", fetchMock);
     const user = userEvent.setup();
     render(<ChampionsApp />);
     await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Blastoise");
     await user.click(screen.getByRole("button", { name: "Configure Blastoise" }));
     expect(await screen.findByRole("heading", { name: "Mega Blastoise" })).toBeInTheDocument();
+    await waitFor(() => expect(fetchMock.mock.calls
+      .map(([input]) => new URL(String(input), "https://test.invalid").searchParams.get("pokemonId"))
+      .filter(Boolean)).toEqual(["blastoise"]));
     expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("Blastoisinite");
     await waitFor(() => expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("Mega Launcher"));
     expect(screen.getByRole("combobox", { name: "Nature" })).toHaveValue("Modest");
@@ -431,6 +438,47 @@ describe("ChampionsApp", () => {
     await user.click(within(buildMode).getByRole("button", { name: "Singles" }));
     expect(await screen.findByRole("heading", { name: "Blastoise" })).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("Leftovers");
+  });
+
+  it("reloads recommendations only when a Mega form has a distinct battle-data key", async () => {
+    const rows = (pokemonName: string, heldItem: string, ability: string, move: string) => ({
+      singles: null,
+      doubles: { pokemon: pokemonName, format: "Doubles", season: "Current", date: null, source: "key-test", rows: [
+        { category: "held_item", rank: 1, name: heldItem, percentage: "90%", percentageValue: 90, statUp: "", statDown: "", ap: null },
+        { category: "ability", rank: 1, name: ability, percentage: "80%", percentageValue: 80, statUp: "", statDown: "", ap: null },
+        { category: "move", rank: 1, name: move, percentage: "70%", percentageValue: 70, statUp: "", statDown: "", ap: null },
+      ] },
+    });
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const pokemonId = new URL(String(input), "https://test.invalid").searchParams.get("pokemonId");
+      return Response.json({ data: pokemonId === "mega-gallade"
+        ? rows("Mega Gallade", "Galladite", "Inner Focus", "Protect")
+        : rows("Gallade", "Galladite", "Sharpness", "Sacred Sword") });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Gallade");
+    await user.click(screen.getByRole("button", { name: "Configure Gallade" }));
+    expect(await screen.findByRole("heading", { name: "Mega Gallade" })).toBeInTheDocument();
+    await waitFor(() => expect(fetchMock.mock.calls
+      .map(([input]) => new URL(String(input), "https://test.invalid").searchParams.get("pokemonId"))
+      .filter(Boolean)).toEqual(["gallade", "mega-gallade"]));
+    expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("Inner Focus");
+  });
+
+  it("does not let a regional form use another form's dedicated Mega Stone", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Galarian Slowbro");
+    await user.click(screen.getByRole("button", { name: "Configure Galarian Slowbro" }));
+    const item = screen.getByRole("combobox", { name: /Held item/ });
+    await user.click(item);
+    await user.type(item, "Slowbronite");
+    await user.click(screen.getByRole("option", { name: /Slowbronite/ }));
+    expect(screen.getByRole("heading", { name: "Galarian Slowbro" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Mega Slowbro" })).not.toBeInTheDocument();
   });
 
   it("keeps independent selectable Singles and Doubles teams", async () => {

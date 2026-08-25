@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 8
-- Updated: 2026-08-25T09:36:00Z
+- State revision: 9
+- Updated: 2026-08-25T12:36:00Z
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: AP spread remediation deployed to isolated Dev; product-owner UAT pending
+- Phase: review exception remediation committed and verified; exact-candidate Dev handoff and renewed UAT pending
 
 ## Repository identity
 
 - Branch: codex/team-member-edit-move-picker
-- Observed commit: 1334a681eedbd356bba282bc619b2126524af2b9
+- Observed commit: release-candidate branch HEAD (the commit hash is recorded by the deployment/version evidence rather than embedded in its own tree)
 
 ## Product anchors
 
@@ -25,17 +25,17 @@ Keep this concise. Every fresh PDOS context reads it first.
 - Current slice: Complete in-place editing, rich selectors with real top-ten usage ranks, transparent upstream gaps, locale/modal consistency, and readable build summaries.
 - Active workstreams: `workstreams/2026-08-20-team-member-edit-move-picker.md`
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
-- Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`
-- Blocking dependencies: renewed product-owner UAT, PR check, and clean independent review.
+- Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
+- Blocking dependencies: renewed product-owner UAT, updated PR check, and clean independent review.
 - Consequential open decisions: production deployment remains human-only and is outside the pre-UAT phase.
 
 ## Handoff
 
-- What changed: Added Mega-to-regular editing, searchable grouped ability/item pickers with persisted detailed/compact styles, real current-format top-ten ranks across move/ability/item/nature/AP selectors, direct AP spread application with Custom fallback, upstream rank-gap disclosure without fabricated rows, severity-ordered matchups, the live Mega Gallade battle key, Other item filtering, document Escape for dialogs, locale persistence/browser inference, localized battle rows, visible move mechanics, and AP/nature team summaries.
-- Verification evidence: Final `pnpm verify:deploy` passed, including form/localization audits, 17 test files / 118 tests, production build, and 10 built-output/API checks. `pnpm data:audit:live` passed for 358 snapshot forms after reconciling Mega Gallade's current `gallademega` key. AP domain/component regressions cover rank 2/rank 10, exact saved-rank recognition, atomic six-stat application, and Custom fallback.
-- Not verified: real keyboard/touch/responsive UAT and product-owner acceptance of the AP selector.
-- Residual risks: Long localized AP labels and mobile AP layout, picker geometry, the live Clefable rank-gap disclosure, matchup ordering, and all dialog/locale journeys must be checked on the isolated Dev site. Clefable Doubles ranks 1–5 remain absent upstream.
-- Next safe action: Product owner tests the AP preset and Custom journeys on Champions Lab Dev; do not open a PR until explicit UAT approval.
+- What changed: Preserved all earlier builder work and corrected review exceptions by caching usage per `battleDataKey`, loading only genuinely distinct form keys, and requiring an explicit regular-form identity for each Mega Stone.
+- Verification evidence: `pnpm verify:dev` passed against committed source with 17 test files / 121 tests, two successful builds, form/localization audits, 10 built-output/API checks, and a Dev manifest assertion. `pnpm data:audit:live` also passed for 358 snapshot forms. New golden cases cover shared-key Blastoise, distinct-key Mega Gallade, and incompatible Galarian Slowbro/Slowbronite.
+- Not verified: product-owner acceptance of the three focused transition journeys on isolated Dev.
+- Residual risks: Responsive AP/picker geometry and external live data availability remain as documented; Clefable Doubles ranks 1–5 remain absent upstream.
+- Next safe action: product owner completes the focused Mega transition UAT on Champions Lab Dev; do not update or merge PR #7 before explicit acceptance.
 
 ## Read next
 
@@ -47,5 +47,6 @@ Keep this concise. Every fresh PDOS context reads it first.
 - `remediations/REM-20260820-team-builder-ux-F003.md`
 - `remediations/REM-20260825-team-builder-ux-F004.md`
 - `remediations/REM-20260825-team-builder-ux-F005.md`
+- `remediations/REM-20260825-team-builder-ux-F006.md`
 - `../PROJECT_SPEC.md`
 - `../DEPLOYMENT_CHECKLIST.md`

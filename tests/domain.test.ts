@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { abilities, items, megaStoneIdByPokemonId, moves, pokemon, pokemonByAbilityId, pokemonById, pokemonByMoveId } from "../lib/catalog";
+import { abilities, items, megaBasePokemonIdByStoneId, megaStoneIdByPokemonId, megaStoneMatchesPokemon, moves, pokemon, pokemonByAbilityId, pokemonById, pokemonByMoveId } from "../lib/catalog";
 import { calculateFinalStats, formatPriority, modifiedSpeed, NATURES, priorityMatches, sanitizeTeamMembers, validateAp, validateTeam, ZERO_STATS } from "../lib/domain";
 import type { TeamMember } from "../lib/types";
 import { isAdminEmail, parseAdminEmails } from "../lib/admin-auth";
@@ -11,6 +11,17 @@ import type { BattleUsage } from "../lib/types";
 
 const usageFixture = (rows: BattleUsage["rows"]): BattleUsage => ({ pokemon: "Blastoise", format: "Doubles", season: "Current", date: null, source: "test", rows });
 const usageRow = (category: string, rank: number, name: string) => ({ category, rank, name, percentage: "50%", percentageValue: 50, statUp: "", statDown: "", ap: null });
+
+describe("Mega Stone base-form compatibility", () => {
+  it("maps every Mega Stone to one explicit regular form", () => {
+    expect(megaBasePokemonIdByStoneId.size).toBe(megaStoneIdByPokemonId.size);
+    expect(megaBasePokemonIdByStoneId.get("slowbronite")).toBe("slowbro");
+    expect(megaStoneMatchesPokemon("slowbronite", "slowbro")).toBe(true);
+    expect(megaStoneMatchesPokemon("slowbronite", "galarian-slowbro")).toBe(false);
+    expect(megaBasePokemonIdByStoneId.get("raichunite-x")).toBe("raichu");
+    expect(megaStoneMatchesPokemon("raichunite-x", "alolan-raichu")).toBe(false);
+  });
+});
 
 describe("battle-data build recommendations", () => {
   it("maps ranked upstream names to the best legal item, ability, and four moves", () => {
