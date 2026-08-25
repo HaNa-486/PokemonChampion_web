@@ -4,7 +4,7 @@
 - Review finding: reviews/REV-20260820-team-builder-ux.md#F-005
 - Severity: medium
 - Status: implemented
-- Updated: 2026-08-25T09:25:00Z
+- Updated: 2026-08-25T09:36:00Z
 - Autonomy class: auto-decide
 - Owner: Codex
 - Decision authority: project owner explicitly authorized this feature; implementation details are auto-decide
@@ -23,7 +23,7 @@
 - Domain regression covers rank preservation, rank 10, percentages, and exclusion beyond rank 10.
 - Component regressions cover applying rank 2, updating all six sliders, switching to Custom after manual adjustment, and recognizing an exact saved rank.
 - `pnpm verify:deploy` passed: lint with zero errors, typecheck, form and Traditional Chinese audits, 17 test files / 118 tests, production build, and 10 rendered-output/API checks.
-- Exact committed Dev packaging, isolated Dev deployment, and product-owner UAT remain pending.
+- Exact committed Dev packaging, owner-only deployment, and HTTP/API smoke checks passed; product-owner UAT remains pending.
 
 ## Residual risk
 
@@ -33,3 +33,4 @@
 
 - 2026-08-25T09:00:00Z in_progress: created from product-owner feedback and implementation started.
 - 2026-08-25T09:25:00Z implemented: rank-aware AP choices, atomic application, saved-spread recognition, Custom fallback, responsive layout, and regressions completed; Dev UAT remains required.
+- 2026-08-25T09:36:00Z implemented: exact candidate deployed privately to Champions Lab Dev and smoke-tested; awaiting product-owner UAT.
