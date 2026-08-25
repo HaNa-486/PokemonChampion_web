@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
-import { abilities, abilityById, catalogSnapshotDate, itemById, items, megaBasePokemonIdByStoneId, megaPokemonByStoneId, megaStoneIdByPokemonId, megaStoneMatchesPokemon, moveById, moves, pokemon, pokemonById } from "../lib/catalog";
+import { abilities, abilityById, battleDataKeyForPokemon, battleDataSourcePokemon, catalogSnapshotDate, itemById, items, megaBasePokemonIdByStoneId, megaPokemonByStoneId, megaStoneIdByPokemonId, megaStoneMatchesPokemon, moveById, moves, pokemon, pokemonById } from "../lib/catalog";
 import { rankedAbilityChoices, rankedApChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature, type RankedChoice } from "../lib/battle-recommendations";
 import { apTotal, calculateFinalStats, formatPriority, modifiedSpeed, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
@@ -323,7 +323,7 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     const mega = itemId ? megaPokemonByStoneId.get(itemId) : null;
     return mega && megaStoneMatchesPokemon(itemId!, baseSelected.id) ? mega : baseSelected;
   }, [baseSelected, itemId]);
-  const battleDataKey = effectiveSelected.battleDataKey ?? effectiveSelected.speciesKey;
+  const battleDataKey = battleDataKeyForPokemon(effectiveSelected);
   const battleData = battleDataByKey[battleDataKey] ?? null;
   const initialRecommendationAppliedRef = useRef(Boolean(editingMember));
   const pendingFormHydrationRef = useRef<{ key: string; pokemon: Pokemon; replaceAbility: boolean } | null>(null);
@@ -363,7 +363,7 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     const legalMoves = new Set(nextSelected.moveIds);
     const retainedMoves = moveIds.filter((id) => legalMoves.has(id));
     const replaceAbility = !abilityId || !nextSelected.abilityIds.includes(abilityId);
-    const nextBattleDataKey = nextSelected.battleDataKey ?? nextSelected.speciesKey;
+    const nextBattleDataKey = battleDataKeyForPokemon(nextSelected);
     if (nextBattleDataKey !== battleDataKey) {
       setRecommendationsLoading(true);
       pendingFormHydrationRef.current = { key: nextBattleDataKey, pokemon: nextSelected, replaceAbility };
@@ -421,7 +421,7 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
 
   useEffect(() => {
     let cancelled = false;
-    const requestedPokemon = effectiveSelected;
+    const requestedPokemon = battleDataSourcePokemon(effectiveSelected);
     const requestedKey = battleDataKey;
     const applyBattleData = (data: BattleApiResponse["data"] | null) => {
       if (cancelled) return;

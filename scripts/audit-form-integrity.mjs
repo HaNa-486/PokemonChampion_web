@@ -28,7 +28,11 @@ const FORM_KEY_CONTRACT = {
   "rotom-frost": "rotomfrost",
   "rotom-fan": "rotomfan",
   rotom: "rotom",
+  gallade: "gallade",
+  "mega-gallade": "gallade",
 };
+
+const reviewedBattleDataKey = (id, upstreamKey) => id === "mega-gallade" || upstreamKey === "gallademega" ? "gallade" : upstreamKey;
 
 const MINIMUM_COUNTS = { pokemon: 300, moves: 500, abilities: 150, items: 148 };
 const REVIEWED_LEGAL_ITEM_COUNT = 148;
@@ -140,7 +144,10 @@ export async function auditLiveContracts(snapshot) {
   for (const source of sourceForms) {
     const entry = byName.get(source.name);
     if (!entry) errors.push(`Live index form is missing from snapshot: ${source.name}`);
-    else if (entry.battleDataKey !== source.showdownId) errors.push(`${source.name} maps to ${entry.battleDataKey}; live Showdown id is ${source.showdownId}`);
+    else {
+      const expectedKey = reviewedBattleDataKey(entry.id, source.showdownId);
+      if (entry.battleDataKey !== expectedKey) errors.push(`${source.name} maps to ${entry.battleDataKey}; reviewed battle-data key is ${expectedKey}`);
+    }
   }
 
   const usages = await Promise.all([

@@ -67,7 +67,7 @@ pnpm data:audit:live
 ```
 
 - [ ] Every directly indexed Champions form exists in the snapshot.
-- [ ] Every directly indexed form's `battleDataKey` equals its live `showdownId`.
+- [ ] Every directly indexed non-Mega form's `battleDataKey` equals its live `showdownId`; every Mega uses its explicit regular form's key, and `gallademega` is absent.
 - [ ] Regional, gender, breed, and Rotom/appliance forms use their own battle keys.
 - [ ] Ambiguous shared metadata fails instead of applying last-write-wins.
 - [ ] Pokémon, move, ability, and item counts did not unexpectedly collapse.
@@ -116,7 +116,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Held-item thumbnails appear beside item names in the Item DB, Pokémon battle usage, builder selection preview, Mega transformation message, floating team tray, and Speed Compare selection preview.
 - [ ] The same held-item thumbnail appears in both a tooltip trigger and its tooltip heading; a failed image remains readable through the neutral fallback.
 - [ ] Singles/Doubles usage defaults apply the highest-ranked legal item, ability, nature, AP spread, and four unique learnable moves.
-- [ ] Base/Mega forms sharing one `battleDataKey` reuse one recommendation request; a genuinely distinct Mega key (currently Gallade) loads its own ranks after transformation.
+- [ ] Every base/Mega transition reuses the regular form's one recommendation request; Mega Gallade uses `gallade` and never requests `gallademega`.
 - [ ] Illegal, duplicated, or unmapped usage rows are skipped instead of forced into the build.
 - [ ] Each builder move slot supports localized/English name and effect-text search, common-move-first ordering, visible type/category/Power/Accuracy/priority/effect information, clearing, and duplicate-move prevention.
 - [ ] Move, ability, held-item, and nature selectors pin every mapped legal current-format rank 1–10 in the exact source-rank order and display the real rank, including gaps.

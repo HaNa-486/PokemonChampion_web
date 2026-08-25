@@ -115,6 +115,19 @@ for (const [pokemonId, stoneId] of megaStoneIdByPokemonId) {
 
 export const megaStoneMatchesPokemon = (stoneId: string, pokemonId: string) => megaBasePokemonIdByStoneId.get(stoneId) === pokemonId;
 
+/** Every Mega form uses the explicitly mapped regular form's seasonal usage data. */
+export function battleDataSourcePokemon(entry: Pokemon) {
+  if (!entry.isMega) return entry;
+  const stoneId = megaStoneIdByPokemonId.get(entry.id);
+  const baseId = stoneId ? megaBasePokemonIdByStoneId.get(stoneId) : null;
+  return baseId ? pokemonById.get(baseId) ?? entry : entry;
+}
+
+export const battleDataKeyForPokemon = (entry: Pokemon) => {
+  const source = battleDataSourcePokemon(entry);
+  return source.battleDataKey ?? source.speciesKey;
+};
+
 const usageNameKey = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "");
 export const moveIdByUsageName = new Map(moves.map((entry) => [usageNameKey(entry.name), entry.id]));
 export const itemIdByUsageName = new Map(items.map((entry) => [usageNameKey(entry.name), entry.id]));

@@ -440,7 +440,7 @@ describe("ChampionsApp", () => {
     expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("Leftovers");
   });
 
-  it("reloads recommendations only when a Mega form has a distinct battle-data key", async () => {
+  it("reuses Gallade recommendations when Galladite changes it into Mega Gallade", async () => {
     const rows = (pokemonName: string, heldItem: string, ability: string, move: string) => ({
       singles: null,
       doubles: { pokemon: pokemonName, format: "Doubles", season: "Current", date: null, source: "key-test", rows: [
@@ -450,10 +450,8 @@ describe("ChampionsApp", () => {
       ] },
     });
     const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
-      const pokemonId = new URL(String(input), "https://test.invalid").searchParams.get("pokemonId");
-      return Response.json({ data: pokemonId === "mega-gallade"
-        ? rows("Mega Gallade", "Galladite", "Inner Focus", "Protect")
-        : rows("Gallade", "Galladite", "Sharpness", "Sacred Sword") });
+      void input;
+      return Response.json({ data: rows("Gallade", "Galladite", "Sharpness", "Sacred Sword") });
     });
     vi.stubGlobal("fetch", fetchMock);
     const user = userEvent.setup();
@@ -463,7 +461,7 @@ describe("ChampionsApp", () => {
     expect(await screen.findByRole("heading", { name: "Mega Gallade" })).toBeInTheDocument();
     await waitFor(() => expect(fetchMock.mock.calls
       .map(([input]) => new URL(String(input), "https://test.invalid").searchParams.get("pokemonId"))
-      .filter(Boolean)).toEqual(["gallade", "mega-gallade"]));
+      .filter(Boolean)).toEqual(["gallade"]));
     expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("Inner Focus");
   });
 

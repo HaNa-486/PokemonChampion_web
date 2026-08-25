@@ -99,13 +99,13 @@
 - Severity: high
 - Confidence: high
 - Status: implemented; renewed Dev UAT pending
-- Evidence: Independent review correctly identified the one current distinct Mega usage key (`gallade` → `gallademega`) and a separate `speciesKey` ambiguity that could let Galarian Slowbro use Slowbronite. A blanket form-ID refetch was rejected because most base/Mega pairs intentionally share one source.
+- Evidence: Independent review identified an upstream `gallademega` key and a separate `speciesKey` ambiguity that could let Galarian Slowbro use Slowbronite. The product owner subsequently reviewed the data contract and designated `gallademega` as an upstream exception that this product must ignore; all Mega forms reuse their regular form's source.
 - User impact: Without the targeted fix, Mega Gallade could show regular Gallade recommendation ranks, while regional siblings could transform into an incompatible Mega form.
 - Root cause: Recommendation state was tied to the initially opened form, and transformation eligibility reused the broader duplicate-team family key.
-- Recommended solution: Cache by authoritative `battleDataKey`, load only when the key changes, and map every Mega Stone to one explicit regular-form ID.
+- Recommended solution: Cache by the explicit regular form's authoritative `battleDataKey`, reject `gallademega` at synchronization and runtime boundaries, and map every Mega Stone to one explicit regular-form ID.
 - Alternatives and tradeoffs: Refetching every form ID is simpler but duplicates identical upstream requests for metadata-only Mega forms and misrepresents the data contract.
 - Affected areas: catalog Mega mapping, Build Workbench recommendation loading, Mega detail scope note, component/domain regressions, specification and deployment checklist.
-- Acceptance criteria: Blastoise/Mega Blastoise use one `blastoise` request; Gallade/Mega Gallade load `gallade` then `gallademega`; Galarian Slowbro cannot transform with Slowbronite; user item/nature/AP choices remain intact.
+- Acceptance criteria: Blastoise/Mega Blastoise use one `blastoise` request; Gallade/Mega Gallade use one `gallade` request and never `gallademega`; Galarian Slowbro cannot transform with Slowbronite; user item/nature/AP choices remain intact.
 - Verification: Targeted regressions and `pnpm verify:deploy` pass with 121 tests; exact committed Dev deployment and renewed UAT remain required.
 - Residual risk: Future nonstandard Mega IDs must fail the mapping audit instead of silently gaining family-wide compatibility.
 - Autonomy class: auto-decide

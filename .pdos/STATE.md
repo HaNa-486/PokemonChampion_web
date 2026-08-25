@@ -3,8 +3,8 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 9
-- Updated: 2026-08-25T12:36:00Z
+- State revision: 10
+- Updated: 2026-08-25T14:35:00Z
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
 - Phase: review exception remediation committed and verified; exact-candidate Dev handoff and renewed UAT pending
 
@@ -31,11 +31,11 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Handoff
 
-- What changed: Preserved all earlier builder work and corrected review exceptions by caching usage per `battleDataKey`, loading only genuinely distinct form keys, and requiring an explicit regular-form identity for each Mega Stone.
-- Verification evidence: `pnpm verify:dev` passed against committed source with 17 test files / 121 tests, two successful builds, form/localization audits, 10 built-output/API checks, and a Dev manifest assertion. `pnpm data:audit:live` also passed for 358 snapshot forms. New golden cases cover shared-key Blastoise, distinct-key Mega Gallade, and incompatible Galarian Slowbro/Slowbronite.
-- Not verified: product-owner acceptance of the three focused transition journeys on isolated Dev.
+- What changed: Preserved all earlier builder work, required an explicit regular-form identity for each Mega Stone, and applied the owner's reviewed compatibility rule that every Mega reuses its regular form's battle source; `gallademega` is ignored at sync, catalog, API, and audit boundaries.
+- Verification evidence: `pnpm verify:deploy` passed against the current source with 17 test files / 125 tests, a successful production build, form/localization audits, and 10 built-output/API checks. `pnpm data:audit:live` passed for 358 snapshot forms and accepts only the reviewed Mega Gallade → Gallade exception. Golden cases prove Mega Gallade never requests `gallademega`, every Mega resolves to its explicit regular form, and Galarian Slowbro cannot use Slowbronite.
+- Not verified: exact-commit Dev deployment and product-owner acceptance that Mega Gallade displays the same seasonal data as Gallade.
 - Residual risks: Responsive AP/picker geometry and external live data availability remain as documented; Clefable Doubles ranks 1–5 remain absent upstream.
-- Next safe action: product owner completes the focused Mega transition UAT on Champions Lab Dev; do not update or merge PR #7 before explicit acceptance.
+- Next safe action: commit the exact candidate, run `pnpm verify:dev`, deploy it to Champions Lab Dev, and request only the focused Mega Gallade seasonal-data UAT; do not update or merge PR #7 before explicit acceptance.
 
 ## Read next
 

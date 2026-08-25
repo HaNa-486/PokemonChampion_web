@@ -12889,7 +12889,7 @@
     {
       "id": "mega-gallade",
       "speciesKey": "gallade",
-      "battleDataKey": "gallademega",
+      "battleDataKey": "gallade",
       "name": "Mega Gallade",
       "nameZh": "超級艾路雷朵",
       "nameLocalizationSource": "pokeapi-community-species-plus-reviewed-form-composition",

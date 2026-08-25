@@ -33,6 +33,17 @@ describe("battle data API proxy", () => {
     expect(urls.filter((url) => url.endsWith("/ninetalesalola"))).toHaveLength(2);
   });
 
+  it("uses Gallade battle data for Mega Gallade and never requests gallademega", async () => {
+    const upstreamFetch = vi.fn(async (input: string | URL | Request) => Response.json({ pokemon: "Gallade", format: String(input).includes("/Singles/") ? "Singles" : "Doubles", season: "Current", rows: [] }));
+    vi.stubGlobal("fetch", upstreamFetch);
+    const response = await GET(new Request("http://localhost/api/v1/pokemon/battle?pokemonId=mega-gallade"));
+    const body = await response.json();
+    expect(response.status).toBe(200);
+    expect(body.data.battleDataKey).toBe("gallade");
+    expect(upstreamFetch.mock.calls.every(([url]) => String(url).endsWith("/gallade"))).toBe(true);
+    expect(upstreamFetch.mock.calls.some(([url]) => String(url).includes("gallademega"))).toBe(false);
+  });
+
   it("does not let an arbitrary id become an upstream URL", async () => {
     const upstreamFetch = vi.fn();
     vi.stubGlobal("fetch", upstreamFetch);

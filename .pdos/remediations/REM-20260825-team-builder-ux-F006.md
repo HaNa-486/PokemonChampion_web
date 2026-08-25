@@ -7,11 +7,11 @@
 
 ## Problem
 
-An earlier review recommended reloading battle data for every base/Mega form change. That is incorrect for metadata-only Mega forms that intentionally share one `battleDataKey`, but the opposite blanket behavior was also unsafe: Mega Gallade has its own `gallademega` key. The same transition logic treated every form sharing `speciesKey` as a valid Mega precursor, which could let a regional sibling such as Galarian Slowbro use Slowbronite.
+An earlier review recommended reloading battle data for every base/Mega form change. The product owner confirmed that all Mega forms must instead reuse their explicitly mapped regular form's usage data and that the upstream `gallademega` source is erroneous for this product. The same transition logic also treated every form sharing `speciesKey` as a valid Mega precursor, which could let a regional sibling such as Galarian Slowbro use Slowbronite.
 
 ## Resolution
 
-- Cache and select recommendation data by authoritative `battleDataKey`.
+- Cache and select recommendation data by the authoritative regular-form `battleDataKey`; reject `gallademega` during synchronization and audits.
 - Reuse one response when base and Mega share a key; fetch the effective form only when its key genuinely changes.
 - Map each Mega Stone to one explicit compatible regular-form ID; retain `speciesKey` only for duplicate-team legality.
 - Reconcile illegal moves/abilities after a distinct-key response without overwriting user item, nature, or AP choices.
