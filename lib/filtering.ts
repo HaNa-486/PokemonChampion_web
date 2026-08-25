@@ -34,5 +34,6 @@ export function itemEffectCategories(item: HeldItem) {
   if (/status condition|burn|poison|paraly|sleep|freeze|confus/.test(text) && /cure|heal|remove|recover/.test(text)) categories.push("Status Cure");
   if (/pp/.test(text) && /restore|recover/.test(text)) categories.push("PP Recovery");
   if (/halve|half the damage|reduces? the damage|damage taken/.test(text)) categories.push("Damage Halving");
+  if (categories.length === 0) categories.push("Other");
   return categories;
 }

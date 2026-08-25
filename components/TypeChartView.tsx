@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ALL_TYPES, typeEffectiveness } from "../lib/type-chart";
 import type { PokemonType } from "../lib/types";
@@ -44,17 +44,34 @@ export function TypeChart({ locale, compact = false }: { locale: Locale; compact
 export function TypeChartFloating({ locale = "en" }: { locale?: Locale }) {
   const [open, setOpen] = useState(false);
   const [chartLocale, setChartLocale] = useState(locale);
+  useEffect(() => {
+    const saved = localStorage.getItem("champions-lab-locale-v1");
+    // Browser-only preference hydration must run after the server-rendered default.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (saved === "en" || saved === "zh-Hant") setChartLocale(saved);
+  }, []);
   const copy = chartLocale === "zh-Hant" ? { toggle: "屬性相剋", close: "收合屬性相剋表", full: "開啟完整屬性頁面" } : { toggle: "Type chart", close: "Collapse type chart", full: "Open full type chart page" };
   return <>
     <aside className={`type-chart-float ${open ? "open" : "collapsed"}`} aria-label={copy.toggle}>
       <button className="type-chart-float-toggle" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="floating-type-chart"><span className="type-chart-toggle-icon">{open ? "×" : "18"}</span><span>{copy.toggle}</span></button>
-      {open && <div className="floating-chart-panel" id="floating-type-chart"><div className="floating-chart-actions"><Link href="/type-chart">{copy.full} ↗</Link><button onClick={() => setChartLocale((value) => value === "en" ? "zh-Hant" : "en")}>{chartLocale === "en" ? "繁中" : "EN"}</button><button onClick={() => setOpen(false)} aria-label={copy.close}>×</button></div><TypeChart locale={chartLocale} compact /></div>}
+      {open && <div className="floating-chart-panel" id="floating-type-chart"><div className="floating-chart-actions"><Link href="/type-chart">{copy.full} ↗</Link><button onClick={() => setChartLocale((value) => { const next = value === "en" ? "zh-Hant" : "en"; localStorage.setItem("champions-lab-locale-v1", next); return next; })}>{chartLocale === "en" ? "繁中" : "EN"}</button><button onClick={() => setOpen(false)} aria-label={copy.close}>×</button></div><TypeChart locale={chartLocale} compact /></div>}
     </aside>
     <Link className="type-chart-mobile-link" href="/type-chart">{copy.toggle}</Link>
   </>;
 }
 
 export function TypeChartPageShell() {
-  const [locale, setLocale] = useState<Locale>("en");
+  const [locale, setLocaleState] = useState<Locale>("en");
+  const setLocale = (value: Locale | ((current: Locale) => Locale)) => setLocaleState((current) => {
+    const next = typeof value === "function" ? value(current) : value;
+    localStorage.setItem("champions-lab-locale-v1", next);
+    return next;
+  });
+  useEffect(() => {
+    const saved = localStorage.getItem("champions-lab-locale-v1");
+    // Browser language and localStorage are unavailable during server rendering.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLocale(saved === "en" || saved === "zh-Hant" ? saved : navigator.languages.some((language) => language.toLowerCase().startsWith("zh")) ? "zh-Hant" : "en");
+  }, []);
   return <main className="standalone-type-chart"><div className="standalone-chart-actions"><Link className="back-to-app" href="/">← Champions Lab</Link><button className="locale-button" onClick={() => setLocale((value) => value === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div><TypeChart locale={locale} /></main>;
 }

@@ -1,6 +1,6 @@
 import { apiError, apiSuccess, readBoundedJsonResponse } from "../../../../../lib/api";
 import { normalizeBattleUsage } from "../../../../../lib/battle-data";
-import { pokemonById } from "../../../../../lib/catalog";
+import { battleDataKeyForPokemon, pokemonById } from "../../../../../lib/catalog";
 
 const UPSTREAM = "https://championsbattledata.com/api/battle";
 
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   const pokemonId = new URL(request.url).searchParams.get("pokemonId") ?? "";
   const selected = pokemonById.get(pokemonId);
   if (!selected) return apiError(404, "POKEMON_NOT_FOUND", "The requested Pokémon is not in the current regulation.");
-  const battleDataKey = selected.battleDataKey ?? selected.speciesKey;
+  const battleDataKey = battleDataKeyForPokemon(selected);
   const [singles, doubles] = await Promise.allSettled([load("Singles", battleDataKey), load("Doubles", battleDataKey)]);
   if (singles.status === "rejected" && doubles.status === "rejected") return apiError(502, "BATTLE_DATA_UNAVAILABLE", "Current battle data is temporarily unavailable.");
   return apiSuccess({

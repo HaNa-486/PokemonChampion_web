@@ -1,50 +1,52 @@
 # PDOS state
 
-Keep this file concise. Every fresh PDOS context reads it first.
+Keep this concise. Every fresh PDOS context reads it first.
 
-- Protocol version: 0.3.0
-- State revision: 8
-- Updated: 2026-08-13T10:15:00Z
-- State confidence: high
-- Phase: corrected move-name source verified; awaiting exact commit and replacement Dev/UAT deployment
+- Protocol version: 0.4.0-alpha.1
+- State revision: 10
+- Updated: 2026-08-25T14:35:00Z
+- State confidence: reconciled with current branch, user request, repository evidence, and tests
+- Phase: review exception remediation committed and verified; exact-candidate Dev handoff and renewed UAT pending
 
 ## Repository identity
 
-- Branch: codex/traditional-chinese-localization
-- Worktree: C:\Users\091\codex_workspace\BDWP\PokemonChampion
-- Base commit: 29bea4dbb81b4630a2636756113b379fad41e8f3
+- Branch: codex/team-member-edit-move-picker
+- Observed commit: release-candidate branch HEAD (the commit hash is recorded by the deployment/version evidence rather than embedded in its own tree)
 
 ## Product anchors
 
-- Primary user: Traditional Chinese Champions Lab users comparing current-Regulation Pokémon, moves, abilities, and held items.
-- Product outcome: Switching to Traditional Chinese produces a genuinely Chinese catalog and interaction flow, without English descriptions masquerading as localized data.
-- Critical journey: switch to zh-Hant -> browse/filter catalogs -> inspect Pokémon/forms -> read move/ability/item tooltips and current-season usage -> build a team.
-- Non-goals: full Admin publish/revert workflow; human copy-editing of every machine-translated Champions-specific sentence in this release.
+- Primary user: competitive and new Pokémon Champions players building legal Singles/Doubles teams.
+- Product outcome: Existing members are editable in place, and all build choices are searchable and understandable without external lookup.
+- Critical journey: open selected team -> edit member -> switch form/item if needed -> search/read/select moves/ability/item -> adjust AP/nature -> save -> same team slot updates.
+- Non-goals: strategic move recommendations, drag-reordering, or automatic production promotion.
 
 ## Current work
 
-- Current slice: Complete zh-Hant catalog and UI taxonomy localization.
-- Active workstream: `workstreams/2026-08-13-traditional-chinese-localization.md`
-- Blocking dependency: Exact commit must pass `pnpm verify:deploy` and `pnpm data:audit:live`, then pass `pnpm verify:dev` and be deployed privately to Champions Lab Dev for product-owner UAT before PR.
-- Consequential open decision: Production promotion remains a separate approval after PR checks, independent review, and merge.
+- Current slice: Complete in-place editing, rich selectors with real top-ten usage ranks, transparent upstream gaps, locale/modal consistency, and readable build summaries.
+- Active workstreams: `workstreams/2026-08-20-team-member-edit-move-picker.md`
+- Active review: `reviews/REV-20260820-team-builder-ux.md`
+- Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
+- Blocking dependencies: renewed product-owner UAT, updated PR check, and clean independent review.
+- Consequential open decisions: production deployment remains human-only and is outside the pre-UAT phase.
 
 ## Handoff
 
-- What changed: Rebuilt zh-Hant descriptions from complete effective Champions mechanics; protected official entity names; added per-record provenance, semantic/numeric/no-English/no-placeholder audits, reviewed critical overrides, and completed Chinese taxonomy/table/filter/item-single-use UI coverage.
-- Verification evidence: `pnpm verify:deploy` passed 17 files / 104 tests plus 10 built-worker checks; `pnpm data:audit:zh` passed 539 moves / 200 abilities / 148 items; `pnpm data:audit:live` passed 358 snapshot / 236 live forms across 18 groups.
-- Not verified: Dev artifact, Dev deployment, and product-owner visual UAT. Local in-app browser binding was unavailable, so visual QA moves to the isolated Dev deployment.
-- Residual risks: Raw machine translations remain clearly identified and require progressive editorial review; Admin approval/audit/revert remains a separate P1 workstream.
-- Next safe action: Commit the exact verified candidate, run `pnpm verify:dev`, deploy that commit to Champions Lab Dev, and provide focused UAT checks.
-
-## Move-name correction addendum
-
-- Replaced the mislabeled PokeAPI move-name feed with pinned PKHeX Traditional Chinese game strings for all 539 legal moves.
-- Corrected 34 mixed-Simplified names and added exact provenance, seven golden regressions, and a fail-closed Simplified-character guard.
-- Current evidence: `pnpm verify:deploy` passed 17 files / 105 tests plus 10 built-worker checks; `pnpm data:audit:zh` passed 539 moves / 200 abilities / 148 items; `pnpm data:audit:live` passed 358 snapshot / 236 live forms across 18 groups.
-- The previous Dev UAT result is invalid because the candidate changed. Next safe action is exact commit, `pnpm verify:dev`, and a replacement private Dev deployment.
+- What changed: Preserved all earlier builder work, required an explicit regular-form identity for each Mega Stone, and applied the owner's reviewed compatibility rule that every Mega reuses its regular form's battle source; `gallademega` is ignored at sync, catalog, API, and audit boundaries.
+- Verification evidence: `pnpm verify:deploy` passed against the current source with 17 test files / 125 tests, a successful production build, form/localization audits, and 10 built-output/API checks. `pnpm data:audit:live` passed for 358 snapshot forms and accepts only the reviewed Mega Gallade → Gallade exception. Golden cases prove Mega Gallade never requests `gallademega`, every Mega resolves to its explicit regular form, and Galarian Slowbro cannot use Slowbronite.
+- Not verified: exact-commit Dev deployment and product-owner acceptance that Mega Gallade displays the same seasonal data as Gallade.
+- Residual risks: Responsive AP/picker geometry and external live data availability remain as documented; Clefable Doubles ranks 1–5 remain absent upstream.
+- Next safe action: commit the exact candidate, run `pnpm verify:dev`, deploy it to Champions Lab Dev, and request only the focused Mega Gallade seasonal-data UAT; do not update or merge PR #7 before explicit acceptance.
 
 ## Read next
 
-- `workstreams/2026-08-13-traditional-chinese-localization.md`
+- `AUTONOMY.md`
+- `workstreams/2026-08-20-team-member-edit-move-picker.md`
+- `reviews/REV-20260820-team-builder-ux.md`
+- `remediations/REM-20260820-team-builder-ux-F001.md`
+- `remediations/REM-20260820-team-builder-ux-F002.md`
+- `remediations/REM-20260820-team-builder-ux-F003.md`
+- `remediations/REM-20260825-team-builder-ux-F004.md`
+- `remediations/REM-20260825-team-builder-ux-F005.md`
+- `remediations/REM-20260825-team-builder-ux-F006.md`
 - `../PROJECT_SPEC.md`
 - `../DEPLOYMENT_CHECKLIST.md`

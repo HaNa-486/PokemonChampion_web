@@ -7,14 +7,28 @@ const numberOrZero = (value: unknown) => Number.isFinite(Number(value)) ? Number
 export function normalizeBattleUsage(input: unknown, expectedFormat: "Singles" | "Doubles"): BattleUsage {
   const value = input && typeof input === "object" ? input as Record<string, unknown> : {};
   const rows = Array.isArray(value.rows) ? value.rows : [];
+  const normalizedRows = rows.map((raw) => normalizeBattleRow(raw as UpstreamRow)).filter((row): row is BattleUsageRow => Boolean(row));
   return {
     pokemon: typeof value.pokemon === "string" ? value.pokemon : "",
     format: value.format === "Singles" || value.format === "Doubles" ? value.format : expectedFormat,
     season: typeof value.season === "string" ? value.season : "Current",
     date: typeof value.date === "string" ? value.date : null,
     source: typeof value.source === "string" ? value.source : "Pokémon Champions Battle Data",
-    rows: rows.map((raw) => normalizeBattleRow(raw as UpstreamRow)).filter((row): row is BattleUsageRow => Boolean(row)),
+    rows: normalizedRows,
+    rankGaps: detectRankGaps(normalizedRows),
   };
+}
+
+function detectRankGaps(rows: BattleUsageRow[]) {
+  const categories = [...new Set(rows.map((row) => row.category))];
+  return categories.flatMap((category) => {
+    const ranked = rows.filter((row) => row.category === category && row.rank > 0).map((row) => row.rank);
+    if (!ranked.length) return [];
+    const highestReportedRank = Math.min(10, Math.max(...ranked));
+    const present = new Set(ranked);
+    const missingRanks = Array.from({ length: highestReportedRank }, (_, index) => index + 1).filter((rank) => !present.has(rank));
+    return missingRanks.length ? [{ category, missingRanks }] : [];
+  });
 }
 
 function normalizeBattleRow(row: UpstreamRow): BattleUsageRow | null {

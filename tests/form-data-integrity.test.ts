@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { pokemonById } from "../lib/catalog";
+import { battleDataKeyForPokemon, megaBasePokemonIdByStoneId, megaStoneIdByPokemonId, pokemon, pokemonById } from "../lib/catalog";
 
 const expectedBattleKeys: Record<string, string> = {
   "alolan-ninetales": "ninetalesalola",
@@ -24,6 +24,8 @@ const expectedBattleKeys: Record<string, string> = {
   "rotom-frost": "rotomfrost",
   "rotom-fan": "rotomfan",
   rotom: "rotom",
+  gallade: "gallade",
+  "mega-gallade": "gallade",
 };
 
 describe("form-specific catalog integrity", () => {
@@ -45,5 +47,20 @@ describe("form-specific catalog integrity", () => {
     expect(regular?.abilityIds).toEqual(expect.arrayContaining(["flash-fire", "drought"]));
     expect(alolan?.moveIds).toContain("aurora-veil");
     expect(regular?.moveIds).not.toContain("aurora-veil");
+  });
+
+  it("ignores the reviewed gallademega upstream source", () => {
+    expect(pokemonById.get("mega-gallade")?.battleDataKey).toBe("gallade");
+    expect(pokemonById.get("mega-gallade")?.battleDataKey).toBe(pokemonById.get("gallade")?.battleDataKey);
+  });
+
+  it("uses every Mega form's explicitly mapped regular form for battle data", () => {
+    for (const entry of pokemon.filter((candidate) => candidate.isMega)) {
+      const stoneId = megaStoneIdByPokemonId.get(entry.id);
+      expect(stoneId, `${entry.id} dedicated stone`).toBeDefined();
+      const base = pokemonById.get(megaBasePokemonIdByStoneId.get(stoneId!) ?? "");
+      expect(base, `${entry.id} explicit base form`).toBeDefined();
+      expect(battleDataKeyForPokemon(entry), `${entry.id} effective battle source`).toBe(base?.battleDataKey ?? base?.speciesKey);
+    }
   });
 });

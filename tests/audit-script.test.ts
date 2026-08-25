@@ -16,4 +16,13 @@ describe("deployment data audit", () => {
       expect.stringContaining("must not share a battleDataKey"),
     ]));
   });
+
+  it("rejects restoring the reviewed gallademega source", () => {
+    const broken = structuredClone(snapshot);
+    const megaGallade = broken.pokemon.find((entry) => entry.id === "mega-gallade")!;
+    megaGallade.battleDataKey = "gallademega";
+    expect(auditSnapshot(broken).errors).toEqual(expect.arrayContaining([
+      expect.stringContaining("mega-gallade uses gallademega; expected gallade"),
+    ]));
+  });
 });

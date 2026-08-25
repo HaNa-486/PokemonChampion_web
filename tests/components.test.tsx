@@ -10,8 +10,14 @@ import { moves } from "../lib/catalog";
 import { useTeamStore } from "../lib/team-store";
 import type { TeamMember } from "../lib/types";
 
-beforeEach(() => useTeamStore.setState({ teams: { singles: [], doubles: [] }, hydrated: true }));
-afterEach(() => vi.unstubAllGlobals());
+beforeEach(() => {
+  localStorage.clear();
+  useTeamStore.setState({ teams: { singles: [], doubles: [] }, hydrated: true });
+});
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
 describe("Move Database", () => {
   it("localizes move properties in Traditional Chinese mode", async () => {
@@ -106,6 +112,8 @@ describe("Move Database", () => {
     await user.type(within(filters).getByRole("spinbutton", { name: "Reverse lookup minimum SpA" }), "100");
     expect(within(dialog).getByText("Mega Charizard X")).toBeInTheDocument();
     expect(dialog.querySelectorAll(".reverse-results-table tbody tr")).toHaveLength(1);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Dragon Claw" })).not.toBeInTheDocument();
   });
 
   it("paginates all moves instead of hiding entries after 100", async () => {
@@ -159,6 +167,14 @@ describe("reference filters", () => {
     expect(charizardite.querySelector("img")).toHaveAttribute("src", "/items/charizardite-x.png");
     expect(screen.queryByRole("button", { name: "Choice Scarf" })).not.toBeInTheDocument();
     expect(container.querySelectorAll("tbody img.item-icon").length).toBeGreaterThan(0);
+  });
+
+  it("offers an Other effect filter for uncategorized held items", async () => {
+    const user = userEvent.setup();
+    render(<ResourceDatabaseV2 kind="items" locale="en" />);
+    await user.click(screen.getByRole("button", { name: "Other" }));
+    expect(screen.getByRole("button", { name: "King's Rock" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Leftovers" })).not.toBeInTheDocument();
   });
 
   it("sorts abilities by user count and opens all eligible Pokémon", async () => {
@@ -260,7 +276,7 @@ describe("ChampionsApp", () => {
   it("opens complete Pokémon details and switches current battle formats", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
       scope: "species",
-      singles: { pokemon: "Absol", format: "Singles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rows: [{ category: "move", rank: 1, name: "Sucker Punch", percentage: "70.0%", percentageValue: 70, statUp: "", statDown: "", ap: null }] },
+      singles: { pokemon: "Absol", format: "Singles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rankGaps: [{ category: "move", missingRanks: [1, 2, 3, 4, 5] }], rows: [{ category: "move", rank: 6, name: "Sucker Punch", percentage: "70.0%", percentageValue: 70, statUp: "", statDown: "", ap: null }] },
       doubles: { pokemon: "Absol", format: "Doubles", season: "Current", date: null, source: "Pokémon Champions Battle Data", rows: [
         { category: "held_item", rank: 1, name: "Absolite", percentage: "39.5%", percentageValue: 39.5, statUp: "", statDown: "", ap: null },
         { category: "ability", rank: 1, name: "Pressure", percentage: "60.5%", percentageValue: 60.5, statUp: "", statDown: "", ap: null },
@@ -282,6 +298,7 @@ describe("ChampionsApp", () => {
     await user.click(within(moveFilters).getByRole("button", { name: "1 target" }));
     await user.click(within(moveFilters).getByRole("button", { name: "Contact" }));
     expect(within(dialog).getByRole("button", { name: "Sucker Punch" })).toBeInTheDocument();
+    expect(within(dialog).getByText(/Power 70 · Acc\. 100 · PP 8/)).toBeInTheDocument();
     expect(within(dialog).queryByRole("button", { name: "Calm Mind" })).not.toBeInTheDocument();
     const mobileFilterToggle = within(dialog).getByRole("button", { name: "Move filters (5)" });
     expect(mobileFilterToggle).toHaveAttribute("aria-expanded", "false");
@@ -299,7 +316,9 @@ describe("ChampionsApp", () => {
     expect(within(matchups).getByText("0×")).toBeInTheDocument();
     await user.click(within(dialog).getByRole("button", { name: "Singles" }));
     const singlesUsage = dialog.querySelector<HTMLElement>(".battle-usage")!;
+    expect(within(singlesUsage).getByText("The official source is missing ranks #1, #2, #3, #4, #5; the original reported ranks are preserved below.")).toBeInTheDocument();
     const usageMove = within(singlesUsage).getByRole("button", { name: "Sucker Punch" });
+    expect(usageMove.closest(".usage-row")).toHaveTextContent(/^6/);
     expect(usageMove.closest(".usage-row")).toHaveTextContent("Dark");
     fireEvent.focus(usageMove);
     expect(await screen.findByRole("tooltip")).toHaveTextContent("Priority +1");
@@ -314,54 +333,150 @@ describe("ChampionsApp", () => {
     expect(within(nature).getAllByRole("option")).toHaveLength(21);
     expect(within(nature).getByRole("option", { name: "Adamant (Atk ↑ / SpA ↓)" })).toBeInTheDocument();
     await user.selectOptions(nature, "Adamant");
+    fireEvent.change(screen.getByRole("slider", { name: /Atk/ }), { target: { value: "32" } });
     await user.click(screen.getByRole("button", { name: "Build & add" }));
     const tray = screen.getByRole("complementary", { name: "Selected team" });
     expect(within(tray).getByText("Weak")).toBeInTheDocument();
     expect(within(tray).getByText("Immune")).toBeInTheDocument();
-    expect(within(tray).getByText("Adamant")).toHaveAttribute("title", "Adamant (Atk ↑ / SpA ↓)");
+    expect(within(tray).getByText("Adamant (Atk ↑ / SpA ↓)")).toHaveAttribute("title", "Adamant (Atk ↑ / SpA ↓)");
+    expect(within(tray).getByText("+32")).toBeInTheDocument();
+    expect(tray.querySelector(".nature-up")).toHaveTextContent("↑");
+    expect(tray.querySelector(".nature-down")).toHaveTextContent("↓");
   });
 
-  it("preselects and locks the dedicated stone for a Mega build", async () => {
+  it("preselects the dedicated stone but lets a Mega build return to its regular form", async () => {
     const user = userEvent.setup();
-    const { container } = render(<ChampionsApp />);
+    render(<ChampionsApp />);
     await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Mega Absol");
     await user.click(screen.getByRole("button", { name: "Configure Mega Absol" }));
     const item = screen.getByRole("combobox", { name: /Held item/ });
-    expect(item).toBeDisabled();
-    expect(item).toHaveValue("absolite");
-    expect(container.querySelector(".selected-item-preview img")).toHaveAttribute("src", "/items/absolite.png");
-    expect(screen.getByText("This Mega form must hold its dedicated Mega Stone.")).toBeInTheDocument();
+    expect(item).toHaveValue("Absolite");
+    await user.click(item);
+    const options = within(screen.getByRole("listbox", { name: "Held item options" })).getAllByRole("option").filter((option) => !option.classList.contains("clear-option"));
+    expect(options[0]).toHaveTextContent("Absolite");
+    await user.clear(item);
+    await user.type(item, "Life Orb");
+    await user.click(screen.getByRole("option", { name: /Life Orb/ }));
+    expect(screen.getByRole("heading", { name: "Absol" })).toBeInTheDocument();
+    expect(item).toHaveValue("Life Orb");
+  });
+
+  it("edits a saved Mega member into its regular form with an ordinary item", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const member: TeamMember = {
+      id: "mega-absol", pokemonId: "mega-absol", abilityId: "magic-bounce", itemId: "absolite",
+      moveIds: ["sucker-punch", "protect"], ap: { ...ZERO_STATS, attack: 32, speed: 32 },
+      nature: { name: "Jolly", nameZh: "爽朗", up: "speed", down: "specialAttack" },
+    };
+    useTeamStore.setState({ teams: { singles: [], doubles: [member] }, hydrated: true });
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.click(screen.getByRole("button", { name: "Edit Mega Absol" }));
+    const item = screen.getByRole("combobox", { name: "Held item" });
+    await user.click(item);
+    await user.clear(item);
+    await user.type(item, "Life Orb");
+    await user.click(screen.getByRole("option", { name: /Life Orb/ }));
+    expect(screen.getByRole("heading", { name: "Absol" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    expect(useTeamStore.getState().teams.doubles[0]).toMatchObject({ pokemonId: "absol", itemId: "life-orb" });
   });
 
   it("applies current-format usage and transforms a base Pokémon when its Mega Stone is selected", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      void input;
+      return Response.json({ data: {
       singles: { pokemon: "Blastoise", format: "Singles", season: "Current", date: null, source: "test", rows: [{ category: "held_item", rank: 1, name: "Leftovers", percentage: "40%", percentageValue: 40, statUp: "", statDown: "", ap: null }] },
       doubles: { pokemon: "Blastoise", format: "Doubles", season: "Current", date: null, source: "test", rows: [
         { category: "held_item", rank: 1, name: "Blastoisinite", percentage: "80%", percentageValue: 80, statUp: "", statDown: "", ap: null },
         { category: "ability", rank: 1, name: "Mega Launcher", percentage: "100%", percentageValue: 100, statUp: "", statDown: "", ap: null },
         { category: "stat_alignment", rank: 1, name: "Modest", percentage: "75%", percentageValue: 75, statUp: "Sp. Atk", statDown: "Attack", ap: null },
         { category: "stat_points", rank: 1, name: "", percentage: "60%", percentageValue: 60, statUp: "", statDown: "", ap: { hp: 2, attack: 0, defense: 0, specialAttack: 32, specialDefense: 0, speed: 32 } },
+        { category: "stat_points", rank: 2, name: "", percentage: "25%", percentageValue: 25, statUp: "", statDown: "", ap: { hp: 32, attack: 0, defense: 32, specialAttack: 0, specialDefense: 2, speed: 0 } },
         ...["Aura Sphere", "Dark Pulse", "Dragon Pulse", "Water Pulse"].map((name, index) => ({ category: "move", rank: index + 1, name, percentage: `${90 - index}%`, percentageValue: 90 - index, statUp: "", statDown: "", ap: null })),
       ] },
-    } })));
+      } });
+    });
+    vi.stubGlobal("fetch", fetchMock);
     const user = userEvent.setup();
     render(<ChampionsApp />);
     await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Blastoise");
     await user.click(screen.getByRole("button", { name: "Configure Blastoise" }));
     expect(await screen.findByRole("heading", { name: "Mega Blastoise" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("blastoisinite");
-    await waitFor(() => expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("mega-launcher"));
+    await waitFor(() => expect(fetchMock.mock.calls
+      .map(([input]) => new URL(String(input), "https://test.invalid").searchParams.get("pokemonId"))
+      .filter(Boolean)).toEqual(["blastoise"]));
+    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("Blastoisinite");
+    await waitFor(() => expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("Mega Launcher"));
     expect(screen.getByRole("combobox", { name: "Nature" })).toHaveValue("Modest");
+    expect(screen.getByRole("option", { name: /Common #1 .*Modest/ })).toBeInTheDocument();
+    await user.click(screen.getByRole("combobox", { name: "Ability" }));
+    expect(screen.getByRole("option", { name: /Mega Launcher.*Common #1/ })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    await user.click(screen.getByRole("combobox", { name: /Held item/ }));
+    expect(screen.getByRole("option", { name: /Blastoisinite.*Common #1/ })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    await user.click(screen.getByRole("combobox", { name: "Move 1" }));
+    expect(screen.getByRole("option", { name: /Aura Sphere.*Common #1/ })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
     expect(screen.getByRole("slider", { name: /SpA/ })).toHaveValue("32");
     expect(screen.getByRole("slider", { name: /Spe/ })).toHaveValue("32");
     expect(screen.getByText("0 / 66 remaining")).toBeInTheDocument();
-    expect(screen.getByText(/transforms this build into Mega Blastoise/)).toBeInTheDocument();
-    const moveValues = screen.getAllByRole("combobox", { name: /Move [1-4]/ }).map((entry) => (entry as HTMLSelectElement).value);
+    const apSpread = screen.getByRole("combobox", { name: "AP spread" });
+    expect(apSpread).toHaveValue("1");
+    expect(screen.getByRole("option", { name: /Common #2 .*HP 32 .*Def 32 .*SpD 2 .*25%/ })).toBeInTheDocument();
+    await user.selectOptions(apSpread, "2");
+    expect(screen.getByRole("slider", { name: /HP/ })).toHaveValue("32");
+    expect(screen.getByRole("slider", { name: /Def/ })).toHaveValue("32");
+    expect(screen.getByRole("slider", { name: /SpD/ })).toHaveValue("2");
+    fireEvent.change(screen.getByRole("slider", { name: /HP/ }), { target: { value: "31" } });
+    expect(apSpread).toHaveValue("custom");
+    expect(screen.getByText(/current form is Mega Blastoise/)).toBeInTheDocument();
+    const moveValues = screen.getAllByRole("combobox", { name: /Move [1-4]/ }).map((entry) => entry.getAttribute("data-move-id"));
     expect(moveValues).toEqual(["aura-sphere", "dark-pulse", "dragon-pulse", "water-pulse"]);
     const buildMode = screen.getAllByRole("group", { name: "Team mode" }).at(-1)!;
     await user.click(within(buildMode).getByRole("button", { name: "Singles" }));
     expect(await screen.findByRole("heading", { name: "Blastoise" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("leftovers");
+    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("Leftovers");
+  });
+
+  it("reuses Gallade recommendations when Galladite changes it into Mega Gallade", async () => {
+    const rows = (pokemonName: string, heldItem: string, ability: string, move: string) => ({
+      singles: null,
+      doubles: { pokemon: pokemonName, format: "Doubles", season: "Current", date: null, source: "key-test", rows: [
+        { category: "held_item", rank: 1, name: heldItem, percentage: "90%", percentageValue: 90, statUp: "", statDown: "", ap: null },
+        { category: "ability", rank: 1, name: ability, percentage: "80%", percentageValue: 80, statUp: "", statDown: "", ap: null },
+        { category: "move", rank: 1, name: move, percentage: "70%", percentageValue: 70, statUp: "", statDown: "", ap: null },
+      ] },
+    });
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      void input;
+      return Response.json({ data: rows("Gallade", "Galladite", "Sharpness", "Sacred Sword") });
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Gallade");
+    await user.click(screen.getByRole("button", { name: "Configure Gallade" }));
+    expect(await screen.findByRole("heading", { name: "Mega Gallade" })).toBeInTheDocument();
+    await waitFor(() => expect(fetchMock.mock.calls
+      .map(([input]) => new URL(String(input), "https://test.invalid").searchParams.get("pokemonId"))
+      .filter(Boolean)).toEqual(["gallade"]));
+    expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("Inner Focus");
+  });
+
+  it("does not let a regional form use another form's dedicated Mega Stone", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Galarian Slowbro");
+    await user.click(screen.getByRole("button", { name: "Configure Galarian Slowbro" }));
+    const item = screen.getByRole("combobox", { name: /Held item/ });
+    await user.click(item);
+    await user.type(item, "Slowbronite");
+    await user.click(screen.getByRole("option", { name: /Slowbronite/ }));
+    expect(screen.getByRole("heading", { name: "Galarian Slowbro" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Mega Slowbro" })).not.toBeInTheDocument();
   });
 
   it("keeps independent selectable Singles and Doubles teams", async () => {
@@ -376,6 +491,138 @@ describe("ChampionsApp", () => {
     expect(within(tray).queryByText("Garchomp")).not.toBeInTheDocument();
   });
 
+  it("edits an existing team member in place without removing or reordering it", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const existing: TeamMember = {
+      id: "editable-absol",
+      pokemonId: "absol",
+      abilityId: "pressure",
+      itemId: "life-orb",
+      moveIds: ["sucker-punch", "protect"],
+      ap: { ...ZERO_STATS, attack: 32, speed: 32 },
+      nature: { name: "Adamant", nameZh: "固執", up: "attack", down: "specialAttack" },
+    };
+    const teammate: TeamMember = { ...existing, id: "teammate", pokemonId: "garchomp", abilityId: "rough-skin", itemId: "sitrus-berry", moveIds: ["dragon-claw"] };
+    useTeamStore.setState({ teams: { singles: [], doubles: [existing, teammate] }, hydrated: true });
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    await user.click(within(tray).getByRole("button", { name: "Edit Absol" }));
+    expect(screen.getByRole("button", { name: "Save changes" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Move 1" })).toHaveValue("Sucker Punch");
+    expect(screen.getByRole("combobox", { name: "Nature" })).toHaveValue("Adamant");
+    const teamMode = screen.getAllByRole("group", { name: "Team mode" }).at(-1)!;
+    expect(within(teamMode).getByRole("button", { name: "Doubles" })).toBeDisabled();
+    const firstMove = screen.getByRole("combobox", { name: "Move 1" });
+    fireEvent.click(firstMove);
+    fireEvent.change(firstMove, { target: { value: "Close Combat" } });
+    fireEvent.click(within(screen.getByRole("listbox", { name: "Move 1 options" })).getByText("Close Combat", { selector: "strong" }));
+    fireEvent.change(screen.getByRole("combobox", { name: "Nature" }), { target: { value: "Jolly" } });
+    fireEvent.click(screen.getByRole("button", { name: "Save changes" }));
+    const saved = useTeamStore.getState().teams.doubles;
+    expect(saved).toHaveLength(2);
+    expect(saved.map((member) => member.id)).toEqual(["editable-absol", "teammate"]);
+    expect(saved[0].moveIds[0]).toBe("close-combat");
+    expect(saved[0].nature.name).toBe("Jolly");
+  }, 60_000);
+
+  it("recognizes a saved AP spread and switches it to Custom after a manual adjustment", async () => {
+    const existing: TeamMember = {
+      id: "ranked-ap-absol", pokemonId: "absol", abilityId: "pressure", itemId: "life-orb",
+      moveIds: ["sucker-punch", "protect"], ap: { ...ZERO_STATS, attack: 32, speed: 32 },
+      nature: { name: "Jolly", nameZh: "爽朗", up: "speed", down: "specialAttack" },
+    };
+    vi.stubGlobal("fetch", vi.fn(async () => Response.json({ data: {
+      singles: null,
+      doubles: { pokemon: "Absol", format: "Doubles", season: "Current", date: null, source: "test", rows: [
+        { category: "stat_points", rank: 3, name: "", percentage: "18.5%", percentageValue: 18.5, statUp: "", statDown: "", ap: { ...ZERO_STATS, attack: 32, speed: 32 } },
+      ] },
+    } })));
+    useTeamStore.setState({ teams: { singles: [], doubles: [existing] }, hydrated: true });
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.click(screen.getByRole("button", { name: "Edit Absol" }));
+    const apSpread = await screen.findByRole("combobox", { name: "AP spread" });
+    await waitFor(() => expect(apSpread).toHaveValue("3"));
+    expect(screen.getByRole("option", { name: /Common #3 .*18.5%/ })).toBeInTheDocument();
+    fireEvent.change(screen.getByRole("slider", { name: /Def/ }), { target: { value: "1" } });
+    expect(apSpread).toHaveValue("custom");
+  });
+
+  it("preserves saved moves and ability when an edited member changes only its ordinary held item", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const existing: TeamMember = {
+      id: "item-edit-absol",
+      pokemonId: "absol",
+      abilityId: "super-luck",
+      itemId: "life-orb",
+      moveIds: ["sucker-punch", "protect"],
+      ap: { ...ZERO_STATS, attack: 32, speed: 32 },
+      nature: { name: "Adamant", nameZh: "固執", up: "attack", down: "specialAttack" },
+    };
+    useTeamStore.setState({ teams: { singles: [], doubles: [existing] }, hydrated: true });
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    await user.click(within(tray).getByRole("button", { name: "Edit Absol" }));
+    const item = screen.getByRole("combobox", { name: /Held item/ });
+    await user.click(item);
+    await user.clear(item);
+    await user.type(item, "Sitrus Berry");
+    await user.click(screen.getByRole("option", { name: /Sitrus Berry/ }));
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    const saved = useTeamStore.getState().teams.doubles[0];
+    expect(saved.itemId).toBe("sitrus-berry");
+    expect(saved.moveIds).toEqual(["sucker-punch", "protect"]);
+    expect(saved.abilityId).toBe("super-luck");
+  });
+
+  it("searches learnable moves by effect, shows useful mechanics, and prevents duplicate selections", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    const firstMove = screen.getByRole("combobox", { name: "Move 1" });
+    await user.click(firstMove);
+    fireEvent.change(firstMove, { target: { value: "Me First" } });
+    const suckerPunch = screen.getByRole("option", { name: /Sucker Punch/ });
+    expect(suckerPunch).toHaveTextContent("Dark");
+    expect(suckerPunch).toHaveTextContent("Physical");
+    expect(suckerPunch).toHaveTextContent("Power 70");
+    expect(suckerPunch).toHaveTextContent("Priority +1");
+    await user.click(suckerPunch);
+    const secondMove = screen.getByRole("combobox", { name: "Move 2" });
+    await user.click(secondMove);
+    fireEvent.change(secondMove, { target: { value: "Sucker Punch" } });
+    expect(screen.getByRole("option", { name: /Sucker Punch/ })).toBeDisabled();
+    expect(screen.getByText("Already selected")).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(secondMove).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("selects a searched move with arrow keys and Enter while skipping disabled duplicates", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    const firstMove = screen.getByRole("combobox", { name: "Move 1" });
+    await user.click(firstMove);
+    fireEvent.change(firstMove, { target: { value: "Sucker Punch" } });
+    await user.keyboard("{ArrowDown}{Enter}");
+    expect(firstMove).toHaveValue("Sucker Punch");
+    expect(firstMove).toHaveAttribute("aria-expanded", "false");
+
+    const secondMove = screen.getByRole("combobox", { name: "Move 2" });
+    await user.click(secondMove);
+    fireEvent.change(secondMove, { target: { value: "Sucker Punch" } });
+    expect(screen.getByRole("option", { name: /Sucker Punch/ })).toBeDisabled();
+    await user.keyboard("{ArrowDown}{Enter}");
+    expect(secondMove).not.toHaveValue("Sucker Punch");
+    expect(secondMove).toHaveFocus();
+  });
+
   it("switches language without losing navigation", async () => {
     const user = userEvent.setup();
     render(<ChampionsApp />);
@@ -384,6 +631,58 @@ describe("ChampionsApp", () => {
     expect(screen.getByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
     await user.type(screen.getByPlaceholderText("搜尋寶可夢名稱…"), "Garchomp");
     expect(screen.getByText("烈咬陸鯊")).toBeInTheDocument();
+  });
+
+  it("restores the user's last language after a remount", async () => {
+    const user = userEvent.setup();
+    const first = render(<ChampionsApp />);
+    await user.click(screen.getByRole("button", { name: "繁中" }));
+    expect(localStorage.getItem("champions-lab-locale-v1")).toBe("zh-Hant");
+    first.unmount();
+    render(<ChampionsApp />);
+    expect(await screen.findByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
+  });
+
+  it("uses the browser language on the first visit", async () => {
+    vi.spyOn(window.navigator, "languages", "get").mockReturnValue(["zh-TW", "en-US"]);
+    render(<ChampionsApp />);
+    expect(await screen.findByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
+    expect(localStorage.getItem("champions-lab-locale-v1")).toBe("zh-Hant");
+  });
+
+  it("defaults resource pickers to detailed descriptions and remembers compact choices", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    const ability = screen.getByRole("combobox", { name: "Ability" });
+    await user.click(ability);
+    await user.clear(ability);
+    await user.type(ability, "Super Luck");
+    expect(screen.getByRole("option", { name: /Super Luck/ })).toHaveTextContent("critical hit ratio");
+    await user.keyboard("{Escape}");
+    const abilityPreference = screen.getByText("ability").parentElement!;
+    await user.click(within(abilityPreference).getByRole("button", { name: "Compact" }));
+    await user.click(ability);
+    await user.clear(ability);
+    await user.type(ability, "Super Luck");
+    expect(screen.getByRole("option", { name: /Super Luck/ })).not.toHaveTextContent("critical hit ratio");
+    expect(JSON.parse(localStorage.getItem("champions-lab-builder-display-v1") ?? "{}")).toMatchObject({ ability: "compact" });
+  });
+
+  it("closes detail and build modals with Escape from document focus", async () => {
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: /^Absol$/ }));
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
   });
 
   it("opens searchable ability and item reference views", async () => {

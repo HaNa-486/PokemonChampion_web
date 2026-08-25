@@ -11,6 +11,9 @@ const REQUEST_TIMEOUT_MS = 20_000;
 const MAX_TEXT_BYTES = 32 * 1024 * 1024;
 const MAX_JSON_BYTES = 16 * 1024 * 1024;
 const slugify = (value) => value.normalize("NFKD").toLowerCase().replace(/[’']/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+// Reviewed Champions compatibility exception: the separately indexed gallademega
+// source is not used by the product. Mega Gallade shares Gallade's official usage.
+const battleDataKeyFor = (formId, upstreamKey) => formId === "mega-gallade" || upstreamKey === "gallademega" ? "gallade" : upstreamKey;
 
 export function parseCsv(source) {
   const rows = [];
@@ -48,7 +51,7 @@ export function normalizeChampionsPokemon(entry, origin = "https://championsbatt
   return {
     id: entry.showdownId ?? entry.slug,
     speciesKey: entry.slug ?? entry.showdownId,
-    battleDataKey: entry.showdownId ?? entry.slug,
+    battleDataKey: battleDataKeyFor(entry.slug ?? entry.showdownId, entry.showdownId ?? entry.slug),
     name: entry.name,
     savedName,
     types: Array.isArray(summary.types) ? summary.types : [],
@@ -199,7 +202,7 @@ export async function buildSnapshot(championsSource, revisions = {}) {
       pokemonMap.set(id, {
         id,
         speciesKey: slugify(form.base_name || entry.name),
-        battleDataKey: entry.showdownId ?? entry.slug,
+        battleDataKey: battleDataKeyFor(id, entry.showdownId ?? entry.slug),
         name, nameZh: requireZh(zhLocalization.pokemonNames, id, name), nameLocalizationSource: zhLocalization.nameSources?.pokemon?.[id] ?? "unknown", savedName: name,
         types: String(form.types || "").split("/").filter(Boolean),
         baseStats: { hp: number(form.hp, 75), attack: number(form.atk, 20), defense: number(form.def, 20), specialAttack: number(form.spa, 20), specialDefense: number(form.spd, 20), speed: number(form.spe, 20) },

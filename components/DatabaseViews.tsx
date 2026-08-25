@@ -7,6 +7,7 @@ import { abilityCategories, compareValues, itemEffectCategories, type SortDirect
 import { useTeamStore } from "../lib/team-store";
 import { ALL_TYPES } from "../lib/type-chart";
 import { localizedTerm, localizedTerms } from "../lib/localization";
+import { useDialogEscape } from "../lib/use-dialog-escape";
 import type { BattleFormat, Move, Pokemon, Stats } from "../lib/types";
 import { InfoTooltip } from "./InfoTooltip";
 import { ItemDisplay, ItemTooltip } from "./ItemDisplay";
@@ -20,7 +21,7 @@ type SortState<Key extends string> = { key: Key; direction: SortDirection };
 const statKeys = ["hp", "attack", "defense", "specialAttack", "specialDefense", "speed"] as const;
 const statLabels: Record<(typeof statKeys)[number], string> = { hp: "HP", attack: "Atk", defense: "Def", specialAttack: "SpA", specialDefense: "SpD", speed: "Spe" };
 const abilityFilterOptions = ["Weather", "Terrain", "Offense", "Defense", "Status", "Stat Changes", "Speed", "Type", "Contact", "Switch / Hazard", "Item / Berry", "Ability / Move", "Other"];
-const itemEffectOptions = ["HP Recovery", "Status Cure", "PP Recovery", "Damage Halving"];
+const itemEffectOptions = ["HP Recovery", "Status Cure", "PP Recovery", "Damage Halving", "Other"];
 
 const localName = (entry: { name: string; nameZh: string }, locale: Locale) => locale === "zh-Hant" ? entry.nameZh : entry.name;
 const toggleValue = (values: string[], value: string) => values.includes(value) ? values.filter((entry) => entry !== value) : [...values, value];
@@ -52,6 +53,7 @@ type ReverseSelection = { id: string; kind: "move" | "ability"; name: string; de
 type ReverseSortKey = "relevance" | "name" | "type" | keyof Stats | "ability";
 
 function PokemonUsersDialog({ selection, locale, onClose }: { selection: ReverseSelection; locale: Locale; onClose: () => void }) {
+  useDialogEscape(onClose);
   const [query, setQuery] = useState("");
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
   const [typeMode, setTypeMode] = useState<"or" | "and">("or");

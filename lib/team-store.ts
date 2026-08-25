@@ -13,6 +13,7 @@ type TeamState = {
   hydrated: boolean;
   hydrate: () => Promise<void>;
   add: (format: BattleFormat, member: TeamMember) => void;
+  update: (format: BattleFormat, member: TeamMember) => void;
   remove: (format: BattleFormat, memberId: string) => void;
   clear: (format: BattleFormat) => void;
 };
@@ -49,6 +50,13 @@ export const useTeamStore = create<TeamState>((set, getState) => ({
   add: (format, member) => {
     const teams = getState().teams;
     const next = { ...teams, [format]: sanitizeTeamMembers([...teams[format], member], pokemonById) };
+    set({ teams: next });
+    persist(next);
+  },
+  update: (format, member) => {
+    const teams = getState().teams;
+    const nextMembers = teams[format].map((current) => current.id === member.id ? member : current);
+    const next = { ...teams, [format]: sanitizeTeamMembers(nextMembers, pokemonById) };
     set({ teams: next });
     persist(next);
   },

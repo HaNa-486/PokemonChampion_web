@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { HeldItem } from "../lib/types";
 import { InfoTooltip } from "./InfoTooltip";
+import { localizedTerm } from "../lib/localization";
 
 type Locale = "en" | "zh-Hant";
 
@@ -26,7 +27,7 @@ export function ItemTooltip({ item, locale, onActivate, size = 24 }: { item?: He
   if (!item) return <span>—</span>;
   return <InfoTooltip label={<ItemDisplay item={item} locale={locale} size={size} />} onActivate={onActivate}>
     <div className="item-tooltip-title"><ItemDisplay item={item} locale={locale} size={32} /></div>
-    <div className="tooltip-meta"><span>{item.category}</span></div>
+    <div className="tooltip-meta"><span>{localizedTerm(item.category, locale)}</span></div>
     <p>{locale === "zh-Hant" ? item.descriptionZh : item.description}</p>
   </InfoTooltip>;
 }
