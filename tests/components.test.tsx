@@ -10,8 +10,14 @@ import { moves } from "../lib/catalog";
 import { useTeamStore } from "../lib/team-store";
 import type { TeamMember } from "../lib/types";
 
-beforeEach(() => useTeamStore.setState({ teams: { singles: [], doubles: [] }, hydrated: true }));
-afterEach(() => vi.unstubAllGlobals());
+beforeEach(() => {
+  localStorage.clear();
+  useTeamStore.setState({ teams: { singles: [], doubles: [] }, hydrated: true });
+});
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
 describe("Move Database", () => {
   it("localizes move properties in Traditional Chinese mode", async () => {
@@ -106,6 +112,8 @@ describe("Move Database", () => {
     await user.type(within(filters).getByRole("spinbutton", { name: "Reverse lookup minimum SpA" }), "100");
     expect(within(dialog).getByText("Mega Charizard X")).toBeInTheDocument();
     expect(dialog.querySelectorAll(".reverse-results-table tbody tr")).toHaveLength(1);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Dragon Claw" })).not.toBeInTheDocument();
   });
 
   it("paginates all moves instead of hiding entries after 100", async () => {
@@ -159,6 +167,14 @@ describe("reference filters", () => {
     expect(charizardite.querySelector("img")).toHaveAttribute("src", "/items/charizardite-x.png");
     expect(screen.queryByRole("button", { name: "Choice Scarf" })).not.toBeInTheDocument();
     expect(container.querySelectorAll("tbody img.item-icon").length).toBeGreaterThan(0);
+  });
+
+  it("offers an Other effect filter for uncategorized held items", async () => {
+    const user = userEvent.setup();
+    render(<ResourceDatabaseV2 kind="items" locale="en" />);
+    await user.click(screen.getByRole("button", { name: "Other" }));
+    expect(screen.getByRole("button", { name: "King's Rock" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Leftovers" })).not.toBeInTheDocument();
   });
 
   it("sorts abilities by user count and opens all eligible Pokémon", async () => {
@@ -282,6 +298,7 @@ describe("ChampionsApp", () => {
     await user.click(within(moveFilters).getByRole("button", { name: "1 target" }));
     await user.click(within(moveFilters).getByRole("button", { name: "Contact" }));
     expect(within(dialog).getByRole("button", { name: "Sucker Punch" })).toBeInTheDocument();
+    expect(within(dialog).getByText(/Power 70 · Acc\. 100 · PP 8/)).toBeInTheDocument();
     expect(within(dialog).queryByRole("button", { name: "Calm Mind" })).not.toBeInTheDocument();
     const mobileFilterToggle = within(dialog).getByRole("button", { name: "Move filters (5)" });
     expect(mobileFilterToggle).toHaveAttribute("aria-expanded", "false");
@@ -314,23 +331,53 @@ describe("ChampionsApp", () => {
     expect(within(nature).getAllByRole("option")).toHaveLength(21);
     expect(within(nature).getByRole("option", { name: "Adamant (Atk ↑ / SpA ↓)" })).toBeInTheDocument();
     await user.selectOptions(nature, "Adamant");
+    fireEvent.change(screen.getByRole("slider", { name: /Atk/ }), { target: { value: "32" } });
     await user.click(screen.getByRole("button", { name: "Build & add" }));
     const tray = screen.getByRole("complementary", { name: "Selected team" });
     expect(within(tray).getByText("Weak")).toBeInTheDocument();
     expect(within(tray).getByText("Immune")).toBeInTheDocument();
-    expect(within(tray).getByText("Adamant")).toHaveAttribute("title", "Adamant (Atk ↑ / SpA ↓)");
+    expect(within(tray).getByText("Adamant (Atk ↑ / SpA ↓)")).toHaveAttribute("title", "Adamant (Atk ↑ / SpA ↓)");
+    expect(within(tray).getByText("+32")).toBeInTheDocument();
+    expect(tray.querySelector(".nature-up")).toHaveTextContent("↑");
+    expect(tray.querySelector(".nature-down")).toHaveTextContent("↓");
   });
 
-  it("preselects and locks the dedicated stone for a Mega build", async () => {
+  it("preselects the dedicated stone but lets a Mega build return to its regular form", async () => {
     const user = userEvent.setup();
-    const { container } = render(<ChampionsApp />);
+    render(<ChampionsApp />);
     await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Mega Absol");
     await user.click(screen.getByRole("button", { name: "Configure Mega Absol" }));
     const item = screen.getByRole("combobox", { name: /Held item/ });
-    expect(item).toBeDisabled();
-    expect(item).toHaveValue("absolite");
-    expect(container.querySelector(".selected-item-preview img")).toHaveAttribute("src", "/items/absolite.png");
-    expect(screen.getByText("This Mega form must hold its dedicated Mega Stone.")).toBeInTheDocument();
+    expect(item).toHaveValue("Absolite");
+    await user.click(item);
+    const options = within(screen.getByRole("listbox", { name: "Held item options" })).getAllByRole("option").filter((option) => !option.classList.contains("clear-option"));
+    expect(options[0]).toHaveTextContent("Absolite");
+    await user.clear(item);
+    await user.type(item, "Life Orb");
+    await user.click(screen.getByRole("option", { name: /Life Orb/ }));
+    expect(screen.getByRole("heading", { name: "Absol" })).toBeInTheDocument();
+    expect(item).toHaveValue("Life Orb");
+  });
+
+  it("edits a saved Mega member into its regular form with an ordinary item", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const member: TeamMember = {
+      id: "mega-absol", pokemonId: "mega-absol", abilityId: "magic-bounce", itemId: "absolite",
+      moveIds: ["sucker-punch", "protect"], ap: { ...ZERO_STATS, attack: 32, speed: 32 },
+      nature: { name: "Jolly", nameZh: "爽朗", up: "speed", down: "specialAttack" },
+    };
+    useTeamStore.setState({ teams: { singles: [], doubles: [member] }, hydrated: true });
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.click(screen.getByRole("button", { name: "Edit Mega Absol" }));
+    const item = screen.getByRole("combobox", { name: "Held item" });
+    await user.click(item);
+    await user.clear(item);
+    await user.type(item, "Life Orb");
+    await user.click(screen.getByRole("option", { name: /Life Orb/ }));
+    expect(screen.getByRole("heading", { name: "Absol" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Save changes" }));
+    expect(useTeamStore.getState().teams.doubles[0]).toMatchObject({ pokemonId: "absol", itemId: "life-orb" });
   });
 
   it("applies current-format usage and transforms a base Pokémon when its Mega Stone is selected", async () => {
@@ -349,19 +396,19 @@ describe("ChampionsApp", () => {
     await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Blastoise");
     await user.click(screen.getByRole("button", { name: "Configure Blastoise" }));
     expect(await screen.findByRole("heading", { name: "Mega Blastoise" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("blastoisinite");
-    await waitFor(() => expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("mega-launcher"));
+    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("Blastoisinite");
+    await waitFor(() => expect(screen.getByRole("combobox", { name: "Ability" })).toHaveValue("Mega Launcher"));
     expect(screen.getByRole("combobox", { name: "Nature" })).toHaveValue("Modest");
     expect(screen.getByRole("slider", { name: /SpA/ })).toHaveValue("32");
     expect(screen.getByRole("slider", { name: /Spe/ })).toHaveValue("32");
     expect(screen.getByText("0 / 66 remaining")).toBeInTheDocument();
-    expect(screen.getByText(/transforms this build into Mega Blastoise/)).toBeInTheDocument();
+    expect(screen.getByText(/current form is Mega Blastoise/)).toBeInTheDocument();
     const moveValues = screen.getAllByRole("combobox", { name: /Move [1-4]/ }).map((entry) => entry.getAttribute("data-move-id"));
     expect(moveValues).toEqual(["aura-sphere", "dark-pulse", "dragon-pulse", "water-pulse"]);
     const buildMode = screen.getAllByRole("group", { name: "Team mode" }).at(-1)!;
     await user.click(within(buildMode).getByRole("button", { name: "Singles" }));
     expect(await screen.findByRole("heading", { name: "Blastoise" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("leftovers");
+    expect(screen.getByRole("combobox", { name: /Held item/ })).toHaveValue("Leftovers");
   });
 
   it("keeps independent selectable Singles and Doubles teams", async () => {
@@ -427,7 +474,11 @@ describe("ChampionsApp", () => {
     render(<ChampionsApp />);
     const tray = screen.getByRole("complementary", { name: "Selected team" });
     await user.click(within(tray).getByRole("button", { name: "Edit Absol" }));
-    await user.selectOptions(screen.getByRole("combobox", { name: /Held item/ }), "sitrus-berry");
+    const item = screen.getByRole("combobox", { name: /Held item/ });
+    await user.click(item);
+    await user.clear(item);
+    await user.type(item, "Sitrus Berry");
+    await user.click(screen.getByRole("option", { name: /Sitrus Berry/ }));
     await user.click(screen.getByRole("button", { name: "Save changes" }));
     const saved = useTeamStore.getState().teams.doubles[0];
     expect(saved.itemId).toBe("sitrus-berry");
@@ -489,6 +540,58 @@ describe("ChampionsApp", () => {
     expect(screen.getByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
     await user.type(screen.getByPlaceholderText("搜尋寶可夢名稱…"), "Garchomp");
     expect(screen.getByText("烈咬陸鯊")).toBeInTheDocument();
+  });
+
+  it("restores the user's last language after a remount", async () => {
+    const user = userEvent.setup();
+    const first = render(<ChampionsApp />);
+    await user.click(screen.getByRole("button", { name: "繁中" }));
+    expect(localStorage.getItem("champions-lab-locale-v1")).toBe("zh-Hant");
+    first.unmount();
+    render(<ChampionsApp />);
+    expect(await screen.findByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
+  });
+
+  it("uses the browser language on the first visit", async () => {
+    vi.spyOn(window.navigator, "languages", "get").mockReturnValue(["zh-TW", "en-US"]);
+    render(<ChampionsApp />);
+    expect(await screen.findByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
+    expect(localStorage.getItem("champions-lab-locale-v1")).toBe("zh-Hant");
+  });
+
+  it("defaults resource pickers to detailed descriptions and remembers compact choices", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    const ability = screen.getByRole("combobox", { name: "Ability" });
+    await user.click(ability);
+    await user.clear(ability);
+    await user.type(ability, "Super Luck");
+    expect(screen.getByRole("option", { name: /Super Luck/ })).toHaveTextContent("critical hit ratio");
+    await user.keyboard("{Escape}");
+    const abilityPreference = screen.getByText("ability").parentElement!;
+    await user.click(within(abilityPreference).getByRole("button", { name: "Compact" }));
+    await user.click(ability);
+    await user.clear(ability);
+    await user.type(ability, "Super Luck");
+    expect(screen.getByRole("option", { name: /Super Luck/ })).not.toHaveTextContent("critical hit ratio");
+    expect(JSON.parse(localStorage.getItem("champions-lab-builder-display-v1") ?? "{}")).toMatchObject({ ability: "compact" });
+  });
+
+  it("closes detail and build modals with Escape from document focus", async () => {
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: /^Absol$/ }));
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
   });
 
   it("opens searchable ability and item reference views", async () => {

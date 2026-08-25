@@ -5,7 +5,7 @@
 - Status: in_progress
 - Created: 2026-08-20T07:05:00Z
 - Scope: floating team tray, Build Workbench, team persistence, move selection, responsive accessibility
-- Release assessment: not-ready; independent PR review findings implemented locally and awaiting renewed Dev UAT
+- Release assessment: not-ready; expanded product-owner UAT findings implemented locally and awaiting exact-candidate verification and renewed Dev UAT
 
 ## Findings
 
@@ -42,3 +42,20 @@
 - Residual risk: Renewed Dev UAT must confirm keyboard navigation and final popover geometry.
 - Autonomy class: auto-decide
 - Remediation: remediations/REM-20260820-team-builder-ux-F002.md
+
+### F-003
+
+- Severity: medium
+- Confidence: high
+- Status: implemented
+- Evidence: UAT showed locked Mega stones, long native ability/item lists, missing Other filter, modal Escape gaps, reset-to-English refreshes, opaque team AP/nature, incomplete battle-row localization, and hidden learnable-move mechanics.
+- User impact: Users could not revise a Mega into a regular build, beginners still needed external references, and important build/localization information was not visible at decision time.
+- Root cause: The first editing slice covered move selection and replacement persistence but did not yet apply the same interaction/accessibility/localization contract across related selectors and dialogs.
+- Recommended solution: Treat selected stone as the form switch, use shared rich searchable ability/item pickers, persist independent display preferences and locale, centralize Escape behavior, and expose AP/nature/move mechanics inline.
+- Alternatives and tradeoffs: Keeping native selects is smaller but cannot provide grouped mechanics-rich choices or a usable beginner flow.
+- Affected areas: builder, team tray, item filters, Pokémon detail, type chart locale, dialog handling, component tests, product spec.
+- Acceptance criteria: Mega can return to regular form; item/ability search and details work; Other is selectable; every modal closes from document Escape; locale persists/infers; AP/nature and move mechanics are visible; usage rows are localized.
+- Verification: `pnpm verify:deploy` passes with 17 test files / 115 tests, production build, and 10 built-output/API checks; exact Dev UAT remains pending.
+- Residual risk: Responsive popover geometry and all modal/locale journeys need exact-candidate Dev UAT.
+- Autonomy class: auto-decide
+- Remediation: remediations/REM-20260820-team-builder-ux-F003.md

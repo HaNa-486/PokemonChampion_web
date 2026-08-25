@@ -88,11 +88,12 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Base + Mega is rejected.
 - [ ] Sibling Mega branches such as Mega X + Mega Y are rejected.
 - [ ] Mega Pokémon from different species families remain legal together.
-- [ ] Every Mega form is locked to its dedicated stone.
+- [ ] Every submitted Mega form holds its dedicated stone; removing/replacing the stone in the editor returns the build to its regular form.
 - [ ] Selecting a Mega Stone on a base form updates sprite, name, types, abilities, base stats, matchups, final stats, and legality identity.
 - [ ] Singles and Doubles teams remain independent and persist through switching.
 - [ ] Editing a team member restores its exact saved fields, saves in the same slot with the same member ID, does not change the team count, and does not falsely conflict with its own Pokémon or held item.
 - [ ] Changing only an ordinary held item preserves the member's saved moves and ability; a Mega form change reconciles only choices that become illegal.
+- [ ] Editing a saved Mega member and choosing an ordinary item updates sprite/name/types/stats/abilities to the regular form without changing its team slot or member ID.
 - [ ] Editing cannot move a member between Singles and Doubles; genuine duplicate-family, duplicate-item, Mega-Stone, move, ability, and AP errors still block save.
 
 ## 5. Catalog and recommendation regression
@@ -115,13 +116,17 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Singles/Doubles usage defaults apply the highest-ranked legal item, ability, nature, AP spread, and four unique learnable moves.
 - [ ] Illegal, duplicated, or unmapped usage rows are skipped instead of forced into the build.
 - [ ] Each builder move slot supports localized/English name and effect-text search, common-move-first ordering, visible type/category/Power/Accuracy/priority/effect information, clearing, and duplicate-move prevention.
+- [ ] Builder ability and item fields support name/effect search, localized rich descriptions, keyboard/mouse/touch selection, and independent Detailed/Compact preferences that default to Detailed and persist.
+- [ ] Held-item options are grouped by effect class, expose Other, and place the selected family’s dedicated stone first in the Mega Stone group.
+- [ ] Learnable move cards show Power, Accuracy, and PP without requiring hover.
 
 ## 6. Browser and responsive QA
 
 Required for interaction, layout, responsive, or CSS changes. Check at 390, 768, and 1440 CSS pixels; commercial release candidates also run Chromium, Firefox, and WebKit.
 
-- [ ] Keyboard focus, Escape, mouse, and touch behavior work for tooltips and dialogs.
+- [ ] Keyboard focus, document-level Escape, mouse, and touch behavior work for tooltips and every modal dialog.
 - [ ] English and Traditional Chinese critical flows do not clip or lose state.
+- [ ] A first visit follows the browser language (`zh*` → Traditional Chinese, otherwise English), and an explicit language choice survives refresh/remount.
 - [ ] In `zh-Hant`, every listed Pokémon/form name is the official Traditional Chinese name; no Pokémon name is machine translated or left in English.
 - [ ] In `zh-Hant`, all move, ability, and held-item names and descriptions are Chinese on database rows, detail dialogs, battle-usage rows, and tooltips; none silently reuse the English description.
 - [ ] `pnpm data:audit:zh` confirms every Chinese description is derived from the exact effective Champions English mechanic, preserves every numeric token, multiplier, rounding rule, trigger threshold, and single-use condition, and contains no broken placeholder or unapproved English residue.
@@ -133,6 +138,7 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] The team tray can scroll through all six complete cards.
 - [ ] Builder and detail dialogs remain within the viewport.
 - [ ] Builder move pickers work by keyboard, mouse, and touch; Arrow Up/Down and Home/End move through enabled results, Enter selects, duplicate-disabled results are skipped, Escape closes, focus is restored, and only one field menu needs focus at a time.
+- [ ] Team cards make each non-zero AP addition and nature-raised/lowered stat visible without reopening the editor.
 - [ ] At 390 px, detail move filters expand/collapse cleanly, chip rows scroll horizontally, and battle-usage tooltips open by touch.
 - [ ] At 390, 768, and 1440 px, item thumbnails do not clip, distort, obscure labels, or create unintended horizontal page scrolling.
 - [ ] The 18×18 type chart is complete.

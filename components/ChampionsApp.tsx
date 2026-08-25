@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { abilities, abilityById, catalogSnapshotDate, itemById, items, megaPokemonByStoneId, megaStoneIdByPokemonId, moveById, moves, pokemon, pokemonById } from "../lib/catalog";
 import { recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature } from "../lib/battle-recommendations";
 import { apTotal, calculateFinalStats, formatPriority, modifiedSpeed, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
 import { localizedTerm, localizedTerms } from "../lib/localization";
+import { itemEffectCategories } from "../lib/filtering";
+import { useDialogEscape } from "../lib/use-dialog-escape";
 import type { BattleFormat, BattleUsage, Move, Nature, Pokemon, Stats, TeamMember } from "../lib/types";
 import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "./DatabaseViews";
 import { InfoTooltip } from "./InfoTooltip";
@@ -16,6 +18,13 @@ import { TypeMatchups } from "./TypeMatchups";
 type Locale = "en" | "zh-Hant";
 type View = "pokemon" | "moves" | "abilities" | "items" | "speed";
 type PriorityClass = "positive" | "zero" | "negative";
+type DisplayMode = "detailed" | "compact";
+type BuilderDisplayModes = Record<"move" | "ability" | "item", DisplayMode>;
+
+const BUILDER_DISPLAY_KEY = "champions-lab-builder-display-v1";
+const LOCALE_STORAGE_KEY = "champions-lab-locale-v1";
+const ITEM_GROUP_ORDER = ["Mega Stone", "HP Recovery", "Status Cure", "PP Recovery", "Damage Halving", "Other"];
+const defaultDisplayModes: BuilderDisplayModes = { move: "detailed", ability: "detailed", item: "detailed" };
 
 const labels = {
   en: { pokemon: "Pokémon DB", moves: "Move DB", abilities: "Ability DB", items: "Held Item DB", speed: "Speed Compare", search: "Search Pokémon or type…", current: "Regulation M-4 · Current", add: "Build & add", save: "Save changes", edit: "Edit", team: "Selected team", empty: "Choose a Pokémon to start building.", data: "Battle data updated", stale: "cached snapshot", doubles: "Doubles", singles: "Singles" },
@@ -63,13 +72,79 @@ function AbilityTooltip({ id, locale }: { id: string; locale: Locale }) {
 
 const builderMoveCategoryOrder: Record<Move["category"], number> = { Physical: 0, Special: 1, Status: 2 };
 
-function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, recommendedMoveIds: commonMoveIds, locale, onChange }: {
+type ResourcePickerOption = {
+  id: string;
+  name: string;
+  searchText: string;
+  description: string;
+  meta?: ReactNode;
+  icon?: ReactNode;
+  group?: string;
+};
+
+function ResourcePicker({ label, value, options, locale, detailed, onChange }: {
+  label: string;
+  value: string | null;
+  options: ResourcePickerOption[];
+  locale: Locale;
+  detailed: boolean;
+  onChange: (value: string | null) => void;
+}) {
+  const listId = useId();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const [activeValue, setActiveValue] = useState(value ?? "__clear__");
+  const current = options.find((option) => option.id === value) ?? null;
+  const normalizedQuery = query.trim().toLocaleLowerCase(locale);
+  const filtered = normalizedQuery ? options.filter((option) => option.searchText.toLocaleLowerCase(locale).includes(normalizedQuery)) : options;
+  const navigableValues = ["__clear__", ...filtered.map((option) => option.id)];
+  const close = () => { setOpen(false); setQuery(""); };
+  const openMenu = () => { setOpen(true); setActiveValue(value && navigableValues.includes(value) ? value : navigableValues[0] ?? "__clear__"); };
+  const choose = (nextValue: string | null) => { onChange(nextValue); close(); queueMicrotask(() => inputRef.current?.focus()); };
+  const moveActive = (direction: 1 | -1) => {
+    const currentIndex = navigableValues.indexOf(activeValue);
+    const startIndex = currentIndex < 0 ? (direction > 0 ? -1 : 0) : currentIndex;
+    setActiveValue(navigableValues[(startIndex + direction + navigableValues.length) % navigableValues.length] ?? "__clear__");
+  };
+  useEffect(() => {
+    if (!open) return;
+    const activeOption = document.getElementById(`${listId}-option-${activeValue}`);
+    if (activeOption && typeof activeOption.scrollIntoView === "function") activeOption.scrollIntoView({ block: "nearest" });
+  }, [activeValue, listId, open]);
+  return <div className="resource-picker-field" onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) close(); }}>
+    <label htmlFor={`${listId}-input`}>{label}</label>
+    <div className={`resource-combobox ${open ? "open" : ""}`}>
+      {!open && current?.icon}
+      <input id={`${listId}-input`} ref={inputRef} role="combobox" aria-label={label} aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-option-${activeValue}` : undefined} aria-autocomplete="list" autoComplete="off" value={open ? query : current?.name ?? ""} placeholder={locale === "zh-Hant" ? "輸入名稱或效果搜尋…" : "Search name or effect…"} onFocus={() => { openMenu(); setQuery(""); }} onChange={(event) => { setOpen(true); setQuery(event.target.value); setActiveValue("__clear__"); }} onKeyDown={(event) => {
+        if (event.key === "Escape") { event.preventDefault(); close(); }
+        else if (event.key === "ArrowDown") { event.preventDefault(); if (open) moveActive(1); else openMenu(); }
+        else if (event.key === "ArrowUp") { event.preventDefault(); if (open) moveActive(-1); else openMenu(); }
+        else if (event.key === "Home" && open) { event.preventDefault(); setActiveValue(navigableValues[0] ?? "__clear__"); }
+        else if (event.key === "End" && open) { event.preventDefault(); setActiveValue(navigableValues.at(-1) ?? "__clear__"); }
+        else if (event.key === "Enter" && open) { event.preventDefault(); if (navigableValues.includes(activeValue)) choose(activeValue === "__clear__" ? null : activeValue); }
+      }} />
+      <button type="button" className="move-picker-toggle" aria-label={locale === "zh-Hant" ? `開啟${label}選單` : `Open ${label} menu`} onClick={() => { if (open) close(); else openMenu(); inputRef.current?.focus(); }}>⌄</button>
+    </div>
+    {open && <div className="resource-picker-popover"><div id={listId} role="listbox" aria-label={`${label} options`} className="resource-picker-options">
+      <button id={`${listId}-option-__clear__`} type="button" role="option" aria-selected={!value} className={`resource-option clear-option ${activeValue === "__clear__" ? "active" : ""}`} onMouseEnter={() => setActiveValue("__clear__")} onMouseDown={(event) => event.preventDefault()} onClick={() => choose(null)}>{locale === "zh-Hant" ? "— 不選擇" : "— None"}</button>
+      {filtered.map((option, index) => {
+        const showGroup = Boolean(option.group && option.group !== filtered[index - 1]?.group);
+        return <div className="resource-option-wrap" key={option.id}>{showGroup && <div className="resource-option-group">{localizedTerm(option.group!, locale)}</div>}<button id={`${listId}-option-${option.id}`} type="button" role="option" aria-selected={option.id === value} className={`resource-option ${activeValue === option.id ? "active" : ""}`} onMouseEnter={() => setActiveValue(option.id)} onMouseDown={(event) => event.preventDefault()} onClick={() => choose(option.id)}><span className="resource-option-heading">{option.icon}<strong>{option.name}</strong></span>{option.meta && <span className="resource-option-meta">{option.meta}</span>}{detailed && <span className="resource-option-description">{option.description}</span>}</button></div>;
+      })}
+      {!filtered.length && <p className="move-picker-empty">{locale === "zh-Hant" ? "找不到符合的選項。" : "No matching option."}</p>}
+    </div></div>}
+  </div>;
+}
+
+function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, recommendedMoveIds: commonMoveIds, locale, detailed, onChange }: {
   slot: number;
   value: string | null;
   legalMoveIds: string[];
   selectedMoveIds: string[];
   recommendedMoveIds: string[];
   locale: Locale;
+  detailed: boolean;
   onChange: (moveId: string | null) => void;
 }) {
   const listId = useId();
@@ -146,7 +221,7 @@ function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, recommendedMov
       <button type="button" className="move-picker-toggle" aria-label={locale === "zh-Hant" ? `開啟${fieldLabel}選單` : `Open ${fieldLabel} menu`} onClick={() => { if (open) close(); else openMenu(); inputRef.current?.focus(); }}>⌄</button>
     </div>
     {open && <div className="move-picker-popover">
-      <div className="move-picker-help">{locale === "zh-Hant" ? "常用招式優先；可搜尋名稱或效果。" : "Common moves first. Search by name or effect."}</div>
+      {detailed && <div className="move-picker-help">{locale === "zh-Hant" ? "常用招式優先；可搜尋名稱或效果。" : "Common moves first. Search by name or effect."}</div>}
       <div id={listId} role="listbox" aria-label={`${fieldLabel} options`} className="move-picker-options">
         <button id={`${listId}-option-__clear__`} type="button" role="option" aria-selected={!value} className={`move-option clear-option ${activeValue === "__clear__" ? "active" : ""}`} onMouseEnter={() => setActiveValue("__clear__")} onMouseDown={(event) => event.preventDefault()} onClick={() => { onChange(null); close(); inputRef.current?.focus(); }}>
           {locale === "zh-Hant" ? "— 清除此欄" : "— Clear this slot"}
@@ -156,8 +231,7 @@ function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, recommendedMov
           const rank = commonRank.get(move.id);
           return <button id={`${listId}-option-${move.id}`} type="button" role="option" aria-selected={move.id === value} disabled={selectedElsewhere} className={`move-option ${activeValue === move.id ? "active" : ""}`} key={move.id} onMouseEnter={() => { if (!selectedElsewhere) setActiveValue(move.id); }} onMouseDown={(event) => event.preventDefault()} onClick={() => { onChange(move.id); close(); inputRef.current?.focus(); }}>
             <span className="move-option-heading"><TypeBadge type={move.type} locale={locale} /><strong>{localName(move, locale)}</strong>{rank && <em>{locale === "zh-Hant" ? `常用 #${rank}` : `Common #${rank}`}</em>}</span>
-            <span className="move-option-meta">{localizedTerm(move.category, locale)} · {localizedTerm("Power", locale)} {move.power ?? "—"} · {localizedTerm("Acc.", locale)} {move.accuracy ?? "—"} · {localizedTerm("Priority", locale)} {formatPriority(move.priority)}</span>
-            <span className="move-option-description">{locale === "zh-Hant" ? move.descriptionZh : move.description}</span>
+            {detailed && <><span className="move-option-meta">{localizedTerm(move.category, locale)} · {localizedTerm("Power", locale)} {move.power ?? "—"} · {localizedTerm("Acc.", locale)} {move.accuracy ?? "—"} · PP {move.pp} · {localizedTerm("Priority", locale)} {formatPriority(move.priority)}</span><span className="move-option-description">{locale === "zh-Hant" ? move.descriptionZh : move.description}</span></>}
             {selectedElsewhere && <span className="move-option-used">{locale === "zh-Hant" ? "已選在其他欄位" : "Already selected"}</span>}
           </button>;
         })}
@@ -197,6 +271,7 @@ function BuildEditor({ selected, editingMember, locale, format, onFormatChange, 
 type BattleApiResponse = { data: { singles: BattleUsage | null; doubles: BattleUsage | null } };
 
 function BuildEditorContent({ selected, editingMember, locale, format, onFormatChange: setAppFormat, onClose }: { selected: Pokemon; editingMember: TeamMember | null; locale: Locale; format: BattleFormat; onFormatChange: (format: BattleFormat) => void; onClose: () => void }) {
+  useDialogEscape(onClose);
   const members = useTeamStore((state) => state.teams[format]);
   const add = useTeamStore((state) => state.add);
   const update = useTeamStore((state) => state.update);
@@ -204,18 +279,36 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
   const [moveIds, setMoveIds] = useState<string[]>(editingMember?.moveIds.slice(0, 4) ?? selected.moveIds.slice(0, 4));
   const [abilityId, setAbilityId] = useState<string | null>(editingMember?.abilityId ?? selected.abilityIds[0] ?? null);
   const requiredMegaStoneId = megaStoneIdByPokemonId.get(selected.id) ?? null;
-  const [itemId, rawSetItemId] = useState<string | null>(requiredMegaStoneId ?? editingMember?.itemId ?? null);
+  const baseSelected = useMemo(() => selected.isMega ? pokemon.find((entry) => entry.speciesKey === selected.speciesKey && !entry.isMega) ?? selected : selected, [selected]);
+  const [itemId, rawSetItemId] = useState<string | null>(editingMember?.itemId ?? requiredMegaStoneId ?? null);
   const [battleData, setBattleData] = useState<BattleApiResponse["data"] | null>(null);
   const [recommendationsLoading, setRecommendationsLoading] = useState(true);
   const formatRef = useRef(format);
   const [ap, setAp] = useState<Stats>(editingMember ? { ...editingMember.ap } : { ...ZERO_STATS });
   const [nature, setNature] = useState<Nature>(editingMember?.nature ?? NEUTRAL_NATURE);
   const [error, setError] = useState("");
+  const [displayModes, setDisplayModes] = useState<BuilderDisplayModes>(defaultDisplayModes);
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(BUILDER_DISPLAY_KEY) ?? "null") as Partial<BuilderDisplayModes> | null;
+      // Browser-only preference hydration must run after the server-rendered default.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      if (saved) setDisplayModes({
+        move: saved.move === "compact" ? "compact" : "detailed",
+        ability: saved.ability === "compact" ? "compact" : "detailed",
+        item: saved.item === "compact" ? "compact" : "detailed",
+      });
+    } catch { /* Ignore malformed local preferences. */ }
+  }, []);
+  const changeDisplayMode = (kind: keyof BuilderDisplayModes, mode: DisplayMode) => setDisplayModes((current) => {
+    const next = { ...current, [kind]: mode };
+    localStorage.setItem(BUILDER_DISPLAY_KEY, JSON.stringify(next));
+    return next;
+  });
   const effectiveSelected = useMemo(() => {
-    if (selected.isMega || !itemId) return selected;
-    const mega = megaPokemonByStoneId.get(itemId);
-    return mega?.speciesKey === selected.speciesKey ? mega : selected;
-  }, [itemId, selected]);
+    const mega = itemId ? megaPokemonByStoneId.get(itemId) : null;
+    return mega?.speciesKey === selected.speciesKey ? mega : baseSelected;
+  }, [baseSelected, itemId, selected.speciesKey]);
   const usage = battleData?.[format] ?? null;
   const commonMoveIds = useMemo(() => recommendedMoveIds(usage, effectiveSelected), [effectiveSelected, usage]);
   const finalStats = calculateFinalStats(effectiveSelected.baseStats, ap, nature);
@@ -223,8 +316,8 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
   const applyRecommendations = (nextFormat: BattleFormat, data: BattleApiResponse["data"] | null, chosenItem?: string | null) => {
     const nextUsage = data?.[nextFormat] ?? null;
     const nextItem = chosenItem === undefined ? requiredMegaStoneId ?? recommendedItemId(nextUsage) : chosenItem;
-    const mega = !selected.isMega && nextItem ? megaPokemonByStoneId.get(nextItem) : null;
-    const target = mega?.speciesKey === selected.speciesKey ? mega : selected;
+    const mega = nextItem ? megaPokemonByStoneId.get(nextItem) : null;
+    const target = mega?.speciesKey === selected.speciesKey ? mega : baseSelected;
     const suggestedMoves = recommendedMoveIds(nextUsage, target);
     rawSetItemId(nextItem);
     setMoveIds((suggestedMoves.length ? suggestedMoves : target.moveIds).slice(0, 4));
@@ -239,8 +332,8 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     applyRecommendations(nextFormat, battleData);
   };
   const changeItem = (nextItem: string | null) => {
-    const nextMega = !selected.isMega && nextItem ? megaPokemonByStoneId.get(nextItem) : null;
-    const nextSelected = nextMega?.speciesKey === selected.speciesKey ? nextMega : selected;
+    const nextMega = nextItem ? megaPokemonByStoneId.get(nextItem) : null;
+    const nextSelected = nextMega?.speciesKey === selected.speciesKey ? nextMega : baseSelected;
     rawSetItemId(nextItem);
     if (nextSelected.id === effectiveSelected.id) return;
     const nextUsage = battleData?.[format] ?? null;
@@ -254,6 +347,33 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
   };
   const onFormatChange = changeFormat;
   const setItemId = changeItem;
+
+  const familyStoneIds = useMemo(() => pokemon
+    .filter((entry) => entry.speciesKey === selected.speciesKey && entry.isMega)
+    .map((entry) => megaStoneIdByPokemonId.get(entry.id))
+    .filter((id): id is string => Boolean(id)), [selected.speciesKey]);
+  const selectableItems = useMemo(() => [...items].sort((left, right) => {
+    const leftGroup = left.category === "Mega Stone" ? "Mega Stone" : itemEffectCategories(left)[0] ?? "Other";
+    const rightGroup = right.category === "Mega Stone" ? "Mega Stone" : itemEffectCategories(right)[0] ?? "Other";
+    const leftDedicated = familyStoneIds.indexOf(left.id);
+    const rightDedicated = familyStoneIds.indexOf(right.id);
+    if (leftGroup === "Mega Stone" && rightGroup === "Mega Stone" && (leftDedicated >= 0 || rightDedicated >= 0)) {
+      if (leftDedicated < 0) return 1;
+      if (rightDedicated < 0) return -1;
+      if (leftDedicated !== rightDedicated) return leftDedicated - rightDedicated;
+    }
+    return ITEM_GROUP_ORDER.indexOf(leftGroup) - ITEM_GROUP_ORDER.indexOf(rightGroup) || localName(left, locale).localeCompare(localName(right, locale));
+  }), [familyStoneIds, locale]);
+  const abilityOptions = useMemo<ResourcePickerOption[]>(() => effectiveSelected.abilityIds.map((id) => abilityById.get(id)).filter((entry): entry is NonNullable<typeof entry> => Boolean(entry)).map((entry) => ({ id: entry.id, name: localName(entry, locale), searchText: `${entry.name} ${entry.nameZh} ${entry.description} ${entry.descriptionZh}`, description: locale === "zh-Hant" ? entry.descriptionZh : entry.description })), [effectiveSelected.abilityIds, locale]);
+  const itemOptions = useMemo<ResourcePickerOption[]>(() => selectableItems.map((item) => ({
+    id: item.id,
+    name: localName(item, locale),
+    searchText: `${item.name} ${item.nameZh} ${item.description} ${item.descriptionZh}`,
+    description: locale === "zh-Hant" ? item.descriptionZh : item.description,
+    icon: item.imageUrl ? <img className="item-icon" src={item.imageUrl} alt="" width="24" height="24" /> : null,
+    meta: localizedTerm(item.category, locale),
+    group: item.category === "Mega Stone" ? "Mega Stone" : itemEffectCategories(item)[0] ?? "Other",
+  })), [locale, selectableItems]);
 
   useEffect(() => { formatRef.current = format; }, [format]);
 
@@ -278,9 +398,25 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     if (isEditing) update(format, candidate); else add(format, candidate);
     onClose();
   };
-  const selectableItems = requiredMegaStoneId ? items.filter((item) => item.id === requiredMegaStoneId) : items;
   const selectedItem = itemId ? itemById.get(itemId) ?? null : null;
-  return <div className="editor-backdrop" role="presentation"><section className="build-editor" role="dialog" aria-modal="true" aria-labelledby="builder-title"><button className="close-button" onClick={onClose} aria-label="Close">×</button><div className="builder-identity"><img src={effectiveSelected.imageUrl} alt="" width="92" height="92" /><div><p className="eyebrow">BUILD WORKBENCH</p><h2 id="builder-title">{localName(effectiveSelected, locale)}</h2><div className="badge-row">{effectiveSelected.types.map((type) => <TypeBadge key={type} type={type} locale={locale} />)}</div></div></div><div className="build-format-selector"><span>{locale === "zh-Hant" ? "隊伍模式" : "Team mode"}</span><div className="segmented" role="group" aria-label="Team mode"><button disabled={isEditing} className={format === "singles" ? "active" : ""} onClick={() => onFormatChange("singles")}>{labels[locale].singles}</button><button disabled={isEditing} className={format === "doubles" ? "active" : ""} onClick={() => onFormatChange("doubles")}>{labels[locale].doubles}</button></div><small>{isEditing ? (locale === "zh-Hant" ? "正在編輯隊伍中的既有配置；儲存後位置不會改變。" : "Editing this team member in place; its team position will be preserved.") : recommendationsLoading ? (locale === "zh-Hant" ? "正在讀取當前使用率…" : "Loading current usage…") : usage ? (locale === "zh-Hant" ? "已套用此模式使用率最高的持有物、招式與特性" : "Top current-format item, moves, and ability applied") : (locale === "zh-Hant" ? "使用率暫時無法取得，已使用預設配置" : "Usage unavailable; catalog defaults applied")}</small></div>{effectiveSelected.id !== selected.id && selectedItem && <p className="mega-transform-note">{locale === "zh-Hant" ? <>攜帶 <ItemDisplay item={selectedItem} locale={locale} size={22} />，已切換為 {localName(effectiveSelected, locale)}。</> : <><ItemDisplay item={selectedItem} locale={locale} size={22} /> transforms this build into {localName(effectiveSelected, locale)}.</>}</p>}<div className="builder-grid"><label>{locale === "zh-Hant" ? "性格" : "Nature"}<select value={nature.name} onChange={(event) => setNature(NATURES.find((entry) => entry.name === event.target.value) ?? NEUTRAL_NATURE)}>{NATURES.map((entry) => <option value={entry.name} key={entry.name}>{natureLabel(entry, locale)}</option>)}</select></label><label>{locale === "zh-Hant" ? "特性" : "Ability"}<select value={abilityId ?? ""} onChange={(event) => setAbilityId(event.target.value || null)}><option value="">—</option>{effectiveSelected.abilityIds.map((id) => <option value={id} key={id}>{localName(abilityById.get(id)!, locale)}</option>)}</select></label><label>{locale === "zh-Hant" ? "持有物" : "Held item"}<select value={itemId ?? ""} disabled={Boolean(requiredMegaStoneId)} onChange={(event) => setItemId(event.target.value || null)}><option value="">—</option>{selectableItems.map((item) => <option key={item.id} value={item.id}>{localName(item, locale)}</option>)}</select>{selectedItem && <ItemDisplay item={selectedItem} locale={locale} size={28} className="selected-item-preview" />}{requiredMegaStoneId && <small className="field-note">{locale === "zh-Hant" ? "Mega 型態必須持有專屬超級石。" : "This Mega form must hold its dedicated Mega Stone."}</small>}</label></div><div className="move-slots">{[0,1,2,3].map((slot) => <MovePicker key={slot} slot={slot} value={moveIds[slot] ?? null} legalMoveIds={effectiveSelected.moveIds} selectedMoveIds={moveIds} recommendedMoveIds={commonMoveIds} locale={locale} onChange={(moveId) => setMoveIds((current) => { const next = [...current]; if (moveId) next[slot] = moveId; else next.splice(slot, 1); return next.filter(Boolean).slice(0, 4); })} />)}</div><div className="ap-head"><h3>Stats & AP</h3><span className={remaining < 0 ? "remaining bad" : "remaining"}>{remaining} / 66 remaining</span></div><div className="stat-editor">{(Object.keys(statLabels) as Array<keyof Stats>).map((stat) => <label key={stat}><span>{statLabels[stat]} <b>{finalStats[stat]}</b></span><input type="range" min="0" max="32" value={ap[stat]} onChange={(event) => { const value = Number(event.target.value); setAp((current) => apTotal({ ...current, [stat]: value }) <= 66 ? { ...current, [stat]: value } : current); }} /><output>{ap[stat]}</output></label>)}</div>{error && <p className="form-error" role="alert">{error}</p>}<button className="primary-button" onClick={submit}>{isEditing ? labels[locale].save : labels[locale].add}</button></section></div>;
+  return <div className="editor-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>
+    <section className="build-editor" role="dialog" aria-modal="true" aria-labelledby="builder-title">
+      <button className="close-button" onClick={onClose} aria-label={locale === "zh-Hant" ? "關閉" : "Close"}>×</button>
+      <div className="builder-identity"><img src={effectiveSelected.imageUrl} alt="" width="92" height="92" /><div><p className="eyebrow">BUILD WORKBENCH</p><h2 id="builder-title">{localName(effectiveSelected, locale)}</h2><div className="badge-row">{effectiveSelected.types.map((type) => <TypeBadge key={type} type={type} locale={locale} />)}</div></div></div>
+      <div className="build-format-selector"><span>{locale === "zh-Hant" ? "隊伍模式" : "Team mode"}</span><div className="segmented" role="group" aria-label="Team mode"><button disabled={isEditing} className={format === "singles" ? "active" : ""} onClick={() => onFormatChange("singles")}>{labels[locale].singles}</button><button disabled={isEditing} className={format === "doubles" ? "active" : ""} onClick={() => onFormatChange("doubles")}>{labels[locale].doubles}</button></div><small>{isEditing ? (locale === "zh-Hant" ? "正在編輯隊伍中的既有配置；儲存後位置不會改變。" : "Editing this team member in place; its team position will be preserved.") : recommendationsLoading ? (locale === "zh-Hant" ? "正在讀取當前使用率…" : "Loading current usage…") : usage ? (locale === "zh-Hant" ? "已套用此模式使用率最高的持有物、招式與特性" : "Top current-format item, moves, and ability applied") : (locale === "zh-Hant" ? "使用率暫時無法取得，已使用預設配置" : "Usage unavailable; catalog defaults applied")}</small></div>
+      <div className="builder-display-preferences" aria-label={locale === "zh-Hant" ? "選單顯示方式" : "Picker display modes"}>{(["move", "ability", "item"] as const).map((kind) => <div key={kind}><span>{locale === "zh-Hant" ? kind === "move" ? "招式" : kind === "ability" ? "特性" : "持有物" : kind}</span><div className="segmented"><button className={displayModes[kind] === "detailed" ? "active" : ""} onClick={() => changeDisplayMode(kind, "detailed")}>{locale === "zh-Hant" ? "詳細" : "Detailed"}</button><button className={displayModes[kind] === "compact" ? "active" : ""} onClick={() => changeDisplayMode(kind, "compact")}>{locale === "zh-Hant" ? "精簡" : "Compact"}</button></div></div>)}</div>
+      {effectiveSelected.id !== selected.id && <p className="mega-transform-note">{locale === "zh-Hant" ? <>{selectedItem ? <>選擇 <ItemDisplay item={selectedItem} locale={locale} size={22} /> 後</> : "移除專屬超級石後"}，目前型態為 {localName(effectiveSelected, locale)}。</> : <>{selectedItem ? <><ItemDisplay item={selectedItem} locale={locale} size={22} /> selected; </> : "Dedicated Mega Stone removed; "}current form is {localName(effectiveSelected, locale)}.</>}</p>}
+      <div className="builder-grid">
+        <label>{locale === "zh-Hant" ? "性格" : "Nature"}<select value={nature.name} onChange={(event) => setNature(NATURES.find((entry) => entry.name === event.target.value) ?? NEUTRAL_NATURE)}>{NATURES.map((entry) => <option value={entry.name} key={entry.name}>{natureLabel(entry, locale)}</option>)}</select></label>
+        <ResourcePicker label={locale === "zh-Hant" ? "特性" : "Ability"} value={abilityId} options={abilityOptions} locale={locale} detailed={displayModes.ability === "detailed"} onChange={setAbilityId} />
+        <ResourcePicker label={locale === "zh-Hant" ? "持有物" : "Held item"} value={itemId} options={itemOptions} locale={locale} detailed={displayModes.item === "detailed"} onChange={setItemId} />
+      </div>
+      <div className="move-slots">{[0,1,2,3].map((slot) => <MovePicker key={slot} slot={slot} value={moveIds[slot] ?? null} legalMoveIds={effectiveSelected.moveIds} selectedMoveIds={moveIds} recommendedMoveIds={commonMoveIds} locale={locale} detailed={displayModes.move === "detailed"} onChange={(moveId) => setMoveIds((current) => { const next = [...current]; if (moveId) next[slot] = moveId; else next.splice(slot, 1); return next.filter(Boolean).slice(0, 4); })} />)}</div>
+      <div className="ap-head"><h3>{locale === "zh-Hant" ? "能力值與 AP" : "Stats & AP"}</h3><span className={remaining < 0 ? "remaining bad" : "remaining"}>{remaining} / 66 {locale === "zh-Hant" ? "剩餘" : "remaining"}</span></div>
+      <div className="stat-editor">{(Object.keys(statLabels) as Array<keyof Stats>).map((stat) => <label key={stat}><span>{statLabels[stat]}{nature.up === stat && <em className="nature-up" title="+10%">↑</em>}{nature.down === stat && <em className="nature-down" title="−10%">↓</em>} <b>{finalStats[stat]}</b></span><input type="range" min="0" max="32" value={ap[stat]} onChange={(event) => { const value = Number(event.target.value); setAp((current) => apTotal({ ...current, [stat]: value }) <= 66 ? { ...current, [stat]: value } : current); }} /><output>{ap[stat]}</output></label>)}</div>
+      {error && <p className="form-error" role="alert">{error}</p>}<button className="primary-button" onClick={submit}>{isEditing ? labels[locale].save : labels[locale].add}</button>
+    </section>
+  </div>;
 }
 
 function TeamTray({ locale, format, onFormatChange, onEdit }: { locale: Locale; format: BattleFormat; onFormatChange: (format: BattleFormat) => void; onEdit: (member: TeamMember, format: BattleFormat) => void }) {
@@ -288,7 +424,21 @@ function TeamTray({ locale, format, onFormatChange, onEdit }: { locale: Locale; 
   const members = teams[format];
   const remove = useTeamStore((state) => state.remove);
   const [open, setOpen] = useState(true);
-  return <aside className={`team-tray ${open ? "open" : "collapsed"}`} aria-label={labels[locale].team}><button className="tray-header" onClick={() => setOpen(!open)} aria-expanded={open}><span><b>{labels[locale].team}</b><small>{labels[locale][format]} · {members.length} / 6</small></span><span>{open ? "⌄" : "⌃"}</span></button>{open && <><div className="team-format-tabs" role="group" aria-label="Selected team format"><button className={format === "singles" ? "active" : ""} onClick={() => onFormatChange("singles")}>{labels[locale].singles} {teams.singles.length}/6</button><button className={format === "doubles" ? "active" : ""} onClick={() => onFormatChange("doubles")}>{labels[locale].doubles} {teams.doubles.length}/6</button></div><div className="team-list">{members.length === 0 ? <p className="team-empty">{labels[locale].empty}</p> : members.map((member) => { const entry = pokemonById.get(member.pokemonId)!; const stats = calculateFinalStats(entry.baseStats, member.ap, member.nature); return <article className="team-card" key={member.id}><div className="team-card-actions"><button className="edit-member" onClick={() => onEdit(member, format)} aria-label={`${labels[locale].edit} ${localName(entry, locale)}`}>{labels[locale].edit}</button><button className="remove-member" onClick={() => remove(format, member.id)} aria-label={`Remove ${entry.name}`}>×</button></div><div className="team-card-title"><img src={entry.imageUrl} alt="" width="52" height="52" /><div><strong>{localName(entry, locale)}</strong><div className="badge-row compact">{entry.types.map((type) => <TypeBadge key={type} type={type} locale={locale} />)}</div></div></div><TypeMatchups types={entry.types} locale={locale} compact /><div className="team-moves">{member.moveIds.map((id) => { const move = moveById.get(id)!; return <span key={id}><TypeBadge type={move.type} locale={locale} /> {localName(move, locale)}</span>; })}</div><div className="team-meta"><span>{member.abilityId ? <AbilityTooltip id={member.abilityId} locale={locale} /> : "—"}</span><span>{member.itemId ? <ItemTooltip item={itemById.get(member.itemId)} locale={locale} size={22} /> : (locale === "zh-Hant" ? "無持有物" : "No item")}</span><span title={natureLabel(member.nature, locale)}>{locale === "zh-Hant" ? member.nature.nameZh ?? member.nature.name : member.nature.name}</span></div><div className="mini-stats">{(Object.keys(statLabels) as Array<keyof Stats>).map((stat) => <span key={stat}><small>{statLabels[stat]}</small><b>{stats[stat]}</b></span>)}</div></article>; })}</div></>}</aside>;
+  return <aside className={`team-tray ${open ? "open" : "collapsed"}`} aria-label={labels[locale].team}>
+    <button className="tray-header" onClick={() => setOpen(!open)} aria-expanded={open}><span><b>{labels[locale].team}</b><small>{labels[locale][format]} · {members.length} / 6</small></span><span>{open ? "⌄" : "⌃"}</span></button>
+    {open && <><div className="team-format-tabs" role="group" aria-label="Selected team format"><button className={format === "singles" ? "active" : ""} onClick={() => onFormatChange("singles")}>{labels[locale].singles} {teams.singles.length}/6</button><button className={format === "doubles" ? "active" : ""} onClick={() => onFormatChange("doubles")}>{labels[locale].doubles} {teams.doubles.length}/6</button></div><div className="team-list">{members.length === 0 ? <p className="team-empty">{labels[locale].empty}</p> : members.map((member) => {
+      const entry = pokemonById.get(member.pokemonId)!;
+      const stats = calculateFinalStats(entry.baseStats, member.ap, member.nature);
+      return <article className="team-card" key={member.id}>
+        <div className="team-card-actions"><button className="edit-member" onClick={() => onEdit(member, format)} aria-label={`${labels[locale].edit} ${localName(entry, locale)}`}>{labels[locale].edit}</button><button className="remove-member" onClick={() => remove(format, member.id)} aria-label={`Remove ${entry.name}`}>×</button></div>
+        <div className="team-card-title"><img src={entry.imageUrl} alt="" width="52" height="52" /><div><strong>{localName(entry, locale)}</strong><div className="badge-row compact">{entry.types.map((type) => <TypeBadge key={type} type={type} locale={locale} />)}</div></div></div>
+        <TypeMatchups types={entry.types} locale={locale} compact />
+        <div className="team-moves">{member.moveIds.map((id) => { const move = moveById.get(id)!; return <span key={id}><TypeBadge type={move.type} locale={locale} /> {localName(move, locale)}</span>; })}</div>
+        <div className="team-meta"><span>{member.abilityId ? <AbilityTooltip id={member.abilityId} locale={locale} /> : "—"}</span><span>{member.itemId ? <ItemTooltip item={itemById.get(member.itemId)} locale={locale} size={22} /> : (locale === "zh-Hant" ? "無持有物" : "No item")}</span><span className="team-nature" title={natureLabel(member.nature, locale)}>{natureLabel(member.nature, locale)}</span></div>
+        <div className="mini-stats">{(Object.keys(statLabels) as Array<keyof Stats>).map((stat) => <span key={stat}><small>{statLabels[stat]}{member.nature.up === stat && <i className="nature-up">↑</i>}{member.nature.down === stat && <i className="nature-down">↓</i>}</small><b>{stats[stat]}</b><em className={member.ap[stat] ? "has-ap" : ""}>+{member.ap[stat]}</em></span>)}</div>
+      </article>;
+    })}</div></>}
+  </aside>;
 }
 
 function SpeedCompare({ locale }: { locale: Locale }) {
@@ -300,15 +450,30 @@ function SpeedCompare({ locale }: { locale: Locale }) {
 }
 
 export function ChampionsApp() {
-  const [locale, setLocale] = useState<Locale>("en");
+  const [locale, setLocaleState] = useState<Locale>("en");
+  const setLocale = (value: Locale | ((current: Locale) => Locale)) => setLocaleState((current) => {
+    const next = typeof value === "function" ? value(current) : value;
+    localStorage.setItem(LOCALE_STORAGE_KEY, next);
+    return next;
+  });
   const [view, setView] = useState<View>("pokemon");
   const [format, setFormat] = useState<BattleFormat>("doubles");
   const [selected, setSelected] = useState<Pokemon | null>(null);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const hydrate = useTeamStore((state) => state.hydrate);
   useEffect(() => { void hydrate(); }, [hydrate]);
+  useEffect(() => {
+    const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
+    const preferred = saved === "en" || saved === "zh-Hant"
+      ? saved
+      : navigator.languages.some((language) => language.toLowerCase().startsWith("zh")) ? "zh-Hant" : "en";
+    // Browser language and localStorage are unavailable during server rendering.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLocale(preferred);
+  }, []);
+  useEffect(() => { document.documentElement.lang = locale === "zh-Hant" ? "zh-Hant" : "en"; }, [locale]);
   const copy = labels[locale];
-  const closeEditor = () => { setSelected(null); setEditingMember(null); };
+  const closeEditor = useCallback(() => { setSelected(null); setEditingMember(null); }, []);
   const startNewBuild = (entry: Pokemon) => { setEditingMember(null); setSelected(entry); };
   const editTeamMember = (member: TeamMember, memberFormat: BattleFormat) => {
     const entry = pokemonById.get(member.pokemonId);

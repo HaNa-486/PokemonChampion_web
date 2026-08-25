@@ -3,10 +3,10 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 4
-- Updated: 2026-08-24T04:00:00Z
+- State revision: 5
+- Updated: 2026-08-25T05:00:00Z
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: independent PR review fixes locally verified; new exact commit and renewed Dev/UAT deployment pending
+- Phase: expanded UAT remediation locally verified; exact commit and renewed Dev/UAT deployment pending
 
 ## Repository identity
 
@@ -16,26 +16,26 @@ Keep this concise. Every fresh PDOS context reads it first.
 ## Product anchors
 
 - Primary user: competitive and new Pokémon Champions players building legal Singles/Doubles teams.
-- Product outcome: Existing members are editable in place, and move selection is searchable and understandable without external lookup.
-- Critical journey: open selected team -> edit member -> search/read/select legal moves -> adjust fields -> save -> same team slot updates.
+- Product outcome: Existing members are editable in place, and all build choices are searchable and understandable without external lookup.
+- Critical journey: open selected team -> edit member -> switch form/item if needed -> search/read/select moves/ability/item -> adjust AP/nature -> save -> same team slot updates.
 - Non-goals: strategic move recommendations, drag-reordering, or automatic production promotion.
 
 ## Current work
 
-- Current slice: In-place team member editing and beginner-friendly searchable move picker.
+- Current slice: Complete in-place editing, rich selectors, locale/modal consistency, and readable build summaries.
 - Active workstreams: `workstreams/2026-08-20-team-member-edit-move-picker.md`
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
-- Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`
-- Blocking dependencies: new exact commit, Dev verification/deploy, renewed product-owner UAT, PR re-check, and clean independent re-review.
+- Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`
+- Blocking dependencies: exact commit, Dev verification/deploy, renewed product-owner UAT, PR check, and clean independent review.
 - Consequential open decisions: production deployment remains human-only and is outside the pre-UAT phase.
 
 ## Handoff
 
-- What changed: In addition to the original editor and searchable move picker, ordinary item-only edits now preserve saved moves/ability, while Mega transitions reconcile legality; the combobox now supports active options, Arrow/Home/End navigation, Enter selection, duplicate-disabled skipping, and focus retention.
-- Verification evidence: `pnpm verify:deploy` passed, including lint (pre-existing warnings only), typecheck, 358-form integrity audit, Traditional Chinese semantic audit for 539 moves/200 abilities/148 items, 17 unit-test files / 109 tests, production build, and 10 rendered/API tests.
-- Not verified: new exact Dev build/deploy and renewed real keyboard/responsive UAT.
-- Residual risks: Item-only preservation and move-picker keyboard behavior must be checked on the isolated Dev site.
-- Next safe action: Commit the new exact candidate, run `pnpm verify:dev`, and deploy that commit to Champions Lab Dev for renewed UAT.
+- What changed: Added Mega-to-regular editing, searchable grouped ability/item pickers with persisted detailed/compact styles, Other item filtering, document Escape for dialogs, locale persistence/browser inference, localized battle rows, visible move mechanics, and AP/nature team summaries.
+- Verification evidence: `pnpm verify:deploy` passed after final code/spec cleanup, including form/localization audits, 17 test files / 115 tests, production build, and 10 built-output/API checks.
+- Not verified: complete deployment gate, exact Dev build/deploy, and real keyboard/touch/responsive UAT.
+- Residual risks: Picker geometry and all dialog/locale journeys must be checked on the isolated Dev site.
+- Next safe action: Commit the exact candidate, run `pnpm verify:dev`, and deploy that commit to Champions Lab Dev for renewed UAT.
 
 ## Read next
 
@@ -44,5 +44,6 @@ Keep this concise. Every fresh PDOS context reads it first.
 - `reviews/REV-20260820-team-builder-ux.md`
 - `remediations/REM-20260820-team-builder-ux-F001.md`
 - `remediations/REM-20260820-team-builder-ux-F002.md`
+- `remediations/REM-20260820-team-builder-ux-F003.md`
 - `../PROJECT_SPEC.md`
 - `../DEPLOYMENT_CHECKLIST.md`

@@ -8,7 +8,7 @@ const zh: Record<string, string> = {
   "1 target": "單一目標", "1 Foe": "單一對手", "All Pokemon": "場上所有寶可夢", "All Pokémon": "場上所有寶可夢", "All adjacent": "所有鄰近寶可夢", "All allies": "所有我方", "All foes": "所有對手", Ally: "我方一隻", "Ally or self": "自己或我方", "Ally side": "我方場地", "Opposing side": "對手場地", "Random foe": "隨機對手", Self: "自己", Varies: "依招式而異", "Whole field": "全場",
   Authentic: "真實系招式", Ballistics: "波導彈類", Bite: "啃咬", Charge: "蓄力", Contact: "接觸", Dance: "舞蹈", Defrost: "可解凍", Distance: "遠距離", Gravity: "受重力影響", Heal: "回復", Mental: "精神", Mirror: "可被鏡面招式模仿", "Non Sky Battle": "空中對戰限制", Powder: "粉末", Protect: "可被守住", Pulse: "波動", Punch: "拳擊", Recharge: "需休息", Reflectable: "可被魔法反射", Slicing: "切割", Snatch: "可被搶奪", Sound: "聲音", Wind: "風",
   Weather: "天氣", Terrain: "場地", Offense: "攻擊", Defense: "防禦", Statuses: "狀態", "Stat Changes": "能力變化", Speed: "速度", Type: "屬性", Switch: "替換", "Switch / Hazard": "替換／場地障礙", "Item / Berry": "道具／樹果", "Ability / Move": "特性／招式", Other: "其他",
-  "Mega Stone": "超級石", Item: "一般道具", Berry: "樹果", "HP Recovery": "HP 回復", "Status Cure": "異常狀態回復", "PP Recovery": "PP 回復", "Damage Halving": "傷害減半",
+  "Mega Stone": "超級石", Item: "一般道具", Berry: "樹果", "HP Recovery": "HP 回復", "Status Cure": "異常狀態回復", "PP Recovery": "PP 回復", "Damage Halving": "傷害減半", "Held item": "持有物",
   Priority: "優先度", Category: "分類", Target: "目標", Properties: "特性標籤", Move: "招式", Class: "分類", Power: "威力", "Acc.": "命中", Effect: "效果", Name: "名稱", Ability: "特性", "Effect class": "效果分類", Pokemon: "寶可夢", Pokémon: "寶可夢",
   "+ Positive": "+ 正優先度", "0 Neutral": "0 一般優先度", "− Negative": "− 負優先度", "- Negative": "− 負優先度",
 };

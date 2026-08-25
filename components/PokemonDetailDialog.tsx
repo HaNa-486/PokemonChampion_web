@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { abilityById, abilityIdByUsageName, itemById, itemIdByUsageName, moveById, moveIdByUsageName, usageEntityKey } from "../lib/catalog";
-import { formatPriority, priorityMatches } from "../lib/domain";
+import { abilityById, abilityIdByUsageName, itemById, itemIdByUsageName, moveById, moveIdByUsageName, pokemon as catalogPokemon, usageEntityKey } from "../lib/catalog";
+import { formatPriority, NATURES, priorityMatches } from "../lib/domain";
 import type { BattleUsage, BattleUsageRow, Move, Pokemon } from "../lib/types";
 import { InfoTooltip } from "./InfoTooltip";
 import { ItemDisplay, ItemTooltip } from "./ItemDisplay";
 import { TypeBadge } from "./TypeBadge";
 import { TypeMatchups } from "./TypeMatchups";
 import { localizedTerm } from "../lib/localization";
+import { useDialogEscape } from "../lib/use-dialog-escape";
 
 type Locale = "en" | "zh-Hant";
 type PriorityClass = "positive" | "zero" | "negative";
@@ -37,17 +38,22 @@ function FilterGroup({ label, options, selected, onToggle, locale }: { label: st
 }
 
 function MoveEntry({ move, locale }: { move: Move; locale: Locale }) {
-  return <InfoTooltip label={localName(move, locale)}><strong>{localName(move, locale)}</strong><div className="tooltip-meta"><TypeBadge type={move.type} locale={locale} /><span>{localizedTerm(move.category, locale)}</span><span>{localizedTerm("Priority", locale)} {formatPriority(move.priority)}</span></div><div className="tooltip-stats"><span>{localizedTerm("Power", locale)} {move.power ?? "—"}</span><span>{localizedTerm("Acc.", locale)} {move.accuracy ?? "—"}</span><span>PP {move.pp}</span></div><p>{locale === "zh-Hant" ? move.descriptionZh : move.description}</p></InfoTooltip>;
+  return <span className="learnable-move-entry"><InfoTooltip label={localName(move, locale)}><strong>{localName(move, locale)}</strong><div className="tooltip-meta"><TypeBadge type={move.type} locale={locale} /><span>{localizedTerm(move.category, locale)}</span><span>{localizedTerm("Priority", locale)} {formatPriority(move.priority)}</span></div><div className="tooltip-stats"><span>{localizedTerm("Power", locale)} {move.power ?? "—"}</span><span>{localizedTerm("Acc.", locale)} {move.accuracy ?? "—"}</span><span>PP {move.pp}</span></div><p>{locale === "zh-Hant" ? move.descriptionZh : move.description}</p></InfoTooltip><small className="learnable-move-stats">{localizedTerm("Power", locale)} {move.power ?? "—"} · {localizedTerm("Acc.", locale)} {move.accuracy ?? "—"} · PP {move.pp}</small></span>;
 }
 
-function usageName(row: BattleUsageRow) {
+function usageName(row: BattleUsageRow, locale: Locale) {
+  if (row.ap) {
+    const labels = locale === "zh-Hant"
+      ? { hp: "HP", attack: "攻擊", defense: "防禦", specialAttack: "特攻", specialDefense: "特防", speed: "速度" }
+      : statLabels;
+    return statKeys.map((key) => `${labels[key]} ${row.ap![key]}`).join(" / ");
+  }
   if (row.name) return row.statUp || row.statDown ? `${row.name} (${row.statUp || "—"} ↑ / ${row.statDown || "—"} ↓)` : row.name;
-  if (row.ap) return `HP ${row.ap.hp} / Atk ${row.ap.attack} / Def ${row.ap.defense} / SpA ${row.ap.specialAttack} / SpD ${row.ap.specialDefense} / Spe ${row.ap.speed}`;
   return "—";
 }
 
 function UsageEntry({ category, row, locale }: { category: string; row: BattleUsageRow; locale: Locale }) {
-  const fallback = usageName(row);
+  const fallback = usageName(row, locale);
   if (category === "move") {
     const move = moveById.get(moveIdByUsageName.get(usageEntityKey(row.name)) ?? "");
     if (move) return <span className="usage-resource"><TypeBadge type={move.type} locale={locale} /><MoveEntry move={move} locale={locale} /></span>;
@@ -61,6 +67,20 @@ function UsageEntry({ category, row, locale }: { category: string; row: BattleUs
     if (item) return <span className="usage-resource"><ItemTooltip item={item} locale={locale} /></span>;
     return <span className="usage-resource"><ItemDisplay locale={locale} fallbackName={fallback} /></span>;
   }
+  if (category === "stat_alignment") {
+    const nature = NATURES.find((entry) => usageEntityKey(entry.name) === usageEntityKey(row.name));
+    if (nature) {
+      const name = locale === "zh-Hant" ? nature.nameZh ?? nature.name : nature.name;
+      const labels = locale === "zh-Hant"
+        ? { hp: "HP", attack: "攻擊", defense: "防禦", specialAttack: "特攻", specialDefense: "特防", speed: "速度" }
+        : statLabels;
+      return <span>{name}{nature.up && nature.down ? ` (${labels[nature.up]} ↑ / ${labels[nature.down]} ↓)` : locale === "zh-Hant" ? "（能力值不變）" : " (No stat change)"}</span>;
+    }
+  }
+  if (category === "teammate") {
+    const teammate = catalogPokemon.find((entry) => usageEntityKey(entry.name) === usageEntityKey(row.name));
+    if (teammate) return <span>{localName(teammate, locale)}</span>;
+  }
   return <span>{fallback}</span>;
 }
 
@@ -71,6 +91,7 @@ function BattlePanel({ usage, locale }: { usage: BattleUsage | null | undefined;
 }
 
 export function PokemonDetailDialog({ pokemon, locale, initialFormat, onClose, onBuild }: { pokemon: Pokemon; locale: Locale; initialFormat: "singles" | "doubles"; onClose: () => void; onBuild: () => void }) {
+  useDialogEscape(onClose);
   const [format, setFormat] = useState(initialFormat);
   const [battle, setBattle] = useState<BattleResponse["data"] | null>(null);
   const [error, setError] = useState("");
