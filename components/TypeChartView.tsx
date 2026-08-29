@@ -17,12 +17,12 @@ const TYPE_NAMES_ZH: Record<PokemonType, string> = {
 const cellText = (value: number) => value === 2 ? "2×" : value === .5 ? "½×" : value === 0 ? "0×" : "—";
 const typeName = (type: PokemonType, locale: Locale) => locale === "zh-Hant" ? TYPE_NAMES_ZH[type] : type;
 
-export function TypeChart({ locale, compact = false }: { locale: Locale; compact?: boolean }) {
+export function TypeChart({ locale }: { locale: Locale }) {
   const copy = locale === "zh-Hant"
     ? { eyebrow: "屬性指南", title: "屬性相剋表", intro: "左側為攻擊招式屬性，上方為防守方屬性。雙屬性寶可夢需將兩個倍率相乘。", attack: "攻擊 ↓ / 防守 →", strong: "效果絕佳", resist: "效果不好", immune: "沒有效果", neutral: "一般傷害" }
     : { eyebrow: "TYPE GUIDE", title: "Type Matchup Chart", intro: "Attack types run down the left; defending types run across the top. Multiply both values for a dual-type Pokémon.", attack: "Attack ↓ / Defend →", strong: "Super effective", resist: "Not very effective", immune: "No effect", neutral: "Neutral damage" };
 
-  return <section className={compact ? "type-chart-card compact" : "panel type-chart-page"}>
+  return <section className="panel type-chart-page">
     <div className="type-chart-head">
       <div><p className="eyebrow">{copy.eyebrow}</p><h1>{copy.title}</h1><p>{copy.intro}</p></div>
     </div>
@@ -39,25 +39,6 @@ export function TypeChart({ locale, compact = false }: { locale: Locale; compact
       </table>
     </div>
   </section>;
-}
-
-export function TypeChartFloating({ locale = "en" }: { locale?: Locale }) {
-  const [open, setOpen] = useState(false);
-  const [chartLocale, setChartLocale] = useState(locale);
-  useEffect(() => {
-    const saved = localStorage.getItem("champions-lab-locale-v1");
-    // Browser-only preference hydration must run after the server-rendered default.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (saved === "en" || saved === "zh-Hant") setChartLocale(saved);
-  }, []);
-  const copy = chartLocale === "zh-Hant" ? { toggle: "屬性相剋", close: "收合屬性相剋表", full: "開啟完整屬性頁面" } : { toggle: "Type chart", close: "Collapse type chart", full: "Open full type chart page" };
-  return <>
-    <aside className={`type-chart-float ${open ? "open" : "collapsed"}`} aria-label={copy.toggle}>
-      <button className="type-chart-float-toggle" onClick={() => setOpen((value) => !value)} aria-expanded={open} aria-controls="floating-type-chart"><span className="type-chart-toggle-icon">{open ? "×" : "18"}</span><span>{copy.toggle}</span></button>
-      {open && <div className="floating-chart-panel" id="floating-type-chart"><div className="floating-chart-actions"><Link href="/type-chart">{copy.full} ↗</Link><button onClick={() => setChartLocale((value) => { const next = value === "en" ? "zh-Hant" : "en"; localStorage.setItem("champions-lab-locale-v1", next); return next; })}>{chartLocale === "en" ? "繁中" : "EN"}</button><button onClick={() => setOpen(false)} aria-label={copy.close}>×</button></div><TypeChart locale={chartLocale} compact /></div>}
-    </aside>
-    <Link className="type-chart-mobile-link" href="/type-chart">{copy.toggle}</Link>
-  </>;
 }
 
 export function TypeChartPageShell() {

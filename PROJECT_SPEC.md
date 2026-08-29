@@ -551,7 +551,7 @@ A Mega form preselects its dedicated stone. Every stone maps to one explicit com
 
 Provide a complete 18×18 attack-versus-defense matrix as a standalone page. Attack types run down the left and defending types across the top. Use full, high-contrast type badges plus text/icon cues; color alone is insufficient. The first column remains sticky during horizontal scrolling and the header row remains sticky during vertical scrolling.
 
-Desktop also provides a collapsible lower-left floating chart because the team tray occupies the lower-right. Its chart area must support real horizontal and vertical scrolling without clipping its scrollbars. Mobile hides the floating panel and exposes only the standalone page link. Verify behavior at 390, 768, and 1440 CSS pixels.
+The primary application navigation exposes the chart as a first-class tab alongside the databases and Speed Compare. The chart area must support real horizontal and vertical scrolling without clipping its scrollbars. The tab must remain accessible on mobile without adding a floating control. The standalone `/type-chart` page remains available as a direct route. Verify behavior at 390, 768, and 1440 CSS pixels.
 
 ### 8.9 i18n/accessibility
 
@@ -731,7 +731,7 @@ Team tray: add/edit/remove, independent Singles/Doubles groups, format-aware usa
 
 Builder selectors: Mega-to-regular and regular-to-Mega transitions, dedicated-stone-first item grouping, item effect groups including Other, localized name/effect search, Detailed/Compact preference persistence, visible learnable-move Power/Accuracy/PP, and document-level Escape dismissal. Locale tests cover browser-language inference, explicit-choice persistence, and localized battle-usage nature/AP/teammate values.
 
-Type chart: all 18×18 cells, dual-type multiplication, sticky header/first column, high-contrast badges, desktop floating panel with horizontal/vertical scrolling, standalone page, and mobile floating-panel suppression.
+Type chart: first-class application tab, all 18×18 cells, dual-type multiplication, sticky header/first column, high-contrast badges, horizontal/vertical scrolling, standalone page, and no floating control.
 
 ### 13.3 API/integration tests
 
@@ -786,7 +786,7 @@ Only after golden formula fixtures: missing input error; identical build tie; no
 10. Open move/ability reverse lookup and sort by eligible-form count.
 11. Transform a base form by selecting its Mega Stone and verify every effective field.
 12. Scroll the six-card team tray to its final member.
-13. Open the floating type chart, scroll both axes, verify sticky labels, then use the mobile standalone page.
+13. Open the Type Chart tab, scroll both axes, verify sticky labels, then verify the same tab remains accessible on mobile.
 14. Compare speeds and identify tie.
 15. Switch English/Chinese without losing state.
 16. Use mobile bottom sheet at 360/390 px.

@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from "@testing-library/rea
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChampionsApp } from "../components/ChampionsApp";
-import { TypeChart, TypeChartFloating } from "../components/TypeChartView";
+import { TypeChart } from "../components/TypeChartView";
 import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
 import { compareLearnableMoves } from "../components/PokemonDetailDialog";
 import { ZERO_STATS } from "../lib/domain";
@@ -845,11 +845,14 @@ describe("Type matchup chart", () => {
     expect(screen.getByText("Type Matchup Chart")).toBeInTheDocument();
   });
 
-  it("opens from the lower-left floating control and links to the full page", async () => {
+  it("opens as a first-class application tab without a floating control", async () => {
     const user = userEvent.setup();
-    render(<TypeChartFloating />);
-    await user.click(screen.getByRole("button", { name: /Type chart/ }));
-    expect(screen.getByRole("link", { name: /Open full type chart page/ })).toHaveAttribute("href", "/type-chart");
+    render(<ChampionsApp />);
+    expect(screen.queryByRole("complementary", { name: /Type chart/ })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Type Chart" }));
     expect(screen.getByLabelText("Type Matchup Chart")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "繁中" }));
+    expect(screen.getByRole("button", { name: "屬性相剋" })).toHaveClass("active");
+    expect(screen.getByRole("heading", { name: "屬性相剋表" })).toBeInTheDocument();
   });
 });

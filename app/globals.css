@@ -416,23 +416,6 @@ footer a { color: var(--mint-dark); }
 .type-chart-table td.effect-resist, .chart-effect.effect-resist { color: #17618a; background: #e0f3ff; }
 .type-chart-table td.effect-immune, .chart-effect.effect-immune { color: white; background: #263b42; }
 .type-chart-table td.effect-neutral { color: #a5b1b3; background: #fbfcfb; }
-.type-chart-float { position: fixed; left: 24px; bottom: 22px; z-index: 45; }
-.type-chart-float-toggle { display: flex; align-items: center; gap: 8px; min-height: 46px; padding: 7px 14px 7px 7px; border: 1px solid #9fdac9; border-radius: 14px; color: var(--ink); background: rgba(255,255,255,.96); box-shadow: var(--shadow); font-weight: 850; }
-.type-chart-toggle-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 9px; color: white; background: var(--mint-dark); }
-.floating-chart-panel { position: absolute; left: 0; bottom: 58px; display: flex; flex-direction: column; width: min(720px, calc(100vw - 48px)); max-height: min(620px, calc(100vh - 125px)); overflow: hidden; border: 1px solid #9fdac9; border-radius: 20px; background: white; box-shadow: 0 24px 70px rgba(10,29,34,.28); }
-.floating-chart-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
-.floating-chart-actions a { margin-right: auto; color: var(--mint-dark); font-size: .75rem; font-weight: 850; }
-.floating-chart-actions button { border: 1px solid var(--line); border-radius: 8px; padding: 5px 9px; background: white; font-weight: 850; }
-.type-chart-card.compact { display: flex; flex: 1 1 auto; flex-direction: column; min-width: 0; min-height: 0; overflow: hidden; }
-.type-chart-card.compact .type-chart-head { padding: 16px 18px 12px; }
-.type-chart-card.compact .type-chart-head h1 { font-size: 1.55rem; }
-.type-chart-card.compact .type-chart-head p { font-size: .75rem; }
-.type-chart-card.compact .type-chart-legend { padding: 0 18px 12px; }
-.type-chart-card.compact .type-chart-scroll { flex: 1 1 auto; min-height: 160px; max-height: min(430px, calc(100dvh - 290px)); }
-.type-chart-card.compact .type-chart-table th, .type-chart-card.compact .type-chart-table td { min-width: 54px; height: 38px; padding: 3px; font-size: .62rem; }
-.type-chart-card.compact .type-chart-table tbody th, .type-chart-card.compact .type-chart-table .chart-axis { min-width: 115px; }
-.type-chart-card.compact .type-chart-table thead th { height: 50px; }
-.type-chart-mobile-link { display: none; }
 
 @media (max-width: 1100px) {
   .brand { min-width: auto; }
@@ -445,8 +428,6 @@ footer a { color: var(--mint-dark); }
 }
 
 @media (max-width: 760px) {
-  .type-chart-float { display: none; }
-  .type-chart-mobile-link { position: fixed; top: 124px; left: 9px; z-index: 29; display: block; padding: 8px 11px; border: 1px solid #9fdac9; border-radius: 10px; color: var(--mint-dark); background: rgba(255,255,255,.94); box-shadow: 0 7px 20px rgba(18,48,54,.12); font-size: .72rem; font-weight: 850; text-decoration: none; }
   .standalone-type-chart { padding: 16px 10px; }
   .type-chart-head { padding: 22px 18px 16px; }
   .type-chart-legend { padding: 0 18px 14px; }

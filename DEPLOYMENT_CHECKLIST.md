@@ -148,11 +148,11 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] At 390 px, detail move filters expand/collapse cleanly, chip rows scroll horizontally, and battle-usage tooltips open by touch.
 - [ ] At 390, 768, and 1440 px, item thumbnails do not clip, distort, obscure labels, or create unintended horizontal page scrolling.
 - [ ] The 18×18 type chart is complete.
-- [ ] The floating chart scrolls horizontally and vertically.
+- [ ] The Type Chart tab scrolls horizontally and vertically.
 - [ ] The attack column stays sticky during horizontal scrolling.
 - [ ] The defense header stays sticky during vertical scrolling.
 - [ ] Type badges use readable high-contrast text.
-- [ ] Mobile hides the floating chart and exposes the standalone chart page.
+- [ ] Mobile exposes the Type Chart tab without a floating control.
 - [ ] No tooltip, menu, or dialog is clipped behind a table or floating tray.
 
 ## 7. Security, accessibility, and performance
