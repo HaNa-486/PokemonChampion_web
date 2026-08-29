@@ -6,8 +6,9 @@ import { TypeChart, TypeChartFloating } from "../components/TypeChartView";
 import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
 import { compareLearnableMoves } from "../components/PokemonDetailDialog";
 import { ZERO_STATS } from "../lib/domain";
-import { moves } from "../lib/catalog";
+import { moves, pokemon } from "../lib/catalog";
 import { useTeamStore } from "../lib/team-store";
+import { ALL_TYPES } from "../lib/type-chart";
 import type { TeamMember } from "../lib/types";
 
 beforeEach(() => {
@@ -58,6 +59,20 @@ describe("Move Database", () => {
     await user.click(screen.getByRole("button", { name: "Sound" }));
     expect(screen.getByRole("button", { name: "Parting Shot" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Fire Punch" })).not.toBeInTheDocument();
+  });
+
+  it("uses the Pokémon database type order and clears every move filter in one action", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<MoveDatabaseV2 locale="en" />);
+    const typeGroup = Array.from(container.querySelectorAll<HTMLElement>(".filter-group")).find((group) => group.querySelector("b")?.textContent === "Type")!;
+    expect(within(typeGroup).getAllByRole("button").map((button) => button.textContent)).toEqual(ALL_TYPES);
+    await user.type(screen.getByRole("textbox", { name: "Search moves" }), "Punch");
+    await user.click(within(typeGroup).getByRole("button", { name: "Fire" }));
+    await user.click(screen.getByRole("button", { name: "+ Positive" }));
+    await user.click(screen.getByRole("button", { name: "Clear move filters" }));
+    expect(screen.getByRole("textbox", { name: "Search moves" })).toHaveValue("");
+    expect(container.querySelectorAll(".filter-chip[aria-pressed='true']")).toHaveLength(0);
+    expect(container.querySelectorAll("tbody tr")).toHaveLength(100);
   });
 
   it("sorts move columns in both directions", async () => {
@@ -207,7 +222,7 @@ describe("ChampionsApp", () => {
   it("sorts detail learnsets by category, type, descending priority, properties, and target", () => {
     const names = ["Swords Dance", "Air Slash", "Assurance", "Aerial Ace", "Sucker Punch"];
     const fixture = names.map((name) => moves.find((move) => move.name === name)!);
-    expect([...fixture].sort(compareLearnableMoves).map((move) => move.name)).toEqual(["Sucker Punch", "Assurance", "Aerial Ace", "Air Slash", "Swords Dance"]);
+    expect([...fixture].sort(compareLearnableMoves).map((move) => move.name)).toEqual(["Aerial Ace", "Sucker Punch", "Assurance", "Air Slash", "Swords Dance"]);
   });
 
   it("renders every member in a full six-Pokémon scrollable team list", () => {
@@ -231,6 +246,22 @@ describe("ChampionsApp", () => {
     await user.click(screen.getByRole("button", { name: "Next page" }));
     expect(container.querySelectorAll("tbody tr")).toHaveLength(58);
     expect(screen.getByText("Page", { exact: false })).toHaveTextContent("4 / 4");
+  });
+
+  it("shows, filters, and sorts the total base stat in both directions", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
+    const totalHeader = screen.getByRole("button", { name: /TOT/ });
+    await user.click(totalHeader);
+    const ascending = Array.from(container.querySelectorAll("td[data-stat='total']"), (node) => Number(node.textContent));
+    expect(ascending).toEqual([...ascending].sort((a, b) => a - b));
+    await user.click(totalHeader);
+    const descending = Array.from(container.querySelectorAll("td[data-stat='total']"), (node) => Number(node.textContent));
+    expect(descending).toEqual([...descending].sort((a, b) => b - a));
+    await user.type(screen.getByRole("spinbutton", { name: "Minimum TOT" }), "700");
+    const filtered = Array.from(container.querySelectorAll("td[data-stat='total']"), (node) => Number(node.textContent));
+    expect(filtered.length).toBeGreaterThan(0);
+    expect(filtered.every((value) => value >= 700)).toBe(true);
   });
 
   it("filters Pokémon by type, form, ability, known moves, and minimum stats", async () => {
@@ -292,6 +323,10 @@ describe("ChampionsApp", () => {
     expect(await within(dialog).findByText("Absolite")).toBeInTheDocument();
     expect(within(dialog).getByRole("button", { name: "Absolite" }).querySelector("img")).toHaveAttribute("src", "/items/absolite.png");
     const moveFilters = dialog.querySelector<HTMLElement>(".detail-move-filters")!;
+    const typeGroup = Array.from(moveFilters.querySelectorAll<HTMLElement>(".filter-group")).find((group) => group.querySelector("b")?.textContent === "Type")!;
+    const absol = pokemon.find((entry) => entry.id === "absol")!;
+    const expectedTypes = ALL_TYPES.filter((type) => absol.moveIds.some((id) => moves.find((move) => move.id === id)?.type === type));
+    expect(within(typeGroup).getAllByRole("button").map((button) => button.textContent)).toEqual(expectedTypes);
     await user.click(within(moveFilters).getByRole("button", { name: "+ Positive" }));
     await user.click(within(moveFilters).getByRole("button", { name: "Dark" }));
     await user.click(within(moveFilters).getByRole("button", { name: "Physical" }));

@@ -10,6 +10,7 @@ import { TypeBadge } from "./TypeBadge";
 import { TypeMatchups } from "./TypeMatchups";
 import { localizedTerm } from "../lib/localization";
 import { useDialogEscape } from "../lib/use-dialog-escape";
+import { ALL_TYPES } from "../lib/type-chart";
 
 type Locale = "en" | "zh-Hant";
 type PriorityClass = "positive" | "zero" | "negative";
@@ -23,10 +24,11 @@ const categoryLabels: Record<string, [string, string]> = {
 const localName = (entry: { name: string; nameZh: string }, locale: Locale) => locale === "zh-Hant" ? entry.nameZh : entry.name;
 const toggleValue = (values: string[], value: string) => values.includes(value) ? values.filter((entry) => entry !== value) : [...values, value];
 const moveCategoryRank: Record<Move["category"], number> = { Physical: 0, Special: 1, Status: 2 };
+const typeRank = new Map(ALL_TYPES.map((type, index) => [type, index]));
 
 export function compareLearnableMoves(a: Move, b: Move) {
   return moveCategoryRank[a.category] - moveCategoryRank[b.category]
-    || a.type.localeCompare(b.type)
+    || (typeRank.get(a.type) ?? ALL_TYPES.length) - (typeRank.get(b.type) ?? ALL_TYPES.length)
     || b.priority - a.priority
     || [...a.flags].sort().join(" ").localeCompare([...b.flags].sort().join(" "))
     || a.target.localeCompare(b.target)
@@ -104,7 +106,7 @@ export function PokemonDetailDialog({ pokemon, locale, initialFormat, onClose, o
   const [properties, setProperties] = useState<string[]>([]);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const learnableMoves = useMemo(() => pokemon.moveIds.map((id) => moveById.get(id)).filter((entry): entry is Move => Boolean(entry)), [pokemon.moveIds]);
-  const typeOptions = useMemo(() => [...new Set(learnableMoves.map((move) => move.type))].sort(), [learnableMoves]);
+  const typeOptions = useMemo(() => ALL_TYPES.filter((type) => learnableMoves.some((move) => move.type === type)), [learnableMoves]);
   const targetOptions = useMemo(() => [...new Set(learnableMoves.map((move) => move.target))].sort(), [learnableMoves]);
   const propertyOptions = useMemo(() => [...new Set(learnableMoves.flatMap((move) => move.flags))].sort(), [learnableMoves]);
   const moveEntries = useMemo(() => learnableMoves.filter((move) => {
