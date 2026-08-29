@@ -14,8 +14,29 @@ const TYPE_NAMES_ZH: Record<PokemonType, string> = {
   Bug: "蟲", Rock: "岩石", Ghost: "幽靈", Dragon: "龍", Dark: "惡", Steel: "鋼", Fairy: "妖精",
 };
 
+const TYPE_CODES: Record<PokemonType, string> = {
+  Normal: "N", Fire: "F", Water: "W", Electric: "E", Grass: "Gr", Ice: "I",
+  Fighting: "Ft", Poison: "P", Ground: "Gd", Flying: "Fl", Psychic: "Ps",
+  Bug: "B", Rock: "R", Ghost: "Gh", Dragon: "Dr", Dark: "Dk", Steel: "S", Fairy: "Fa",
+};
+
+const TYPE_CODES_ZH: Record<PokemonType, string> = {
+  Normal: "普", Fire: "火", Water: "水", Electric: "電", Grass: "草", Ice: "冰",
+  Fighting: "鬥", Poison: "毒", Ground: "地", Flying: "飛", Psychic: "超",
+  Bug: "蟲", Rock: "岩", Ghost: "靈", Dragon: "龍", Dark: "惡", Steel: "鋼", Fairy: "妖",
+};
+
 const cellText = (value: number) => value === 2 ? "2×" : value === .5 ? "½×" : value === 0 ? "0×" : "—";
 const typeName = (type: PokemonType, locale: Locale) => locale === "zh-Hant" ? TYPE_NAMES_ZH[type] : type;
+const typeCode = (type: PokemonType, locale: Locale) => locale === "zh-Hant" ? TYPE_CODES_ZH[type] : TYPE_CODES[type];
+
+function ChartTypeLabel({ type, locale, direction }: { type: PokemonType; locale: Locale; direction: "attack" | "defend" }) {
+  return <div className={`chart-${direction}er-label`} aria-label={typeName(type, locale)}>
+    <span className="chart-type-full" aria-hidden="true"><TypeBadge type={type} /></span>
+    <span className={`chart-type-short type-${type.toLowerCase()}`} aria-hidden="true">{typeCode(type, locale)}</span>
+    {locale === "zh-Hant" && <span className="chart-type-localized" aria-hidden="true">{typeName(type, locale)}</span>}
+  </div>;
+}
 
 export function TypeChart({ locale }: { locale: Locale }) {
   const copy = locale === "zh-Hant"
@@ -34,8 +55,9 @@ export function TypeChart({ locale }: { locale: Locale }) {
     </div>
     <div className="type-chart-scroll" tabIndex={0} aria-label={copy.title}>
       <table className="type-chart-table">
-        <thead><tr><th className="chart-axis">{copy.attack}</th>{ALL_TYPES.map((type) => <th key={type} title={typeName(type, locale)}><div className="chart-defender-label"><TypeBadge type={type} />{locale === "zh-Hant" && <span>{typeName(type, locale)}</span>}</div></th>)}</tr></thead>
-        <tbody>{ALL_TYPES.map((attacking) => <tr key={attacking}><th><div className="chart-attacker-label"><TypeBadge type={attacking} />{locale === "zh-Hant" && <span>{typeName(attacking, locale)}</span>}</div></th>{ALL_TYPES.map((defending) => { const value = typeEffectiveness(attacking, defending); const className = value === 2 ? "effect-super" : value === .5 ? "effect-resist" : value === 0 ? "effect-immune" : "effect-neutral"; return <td className={className} key={defending} title={`${typeName(attacking, locale)} → ${typeName(defending, locale)}: ${value}×`}>{cellText(value)}</td>; })}</tr>)}</tbody>
+        <colgroup><col className="chart-axis-column" />{ALL_TYPES.map((type) => <col key={type} />)}</colgroup>
+        <thead><tr><th className="chart-axis"><span className="chart-axis-full">{copy.attack}</span><span className="chart-axis-short" aria-hidden="true">{locale === "zh-Hant" ? "攻／防" : "A/D"}</span></th>{ALL_TYPES.map((type) => <th key={type} title={typeName(type, locale)}><ChartTypeLabel type={type} locale={locale} direction="defend" /></th>)}</tr></thead>
+        <tbody>{ALL_TYPES.map((attacking) => <tr key={attacking}><th title={typeName(attacking, locale)}><ChartTypeLabel type={attacking} locale={locale} direction="attack" /></th>{ALL_TYPES.map((defending) => { const value = typeEffectiveness(attacking, defending); const className = value === 2 ? "effect-super" : value === .5 ? "effect-resist" : value === 0 ? "effect-immune" : "effect-neutral"; return <td className={className} key={defending} title={`${typeName(attacking, locale)} → ${typeName(defending, locale)}: ${value}×`}>{cellText(value)}</td>; })}</tr>)}</tbody>
       </table>
     </div>
   </section>;

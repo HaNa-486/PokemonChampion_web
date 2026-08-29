@@ -3,39 +3,40 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 13
-- Updated: 2026-08-29T15:59:58Z
+- State revision: 15
+- Updated: 2026-08-29T18:17:21Z
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: Type Chart navigation candidate locally verified; exact-commit Dev deployment and UAT pending
+- Phase: no-scroll responsive Type Chart revision locally verified; exact commit, Dev build, and replacement deployment pending
 
 ## Repository identity
 
 - Branch: codex/type-chart-tab
-- Observed commit: ea7c417902287d4fe908e98088a14712db55c024 plus the uncommitted Type Chart candidate
+- Observed commit: 6fbb4f0d08c7295bb726be46ebba9ef1ec3284e3
 
 ## Product anchors
 
 - Primary user: competitive and new Pokémon Champions players building legal Singles/Doubles teams.
 - Product outcome: Core reference tools, including the complete type matchup chart, are easy to find in one consistent primary navigation.
-- Critical journey: open the Type Chart tab -> inspect the full 18×18 matrix in the current language -> scroll both axes while sticky labels remain usable -> switch back to another primary view.
+- Critical journey: open the Type Chart tab -> see all 18 attack rows and 18 defense columns together without internal scrolling at 390/768/1440 -> identify compact type codes through full accessible names -> switch back to another primary view.
 - Non-goals: changing upstream data, battle formulas, strategic recommendations, or automatic production promotion.
 
 ## Current work
 
-- Current slice: Replace the obtrusive floating Type Chart control with a localized first-class application tab.
-- Active workstreams: `workstreams/2026-08-29-type-chart-tab.md`; the previously recorded catalog-session changes are merged into current `main` and preserved in this candidate.
+- Current slice: Fit the complete localized 18×18 Type Chart into supported viewports without internal horizontal or vertical scrolling.
+- Active workstreams: `workstreams/2026-08-29-type-chart-tab.md` is active after product-owner UAT feedback; the previously recorded catalog-session changes are merged into current `main` and preserved in this candidate.
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
-- Blocking dependencies: exact-commit Dev deployment and product-owner UAT; PR/check/review remain post-UAT.
+- Blocking dependencies: full local gate, exact-commit replacement Dev deployment, and restarted product-owner UAT; PR/check/review remain post-UAT.
 - Consequential open decisions: production deployment remains human-only and is outside the pre-UAT phase.
 
 ## Handoff
 
-- What changed: A localized Type Chart tab now sits between Held Item DB and Speed Compare; it renders the existing complete chart within the application. The desktop floating panel, mobile floating link, and obsolete styles were removed, while `/type-chart` remains available directly.
-- Verification evidence: `pnpm verify:deploy` passed with lint 0 errors, typecheck, 358-form integrity audit, Traditional Chinese semantic audit for 539 moves / 200 abilities / 148 items, 17 test files / 133 tests, successful production build, and 10 built-output/API checks. Focused Type Chart tests passed 2/2.
-- Not verified: exact-commit Dev redeployment, product-owner UAT, and browser visual QA at 390/768/1440; no upstream/generated/form mapping changed, so `data:audit:live` was not applicable.
-- Residual risks: responsive navigation fit plus real scroll/sticky behavior at 390/768/1440 require Dev UAT; existing unrelated PDOS F-006 artifacts fail strict state validation.
-- Next safe action: commit the exact verified expanded candidate, run `pnpm verify:dev`, redeploy that exact commit to Champions Lab Dev, and restart focused UAT before opening a PR.
+- What changed: The Type Chart uses a fixed-layout responsive matrix, viewport-derived row height, compact localized type codes below desktop width, tighter explanatory framing, and no internal overflow container. The complete 18×18 relationship remains in one view while full type names remain accessible.
+- Verification evidence: `pnpm verify:deploy` passed with lint 0 errors, typecheck, 358-form integrity audit, Traditional Chinese semantic audit for 539 moves / 200 abilities / 148 items, 17 test files / 133 tests, successful production build, and 10 built-output/API checks. Focused Type Chart tests passed 2/2. Browser geometry at 390×844, 768×1024, and 1440×900 confirmed 18 rows / 324 cells, equal client and scroll dimensions on both axes, no page-width overflow, and the full table bottom inside each viewport.
+- Superseded deployment: Dev version 24 at exact commit `6fbb4f0d08c7295bb726be46ebba9ef1ec3284e3` does not include this UAT revision and must not be approved.
+- Not verified: exact committed Dev build, replacement Dev deployment, and product-owner UAT; no upstream/generated/form mapping changed, so `data:audit:live` is not applicable.
+- Residual risks: physical readability below the supported 390px viewport cannot be guaranteed; existing unrelated PDOS F-006 artifacts fail strict state validation.
+- Next safe action: commit the exact candidate, run `verify:dev`, replace the owner-only Dev deployment, and restart focused UAT.
 
 ## Read next
 

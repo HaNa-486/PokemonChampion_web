@@ -839,9 +839,12 @@ describe("Type matchup chart", () => {
     const { container } = render(<TypeChart locale="en" />);
     expect(container.querySelectorAll("tbody tr")).toHaveLength(18);
     expect(container.querySelectorAll("tbody td")).toHaveLength(324);
+    expect(container.querySelectorAll("colgroup col")).toHaveLength(19);
     const defendingHeader = container.querySelector("thead")!;
     expect(within(defendingHeader).getByText("Normal")).toBeInTheDocument();
     expect(within(defendingHeader).getByText("Fairy")).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Normal")).toHaveLength(2);
+    expect(container.querySelector(".chart-type-short")).toHaveTextContent("N");
     expect(screen.getByText("Type Matchup Chart")).toBeInTheDocument();
   });
 

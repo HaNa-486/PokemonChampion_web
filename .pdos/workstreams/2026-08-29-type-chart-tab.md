@@ -2,7 +2,7 @@
 
 - Status: active
 - Started: 2026-08-29T15:51:33Z
-- Updated: 2026-08-29T15:59:58Z
+- Updated: 2026-08-29T18:17:21Z
 - Branch: codex/type-chart-tab
 - Base commit: ea7c417902287d4fe908e98088a14712db55c024
 - Scope: Replace the floating type matchup affordance with a first-class application tab.
@@ -16,7 +16,7 @@
 
 ## Handoff
 
-- What changed: Added a localized Type Chart tab between Held Item DB and Speed Compare, rendered the existing complete chart inside the application, and removed the desktop floating panel, mobile floating link, and their unused styles while preserving the standalone `/type-chart` route.
-- Verification: `pnpm verify:deploy` passed with lint 0 errors, typecheck, 358-form integrity audit, Traditional Chinese semantic audit for 539 moves / 200 abilities / 148 items, 17 test files / 133 tests, a successful production build, and 10 built-output/API checks. Focused Type Chart tests passed 2/2, including English-to-Traditional-Chinese tab behavior.
-- Residual risks: responsive navigation fit and real scroll/sticky behavior at 390/768/1440 remain for Dev UAT; strict PDOS validation remains blocked by pre-existing unrelated malformed F-006 records.
-- Next safe action: commit the exact verified candidate, run `pnpm verify:dev`, deploy that exact commit to Champions Lab Dev, and request focused UAT.
+- What changed: Product-owner UAT requested a no-scroll, full-matrix responsive presentation, superseding version 24. The revision uses a fixed-layout matrix, viewport-derived row height, compact localized type codes below desktop width, and removes internal overflow while retaining full accessible names.
+- Verification: `verify:deploy` passed with lint 0 errors, typecheck, both data audits, 17 test files / 133 tests, production build, and 10 rendered/API checks; focused Type Chart tests pass 2/2. Browser geometry at 390×844, 768×1024, and 1440×900 confirmed 18 rows / 324 cells, equal client/scroll dimensions on both axes, no page-width overflow, and the complete table inside each viewport.
+- Residual risks: A literal guarantee for arbitrary tiny viewports conflicts with readable labels; target supported widths are 390/768/1440 with adaptive abbreviations and density.
+- Next safe action: Commit the exact candidate, run `verify:dev`, replace the owner-only Dev deployment, and restart focused UAT.

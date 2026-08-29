@@ -148,9 +148,8 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] At 390 px, detail move filters expand/collapse cleanly, chip rows scroll horizontally, and battle-usage tooltips open by touch.
 - [ ] At 390, 768, and 1440 px, item thumbnails do not clip, distort, obscure labels, or create unintended horizontal page scrolling.
 - [ ] The 18×18 type chart is complete.
-- [ ] The Type Chart tab scrolls horizontally and vertically.
-- [ ] The attack column stays sticky during horizontal scrolling.
-- [ ] The defense header stays sticky during vertical scrolling.
+- [ ] The Type Chart tab shows all 18 attack rows and 18 defense columns together without an internal scrollbar at 390, 768, and 1440 CSS pixels.
+- [ ] Compact type codes retain full accessible type names and tooltips.
 - [ ] Type badges use readable high-contrast text.
 - [ ] Mobile exposes the Type Chart tab without a floating control.
 - [ ] No tooltip, menu, or dialog is clipped behind a table or floating tray.
@@ -190,7 +189,7 @@ Production smoke test:
 - [ ] Ninetales reports `battleDataKey=ninetales`.
 - [ ] Alolan Ninetales reports `battleDataKey=ninetalesalola`.
 - [ ] Their usage-based builds are visibly different and form-correct.
-- [ ] Singles/Doubles teams, Mega transformation, reverse lookup, pagination, and chart scrolling work.
+- [ ] Singles/Doubles teams, Mega transformation, reverse lookup, pagination, and the complete no-scroll Type Chart work.
 - [ ] Record deployed URL, version, commit SHA, test summary, and known limitations for UAT.
 
 ## 9. Current hardening gaps
@@ -198,7 +197,7 @@ Production smoke test:
 The following remain required before claiming the full commercial-readiness Definition of Done in `PROJECT_SPEC.md`:
 
 - Automated Chromium/Firefox/WebKit E2E suite
-- Automated sticky-header and real-scroll assertions
+- Automated responsive Type Chart no-overflow assertions
 - axe accessibility gate
 - Dependency, secret, SAST, and isolated-staging ZAP gates
 - Performance/load budgets and k6 suite
