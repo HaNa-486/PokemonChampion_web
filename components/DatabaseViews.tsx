@@ -180,7 +180,15 @@ export function MoveDatabaseV2({ locale, active = true }: { locale: Locale; acti
     const searchMatch = `${move.name} ${move.nameZh}`.toLowerCase().includes(query.toLowerCase());
     return searchMatch && priorityMatches(move, priorities) && (!types.length || types.includes(move.type)) && (!categories.length || categories.includes(move.category)) && (!targets.length || targets.includes(move.target)) && (!properties.length || properties.some((flag) => move.flags.includes(flag)));
   });
-  const sorted = [...allMatches].sort((a, b) => compareValues(value(a) ?? Number.POSITIVE_INFINITY, value(b) ?? Number.POSITIVE_INFINITY, sort.direction) || a.name.localeCompare(b.name));
+  const sorted = [...allMatches].sort((a, b) => {
+    const aValue = value(a);
+    const bValue = value(b);
+    if (aValue == null || bValue == null) {
+      if (aValue == null && bValue == null) return a.name.localeCompare(b.name);
+      return aValue == null ? 1 : -1;
+    }
+    return compareValues(aValue, bValue, sort.direction) || a.name.localeCompare(b.name);
+  });
   const pageCount = Math.max(1, Math.ceil(sorted.length / pageSize));
   const safePage = Math.min(page, pageCount);
   const start = (safePage - 1) * pageSize;

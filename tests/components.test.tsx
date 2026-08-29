@@ -95,6 +95,18 @@ describe("Move Database", () => {
     expect(priority.closest("th")).toHaveAttribute("aria-sort", "ascending");
   });
 
+  it("keeps missing move values last while sorting Power and Acc. descending", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<MoveDatabaseV2 locale="en" />);
+    for (const [name, column] of [["Power", 3], ["Acc.", 4]] as const) {
+      await user.click(screen.getByRole("button", { name }));
+      const values = Array.from(container.querySelectorAll<HTMLTableCellElement>(`tbody tr td:nth-child(${column + 1})`), (cell) => cell.textContent ?? "");
+      expect(values).not.toContain("—");
+      const numericValues = values.map(Number);
+      expect(numericValues).toEqual([...numericValues].sort((a, b) => b - a));
+    }
+  });
+
   it("sorts by usable Pokémon count and opens the reverse lookup", async () => {
     const user = userEvent.setup();
     render(<MoveDatabaseV2 locale="en" />);
