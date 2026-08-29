@@ -119,6 +119,12 @@ tbody tr:hover { background: #f2fbf7; }
 .stat-total { color: var(--mint-dark); font-weight: 900; }
 .filter-actions { display: flex; align-items: center; gap: 12px; padding-left: 106px; }
 .filter-actions span { color: var(--muted); font-size: .72rem; }
+.clear-filters { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #ddb6ba; border-radius: 9px; padding: 8px 13px; color: #8f3f47; background: #fff7f7; box-shadow: inset 3px 0 0 #b85b64; font-size: .76rem; font-weight: 850; letter-spacing: .01em; transition: color .16s ease, background .16s ease, border-color .16s ease, box-shadow .16s ease, transform .16s ease; }
+.clear-filters:hover { color: white; border-color: #9f4650; background: #a9515a; box-shadow: inset 3px 0 0 rgba(255,255,255,.45), 0 6px 14px rgba(145,54,64,.18); transform: translateY(-1px); }
+.clear-filters:active { box-shadow: inset 3px 0 0 rgba(255,255,255,.3); transform: translateY(0); }
+.clear-filters:focus-visible { outline: 3px solid rgba(169,81,90,.22); outline-offset: 2px; }
+.filter-actions .clear-filters-icon, .detail-filter-actions .clear-filters-icon { color: currentColor; font-size: 1rem; font-weight: 900; line-height: 1; transition: transform .2s ease; }
+.clear-filters:hover .clear-filters-icon { transform: rotate(-90deg); }
 .inline-filter { display: flex; align-items: center; }
 .inline-filter > b { padding-top: 0; }
 .inline-filter span { color: var(--muted); font-size: .76rem; }

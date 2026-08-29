@@ -76,7 +76,7 @@ describe("Move Database", () => {
     await user.type(screen.getByRole("textbox", { name: "Search moves" }), "Punch");
     await user.click(within(typeGroup).getByRole("button", { name: "Fire" }));
     await user.click(screen.getByRole("button", { name: "+ Positive" }));
-    await user.click(screen.getByRole("button", { name: "Clear move filters" }));
+    await user.click(screen.getByRole("button", { name: "Reset filters" }));
     expect(screen.getByRole("textbox", { name: "Search moves" })).toHaveValue("");
     expect(container.querySelectorAll(".filter-chip[aria-pressed='true']")).toHaveLength(0);
     expect(container.querySelectorAll("tbody tr")).toHaveLength(100);
@@ -188,7 +188,7 @@ describe("reference filters", () => {
     const { container } = render(<ResourceDatabaseV2 kind="abilities" locale="en" />);
     await user.type(screen.getByRole("textbox", { name: "Search abilities" }), "Drought");
     await user.click(screen.getByRole("button", { name: "Weather" }));
-    await user.click(screen.getByRole("button", { name: "Clear ability filters" }));
+    await user.click(screen.getByRole("button", { name: "Reset filters" }));
     expect(screen.getByRole("textbox", { name: "Search abilities" })).toHaveValue("");
     expect(container.querySelectorAll(".filter-chip[aria-pressed='true']")).toHaveLength(0);
     expect(screen.getByRole("button", { name: "Rough Skin" })).toBeInTheDocument();
@@ -211,7 +211,7 @@ describe("reference filters", () => {
     await user.type(screen.getByRole("textbox", { name: "Search held items" }), "Sitrus");
     await user.click(screen.getByRole("button", { name: "Berry" }));
     await user.click(screen.getByRole("button", { name: "ON" }));
-    await user.click(screen.getByRole("button", { name: "Clear item filters" }));
+    await user.click(screen.getByRole("button", { name: "Reset filters" }));
     expect(screen.getByRole("textbox", { name: "Search held items" })).toHaveValue("");
     expect(screen.getByRole("button", { name: "ON" })).toHaveAttribute("aria-pressed", "true");
     expect(container.querySelectorAll(".filter-chip[aria-pressed='true']")).toHaveLength(1);
