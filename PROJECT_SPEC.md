@@ -47,8 +47,8 @@ GameWith may inspire interaction patterns only. **Do not copy** its CSS, layout,
 | Anonymous users | Team stored locally in versioned IndexedDB |
 | Accounts | Cloud sync/cross-device teams are phase 2, not v1 |
 | Images | Champions Battle Data for Pokémon/form assets; pinned PokeAPI sprites for locally bundled held-item thumbnails |
-| Included | Complete paginated catalogs, details, tooltips, reverse lookup, advanced filters, type chart, usage-based build defaults, builder/tray, speed comparison, admin overrides |
-| Excluded | Damage calculator, AI/strategy recommendations, team analysis, tier lists, community content |
+| Included | Complete paginated catalogs, details, tooltips, reverse lookup, advanced filters, type chart, usage-based build defaults, builder/tray, admin overrides |
+| Excluded | Speed comparison UI (temporarily withdrawn), damage calculator, AI/strategy recommendations, team analysis, tier lists, community content |
 | Commercial intent | Yes; privacy, consent, attribution, security, and legal-review readiness are required |
 
 The v1 usage-based defaults are deterministic: for the chosen Singles or Doubles format, apply the highest-ranked legal held item, ability, nature, AP spread, and up to four legal unique moves from current Champions battle data. They are editable starting values, not strategic recommendations. Future-only AI recommendations may use the complete legal Pokémon/move/ability/item/Regulation/battle dataset and a user's natural-language goal. Do not implement an LLM feature in v1, but keep normalized data and domain APIs suitable for future retrieval.
@@ -64,11 +64,10 @@ Required pages:
 5. Ability database
 6. Held item database
 7. Team builder
-8. Speed comparison
-9. Full 18×18 type matchup chart
-10. Data sources, attribution, and data date
-11. Privacy, terms, cookie settings, and unofficial-project notice
-12. Protected admin override interface
+8. Full 18×18 type matchup chart
+9. Data sources, attribution, and data date
+10. Privacy, terms, cookie settings, and unofficial-project notice
+11. Protected admin override interface
 
 Non-goals: damage calculation, AI/strategy recommendations, team synergy analysis, tier lists, user comments/voting, public raw-data mirror, bulk-data download, competing general-purpose data API, and native apps.
 
@@ -519,21 +518,9 @@ Edit opens the Build Workbench with that exact member's saved form, moves, abili
 
 Adding a seventh never silently overwrites; open replacement selection. Duplicate attempts show domain errors. Incomplete members are allowed and marked. Desktop uses a collapsible floating panel whose internal scroll area makes all six complete cards reachable; mobile uses a fixed bottom bar and accessible bottom sheet. Persist with versioned IndexedDB; LocalStorage only for tiny preferences/migration flags. Navigation/refresh preserves state. Corrupt/old data migrates or quarantines without crashing.
 
-### 8.6 Speed comparison
+### 8.6 Speed comparison (temporarily withdrawn)
 
-Inputs/output: multiple forms/builds, Champions base Speed, AP/nature, validated final Speed, stat stages, verified legal item/ability/weather/field modifiers, Trick Room, original/modified Speed, modifier trace, and speed ties.
-
-Order model:
-
-```text
-move priority
-→ explicit ability/item order rules
-→ field rules such as Trick Room
-→ modified Speed
-→ tie
-```
-
-Name the page **Speed Compare**, not a full turn simulator. State unsupported mechanics. Every supported multiplier/order rule requires a named golden fixture; never guess.
+Do not expose a Speed Compare page, navigation tab, or other user-facing entry point in the current release. The independently tested speed-domain calculation and `/api/v1/speed/compare` contract may remain dormant so a future approved iteration can restore the experience without coupling it to React or re-inventing mechanics.
 
 ### 8.7 Usage-based build defaults and Mega transformation
 
@@ -551,7 +538,7 @@ A Mega form preselects its dedicated stone. Every stone maps to one explicit com
 
 Provide a complete 18×18 attack-versus-defense matrix as a standalone page. Attack types run down the left and defending types across the top. Use full, high-contrast type badges plus text/icon cues; color alone is insufficient. The matrix must fit its available width and height without an internal horizontal or vertical scrollbar at the supported 390, 768, and 1440 CSS-pixel viewports. Compact viewports may use localized one- or two-character type codes while preserving the full type name as an accessible label and tooltip.
 
-The primary application navigation exposes the chart as a first-class tab alongside the databases and Speed Compare. The tab must remain accessible on mobile without adding a floating control. The chart prioritizes the complete relationship matrix over explanatory framing: spacing, labels, and row height adapt to the viewport so all 18×18 relationships are visible together. The standalone `/type-chart` page remains available as a direct route. Verify behavior at 390, 768, and 1440 CSS pixels.
+The primary application navigation exposes the chart as a first-class tab alongside the databases. The tab must remain accessible on mobile without adding a floating control. The chart prioritizes the complete relationship matrix over explanatory framing: spacing, labels, multiplier text, and row height adapt to the viewport so all 18×18 relationships are visible together and make useful use of each cell. Color remains a secondary cue; multiplier text and accessible type names must remain available. The standalone `/type-chart` page remains available as a direct route. Verify behavior at 390, 768, and 1440 CSS pixels.
 
 ### 8.9 i18n/accessibility
 

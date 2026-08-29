@@ -2,11 +2,11 @@
 
 - Status: active
 - Started: 2026-08-29T15:51:33Z
-- Updated: 2026-08-29T18:17:21Z
+- Updated: 2026-08-29T19:10:41Z
 - Branch: codex/type-chart-tab
 - Base commit: ea7c417902287d4fe908e98088a14712db55c024
-- Scope: Replace the floating type matchup affordance with a first-class application tab.
-- Files or areas at risk: ChampionsApp navigation, type chart rendering, responsive navigation, tests
+- Scope: Refine the first-class Type Chart tab through UAT, including adaptive cell content and temporary withdrawal of the Speed Compare UI.
+- Files or areas at risk: ChampionsApp navigation, database views, type chart rendering, responsive navigation, product specification, deployment checklist, tests
 
 ## Coordination
 
@@ -16,7 +16,7 @@
 
 ## Handoff
 
-- What changed: Product-owner UAT requested a no-scroll, full-matrix responsive presentation, superseding version 24. The revision uses a fixed-layout matrix, viewport-derived row height, compact localized type codes below desktop width, and removes internal overflow while retaining full accessible names.
-- Verification: `verify:deploy` passed with lint 0 errors, typecheck, both data audits, 17 test files / 133 tests, production build, and 10 rendered/API checks; focused Type Chart tests pass 2/2. Browser geometry at 390×844, 768×1024, and 1440×900 confirmed 18 rows / 324 cells, equal client/scroll dimensions on both axes, no page-width overflow, and the complete table inside each viewport.
-- Residual risks: A literal guarantee for arbitrary tiny viewports conflicts with readable labels; target supported widths are 390/768/1440 with adaptive abbreviations and density.
+- What changed: Second UAT revision scales compact type codes and explicit multiplier labels with their cells while retaining accessible text and the no-scroll matrix. Speed Compare navigation, React views, UI tests, and dedicated CSS were removed; the dormant domain/API contract remains.
+- Verification: `verify:deploy` passed with lint 0 errors, typecheck, both data audits, 17 test files / 132 tests, build, and 10 rendered/API checks. Browser geometry at 390x844, 768x1024, and 1440x900 confirmed 18 rows / 324 cells, equal client/scroll dimensions, no page-width overflow, full matrix inside each viewport, responsive multiplier fonts, and no Speed Compare tab.
+- Residual risks: Physical readability below the supported 390px width cannot be guaranteed; product-owner UAT and replacement Dev deployment are pending. Unrelated legacy F-006 PDOS records still fail strict validation.
 - Next safe action: Commit the exact candidate, run `verify:dev`, replace the owner-only Dev deployment, and restart focused UAT.
