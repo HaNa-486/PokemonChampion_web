@@ -755,9 +755,9 @@ The committed offline form-integrity audit runs on every deployment. A live audi
 - Cache invalidates after commit only.
 - Handle timeout, malformed JSON/CSV, wrong type, oversized response, and 5xx.
 
-### 13.6 Speed tests
+### 13.6 Dormant speed-domain/API tests
 
-Only after golden formula fixtures: missing input error; identical build tie; normal ordering; verified Trick Room ordering; stat stage/item/ability/weather/field modifiers applied exactly once and in verified order; inactive modifiers excluded; original/modified/trace output; move priority not silently mixed with raw speed; unsupported mechanics explicitly shown.
+The current release has no Speed Compare UI. Keep the dormant domain and `/api/v1/speed/compare` contract covered by named golden fixtures for missing/invalid input, unknown Pokémon, identical-build ties, normal ordering, verified Trick Room ordering, supported stat-stage/multiplier application, stable response fields and calculation version, and `no-store` responses. Do not claim or test a user-facing comparison journey until a future approved milestone restores the UI.
 
 ### 13.7 Critical E2E journeys
 
@@ -774,11 +774,10 @@ Only after golden formula fixtures: missing input error; identical build tie; no
 11. Transform a base form by selecting its Mega Stone and verify every effective field.
 12. Scroll the six-card team tray to its final member.
 13. Open the Type Chart tab at 390, 768, and 1440 CSS pixels; verify all 18 attack rows and 18 defense columns are visible without an internal scrollbar and every compact type code exposes its full name.
-14. Compare speeds and identify tie.
-15. Switch English/Chinese without losing state.
-16. Use mobile bottom sheet at 360/390 px.
-17. Admin previews/publishes/audits/reverts override.
-18. Stale upstream simulation shows last valid snapshot.
+14. Switch English/Chinese without losing state.
+15. Use mobile bottom sheet at 360/390 px.
+16. Admin previews/publishes/audits/reverts override.
+17. Stale upstream simulation shows last valid snapshot.
 
 Run Chromium, Firefox, WebKit. Required relevant widths: 360, 390, 768, 1024, 1440 px.
 
@@ -789,7 +788,7 @@ Run Chromium, Firefox, WebKit. Required relevant widths: 360, 390, 768, 1024, 14
 - Test XSS, SQLi, CSRF, IDOR, session fixation, OAuth state/PKCE, rate limiting, oversized payload, SSRF restriction, CSP, secrets, admin RBAC/audit, unpublished data, error leakage.
 - ZAP active scan only on isolated staging.
 - Rejecting non-essential cookies prevents trackers; consent withdraw works; policies reachable; attribution/notices visible.
-- Load test catalogs, combined move filters, details, format switches, validation, speed compare, and reads during import against section 12 budgets.
+- Load test catalogs, combined move filters, details, format switches, validation, and reads during import against section 12 budgets. The dormant speed API receives contract tests, not a current-release UI/load journey.
 
 Coverage requirements:
 
@@ -828,7 +827,7 @@ Create runbooks for upstream outage/contract change, rejected/stale snapshot, qu
 2. **Data platform:** fixtures, normalized schema/mappings, staging validation/atomic import, quarantine/admin override basics, attribution metadata.
 3. **Catalog UX:** catalog APIs/pages, search/filter/sort, Pokémon detail/battle data, tooltips, priority filter.
 4. **Team builder:** versioned DTO/IndexedDB, AP/nature editor, legality validator, floating tray; final stats only after golden validation.
-5. **Speed compare:** verified calculation/modifier strategies, UI, trace, Trick Room/ties from golden fixtures.
+5. **Dormant speed foundation:** retain verified calculation and API ordering fixtures without exposing a UI; any future Speed Compare UI, trace, or expanded modifier strategy requires a separately approved milestone and UAT.
 6. **Hardening/UAT:** accessibility, security, consent/legal, browser matrix, performance, restore/failure drills, reports/checklist.
 
 Do not implement future AI recommendations or damage calculation in these milestones.

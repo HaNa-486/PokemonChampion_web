@@ -2,7 +2,7 @@
 
 - Status: active
 - Started: 2026-08-29T15:51:33Z
-- Updated: 2026-08-29T19:10:41Z
+- Updated: 2026-08-29T19:32:33Z
 - Branch: codex/type-chart-tab
 - Base commit: ea7c417902287d4fe908e98088a14712db55c024
 - Scope: Refine the first-class Type Chart tab through UAT, including adaptive cell content and temporary withdrawal of the Speed Compare UI.
@@ -16,7 +16,7 @@
 
 ## Handoff
 
-- What changed: Second UAT revision scales compact type codes and explicit multiplier labels with their cells while retaining accessible text and the no-scroll matrix. Speed Compare navigation, React views, UI tests, and dedicated CSS were removed; the dormant domain/API contract remains.
-- Verification: `verify:deploy` passed with lint 0 errors, typecheck, both data audits, 17 test files / 132 tests, build, and 10 rendered/API checks. Browser geometry at 390x844, 768x1024, and 1440x900 confirmed 18 rows / 324 cells, equal client/scroll dimensions, no page-width overflow, full matrix inside each viewport, responsive multiplier fonts, and no Speed Compare tab.
-- Residual risks: Physical readability below the supported 390px width cannot be guaranteed; product-owner UAT and replacement Dev deployment are pending. Unrelated legacy F-006 PDOS records still fail strict validation.
-- Next safe action: Commit the exact candidate, run `verify:dev`, replace the owner-only Dev deployment, and restart focused UAT.
+- What changed: Independent PR review found three consistency/coverage issues. Public metadata no longer advertises Speed Compare, built-output tests now exercise the retained speed API contract, and the later E2E/load/milestone specification consistently defers the withdrawn UI.
+- Verification: focused production build and 12 built-output tests passed. Version 26 and its UAT are superseded because this exact candidate changes after UAT; full gates and Dev deployment must repeat.
+- Residual risks: Physical readability below the supported 390px width cannot be guaranteed; renewed product-owner UAT and final re-review are pending. Unrelated legacy F-006 PDOS records still fail strict validation.
+- Next safe action: Run the full gate, commit and deploy the exact review-fix candidate to owner-only Dev, then request renewed product-owner UAT.

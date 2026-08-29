@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 17
-- Updated: 2026-08-29T19:10:41Z
+- State revision: 19
+- Updated: 2026-08-29T19:32:33Z
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: adaptive Type Chart labels and Speed Compare withdrawal locally verified; exact commit and replacement Dev deployment pending
+- Phase: PR #9 independent-review findings addressed locally; replacement exact commit, Dev deployment, and renewed UAT pending
 
 ## Repository identity
 
 - Branch: codex/type-chart-tab
-- Observed commit: dc8b8fdc8a5f12dccd0313165a7279d57d43d3b1
+- Observed commit: c9ce46e390fe4ae11f0fa2bfe62cecb940e4d58f
 
 ## Product anchors
 
@@ -23,20 +23,20 @@ Keep this concise. Every fresh PDOS context reads it first.
 ## Current work
 
 - Current slice: Scale type labels and matchup multipliers to use their cells while retaining no-scroll completeness, and withdraw the Speed Compare UI.
-- Active workstreams: `workstreams/2026-08-29-type-chart-tab.md` is active after a second product-owner UAT revision; the previously recorded catalog-session changes are preserved.
+- Active workstreams: `workstreams/2026-08-29-type-chart-tab.md` is active to address independent PR review findings; the previously recorded catalog-session changes are preserved.
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
-- Blocking dependencies: exact candidate commit, Dev build/deployment, and restarted product-owner UAT; PR/check/review remain post-UAT.
-- Consequential open decisions: production deployment remains human-only and is outside the pre-UAT phase.
+- Blocking dependencies: exact review-fix commit, repeat checks/Dev deployment, and renewed product-owner UAT; PR merge remains blocked until that exact candidate passes UAT.
+- Consequential open decisions: the product owner explicitly authorized production deployment after clean review and merge in the current conversation; deployment remains blocked until all earlier gates pass.
 
 ## Handoff
 
-- What changed: Type codes now fill substantially more of compact header/row cells and multiplier labels scale from a readable mobile minimum to 1rem on desktop. Color remains secondary to explicit `2×` / `½×` / `0×` text. The Speed Compare tab, React views, UI tests, and dedicated styles were removed; its tested domain/API capability remains dormant for possible future restoration.
-- Verification evidence: `pnpm verify:deploy` passed with lint 0 errors, typecheck, 358-form integrity audit, Traditional Chinese semantic audit for 539 moves / 200 abilities / 148 items, 17 test files / 132 tests, successful build, and 10 built-output/API checks. Browser geometry at 390×844, 768×1024, and 1440×900 confirmed 18 rows / 324 cells, equal client and scroll dimensions on both axes, no page-width overflow, the full table inside each viewport, adaptive multiplier font sizes of 9.92 / 11.904 / 15.75px, and no Speed Compare tab.
-- Superseded deployment: Dev version 25 at exact commit `dc8b8fdc8a5f12dccd0313165a7279d57d43d3b1` does not include this second UAT revision and must not be approved.
-- Not verified: exact committed Dev build, replacement Dev deployment, and product-owner UAT; no upstream/generated/form mapping changed, so `data:audit:live` is not applicable.
+- What changed: PR #9 independent auto review found stale public metadata, missing direct coverage for the intentionally retained speed API, and contradictory later spec requirements. The metadata now advertises available type-matchup functionality, built-output tests cover normal/Trick Room ordering, invalid/unknown input, response version/shape, and `no-store`, and the spec consistently defers Speed Compare UI/load journeys.
+- Verification evidence: focused production build plus 12 built-output tests passed, including the new speed-contract and metadata assertions. Earlier Type Chart geometry and full gate evidence remain applicable to unchanged UI code; the full gate will be repeated on the exact review-fix candidate.
+- Superseded deployment: Dev version 26 at exact commit `c9ce46e390fe4ae11f0fa2bfe62cecb940e4d58f` predates these review fixes and its UAT approval is invalidated by policy.
+- Not verified: full exact-candidate gate, replacement Dev deployment, renewed product-owner UAT, final independent re-review, merge, and production smoke test; no upstream/generated/form mapping changed, so `data:audit:live` is not applicable.
 - Residual risks: physical readability below the supported 390px viewport cannot be guaranteed; existing unrelated PDOS F-006 artifacts fail strict state validation.
-- Next safe action: commit the exact candidate, run `verify:dev`, replace the owner-only Dev deployment, and restart focused UAT.
+- Next safe action: run the full gate, commit and deploy the exact review-fix candidate to owner-only Dev, then request renewed product-owner UAT before continuing PR merge.
 
 ## Read next
 
