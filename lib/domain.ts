@@ -1,6 +1,7 @@
 import type { Move, Nature, NonHpStat, Pokemon, Stats, TeamMember } from "./types";
 
 export const ZERO_STATS: Stats = { hp: 0, attack: 0, defense: 0, specialAttack: 0, specialDefense: 0, speed: 0 };
+export const totalBaseStats = (stats: Stats) => Object.values(stats).reduce((sum, value) => sum + value, 0);
 export const NEUTRAL_NATURE: Nature = { name: "Serious", nameZh: "認真", up: null, down: null };
 export const NATURES: Nature[] = [
   NEUTRAL_NATURE,

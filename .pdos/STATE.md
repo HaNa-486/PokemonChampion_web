@@ -3,43 +3,45 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 10
-- Updated: 2026-08-25T14:35:00Z
+- State revision: 12
+- Updated: 2026-08-29T09:17:00Z
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: review exception remediation committed and verified; exact-candidate Dev handoff and renewed UAT pending
+- Phase: expanded catalog interaction candidate locally verified; exact-commit Dev redeployment and UAT pending
 
 ## Repository identity
 
-- Branch: codex/team-member-edit-move-picker
+- Branch: codex/catalog-type-order-total-stat
 - Observed commit: release-candidate branch HEAD (the commit hash is recorded by the deployment/version evidence rather than embedded in its own tree)
 
 ## Product anchors
 
 - Primary user: competitive and new Pokémon Champions players building legal Singles/Doubles teams.
-- Product outcome: Existing members are editable in place, and all build choices are searchable and understandable without external lookup.
-- Critical journey: open selected team -> edit member -> switch form/item if needed -> search/read/select moves/ability/item -> adjust AP/nature -> save -> same team slot updates.
-- Non-goals: strategic move recommendations, drag-reordering, or automatic production promotion.
+- Product outcome: Database filters use consistent domain ordering, reset quickly, preserve per-view state until reload, and expose intuitive comparison sorting.
+- Critical journey: filter one database -> switch among catalog and speed views without losing state -> clear filters when desired -> sort numeric/mechanic columns descending with one click.
+- Non-goals: changing upstream data, battle formulas, strategic recommendations, or automatic production promotion.
 
 ## Current work
 
-- Current slice: Complete in-place editing, rich selectors with real top-ten usage ranks, transparent upstream gaps, locale/modal consistency, and readable build summaries.
-- Active workstreams: `workstreams/2026-08-20-team-member-edit-move-picker.md`
+- Current slice: Add clear actions to remaining catalogs, default the team tray closed, make selected sort columns descending-first, and preserve all five view states until reload.
+- Active workstreams: `workstreams/2026-08-29-catalog-session-memory-sort-defaults.md` is locally verified; it supersedes the previous Dev v19 UAT candidate while retaining the completed TOT/type-order work.
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
-- Blocking dependencies: renewed product-owner UAT, updated PR check, and clean independent review.
+- Blocking dependencies: exact-commit Dev deployment and product-owner UAT; PR/check/review remain post-UAT.
 - Consequential open decisions: production deployment remains human-only and is outside the pre-UAT phase.
 
 ## Handoff
 
-- What changed: Preserved all earlier builder work, required an explicit regular-form identity for each Mega Stone, and applied the owner's reviewed compatibility rule that every Mega reuses its regular form's battle source; `gallademega` is ignored at sync, catalog, API, and audit boundaries.
-- Verification evidence: `pnpm verify:deploy` passed against the current source with 17 test files / 125 tests, a successful production build, form/localization audits, and 10 built-output/API checks. `pnpm data:audit:live` passed for 358 snapshot forms and accepts only the reviewed Mega Gallade → Gallade exception. Golden cases prove Mega Gallade never requests `gallademega`, every Mega resolves to its explicit regular form, and Galarian Slowbro cannot use Slowbronite.
-- Not verified: exact-commit Dev deployment and product-owner acceptance that Mega Gallade displays the same seasonal data as Gallade.
-- Residual risks: Responsive AP/picker geometry and external live data availability remain as documented; Clefable Doubles ranks 1–5 remain absent upstream.
-- Next safe action: commit the exact candidate, run `pnpm verify:dev`, deploy it to Champions Lab Dev, and request only the focused Mega Gallade seasonal-data UAT; do not update or merge PR #7 before explicit acceptance.
+- What changed: In addition to shared type ordering, Move DB clear-all, and computed TOT filtering/sorting, Ability and Held Item databases now clear all filters in one action; the team tray starts collapsed; selected Pokémon and move columns sort descending on first click; every main view retains its React state while inactive views emit no hidden DOM.
+- Verification evidence: `pnpm verify:deploy` passed with lint 0 errors, typecheck, 358-form integrity audit, Traditional Chinese semantic audit for 539 moves / 200 abilities / 148 items, 17 test files / 132 tests, successful production build, and 10 built-output/API checks. The full component suite passed 48/48 and the focused regression set passed 8/8.
+- Not verified: exact-commit Dev redeployment, product-owner UAT, and browser visual QA at 390/768/1440; no upstream/generated/form mapping changed, so `data:audit:live` was not applicable.
+- Residual risks: responsive visual fit, collapsed-tray discoverability, and interaction feel require Dev UAT; existing unrelated PDOS F-006 artifacts fail strict state validation.
+- Next safe action: commit the exact verified expanded candidate, run `pnpm verify:dev`, redeploy that exact commit to Champions Lab Dev, and restart focused UAT before opening a PR.
 
 ## Read next
 
 - `AUTONOMY.md`
+- `workstreams/2026-08-29-catalog-type-order-total-stat.md`
+- `workstreams/2026-08-29-catalog-session-memory-sort-defaults.md`
 - `workstreams/2026-08-20-team-member-edit-move-picker.md`
 - `reviews/REV-20260820-team-builder-ux.md`
 - `remediations/REM-20260820-team-builder-ux-F001.md`
