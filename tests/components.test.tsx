@@ -312,10 +312,10 @@ describe("ChampionsApp", () => {
     expect(within(resetPokemonFilters).getByRole("button", { name: "Water" })).toHaveAttribute("aria-pressed", "false");
   }, 60_000);
 
-  it("sorts detail learnsets by category, type, descending priority, properties, and target", () => {
+  it("sorts detail learnsets by the Pokémon database type order before move details", () => {
     const names = ["Swords Dance", "Air Slash", "Assurance", "Aerial Ace", "Sucker Punch"];
     const fixture = names.map((name) => moves.find((move) => move.name === name)!);
-    expect([...fixture].sort(compareLearnableMoves).map((move) => move.name)).toEqual(["Aerial Ace", "Sucker Punch", "Assurance", "Air Slash", "Swords Dance"]);
+    expect([...fixture].sort(compareLearnableMoves).map((move) => move.name)).toEqual(["Swords Dance", "Aerial Ace", "Air Slash", "Sucker Punch", "Assurance"]);
   });
 
   it("renders every member in a full six-Pokémon scrollable team list", () => {

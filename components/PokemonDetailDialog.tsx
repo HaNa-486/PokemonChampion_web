@@ -28,8 +28,8 @@ const moveCategoryRank: Record<Move["category"], number> = { Physical: 0, Specia
 const typeRank = new Map(ALL_TYPES.map((type, index) => [type, index]));
 
 export function compareLearnableMoves(a: Move, b: Move) {
-  return moveCategoryRank[a.category] - moveCategoryRank[b.category]
-    || (typeRank.get(a.type) ?? ALL_TYPES.length) - (typeRank.get(b.type) ?? ALL_TYPES.length)
+  return (typeRank.get(a.type) ?? ALL_TYPES.length) - (typeRank.get(b.type) ?? ALL_TYPES.length)
+    || moveCategoryRank[a.category] - moveCategoryRank[b.category]
     || b.priority - a.priority
     || [...a.flags].sort().join(" ").localeCompare([...b.flags].sort().join(" "))
     || a.target.localeCompare(b.target)
