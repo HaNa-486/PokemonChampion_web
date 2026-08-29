@@ -20,6 +20,13 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+const openTeamTray = () => {
+  const tray = screen.getByRole("complementary", { name: "Selected team" });
+  const header = tray.querySelector<HTMLButtonElement>(".tray-header")!;
+  if (header.getAttribute("aria-expanded") !== "true") fireEvent.click(header);
+  return tray;
+};
+
 describe("Move Database", () => {
   it("localizes move properties in Traditional Chinese mode", async () => {
     const user = userEvent.setup();
@@ -75,14 +82,17 @@ describe("Move Database", () => {
     expect(container.querySelectorAll("tbody tr")).toHaveLength(100);
   });
 
-  it("sorts move columns in both directions", async () => {
+  it("sorts the requested move columns descending on the first click", async () => {
     const user = userEvent.setup();
     render(<MoveDatabaseV2 locale="en" />);
+    for (const name of ["Class", "Power", "Acc.", "PP", "Priority"]) {
+      const header = screen.getByRole("button", { name });
+      await user.click(header);
+      expect(header.closest("th")).toHaveAttribute("aria-sort", "descending");
+    }
     const priority = screen.getByRole("button", { name: /Priority/ });
     await user.click(priority);
     expect(priority.closest("th")).toHaveAttribute("aria-sort", "ascending");
-    await user.click(priority);
-    expect(priority.closest("th")).toHaveAttribute("aria-sort", "descending");
   });
 
   it("sorts by usable Pokémon count and opens the reverse lookup", async () => {
@@ -173,6 +183,17 @@ describe("reference filters", () => {
     expect(screen.queryByRole("button", { name: "Rough Skin" })).not.toBeInTheDocument();
   });
 
+  it("clears ability search and category filters in one action", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ResourceDatabaseV2 kind="abilities" locale="en" />);
+    await user.type(screen.getByRole("textbox", { name: "Search abilities" }), "Drought");
+    await user.click(screen.getByRole("button", { name: "Weather" }));
+    await user.click(screen.getByRole("button", { name: "Clear ability filters" }));
+    expect(screen.getByRole("textbox", { name: "Search abilities" })).toHaveValue("");
+    expect(container.querySelectorAll(".filter-chip[aria-pressed='true']")).toHaveLength(0);
+    expect(screen.getByRole("button", { name: "Rough Skin" })).toBeInTheDocument();
+  });
+
   it("filters held items by real category", async () => {
     const user = userEvent.setup();
     const { container } = render(<ResourceDatabaseV2 kind="items" locale="en" />);
@@ -182,6 +203,20 @@ describe("reference filters", () => {
     expect(charizardite.querySelector("img")).toHaveAttribute("src", "/items/charizardite-x.png");
     expect(screen.queryByRole("button", { name: "Choice Scarf" })).not.toBeInTheDocument();
     expect(container.querySelectorAll("tbody img.item-icon").length).toBeGreaterThan(0);
+  });
+
+  it("clears held-item search and category filters while restoring Mega items", async () => {
+    const user = userEvent.setup();
+    const { container } = render(<ResourceDatabaseV2 kind="items" locale="en" />);
+    await user.type(screen.getByRole("textbox", { name: "Search held items" }), "Sitrus");
+    await user.click(screen.getByRole("button", { name: "Berry" }));
+    await user.click(screen.getByRole("button", { name: "ON" }));
+    await user.click(screen.getByRole("button", { name: "Clear item filters" }));
+    expect(screen.getByRole("textbox", { name: "Search held items" })).toHaveValue("");
+    expect(screen.getByRole("button", { name: "ON" })).toHaveAttribute("aria-pressed", "true");
+    expect(container.querySelectorAll(".filter-chip[aria-pressed='true']")).toHaveLength(1);
+    expect(screen.getByRole("button", { name: "Charizardite X" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Choice Scarf" })).toBeInTheDocument();
   });
 
   it("offers an Other effect filter for uncategorized held items", async () => {
@@ -219,6 +254,52 @@ describe("Speed Compare", () => {
 });
 
 describe("ChampionsApp", () => {
+  it("starts with the selected-team tray collapsed", () => {
+    render(<ChampionsApp />);
+    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    expect(tray).toHaveClass("collapsed");
+    expect(tray.querySelector(".tray-header")).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("keeps each database and comparison state while switching views, then resets after remount", async () => {
+    const user = userEvent.setup();
+    const { container, unmount } = render(<ChampionsApp />);
+
+    const pokemonFilters = container.querySelector<HTMLElement>(".pokemon-advanced-filters")!;
+    await user.click(within(pokemonFilters).getByRole("button", { name: "Water" }));
+
+    await user.click(screen.getByRole("button", { name: "Move DB" }));
+    const movePanel = screen.getByRole("heading", { name: "Move DB" }).closest("section")!;
+    await user.click(within(movePanel).getByRole("button", { name: "Water" }));
+
+    await user.click(screen.getByRole("button", { name: "Ability DB" }));
+    await user.click(screen.getByRole("button", { name: "Weather" }));
+
+    await user.click(screen.getByRole("button", { name: "Held Item DB" }));
+    await user.click(screen.getByRole("button", { name: "Berry" }));
+
+    await user.click(screen.getByRole("button", { name: "Speed Compare" }));
+    await user.selectOptions(screen.getByRole("combobox", { name: "Pokemon to compare" }), "alakazam");
+    await user.click(screen.getByRole("button", { name: "Add comparison" }));
+    expect(screen.getByRole("spinbutton", { name: "Speed AP for Alakazam" })).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Pokémon DB" }));
+    expect(within(pokemonFilters).getByRole("button", { name: "Water" })).toHaveAttribute("aria-pressed", "true");
+    await user.click(screen.getByRole("button", { name: "Move DB" }));
+    expect(within(movePanel).getByRole("button", { name: "Water" })).toHaveAttribute("aria-pressed", "true");
+    await user.click(screen.getByRole("button", { name: "Ability DB" }));
+    expect(screen.getByRole("button", { name: "Weather" })).toHaveAttribute("aria-pressed", "true");
+    await user.click(screen.getByRole("button", { name: "Held Item DB" }));
+    expect(screen.getByRole("button", { name: "Berry" })).toHaveAttribute("aria-pressed", "true");
+    await user.click(screen.getByRole("button", { name: "Speed Compare" }));
+    expect(screen.getByRole("spinbutton", { name: "Speed AP for Alakazam" })).toBeInTheDocument();
+
+    unmount();
+    render(<ChampionsApp />);
+    const resetPokemonFilters = document.querySelector<HTMLElement>(".pokemon-advanced-filters")!;
+    expect(within(resetPokemonFilters).getByRole("button", { name: "Water" })).toHaveAttribute("aria-pressed", "false");
+  }, 60_000);
+
   it("sorts detail learnsets by category, type, descending priority, properties, and target", () => {
     const names = ["Swords Dance", "Air Slash", "Assurance", "Aerial Ace", "Sucker Punch"];
     const fixture = names.map((name) => moves.find((move) => move.name === name)!);
@@ -229,8 +310,8 @@ describe("ChampionsApp", () => {
     const pokemonIds = ["abomasnow", "aerodactyl", "alakazam", "arbok", "arcanine", "garchomp"];
     const members: TeamMember[] = pokemonIds.map((pokemonId, index) => ({ id: `member-${index}`, pokemonId, abilityId: null, itemId: null, moveIds: [], ap: { ...ZERO_STATS }, nature: { name: "Serious", nameZh: "認真", up: null, down: null } }));
     useTeamStore.setState({ teams: { singles: [], doubles: members }, hydrated: true });
-    const { container } = render(<ChampionsApp />);
-    const list = container.querySelector<HTMLElement>(".team-list")!;
+    render(<ChampionsApp />);
+    const list = openTeamTray().querySelector<HTMLElement>(".team-list")!;
     expect(list).toBeInTheDocument();
     expect(list.querySelectorAll(":scope > .team-card")).toHaveLength(6);
     expect(within(list).getByText("Garchomp")).toBeInTheDocument();
@@ -253,15 +334,25 @@ describe("ChampionsApp", () => {
     const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
     const totalHeader = screen.getByRole("button", { name: /TOT/ });
     await user.click(totalHeader);
-    const ascending = Array.from(container.querySelectorAll("td[data-stat='total']"), (node) => Number(node.textContent));
-    expect(ascending).toEqual([...ascending].sort((a, b) => a - b));
-    await user.click(totalHeader);
     const descending = Array.from(container.querySelectorAll("td[data-stat='total']"), (node) => Number(node.textContent));
     expect(descending).toEqual([...descending].sort((a, b) => b - a));
+    await user.click(totalHeader);
+    const ascending = Array.from(container.querySelectorAll("td[data-stat='total']"), (node) => Number(node.textContent));
+    expect(ascending).toEqual([...ascending].sort((a, b) => a - b));
     await user.type(screen.getByRole("spinbutton", { name: "Minimum TOT" }), "700");
     const filtered = Array.from(container.querySelectorAll("td[data-stat='total']"), (node) => Number(node.textContent));
     expect(filtered.length).toBeGreaterThan(0);
     expect(filtered.every((value) => value >= 700)).toBe(true);
+  });
+
+  it("sorts every base-stat column descending on the first click", async () => {
+    const user = userEvent.setup();
+    render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
+    for (const name of ["HP", "Atk", "Def", "SpA", "SpD", "Spe"]) {
+      const header = screen.getByRole("button", { name });
+      await user.click(header);
+      expect(header.closest("th")).toHaveAttribute("aria-sort", "descending");
+    }
   });
 
   it("filters Pokémon by type, form, ability, known moves, and minimum stats", async () => {
@@ -370,7 +461,7 @@ describe("ChampionsApp", () => {
     await user.selectOptions(nature, "Adamant");
     fireEvent.change(screen.getByRole("slider", { name: /Atk/ }), { target: { value: "32" } });
     await user.click(screen.getByRole("button", { name: "Build & add" }));
-    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    const tray = openTeamTray();
     expect(within(tray).getByText("Weak")).toBeInTheDocument();
     expect(within(tray).getByText("Immune")).toBeInTheDocument();
     expect(within(tray).getByText("Adamant (Atk ↑ / SpA ↓)")).toHaveAttribute("title", "Adamant (Atk ↑ / SpA ↓)");
@@ -406,7 +497,7 @@ describe("ChampionsApp", () => {
     useTeamStore.setState({ teams: { singles: [], doubles: [member] }, hydrated: true });
     const user = userEvent.setup();
     render(<ChampionsApp />);
-    await user.click(screen.getByRole("button", { name: "Edit Mega Absol" }));
+    await user.click(within(openTeamTray()).getByRole("button", { name: "Edit Mega Absol" }));
     const item = screen.getByRole("combobox", { name: "Held item" });
     await user.click(item);
     await user.clear(item);
@@ -519,7 +610,7 @@ describe("ChampionsApp", () => {
     useTeamStore.setState({ teams: { singles: [member("single", "absol")], doubles: [member("double", "garchomp")] }, hydrated: true });
     const user = userEvent.setup();
     render(<ChampionsApp />);
-    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    const tray = openTeamTray();
     expect(within(tray).getByText("Garchomp")).toBeInTheDocument();
     await user.click(within(tray).getByRole("button", { name: "Singles 1/6" }));
     expect(within(tray).getByText("Absol")).toBeInTheDocument();
@@ -541,7 +632,7 @@ describe("ChampionsApp", () => {
     useTeamStore.setState({ teams: { singles: [], doubles: [existing, teammate] }, hydrated: true });
     const user = userEvent.setup();
     render(<ChampionsApp />);
-    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    const tray = openTeamTray();
     await user.click(within(tray).getByRole("button", { name: "Edit Absol" }));
     expect(screen.getByRole("button", { name: "Save changes" })).toBeInTheDocument();
     expect(screen.getByRole("combobox", { name: "Move 1" })).toHaveValue("Sucker Punch");
@@ -576,7 +667,7 @@ describe("ChampionsApp", () => {
     useTeamStore.setState({ teams: { singles: [], doubles: [existing] }, hydrated: true });
     const user = userEvent.setup();
     render(<ChampionsApp />);
-    await user.click(screen.getByRole("button", { name: "Edit Absol" }));
+    await user.click(within(openTeamTray()).getByRole("button", { name: "Edit Absol" }));
     const apSpread = await screen.findByRole("combobox", { name: "AP spread" });
     await waitFor(() => expect(apSpread).toHaveValue("3"));
     expect(screen.getByRole("option", { name: /Common #3 .*18.5%/ })).toBeInTheDocument();
@@ -598,7 +689,7 @@ describe("ChampionsApp", () => {
     useTeamStore.setState({ teams: { singles: [], doubles: [existing] }, hydrated: true });
     const user = userEvent.setup();
     render(<ChampionsApp />);
-    const tray = screen.getByRole("complementary", { name: "Selected team" });
+    const tray = openTeamTray();
     await user.click(within(tray).getByRole("button", { name: "Edit Absol" }));
     const item = screen.getByRole("combobox", { name: /Held item/ });
     await user.click(item);
@@ -665,7 +756,7 @@ describe("ChampionsApp", () => {
     expect(screen.getByRole("button", { name: "招式資料庫" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
     await user.type(screen.getByPlaceholderText("搜尋寶可夢名稱…"), "Garchomp");
-    expect(screen.getByText("烈咬陸鯊")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "烈咬陸鯊" })).toBeInTheDocument();
   });
 
   it("restores the user's last language after a remount", async () => {
