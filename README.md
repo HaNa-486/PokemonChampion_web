@@ -24,7 +24,6 @@ The production project is identified by `.openai/hosting.json`; Dev/UAT is ident
 - Four selected moves with type badges, ability, item, AP, nature, and calculated final stats
 - Format-specific usage defaults and dedicated Mega Stone transformation
 - Defensive matchup summaries plus a complete 18×18 type chart
-- Speed comparison with stages, Choice Scarf, and Trick Room ordering
 - English and Traditional Chinese UI
 - Protected, allowlisted admin draft-override console backed by Cloudflare D1
 

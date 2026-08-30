@@ -89,6 +89,18 @@ test("keeps the dormant speed comparison API contract stable in normal and Trick
   }
 });
 
+test("preserves identical-build speed ties with non-default stage and multiplier traces", async () => {
+  const tiedEntries = [0, 1].map(() => ({ ...speedEntries[0], stage: 1, multiplier: 1.5 }));
+  const response = await render("/api/v1/speed/compare", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ entries: tiedEntries, trickRoom: false }) });
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("cache-control"), "no-store");
+  const body = await response.json();
+  assert.equal(body.data.calculationVersion, "champions-v1");
+  assert.deepEqual(body.data.rows.map((row) => row.inputIndex), [0, 1]);
+  assert.deepEqual(body.data.rows.map((row) => row.pokemonId), ["alakazam", "alakazam"]);
+  assert.ok(body.data.rows.every((row) => row.finalSpeed === 140 && row.modifiedSpeed === 315 && row.stage === 1 && row.multiplier === 1.5));
+});
+
 test("rejects invalid and unknown Pokémon speed comparison requests", async () => {
   const invalid = await render("/api/v1/speed/compare", { method: "POST", headers: { accept: "application/json", "content-type": "application/json" }, body: JSON.stringify({ entries: [{ ...speedEntries[0], stage: 7 }], trickRoom: false }) });
   assert.equal(invalid.status, 400);
