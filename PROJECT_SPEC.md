@@ -47,8 +47,8 @@ GameWith may inspire interaction patterns only. **Do not copy** its CSS, layout,
 | Anonymous users | Team stored locally in versioned IndexedDB |
 | Accounts | Cloud sync/cross-device teams are phase 2, not v1 |
 | Images | Champions Battle Data for Pokémon/form assets; pinned PokeAPI sprites for locally bundled held-item thumbnails |
-| Included | Complete paginated catalogs, details, tooltips, reverse lookup, advanced filters, type chart, usage-based build defaults, builder/tray, speed comparison, admin overrides |
-| Excluded | Damage calculator, AI/strategy recommendations, team analysis, tier lists, community content |
+| Included | Complete paginated catalogs, details, tooltips, reverse lookup, advanced filters, type chart, usage-based build defaults, builder/tray, admin overrides |
+| Excluded | Speed comparison UI (temporarily withdrawn), damage calculator, AI/strategy recommendations, team analysis, tier lists, community content |
 | Commercial intent | Yes; privacy, consent, attribution, security, and legal-review readiness are required |
 
 The v1 usage-based defaults are deterministic: for the chosen Singles or Doubles format, apply the highest-ranked legal held item, ability, nature, AP spread, and up to four legal unique moves from current Champions battle data. They are editable starting values, not strategic recommendations. Future-only AI recommendations may use the complete legal Pokémon/move/ability/item/Regulation/battle dataset and a user's natural-language goal. Do not implement an LLM feature in v1, but keep normalized data and domain APIs suitable for future retrieval.
@@ -64,11 +64,10 @@ Required pages:
 5. Ability database
 6. Held item database
 7. Team builder
-8. Speed comparison
-9. Full 18×18 type matchup chart
-10. Data sources, attribution, and data date
-11. Privacy, terms, cookie settings, and unofficial-project notice
-12. Protected admin override interface
+8. Full 18×18 type matchup chart
+9. Data sources, attribution, and data date
+10. Privacy, terms, cookie settings, and unofficial-project notice
+11. Protected admin override interface
 
 Non-goals: damage calculation, AI/strategy recommendations, team synergy analysis, tier lists, user comments/voting, public raw-data mirror, bulk-data download, competing general-purpose data API, and native apps.
 
@@ -519,21 +518,9 @@ Edit opens the Build Workbench with that exact member's saved form, moves, abili
 
 Adding a seventh never silently overwrites; open replacement selection. Duplicate attempts show domain errors. Incomplete members are allowed and marked. Desktop uses a collapsible floating panel whose internal scroll area makes all six complete cards reachable; mobile uses a fixed bottom bar and accessible bottom sheet. Persist with versioned IndexedDB; LocalStorage only for tiny preferences/migration flags. Navigation/refresh preserves state. Corrupt/old data migrates or quarantines without crashing.
 
-### 8.6 Speed comparison
+### 8.6 Speed comparison (temporarily withdrawn)
 
-Inputs/output: multiple forms/builds, Champions base Speed, AP/nature, validated final Speed, stat stages, verified legal item/ability/weather/field modifiers, Trick Room, original/modified Speed, modifier trace, and speed ties.
-
-Order model:
-
-```text
-move priority
-→ explicit ability/item order rules
-→ field rules such as Trick Room
-→ modified Speed
-→ tie
-```
-
-Name the page **Speed Compare**, not a full turn simulator. State unsupported mechanics. Every supported multiplier/order rule requires a named golden fixture; never guess.
+Do not expose a Speed Compare page, navigation tab, or other user-facing entry point in the current release. The independently tested speed-domain calculation and `/api/v1/speed/compare` contract may remain dormant so a future approved iteration can restore the experience without coupling it to React or re-inventing mechanics.
 
 ### 8.7 Usage-based build defaults and Mega transformation
 
@@ -549,9 +536,9 @@ A Mega form preselects its dedicated stone. Every stone maps to one explicit com
 
 ### 8.8 Type matchup chart
 
-Provide a complete 18×18 attack-versus-defense matrix as a standalone page. Attack types run down the left and defending types across the top. Use full, high-contrast type badges plus text/icon cues; color alone is insufficient. The first column remains sticky during horizontal scrolling and the header row remains sticky during vertical scrolling.
+Provide a complete 18×18 attack-versus-defense matrix as a standalone page. Attack types run down the left and defending types across the top. Use full, high-contrast type badges plus text/icon cues; color alone is insufficient. The matrix must fit its available width and height without an internal horizontal or vertical scrollbar at the supported 390, 768, and 1440 CSS-pixel viewports. Compact viewports may use localized one- or two-character type codes while preserving the full type name as an accessible label and tooltip.
 
-Desktop also provides a collapsible lower-left floating chart because the team tray occupies the lower-right. Its chart area must support real horizontal and vertical scrolling without clipping its scrollbars. Mobile hides the floating panel and exposes only the standalone page link. Verify behavior at 390, 768, and 1440 CSS pixels.
+The primary application navigation exposes the chart as a first-class tab alongside the databases. The tab must remain accessible on mobile without adding a floating control. The chart prioritizes the complete relationship matrix over explanatory framing: spacing, labels, multiplier text, and row height adapt to the viewport so all 18×18 relationships are visible together and make useful use of each cell. Color remains a secondary cue; multiplier text and accessible type names must remain available. The standalone `/type-chart` page remains available as a direct route. Verify behavior at 390, 768, and 1440 CSS pixels.
 
 ### 8.9 i18n/accessibility
 
@@ -731,7 +718,7 @@ Team tray: add/edit/remove, independent Singles/Doubles groups, format-aware usa
 
 Builder selectors: Mega-to-regular and regular-to-Mega transitions, dedicated-stone-first item grouping, item effect groups including Other, localized name/effect search, Detailed/Compact preference persistence, visible learnable-move Power/Accuracy/PP, and document-level Escape dismissal. Locale tests cover browser-language inference, explicit-choice persistence, and localized battle-usage nature/AP/teammate values.
 
-Type chart: all 18×18 cells, dual-type multiplication, sticky header/first column, high-contrast badges, desktop floating panel with horizontal/vertical scrolling, standalone page, and mobile floating-panel suppression.
+Type chart: first-class application tab, all 18×18 cells visible together without internal scrolling at 390/768/1440, dual-type multiplication, high-contrast full or abbreviated type codes with accessible names, standalone page, and no floating control.
 
 ### 13.3 API/integration tests
 
@@ -768,9 +755,9 @@ The committed offline form-integrity audit runs on every deployment. A live audi
 - Cache invalidates after commit only.
 - Handle timeout, malformed JSON/CSV, wrong type, oversized response, and 5xx.
 
-### 13.6 Speed tests
+### 13.6 Dormant speed-domain/API tests
 
-Only after golden formula fixtures: missing input error; identical build tie; normal ordering; verified Trick Room ordering; stat stage/item/ability/weather/field modifiers applied exactly once and in verified order; inactive modifiers excluded; original/modified/trace output; move priority not silently mixed with raw speed; unsupported mechanics explicitly shown.
+The current release has no Speed Compare UI. Keep the dormant domain and `/api/v1/speed/compare` contract covered by named golden fixtures for missing/invalid input, unknown Pokémon, identical-build ties, normal ordering, verified Trick Room ordering, supported stat-stage/multiplier application, stable response fields and calculation version, and `no-store` responses. Do not claim or test a user-facing comparison journey until a future approved milestone restores the UI.
 
 ### 13.7 Critical E2E journeys
 
@@ -786,12 +773,11 @@ Only after golden formula fixtures: missing input error; identical build tie; no
 10. Open move/ability reverse lookup and sort by eligible-form count.
 11. Transform a base form by selecting its Mega Stone and verify every effective field.
 12. Scroll the six-card team tray to its final member.
-13. Open the floating type chart, scroll both axes, verify sticky labels, then use the mobile standalone page.
-14. Compare speeds and identify tie.
-15. Switch English/Chinese without losing state.
-16. Use mobile bottom sheet at 360/390 px.
-17. Admin previews/publishes/audits/reverts override.
-18. Stale upstream simulation shows last valid snapshot.
+13. Open the Type Chart tab at 390, 768, and 1440 CSS pixels; verify all 18 attack rows and 18 defense columns are visible without an internal scrollbar and every compact type code exposes its full name.
+14. Switch English/Chinese without losing state.
+15. Use mobile bottom sheet at 360/390 px.
+16. Admin previews/publishes/audits/reverts override.
+17. Stale upstream simulation shows last valid snapshot.
 
 Run Chromium, Firefox, WebKit. Required relevant widths: 360, 390, 768, 1024, 1440 px.
 
@@ -802,7 +788,7 @@ Run Chromium, Firefox, WebKit. Required relevant widths: 360, 390, 768, 1024, 14
 - Test XSS, SQLi, CSRF, IDOR, session fixation, OAuth state/PKCE, rate limiting, oversized payload, SSRF restriction, CSP, secrets, admin RBAC/audit, unpublished data, error leakage.
 - ZAP active scan only on isolated staging.
 - Rejecting non-essential cookies prevents trackers; consent withdraw works; policies reachable; attribution/notices visible.
-- Load test catalogs, combined move filters, details, format switches, validation, speed compare, and reads during import against section 12 budgets.
+- Load test catalogs, combined move filters, details, format switches, validation, and reads during import against section 12 budgets. The dormant speed API receives contract tests, not a current-release UI/load journey.
 
 Coverage requirements:
 
@@ -841,7 +827,7 @@ Create runbooks for upstream outage/contract change, rejected/stale snapshot, qu
 2. **Data platform:** fixtures, normalized schema/mappings, staging validation/atomic import, quarantine/admin override basics, attribution metadata.
 3. **Catalog UX:** catalog APIs/pages, search/filter/sort, Pokémon detail/battle data, tooltips, priority filter.
 4. **Team builder:** versioned DTO/IndexedDB, AP/nature editor, legality validator, floating tray; final stats only after golden validation.
-5. **Speed compare:** verified calculation/modifier strategies, UI, trace, Trick Room/ties from golden fixtures.
+5. **Dormant speed foundation:** retain verified calculation and API ordering fixtures without exposing a UI; any future Speed Compare UI, trace, or expanded modifier strategy requires a separately approved milestone and UAT.
 6. **Hardening/UAT:** accessibility, security, consent/legal, browser matrix, performance, restore/failure drills, reports/checklist.
 
 Do not implement future AI recommendations or damage calculation in these milestones.

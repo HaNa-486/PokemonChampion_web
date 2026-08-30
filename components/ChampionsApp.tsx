@@ -3,20 +3,21 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
 import { abilities, abilityById, battleDataKeyForPokemon, battleDataSourcePokemon, catalogSnapshotDate, itemById, items, megaBasePokemonIdByStoneId, megaPokemonByStoneId, megaStoneIdByPokemonId, megaStoneMatchesPokemon, moveById, moves, pokemon, pokemonById } from "../lib/catalog";
 import { rankedAbilityChoices, rankedApChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature, type RankedChoice } from "../lib/battle-recommendations";
-import { apTotal, calculateFinalStats, formatPriority, modifiedSpeed, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
+import { apTotal, calculateFinalStats, formatPriority, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
 import { localizedTerm, localizedTerms } from "../lib/localization";
 import { itemEffectCategories } from "../lib/filtering";
 import { useDialogEscape } from "../lib/use-dialog-escape";
 import type { BattleFormat, BattleUsage, Move, Nature, Pokemon, Stats, TeamMember } from "../lib/types";
-import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "./DatabaseViews";
+import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2 } from "./DatabaseViews";
 import { InfoTooltip } from "./InfoTooltip";
 import { ItemDisplay, ItemTooltip } from "./ItemDisplay";
 import { TypeBadge } from "./TypeBadge";
+import { TypeChart } from "./TypeChartView";
 import { TypeMatchups } from "./TypeMatchups";
 
 type Locale = "en" | "zh-Hant";
-type View = "pokemon" | "moves" | "abilities" | "items" | "speed";
+type View = "pokemon" | "moves" | "abilities" | "items" | "types";
 type PriorityClass = "positive" | "zero" | "negative";
 type DisplayMode = "detailed" | "compact";
 type BuilderDisplayModes = Record<"move" | "ability" | "item", DisplayMode>;
@@ -27,8 +28,8 @@ const ITEM_GROUP_ORDER = ["Common", "Mega Stone", "HP Recovery", "Status Cure", 
 const defaultDisplayModes: BuilderDisplayModes = { move: "detailed", ability: "detailed", item: "detailed" };
 
 const labels = {
-  en: { pokemon: "Pokémon DB", moves: "Move DB", abilities: "Ability DB", items: "Held Item DB", speed: "Speed Compare", search: "Search Pokémon or type…", current: "Regulation M-4 · Current", add: "Build & add", save: "Save changes", edit: "Edit", team: "Selected team", empty: "Choose a Pokémon to start building.", data: "Battle data updated", stale: "cached snapshot", doubles: "Doubles", singles: "Singles" },
-  "zh-Hant": { pokemon: "寶可夢資料庫", moves: "招式資料庫", abilities: "特性資料庫", items: "持有物資料庫", speed: "速度比較", search: "搜尋寶可夢或屬性…", current: "規則 M-4 · 當前", add: "配置並加入", save: "儲存變更", edit: "編輯", team: "已選隊伍", empty: "選擇一隻寶可夢開始配置。", data: "對戰資料更新", stale: "快取資料", doubles: "雙打", singles: "單打" },
+  en: { pokemon: "Pokémon DB", moves: "Move DB", abilities: "Ability DB", items: "Held Item DB", types: "Type Chart", search: "Search Pokémon or type…", current: "Regulation M-4 · Current", add: "Build & add", save: "Save changes", edit: "Edit", team: "Selected team", empty: "Choose a Pokémon to start building.", data: "Battle data updated", stale: "cached snapshot", doubles: "Doubles", singles: "Singles" },
+  "zh-Hant": { pokemon: "寶可夢資料庫", moves: "招式資料庫", abilities: "特性資料庫", items: "持有物資料庫", types: "屬性相剋", search: "搜尋寶可夢或屬性…", current: "規則 M-4 · 當前", add: "配置並加入", save: "儲存變更", edit: "編輯", team: "已選隊伍", empty: "選擇一隻寶可夢開始配置。", data: "對戰資料更新", stale: "快取資料", doubles: "雙打", singles: "單打" },
 };
 
 type DataStatusResponse = { data?: { snapshotDate?: string; stale?: boolean } };
@@ -518,14 +519,6 @@ function TeamTray({ locale, format, onFormatChange, onEdit }: { locale: Locale; 
   </aside>;
 }
 
-function SpeedCompare({ locale }: { locale: Locale }) {
-  const members = useTeamStore((state) => state.teams.doubles);
-  const [trickRoom, setTrickRoom] = useState(false);
-  const [stage, setStage] = useState(0);
-  const rows = useMemo(() => members.map((member) => { const entry = pokemonById.get(member.pokemonId)!; const final = calculateFinalStats(entry.baseStats, member.ap, member.nature).speed; const itemMultiplier = member.itemId === "choice-scarf" ? 1.5 : 1; return { member, entry, final, modified: modifiedSpeed(final, stage, itemMultiplier), itemMultiplier }; }).sort((a,b) => trickRoom ? a.modified - b.modified : b.modified - a.modified), [members, stage, trickRoom]);
-  return <section className="panel speed-panel"><div className="panel-head"><div><p className="eyebrow">TURN ORDER LAB</p><h1>{labels[locale].speed}</h1><p>{locale === "zh-Hant" ? "使用隊伍中的最終速度進行比較" : "Compare final Speed from your selected team"}</p></div></div><div className="speed-controls"><label>Stat stage<select value={stage} onChange={(event) => setStage(Number(event.target.value))}>{[-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6].map((value) => <option key={value} value={value}>{value > 0 ? `+${value}` : value}</option>)}</select></label><button className="filter-chip" aria-pressed={trickRoom} onClick={() => setTrickRoom(!trickRoom)}>Trick Room {trickRoom ? "ON" : "OFF"}</button></div>{rows.length === 0 ? <div className="empty-state"><span>↯</span><h2>{locale === "zh-Hant" ? "隊伍目前是空的" : "Your team is empty"}</h2><p>{locale === "zh-Hant" ? "先從寶可夢資料庫加入成員。" : "Add members from the Pokémon database first."}</p></div> : <div className="speed-list">{rows.map((row, index) => <article key={row.member.id} className="speed-row"><span className="speed-rank">{index + 1}</span><img src={row.entry.imageUrl} alt="" width="64" height="64" /><div className="speed-identity"><strong>{localName(row.entry, locale)}</strong><span>Base {row.entry.baseStats.speed} → Final {row.final}{row.itemMultiplier > 1 ? " × 1.5 Scarf" : ""}</span></div><div className="speed-result"><small>{trickRoom ? "TR order" : "Modified Speed"}</small><b>{row.modified}</b></div></article>)}</div>}<p className="mechanics-note">Priority → explicit order effects → {trickRoom ? "Trick Room → slower first" : "modified Speed → faster first"} → speed tie.</p></section>;
-}
-
 export function ChampionsApp() {
   const [locale, setLocaleState] = useState<Locale>("en");
   const setLocale = (value: Locale | ((current: Locale) => Locale)) => setLocaleState((current) => {
@@ -559,5 +552,5 @@ export function ChampionsApp() {
     setEditingMember(member);
     setSelected(entry);
   };
-  return <div className="app-shell"><header className="topbar"><a className="brand" href="#top" aria-label="Champions Lab home"><span className="brand-mark">CL</span><span><b>CHAMPIONS LAB</b><small>Battle intelligence, built clearly.</small></span></a><nav>{(["pokemon","moves","abilities","items","speed"] as View[]).map((entry) => <button key={entry} className={view === entry ? "active" : ""} onClick={() => setView(entry)}>{copy[entry]}</button>)}</nav><div className="header-actions"><span className="regulation-dot">● {copy.current}</span><div className="segmented" role="group" aria-label="Team mode"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{copy.singles}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{copy.doubles}</button></div><button className="locale-button" onClick={() => setLocale(locale === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></header><main id="top"><PokemonTableV2 active={view === "pokemon"} locale={locale} format={format} onSelect={startNewBuild} /><MoveDatabaseV2 active={view === "moves"} locale={locale} /><ResourceDatabaseV2 active={view === "abilities"} kind="abilities" locale={locale} /><ResourceDatabaseV2 active={view === "items"} kind="items" locale={locale} /><SpeedCompareV2 active={view === "speed"} locale={locale} format={format} /></main><footer><span>Unofficial community tool.</span><a href="https://championsbattledata.com/">Battle data provided by Pokémon Champions Battle Data</a><a href="https://github.com/smogon/pokemon-showdown">Move mechanics provided by Pokémon Showdown</a><a href="https://github.com/PokeAPI/sprites">Held-item sprites provided by PokeAPI sprites</a><DataFreshness locale={locale} /></footer><TeamTray locale={locale} format={format} onFormatChange={setFormat} onEdit={editTeamMember} /><BuildEditor selected={selected} editingMember={editingMember} locale={locale} format={format} onFormatChange={setFormat} onClose={closeEditor} /></div>;
+  return <div className={`app-shell ${view === "types" ? "type-chart-active" : ""}`}><header className="topbar"><a className="brand" href="#top" aria-label="Champions Lab home"><span className="brand-mark">CL</span><span><b>CHAMPIONS LAB</b><small>Battle intelligence, built clearly.</small></span></a><nav>{(["pokemon","moves","abilities","items","types"] as View[]).map((entry) => <button key={entry} className={view === entry ? "active" : ""} onClick={() => setView(entry)}>{copy[entry]}</button>)}</nav><div className="header-actions"><span className="regulation-dot">● {copy.current}</span><div className="segmented" role="group" aria-label="Team mode"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{copy.singles}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{copy.doubles}</button></div><button className="locale-button" onClick={() => setLocale(locale === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></header><main id="top"><PokemonTableV2 active={view === "pokemon"} locale={locale} format={format} onSelect={startNewBuild} /><MoveDatabaseV2 active={view === "moves"} locale={locale} /><ResourceDatabaseV2 active={view === "abilities"} kind="abilities" locale={locale} /><ResourceDatabaseV2 active={view === "items"} kind="items" locale={locale} />{view === "types" && <TypeChart locale={locale} />}</main><footer><span>Unofficial community tool.</span><a href="https://championsbattledata.com/">Battle data provided by Pokémon Champions Battle Data</a><a href="https://github.com/smogon/pokemon-showdown">Move mechanics provided by Pokémon Showdown</a><a href="https://github.com/PokeAPI/sprites">Held-item sprites provided by PokeAPI sprites</a><DataFreshness locale={locale} /></footer><TeamTray locale={locale} format={format} onFormatChange={setFormat} onEdit={editTeamMember} /><BuildEditor selected={selected} editingMember={editingMember} locale={locale} format={format} onFormatChange={setFormat} onClose={closeEditor} /></div>;
 }

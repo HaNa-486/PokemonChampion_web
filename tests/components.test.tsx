@@ -2,8 +2,8 @@ import { fireEvent, render, screen, waitFor, within } from "@testing-library/rea
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChampionsApp } from "../components/ChampionsApp";
-import { TypeChart, TypeChartFloating } from "../components/TypeChartView";
-import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2, SpeedCompareV2 } from "../components/DatabaseViews";
+import { TypeChart } from "../components/TypeChartView";
+import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2 } from "../components/DatabaseViews";
 import { compareLearnableMoves } from "../components/PokemonDetailDialog";
 import { ZERO_STATS } from "../lib/domain";
 import { moves, pokemon } from "../lib/catalog";
@@ -252,19 +252,6 @@ describe("reference filters", () => {
   });
 });
 
-describe("Speed Compare", () => {
-  it("adds independent comparison rows and exposes per-row scenarios", async () => {
-    const user = userEvent.setup();
-    render(<SpeedCompareV2 locale="en" />);
-    expect(screen.getByText("No comparison rows yet")).toBeInTheDocument();
-    await user.selectOptions(screen.getByRole("combobox", { name: "Pokemon to compare" }), "alakazam");
-    await user.click(screen.getByRole("button", { name: "Add comparison" }));
-    const row = screen.getByRole("spinbutton", { name: "Speed AP for Alakazam" }).closest("article")!;
-    expect(within(row).getByRole("spinbutton", { name: "Speed AP for Alakazam" })).toHaveValue(0);
-    expect(within(row).getByText("140")).toBeInTheDocument();
-  });
-});
-
 describe("ChampionsApp", () => {
   it("starts with the selected-team tray collapsed", () => {
     render(<ChampionsApp />);
@@ -273,7 +260,7 @@ describe("ChampionsApp", () => {
     expect(tray.querySelector(".tray-header")).toHaveAttribute("aria-expanded", "false");
   });
 
-  it("keeps each database and comparison state while switching views, then resets after remount", async () => {
+  it("keeps each database state while switching views, then resets after remount", async () => {
     const user = userEvent.setup();
     const { container, unmount } = render(<ChampionsApp />);
 
@@ -290,11 +277,6 @@ describe("ChampionsApp", () => {
     await user.click(screen.getByRole("button", { name: "Held Item DB" }));
     await user.click(screen.getByRole("button", { name: "Berry" }));
 
-    await user.click(screen.getByRole("button", { name: "Speed Compare" }));
-    await user.selectOptions(screen.getByRole("combobox", { name: "Pokemon to compare" }), "alakazam");
-    await user.click(screen.getByRole("button", { name: "Add comparison" }));
-    expect(screen.getByRole("spinbutton", { name: "Speed AP for Alakazam" })).toBeInTheDocument();
-
     await user.click(screen.getByRole("button", { name: "Pokémon DB" }));
     expect(within(pokemonFilters).getByRole("button", { name: "Water" })).toHaveAttribute("aria-pressed", "true");
     await user.click(screen.getByRole("button", { name: "Move DB" }));
@@ -303,9 +285,6 @@ describe("ChampionsApp", () => {
     expect(screen.getByRole("button", { name: "Weather" })).toHaveAttribute("aria-pressed", "true");
     await user.click(screen.getByRole("button", { name: "Held Item DB" }));
     expect(screen.getByRole("button", { name: "Berry" })).toHaveAttribute("aria-pressed", "true");
-    await user.click(screen.getByRole("button", { name: "Speed Compare" }));
-    expect(screen.getByRole("spinbutton", { name: "Speed AP for Alakazam" })).toBeInTheDocument();
-
     unmount();
     render(<ChampionsApp />);
     const resetPokemonFilters = document.querySelector<HTMLElement>(".pokemon-advanced-filters")!;
@@ -839,17 +818,25 @@ describe("Type matchup chart", () => {
     const { container } = render(<TypeChart locale="en" />);
     expect(container.querySelectorAll("tbody tr")).toHaveLength(18);
     expect(container.querySelectorAll("tbody td")).toHaveLength(324);
+    expect(container.querySelectorAll("colgroup col")).toHaveLength(19);
     const defendingHeader = container.querySelector("thead")!;
     expect(within(defendingHeader).getByText("Normal")).toBeInTheDocument();
     expect(within(defendingHeader).getByText("Fairy")).toBeInTheDocument();
+    expect(screen.getAllByLabelText("Normal")).toHaveLength(2);
+    expect(container.querySelector(".chart-type-short")).toHaveTextContent("N");
     expect(screen.getByText("Type Matchup Chart")).toBeInTheDocument();
   });
 
-  it("opens from the lower-left floating control and links to the full page", async () => {
+  it("opens as a first-class application tab without a floating control", async () => {
     const user = userEvent.setup();
-    render(<TypeChartFloating />);
-    await user.click(screen.getByRole("button", { name: /Type chart/ }));
-    expect(screen.getByRole("link", { name: /Open full type chart page/ })).toHaveAttribute("href", "/type-chart");
+    render(<ChampionsApp />);
+    expect(screen.queryByRole("complementary", { name: /Type chart/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Speed Compare" })).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Type Chart" }));
     expect(screen.getByLabelText("Type Matchup Chart")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "繁中" }));
+    expect(screen.getByRole("button", { name: "屬性相剋" })).toHaveClass("active");
+    expect(screen.queryByRole("button", { name: "速度比較" })).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "屬性相剋表" })).toBeInTheDocument();
   });
 });

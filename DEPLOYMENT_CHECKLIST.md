@@ -113,7 +113,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Reverse results use the Pokémon DB-style table; header sorting and sort controls stay synchronized, and mobile horizontal scrolling keeps the Pokémon column sticky.
 - [ ] Pokémon detail shows form-specific learnsets, abilities, matchups, and both battle formats.
 - [ ] Current-season move/item/ability entries open canonical tooltips; moves show their visible type badge and unmapped rows remain readable.
-- [ ] Held-item thumbnails appear beside item names in the Item DB, Pokémon battle usage, builder selection preview, Mega transformation message, floating team tray, and Speed Compare selection preview.
+- [ ] Held-item thumbnails appear beside item names in the Item DB, Pokémon battle usage, builder selection preview, Mega transformation message, and floating team tray.
 - [ ] The same held-item thumbnail appears in both a tooltip trigger and its tooltip heading; a failed image remains readable through the neutral fallback.
 - [ ] Singles/Doubles usage defaults apply the highest-ranked legal item, ability, nature, AP spread, and four unique learnable moves.
 - [ ] Every base/Mega transition reuses the regular form's one recommendation request; Mega Gallade uses `gallade` and never requests `gallademega`.
@@ -148,11 +148,11 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] At 390 px, detail move filters expand/collapse cleanly, chip rows scroll horizontally, and battle-usage tooltips open by touch.
 - [ ] At 390, 768, and 1440 px, item thumbnails do not clip, distort, obscure labels, or create unintended horizontal page scrolling.
 - [ ] The 18×18 type chart is complete.
-- [ ] The floating chart scrolls horizontally and vertically.
-- [ ] The attack column stays sticky during horizontal scrolling.
-- [ ] The defense header stays sticky during vertical scrolling.
+- [ ] The Type Chart tab shows all 18 attack rows and 18 defense columns together without an internal scrollbar at 390, 768, and 1440 CSS pixels.
+- [ ] Compact type codes retain full accessible type names and tooltips.
+- [ ] Type codes and `2×` / `½×` / `0×` labels scale with their cells, remain legible, and do not rely on color alone.
 - [ ] Type badges use readable high-contrast text.
-- [ ] Mobile hides the floating chart and exposes the standalone chart page.
+- [ ] Mobile exposes the Type Chart tab without a floating control.
 - [ ] No tooltip, menu, or dialog is clipped behind a table or floating tray.
 
 ## 7. Security, accessibility, and performance
@@ -186,11 +186,11 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 Production smoke test:
 
 - [ ] Home and `/type-chart` load.
-- [ ] Pokémon, Move, Ability, Held Item, and Speed Compare navigation works.
+- [ ] Pokémon, Move, Ability, Held Item, and Type Chart navigation works; Speed Compare has no user-facing tab or page.
 - [ ] Ninetales reports `battleDataKey=ninetales`.
 - [ ] Alolan Ninetales reports `battleDataKey=ninetalesalola`.
 - [ ] Their usage-based builds are visibly different and form-correct.
-- [ ] Singles/Doubles teams, Mega transformation, reverse lookup, pagination, and chart scrolling work.
+- [ ] Singles/Doubles teams, Mega transformation, reverse lookup, pagination, and the complete no-scroll Type Chart work.
 - [ ] Record deployed URL, version, commit SHA, test summary, and known limitations for UAT.
 
 ## 9. Current hardening gaps
@@ -198,7 +198,7 @@ Production smoke test:
 The following remain required before claiming the full commercial-readiness Definition of Done in `PROJECT_SPEC.md`:
 
 - Automated Chromium/Firefox/WebKit E2E suite
-- Automated sticky-header and real-scroll assertions
+- Automated responsive Type Chart no-overflow assertions
 - axe accessibility gate
 - Dependency, secret, SAST, and isolated-staging ZAP gates
 - Performance/load budgets and k6 suite
