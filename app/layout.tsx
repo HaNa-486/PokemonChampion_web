@@ -4,14 +4,24 @@ import { DevEnvironmentBanner } from "../components/DevEnvironmentBanner";
 import { ThemePreferenceSync } from "../components/ThemeToggle";
 import "./globals.css";
 
-const themeBootScript = `(() => {
+const preferenceBootScript = `(() => {
   try {
+    const root = document.documentElement;
     const saved = localStorage.getItem("champions-lab-theme-v1");
     const theme = saved === "dark" || saved === "light"
       ? saved
       : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme;
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+
+    const savedLocale = localStorage.getItem("champions-lab-locale-v1");
+    const languages = navigator.languages?.length ? navigator.languages : [navigator.language];
+    const locale = savedLocale === "en" || savedLocale === "zh-Hant"
+      ? savedLocale
+      : (languages.some((language) => language.toLowerCase().startsWith("zh")) ? "zh-Hant" : "en");
+    root.dataset.locale = locale;
+    root.lang = locale;
+    if (locale === "zh-Hant") root.dataset.localePending = "";
   } catch {}
 })();`;
 
@@ -49,7 +59,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+        <script dangerouslySetInnerHTML={{ __html: preferenceBootScript }} />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

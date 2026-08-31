@@ -13,6 +13,8 @@ import type { TeamMember } from "../lib/types";
 
 beforeEach(() => {
   localStorage.clear();
+  delete document.documentElement.dataset.locale;
+  delete document.documentElement.dataset.localePending;
   useTeamStore.setState({ teams: { singles: [], doubles: [] }, hydrated: true });
 });
 afterEach(() => {
@@ -36,6 +38,12 @@ describe("Move Database", () => {
     expect(row).toHaveTextContent("接觸");
     expect(row).toHaveTextContent("可被守住");
     expect(row).not.toHaveTextContent("Contact");
+    const headers = within(row!.closest("table")!).getAllByRole("columnheader");
+    const headerLabels = headers.map((header) => header.textContent?.replace(/[↑↓↕]/g, ""));
+    expect(headerLabels).toEqual(expect.arrayContaining(["目標", "效果", "特性標籤"]));
+    expect(headerLabels.indexOf("效果")).toBe(headerLabels.indexOf("目標") + 1);
+    expect(headerLabels.indexOf("特性標籤")).toBe(headerLabels.indexOf("效果") + 1);
+    expect(row?.querySelector(".move-effect-cell")).toHaveTextContent(moves.find((move) => move.name === "Accelerock")!.descriptionZh);
   });
 
   it("filters positive and negative priority independently", async () => {
@@ -757,8 +765,12 @@ describe("ChampionsApp", () => {
     await user.click(screen.getByRole("button", { name: "繁中" }));
     expect(localStorage.getItem("champions-lab-locale-v1")).toBe("zh-Hant");
     first.unmount();
+    document.documentElement.dataset.locale = "zh-Hant";
+    document.documentElement.dataset.localePending = "";
     render(<ChampionsApp />);
     expect(await screen.findByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
+    expect(document.documentElement).not.toHaveAttribute("data-locale-pending");
+    expect(document.documentElement).toHaveAttribute("lang", "zh-Hant");
   });
 
   it("uses the browser language on the first visit", async () => {

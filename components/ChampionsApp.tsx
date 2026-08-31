@@ -543,7 +543,13 @@ export function ChampionsApp() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocale(preferred);
   }, []);
-  useEffect(() => { document.documentElement.lang = locale === "zh-Hant" ? "zh-Hant" : "en"; }, [locale]);
+  useEffect(() => {
+    const root = document.documentElement;
+    if (root.hasAttribute("data-locale-pending") && root.dataset.locale !== locale) return;
+    root.dataset.locale = locale;
+    root.lang = locale;
+    delete root.dataset.localePending;
+  }, [locale]);
   const copy = labels[locale];
   const closeEditor = useCallback(() => { setSelected(null); setEditingMember(null); }, []);
   const startNewBuild = (entry: Pokemon) => { setEditingMember(null); setSelected(entry); };

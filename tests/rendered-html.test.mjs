@@ -24,6 +24,8 @@ test("server-renders Champions Lab instead of the starter", async () => {
   assert.match(html, />BD<\/button>/);
   assert.match(html, />WP<\/button>/);
   assert.match(html, /champions-lab-theme-v1/);
+  assert.match(html, /champions-lab-locale-v1/);
+  assert.match(html, /localePending/);
   assert.match(html, /prefers-color-scheme: dark/);
   assert.match(html, /Pokémon DB/);
   assert.match(html, /Battle data provided by/);
