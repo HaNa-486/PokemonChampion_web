@@ -5,20 +5,23 @@ import { abilities, abilityById, battleDataKeyForPokemon, battleDataSourcePokemo
 import { rankedAbilityChoices, rankedApChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature, type RankedChoice } from "../lib/battle-recommendations";
 import { apTotal, calculateFinalStats, formatPriority, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
+import { useScrapbookStore } from "../lib/scrapbook-store";
 import { localizedTerm, localizedTerms } from "../lib/localization";
 import { itemEffectCategories } from "../lib/filtering";
 import { useDialogEscape } from "../lib/use-dialog-escape";
 import type { BattleFormat, BattleUsage, Move, Nature, Pokemon, Stats, TeamMember } from "../lib/types";
 import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2 } from "./DatabaseViews";
+import { AddToScrapbookDialog } from "./AddToScrapbookDialog";
 import { InfoTooltip } from "./InfoTooltip";
 import { ItemDisplay, ItemTooltip } from "./ItemDisplay";
 import { TypeBadge } from "./TypeBadge";
 import { TypeChart } from "./TypeChartView";
 import { TypeMatchups } from "./TypeMatchups";
 import { ThemeToggle, useThemePreference } from "./ThemeToggle";
+import { ScrapbookView } from "./ScrapbookView";
 
 type Locale = "en" | "zh-Hant";
-type View = "pokemon" | "moves" | "abilities" | "items" | "types";
+type View = "pokemon" | "scrapbook" | "moves" | "abilities" | "items" | "types";
 type PriorityClass = "positive" | "zero" | "negative";
 type DisplayMode = "detailed" | "compact";
 type BuilderDisplayModes = Record<"move" | "ability" | "item", DisplayMode>;
@@ -29,8 +32,8 @@ const ITEM_GROUP_ORDER = ["Common", "Mega Stone", "HP Recovery", "Status Cure", 
 const defaultDisplayModes: BuilderDisplayModes = { move: "detailed", ability: "detailed", item: "detailed" };
 
 const labels = {
-  en: { pokemon: "Pokémon DB", moves: "Move DB", abilities: "Ability DB", items: "Held Item DB", types: "Type Chart", search: "Search Pokémon or type…", current: "Regulation M-4 · Current", add: "Build & add", save: "Save changes", edit: "Edit", team: "Selected team", empty: "Choose a Pokémon to start building.", data: "Battle data updated", stale: "cached snapshot", doubles: "Doubles", singles: "Singles" },
-  "zh-Hant": { pokemon: "寶可夢資料庫", moves: "招式資料庫", abilities: "特性資料庫", items: "持有物資料庫", types: "屬性相剋", search: "搜尋寶可夢或屬性…", current: "規則 M-4 · 當前", add: "配置並加入", save: "儲存變更", edit: "編輯", team: "已選隊伍", empty: "選擇一隻寶可夢開始配置。", data: "對戰資料更新", stale: "快取資料", doubles: "雙打", singles: "單打" },
+  en: { pokemon: "Pokémon DB", scrapbook: "Scrapbooks", moves: "Move DB", abilities: "Ability DB", items: "Held Item DB", types: "Type Chart", search: "Search Pokémon or type…", current: "Regulation M-4 · Current", add: "Build & add", save: "Save changes", edit: "Edit", team: "Selected team", empty: "Choose a Pokémon to start building.", data: "Battle data updated", stale: "cached snapshot", doubles: "Doubles", singles: "Singles" },
+  "zh-Hant": { pokemon: "寶可夢資料庫", scrapbook: "畫本", moves: "招式資料庫", abilities: "特性資料庫", items: "持有物資料庫", types: "屬性相剋", search: "搜尋寶可夢或屬性…", current: "規則 M-4 · 當前", add: "配置並加入", save: "儲存變更", edit: "編輯", team: "已選隊伍", empty: "選擇一隻寶可夢開始配置。", data: "對戰資料更新", stale: "快取資料", doubles: "雙打", singles: "單打" },
 };
 
 type DataStatusResponse = { data?: { snapshotDate?: string; stale?: boolean } };
@@ -531,9 +534,12 @@ export function ChampionsApp() {
   const [view, setView] = useState<View>("pokemon");
   const [format, setFormat] = useState<BattleFormat>("doubles");
   const [selected, setSelected] = useState<Pokemon | null>(null);
+  const [scrapbookCandidate, setScrapbookCandidate] = useState<Pokemon | null>(null);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
   const hydrate = useTeamStore((state) => state.hydrate);
+  const hydrateScrapbooks = useScrapbookStore((state) => state.hydrate);
   useEffect(() => { void hydrate(); }, [hydrate]);
+  useEffect(() => { void hydrateScrapbooks(); }, [hydrateScrapbooks]);
   useEffect(() => {
     const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
     const preferred = saved === "en" || saved === "zh-Hant"
@@ -560,5 +566,5 @@ export function ChampionsApp() {
     setEditingMember(member);
     setSelected(entry);
   };
-  return <div className={`app-shell ${view === "types" ? "type-chart-active" : ""}`}><header className="topbar"><a className="brand" href="#top" aria-label="Champions Lab home"><span className="brand-mark">CL</span><span><b>CHAMPIONS LAB</b><small>Battle intelligence, built clearly.</small></span></a><nav>{(["pokemon","moves","abilities","items","types"] as View[]).map((entry) => <button key={entry} className={view === entry ? "active" : ""} onClick={() => setView(entry)}>{copy[entry]}</button>)}</nav><div className="header-actions"><span className="regulation-dot">● {copy.current}</span><div className="segmented" role="group" aria-label="Team mode"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{copy.singles}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{copy.doubles}</button></div><ThemeToggle theme={theme} locale={locale} onChange={setTheme} /><button className="locale-button" onClick={() => setLocale(locale === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></header><main id="top"><PokemonTableV2 active={view === "pokemon"} locale={locale} format={format} onSelect={startNewBuild} /><MoveDatabaseV2 active={view === "moves"} locale={locale} /><ResourceDatabaseV2 active={view === "abilities"} kind="abilities" locale={locale} /><ResourceDatabaseV2 active={view === "items"} kind="items" locale={locale} />{view === "types" && <TypeChart locale={locale} />}</main><footer><span>Unofficial community tool.</span><a href="https://championsbattledata.com/">Battle data provided by Pokémon Champions Battle Data</a><a href="https://github.com/smogon/pokemon-showdown">Move mechanics provided by Pokémon Showdown</a><a href="https://github.com/PokeAPI/sprites">Held-item sprites provided by PokeAPI sprites</a><DataFreshness locale={locale} /></footer><TeamTray locale={locale} format={format} onFormatChange={setFormat} onEdit={editTeamMember} /><BuildEditor selected={selected} editingMember={editingMember} locale={locale} format={format} onFormatChange={setFormat} onClose={closeEditor} /></div>;
+  return <div className={`app-shell ${view === "types" ? "type-chart-active" : ""}`}><header className="topbar"><a className="brand" href="#top" aria-label="Champions Lab home"><span className="brand-mark">CL</span><span><b>CHAMPIONS LAB</b><small>Battle intelligence, built clearly.</small></span></a><nav>{(["pokemon","scrapbook","moves","abilities","items","types"] as View[]).map((entry) => <button key={entry} className={view === entry ? "active" : ""} onClick={() => setView(entry)}>{copy[entry]}</button>)}</nav><div className="header-actions"><span className="regulation-dot">● {copy.current}</span><div className="segmented" role="group" aria-label="Team mode"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{copy.singles}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{copy.doubles}</button></div><ThemeToggle theme={theme} locale={locale} onChange={setTheme} /><button className="locale-button" onClick={() => setLocale(locale === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></header><main id="top"><PokemonTableV2 active={view === "pokemon"} locale={locale} format={format} onSelect={startNewBuild} onScrapbook={setScrapbookCandidate} />{view === "scrapbook" && <ScrapbookView locale={locale} format={format} onBuild={startNewBuild} onAddToScrapbook={setScrapbookCandidate} />}<MoveDatabaseV2 active={view === "moves"} locale={locale} onScrapbook={setScrapbookCandidate} /><ResourceDatabaseV2 active={view === "abilities"} kind="abilities" locale={locale} onScrapbook={setScrapbookCandidate} /><ResourceDatabaseV2 active={view === "items"} kind="items" locale={locale} />{view === "types" && <TypeChart locale={locale} />}</main><footer><span>Unofficial community tool.</span><a href="https://championsbattledata.com/">Battle data provided by Pokémon Champions Battle Data</a><a href="https://github.com/smogon/pokemon-showdown">Move mechanics provided by Pokémon Showdown</a><a href="https://github.com/PokeAPI/sprites">Held-item sprites provided by PokeAPI sprites</a><DataFreshness locale={locale} /></footer><TeamTray locale={locale} format={format} onFormatChange={setFormat} onEdit={editTeamMember} /><BuildEditor selected={selected} editingMember={editingMember} locale={locale} format={format} onFormatChange={setFormat} onClose={closeEditor} />{scrapbookCandidate && <AddToScrapbookDialog pokemon={scrapbookCandidate} locale={locale} onClose={() => setScrapbookCandidate(null)} />}</div>;
 }

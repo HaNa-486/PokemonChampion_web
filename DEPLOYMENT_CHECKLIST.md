@@ -124,6 +124,13 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Builder ability and item fields support name/effect search, localized rich descriptions, keyboard/mouse/touch selection, and independent Detailed/Compact preferences that default to Detailed and persist.
 - [ ] Held-item options are grouped by effect class, expose Other, and place the selected family’s dedicated stone first in the Mega Stone group.
 - [ ] Learnable move cards show Power, Accuracy, and PP without requiring hover.
+- [ ] Scrapbooks appear between Pokémon DB and Move DB, persist locally, and support multiple books with per-book reusable multi-select tags.
+- [ ] Pokémon DB rows, Pokémon detail, move reverse lookup, and ability reverse lookup all open the same add-to-scrapbook flow.
+- [ ] Duplicate scrapbook adds merge tag membership; untagged Pokémon appear only under Untagged; multi-tag Pokémon appear in every selected group without duplicate saved entries.
+- [ ] The collapsible scrapbook quick finder exposes Pokémon DB-equivalent conditions and shows no candidates until at least one condition is active.
+- [ ] Tag groups and Pokémon can be reordered by drag and accessible move controls; groups support independent and expand/collapse-all controls, with sprite previews while collapsed.
+- [ ] Expanded comparison rows omit TOT and show current-format final stats plus defensive matchups; unavailable usage safely uses the versioned zero-AP neutral fallback.
+- [ ] Inline scrapbook detail keeps the complete Pokémon intelligence and Build Workbench action, lists own-type moves first then canonical types and Physical/Special/Status, and independently toggles six battle-data categories.
 
 ## 6. Browser and responsive QA
 
@@ -154,6 +161,7 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] Type badges use readable high-contrast text.
 - [ ] Mobile exposes the Type Chart tab without a floating control.
 - [ ] No tooltip, menu, or dialog is clipped behind a table or floating tray.
+- [ ] Scrapbook creation, collapsed previews, comparison rows, inline details, move lists, and action controls remain usable at 390, 768, and 1440 px.
 
 ## 7. Security, accessibility, and performance
 
