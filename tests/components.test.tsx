@@ -323,6 +323,7 @@ describe("ChampionsApp", () => {
   it("shows, filters, and sorts the total base stat in both directions", async () => {
     const user = userEvent.setup();
     const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
+    expect(container.querySelector("td[data-stat='total']")).toHaveClass("stat-accent", "stat-total");
     const totalHeader = screen.getByRole("button", { name: /TOT/ });
     await user.click(totalHeader);
     const descending = Array.from(container.querySelectorAll("td[data-stat='total']"), (node) => Number(node.textContent));

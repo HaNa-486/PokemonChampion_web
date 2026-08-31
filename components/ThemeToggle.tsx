@@ -43,7 +43,7 @@ export function ThemePreferenceSync() {
 }
 
 export function useThemePreference() {
-  const [theme, setThemeState] = useState<ThemeMode>("dark");
+  const [theme, setThemeState] = useState<ThemeMode | null>(null);
 
   useEffect(() => {
     const preferred = preferredTheme();
@@ -67,20 +67,24 @@ export function useThemePreference() {
 }
 
 export function ThemeToggle({ theme, locale, onChange }: {
-  theme: ThemeMode;
+  theme: ThemeMode | null;
   locale: "en" | "zh-Hant";
   onChange: (theme: ThemeMode) => void;
 }) {
   const groupLabel = locale === "zh-Hant" ? "顯示模式" : "Display mode";
-  const darkLabel = theme === "dark"
-    ? (locale === "zh-Hant" ? "深色模式（目前使用）" : "Dark mode (current)")
-    : (locale === "zh-Hant" ? "切換為深色模式" : "Switch to dark mode");
-  const lightLabel = theme === "light"
-    ? (locale === "zh-Hant" ? "淺色模式（目前使用）" : "Light mode (current)")
-    : (locale === "zh-Hant" ? "切換為淺色模式" : "Switch to light mode");
+  const darkLabel = theme === null
+    ? (locale === "zh-Hant" ? "深色模式" : "Dark mode")
+    : theme === "dark"
+      ? (locale === "zh-Hant" ? "深色模式（目前使用）" : "Dark mode (current)")
+      : (locale === "zh-Hant" ? "切換為深色模式" : "Switch to dark mode");
+  const lightLabel = theme === null
+    ? (locale === "zh-Hant" ? "淺色模式" : "Light mode")
+    : theme === "light"
+      ? (locale === "zh-Hant" ? "淺色模式（目前使用）" : "Light mode (current)")
+      : (locale === "zh-Hant" ? "切換為淺色模式" : "Switch to light mode");
 
   return <div className="segmented theme-segmented" role="group" aria-label={groupLabel}>
-    <button type="button" className={`theme-button ${theme === "dark" ? "active" : ""}`} aria-label={darkLabel} aria-pressed={theme === "dark"} title={darkLabel} onClick={() => onChange("dark")}>BD</button>
-    <button type="button" className={`theme-button ${theme === "light" ? "active" : ""}`} aria-label={lightLabel} aria-pressed={theme === "light"} title={lightLabel} onClick={() => onChange("light")}>WP</button>
+    <button type="button" data-theme-option="dark" className={`theme-button ${theme === "dark" ? "active" : ""}`} aria-label={darkLabel} aria-pressed={theme === null ? undefined : theme === "dark"} title={darkLabel} onClick={() => onChange("dark")}>BD</button>
+    <button type="button" data-theme-option="light" className={`theme-button ${theme === "light" ? "active" : ""}`} aria-label={lightLabel} aria-pressed={theme === null ? undefined : theme === "light"} title={lightLabel} onClick={() => onChange("light")}>WP</button>
   </div>;
 }

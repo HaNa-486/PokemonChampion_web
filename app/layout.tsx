@@ -4,6 +4,17 @@ import { DevEnvironmentBanner } from "../components/DevEnvironmentBanner";
 import { ThemePreferenceSync } from "../components/ThemeToggle";
 import "./globals.css";
 
+const themeBootScript = `(() => {
+  try {
+    const saved = localStorage.getItem("champions-lab-theme-v1");
+    const theme = saved === "dark" || saved === "light"
+      ? saved
+      : (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  } catch {}
+})();`;
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -37,6 +48,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootScript }} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
