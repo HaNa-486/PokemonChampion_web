@@ -13,6 +13,8 @@ import type { TeamMember } from "../lib/types";
 
 beforeEach(() => {
   localStorage.clear();
+  delete document.documentElement.dataset.locale;
+  delete document.documentElement.dataset.localePending;
   useTeamStore.setState({ teams: { singles: [], doubles: [] }, hydrated: true });
 });
 afterEach(() => {
@@ -36,6 +38,12 @@ describe("Move Database", () => {
     expect(row).toHaveTextContent("接觸");
     expect(row).toHaveTextContent("可被守住");
     expect(row).not.toHaveTextContent("Contact");
+    const headers = within(row!.closest("table")!).getAllByRole("columnheader");
+    const headerLabels = headers.map((header) => header.textContent?.replace(/[↑↓↕]/g, ""));
+    expect(headerLabels).toEqual(expect.arrayContaining(["目標", "效果", "特性標籤"]));
+    expect(headerLabels.indexOf("效果")).toBe(headerLabels.indexOf("目標") + 1);
+    expect(headerLabels.indexOf("特性標籤")).toBe(headerLabels.indexOf("效果") + 1);
+    expect(row?.querySelector(".move-effect-cell")).toHaveTextContent(moves.find((move) => move.name === "Accelerock")!.descriptionZh);
   });
 
   it("filters positive and negative priority independently", async () => {
@@ -323,6 +331,7 @@ describe("ChampionsApp", () => {
   it("shows, filters, and sorts the total base stat in both directions", async () => {
     const user = userEvent.setup();
     const { container } = render(<PokemonTableV2 locale="en" format="doubles" onSelect={() => undefined} />);
+    expect(container.querySelector("td[data-stat='total']")).toHaveClass("stat-accent", "stat-total");
     const totalHeader = screen.getByRole("button", { name: /TOT/ });
     await user.click(totalHeader);
     const descending = Array.from(container.querySelectorAll("td[data-stat='total']"), (node) => Number(node.textContent));
@@ -756,8 +765,12 @@ describe("ChampionsApp", () => {
     await user.click(screen.getByRole("button", { name: "繁中" }));
     expect(localStorage.getItem("champions-lab-locale-v1")).toBe("zh-Hant");
     first.unmount();
+    document.documentElement.dataset.locale = "zh-Hant";
+    document.documentElement.dataset.localePending = "";
     render(<ChampionsApp />);
     expect(await screen.findByRole("heading", { name: "寶可夢資料庫" })).toBeInTheDocument();
+    expect(document.documentElement).not.toHaveAttribute("data-locale-pending");
+    expect(document.documentElement).toHaveAttribute("lang", "zh-Hant");
   });
 
   it("uses the browser language on the first visit", async () => {
@@ -838,5 +851,53 @@ describe("Type matchup chart", () => {
     expect(screen.getByRole("button", { name: "屬性相剋" })).toHaveClass("active");
     expect(screen.queryByRole("button", { name: "速度比較" })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "屬性相剋表" })).toBeInTheDocument();
+  });
+
+  it("follows the system theme until the user chooses a persistent BD or WP override", async () => {
+    let systemIsDark = true;
+    const listeners = new Set<(event: MediaQueryListEvent) => void>();
+    const mediaQuery = {
+      get matches() { return systemIsDark; },
+      media: "(prefers-color-scheme: dark)",
+      onchange: null,
+      addEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => listeners.add(listener),
+      removeEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => listeners.delete(listener),
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      dispatchEvent: () => true,
+    } as MediaQueryList;
+    vi.stubGlobal("matchMedia", vi.fn(() => mediaQuery));
+    const user = userEvent.setup();
+    const first = render(<ChampionsApp />);
+    const themeControl = screen.getByRole("group", { name: "Display mode" });
+    const bd = await screen.findByRole("button", { name: "Dark mode (current)" });
+    const wp = screen.getByRole("button", { name: "Switch to light mode" });
+    expect(bd).toHaveTextContent("BD");
+    expect(wp).toHaveTextContent("WP");
+    expect(bd).toHaveAttribute("title", "Dark mode (current)");
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    expect(themeControl.previousElementSibling).toHaveClass("segmented");
+    expect(themeControl.nextElementSibling).toHaveClass("locale-button");
+
+    systemIsDark = false;
+    listeners.forEach((listener) => listener({ matches: false } as MediaQueryListEvent));
+    await waitFor(() => expect(document.documentElement).toHaveAttribute("data-theme", "light"));
+    expect(screen.getByRole("button", { name: "Light mode (current)" })).toHaveTextContent("WP");
+
+    systemIsDark = true;
+    listeners.forEach((listener) => listener({ matches: true } as MediaQueryListEvent));
+    await waitFor(() => expect(document.documentElement).toHaveAttribute("data-theme", "dark"));
+
+    await user.click(screen.getByRole("button", { name: "Switch to light mode" }));
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+    expect(localStorage.getItem("champions-lab-theme-v1")).toBe("light");
+
+    listeners.forEach((listener) => listener({ matches: true } as MediaQueryListEvent));
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+
+    first.unmount();
+    render(<ChampionsApp />);
+    expect(await screen.findByRole("button", { name: "Light mode (current)" })).toHaveTextContent("WP");
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
   });
 });

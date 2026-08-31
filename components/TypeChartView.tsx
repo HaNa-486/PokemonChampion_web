@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ALL_TYPES, typeEffectiveness } from "../lib/type-chart";
 import type { PokemonType } from "../lib/types";
 import { TypeBadge } from "./TypeBadge";
+import { ThemeToggle, useThemePreference } from "./ThemeToggle";
 
 type Locale = "en" | "zh-Hant";
 
@@ -64,6 +65,7 @@ export function TypeChart({ locale }: { locale: Locale }) {
 }
 
 export function TypeChartPageShell() {
+  const { theme, setTheme } = useThemePreference();
   const [locale, setLocaleState] = useState<Locale>("en");
   const setLocale = (value: Locale | ((current: Locale) => Locale)) => setLocaleState((current) => {
     const next = typeof value === "function" ? value(current) : value;
@@ -76,5 +78,12 @@ export function TypeChartPageShell() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocale(saved === "en" || saved === "zh-Hant" ? saved : navigator.languages.some((language) => language.toLowerCase().startsWith("zh")) ? "zh-Hant" : "en");
   }, []);
-  return <main className="standalone-type-chart"><div className="standalone-chart-actions"><Link className="back-to-app" href="/">← Champions Lab</Link><button className="locale-button" onClick={() => setLocale((value) => value === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div><TypeChart locale={locale} /></main>;
+  useEffect(() => {
+    const root = document.documentElement;
+    if (root.hasAttribute("data-locale-pending") && root.dataset.locale !== locale) return;
+    root.dataset.locale = locale;
+    root.lang = locale;
+    delete root.dataset.localePending;
+  }, [locale]);
+  return <main className="standalone-type-chart"><div className="standalone-chart-actions"><Link className="back-to-app" href="/">← Champions Lab</Link><div className="standalone-preferences"><ThemeToggle theme={theme} locale={locale} onChange={setTheme} /><button className="locale-button" onClick={() => setLocale((value) => value === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></div><TypeChart locale={locale} /></main>;
 }

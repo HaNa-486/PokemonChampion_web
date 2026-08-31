@@ -3,44 +3,46 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 21
-- Updated: 2026-08-30T01:39:00Z
+- State revision: 26
+- Updated: 2026-08-31T03:44:35Z
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: PR #9 second independent-review findings addressed locally; replacement exact commit, Dev deployment, and renewed minimal UAT pending
+- Phase: Dark-mode UAT feedback addressed locally; replacement exact commit and Dev deployment pending
 
 ## Repository identity
 
-- Branch: codex/type-chart-tab
-- Observed commit: 41e55b5f18369543f45b433a88a4e35e209bbbf2
+- Branch: codex/dark-mode
+- Observed commit: f5a1137e0303d4d5b4a21bbaa95fd74f50117b52
 
 ## Product anchors
 
 - Primary user: competitive and new Pokémon Champions players building legal Singles/Doubles teams.
-- Product outcome: Core reference tools, including the complete type matchup chart, are easy to find in one consistent primary navigation.
-- Critical journey: open the Type Chart tab -> see all 18 attack rows and 18 defense columns together without internal scrolling at 390/768/1440 -> identify compact type codes through full accessible names -> switch back to another primary view.
-- Non-goals: changing upstream data, battle formulas, strategic recommendations, or automatic production promotion.
+- Product outcome: Every public and administrative surface remains readable in a consistent dark or light theme while preserving the dense competitive workflow.
+- Critical journey: first visit follows the system theme -> see BD and WP together between format and locale controls with the current mode selected -> manual choice persists -> dark tables retain neutral stat values and a recognizable add-to-team action.
+- Non-goals: changing data, battle formulas, catalog behavior, navigation structure, or automatic production promotion.
 
 ## Current work
 
-- Current slice: Scale type labels and matchup multipliers to use their cells while retaining no-scroll completeness, and withdraw the Speed Compare UI.
-- Active workstreams: `workstreams/2026-08-29-type-chart-tab.md` is active to close the second independent-review findings; the previously recorded catalog-session changes are preserved.
+- Current slice: Resolve dark-theme UAT findings and follow the system theme on first use.
+- Active workstreams: `workstreams/2026-08-31-site-dark-mode.md` is active.
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
-- Blocking dependencies: exact second-review-fix commit, repeat Dev verification/deployment, and renewed minimal product-owner UAT; PR merge remains blocked until that exact candidate passes UAT.
-- Consequential open decisions: the product owner explicitly authorized production deployment after clean review and merge in the current conversation; deployment remains blocked until all earlier gates pass.
+- Blocking dependencies: replacement exact candidate commit, repeat Dev verification/deployment, and renewed product-owner UAT.
+- Consequential open decisions: none for this release.
 
 ## Handoff
 
-- What changed: After product-owner UAT passed on Dev version 27, the second independent review found one stale README feature bullet and one built-route coverage gap for identical speed ties with non-default modifiers. The stale feature claim is removed; a built-output API fixture now verifies both tied rows, stable input indices, final/modified speeds, stage, multiplier, version, and `no-store` behavior.
-- Verification evidence: `pnpm verify:deploy` passed with 17 Vitest files/132 tests and 13 built-output/API tests. A repository-wide product-copy search leaves only intentional dormant-contract references.
-- Superseded deployment: owner-only Champions Lab Dev version 27 at exact commit `41e55b5f18369543f45b433a88a4e35e209bbbf2` passed product-owner UAT, but is superseded by the second review fixes under the exact-commit release rule.
-- Not verified: exact second-review-fix commit, `pnpm verify:dev`, replacement Dev deployment, renewed minimal product-owner UAT, final independent re-review, merge, and production smoke test; no upstream/generated/form mapping changed, so `data:audit:live` is not applicable.
-- Residual risks: physical readability below the supported 390px viewport cannot be guaranteed; existing unrelated PDOS F-006 artifacts fail strict state validation.
-- Next safe action: commit the second review fixes, run `pnpm verify:dev`, deploy the exact replacement candidate to owner-only Dev, then request renewed minimal product-owner UAT.
+- What changed: BD and WP now appear together as an accessible segmented control with an explicit current state and preserved hover text. First use follows `prefers-color-scheme`, including live system changes while no manual override exists; a manual choice persists. Dark-mode SPE/TOT values now use the normal stat color, and the add-to-team control uses dedicated action colors instead of the light text token.
+- Verification evidence: `pnpm verify:deploy` passed with 17 Vitest files/133 tests, the production build, and 13 built-output/API tests. The focused component suite passed 49 tests, including system-theme changes, explicit override persistence, both visible labels, ordering, and hover text. Local preview returned HTTP 200.
+- Superseded Dev deployment: Owner-only Champions Lab Dev version 29 at `f5a1137e0303d4d5b4a21bbaa95fd74f50117b52` is invalidated by the UAT fixes and must not be approved.
+- Prior production baseline: Type Chart release remains deployed from merge commit `2f04fb164f3a77990a425a39f58621fb02a33b85` at `https://champions-lab.eddy8613.chatgpt.site`.
+- Not verified: replacement exact commit, `pnpm verify:dev`, replacement Dev deployment, and renewed product-owner visual UAT at 390/768/1440; no upstream/generated/form mapping changed, so `data:audit:live` is not applicable.
+- Residual risks: theme color quality still requires product-owner visual judgment in Dev UAT; existing unrelated PDOS F-006 artifacts fail strict state validation.
+- Next safe action: commit the replacement candidate, run `pnpm verify:dev`, deploy that exact commit to owner-only Champions Lab Dev, and request renewed focused UAT.
 
 ## Read next
 
 - `AUTONOMY.md`
+- `workstreams/2026-08-31-site-dark-mode.md`
 - `workstreams/2026-08-29-type-chart-tab.md`
 - `workstreams/2026-08-20-team-member-edit-move-picker.md`
 - `reviews/REV-20260820-team-builder-ux.md`
