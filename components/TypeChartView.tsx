@@ -78,5 +78,5 @@ export function TypeChartPageShell() {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocale(saved === "en" || saved === "zh-Hant" ? saved : navigator.languages.some((language) => language.toLowerCase().startsWith("zh")) ? "zh-Hant" : "en");
   }, []);
-  return <main className="standalone-type-chart"><div className="standalone-chart-actions"><Link className="back-to-app" href="/">← Champions Lab</Link><div className="standalone-preferences"><ThemeToggle theme={theme} locale={locale} onToggle={() => setTheme(theme === "dark" ? "light" : "dark")} /><button className="locale-button" onClick={() => setLocale((value) => value === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></div><TypeChart locale={locale} /></main>;
+  return <main className="standalone-type-chart"><div className="standalone-chart-actions"><Link className="back-to-app" href="/">← Champions Lab</Link><div className="standalone-preferences"><ThemeToggle theme={theme} locale={locale} onChange={setTheme} /><button className="locale-button" onClick={() => setLocale((value) => value === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></div><TypeChart locale={locale} /></main>;
 }

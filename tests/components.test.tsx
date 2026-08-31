@@ -840,24 +840,51 @@ describe("Type matchup chart", () => {
     expect(screen.getByRole("heading", { name: "屬性相剋表" })).toBeInTheDocument();
   });
 
-  it("defaults to BD, places the theme control between format and language, and remembers WP", async () => {
+  it("follows the system theme until the user chooses a persistent BD or WP override", async () => {
+    let systemIsDark = true;
+    const listeners = new Set<(event: MediaQueryListEvent) => void>();
+    const mediaQuery = {
+      get matches() { return systemIsDark; },
+      media: "(prefers-color-scheme: dark)",
+      onchange: null,
+      addEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => listeners.add(listener),
+      removeEventListener: (_type: string, listener: (event: MediaQueryListEvent) => void) => listeners.delete(listener),
+      addListener: () => undefined,
+      removeListener: () => undefined,
+      dispatchEvent: () => true,
+    } as MediaQueryList;
+    vi.stubGlobal("matchMedia", vi.fn(() => mediaQuery));
     const user = userEvent.setup();
     const first = render(<ChampionsApp />);
-    const bd = await screen.findByRole("button", { name: "Switch to light mode" });
+    const themeControl = screen.getByRole("group", { name: "Display mode" });
+    const bd = await screen.findByRole("button", { name: "Dark mode (current)" });
+    const wp = screen.getByRole("button", { name: "Switch to light mode" });
     expect(bd).toHaveTextContent("BD");
-    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
-    expect(bd.previousElementSibling).toHaveClass("segmented");
-    expect(bd.nextElementSibling).toHaveClass("locale-button");
-
-    await user.click(bd);
-    const wp = screen.getByRole("button", { name: "Switch to dark mode" });
     expect(wp).toHaveTextContent("WP");
+    expect(bd).toHaveAttribute("title", "Dark mode (current)");
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    expect(themeControl.previousElementSibling).toHaveClass("segmented");
+    expect(themeControl.nextElementSibling).toHaveClass("locale-button");
+
+    systemIsDark = false;
+    listeners.forEach((listener) => listener({ matches: false } as MediaQueryListEvent));
+    await waitFor(() => expect(document.documentElement).toHaveAttribute("data-theme", "light"));
+    expect(screen.getByRole("button", { name: "Light mode (current)" })).toHaveTextContent("WP");
+
+    systemIsDark = true;
+    listeners.forEach((listener) => listener({ matches: true } as MediaQueryListEvent));
+    await waitFor(() => expect(document.documentElement).toHaveAttribute("data-theme", "dark"));
+
+    await user.click(screen.getByRole("button", { name: "Switch to light mode" }));
     expect(document.documentElement).toHaveAttribute("data-theme", "light");
     expect(localStorage.getItem("champions-lab-theme-v1")).toBe("light");
 
+    listeners.forEach((listener) => listener({ matches: true } as MediaQueryListEvent));
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+
     first.unmount();
     render(<ChampionsApp />);
-    expect(await screen.findByRole("button", { name: "Switch to dark mode" })).toHaveTextContent("WP");
+    expect(await screen.findByRole("button", { name: "Light mode (current)" })).toHaveTextContent("WP");
     expect(document.documentElement).toHaveAttribute("data-theme", "light");
   });
 });
