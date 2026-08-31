@@ -1,8 +1,8 @@
 # Workstream: Replace the floating type matchup affordance with a first-class application tab.
 
-- Status: active
+- Status: completed
 - Started: 2026-08-29T15:51:33Z
-- Updated: 2026-08-30T01:39:00Z
+- Updated: 2026-08-30T02:31:00Z
 - Branch: codex/type-chart-tab
 - Base commit: ea7c417902287d4fe908e98088a14712db55c024
 - Scope: Refine the first-class Type Chart tab through UAT, including adaptive cell content and temporary withdrawal of the Speed Compare UI.
@@ -17,6 +17,7 @@
 ## Handoff
 
 - What changed: The second independent PR review found a stale README feature bullet plus missing built-route coverage for identical speed ties with non-default modifiers. The feature claim is removed and a built-output fixture now verifies stable tied input order plus returned calculation traces.
-- Verification: `pnpm verify:deploy` passed with 132 unit tests and 13 built-output/API tests. Dev version 27 passed UAT but is superseded because these fixes create a new exact candidate.
-- Residual risks: Physical readability below the supported 390px width cannot be guaranteed; a replacement Dev deployment, renewed minimal product-owner UAT, and final re-review are pending. Unrelated legacy F-006 PDOS records still fail strict validation.
-- Next safe action: Commit the second review fixes, run `pnpm verify:dev`, deploy the exact replacement candidate to owner-only Dev, then request renewed minimal product-owner UAT.
+- Verification: Owner-only Dev version 28 at exact candidate `1c19e97074d300548eedd441c249d4d34b35b92e` passed product-owner UAT; GitHub verification passed; the final independent review was clean. `pnpm verify:deploy` passed again on exact merge commit `2f04fb164f3a77990a425a39f58621fb02a33b85` with 132 unit tests and 13 built-output/API tests.
+- Release: PR #9 merged as `2f04fb164f3a77990a425a39f58621fb02a33b85`; public Champions Lab version 31 deployed successfully. Production smoke testing confirmed the homepage, five-tab navigation, no Speed Compare entry, and the complete 18-row/18-column Type Chart.
+- Residual risks: Physical readability below the supported 390px width cannot be guaranteed. Unrelated legacy F-006 PDOS records still fail strict validation.
+- Next safe action: Monitor normal production use; open a new scoped workstream for any follow-up change.
