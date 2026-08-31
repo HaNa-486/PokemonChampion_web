@@ -839,4 +839,25 @@ describe("Type matchup chart", () => {
     expect(screen.queryByRole("button", { name: "速度比較" })).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "屬性相剋表" })).toBeInTheDocument();
   });
+
+  it("defaults to BD, places the theme control between format and language, and remembers WP", async () => {
+    const user = userEvent.setup();
+    const first = render(<ChampionsApp />);
+    const bd = await screen.findByRole("button", { name: "Switch to light mode" });
+    expect(bd).toHaveTextContent("BD");
+    expect(document.documentElement).toHaveAttribute("data-theme", "dark");
+    expect(bd.previousElementSibling).toHaveClass("segmented");
+    expect(bd.nextElementSibling).toHaveClass("locale-button");
+
+    await user.click(bd);
+    const wp = screen.getByRole("button", { name: "Switch to dark mode" });
+    expect(wp).toHaveTextContent("WP");
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+    expect(localStorage.getItem("champions-lab-theme-v1")).toBe("light");
+
+    first.unmount();
+    render(<ChampionsApp />);
+    expect(await screen.findByRole("button", { name: "Switch to dark mode" })).toHaveTextContent("WP");
+    expect(document.documentElement).toHaveAttribute("data-theme", "light");
+  });
 });

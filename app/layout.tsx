@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { DevEnvironmentBanner } from "../components/DevEnvironmentBanner";
+import { ThemePreferenceSync } from "../components/ThemeToggle";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,10 +36,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-theme="dark" style={{ colorScheme: "dark" }} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <ThemePreferenceSync />
         <DevEnvironmentBanner />
         {children}
       </body>

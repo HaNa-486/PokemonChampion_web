@@ -19,7 +19,9 @@ test("server-renders Champions Lab instead of the starter", async () => {
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
   const html = await response.text();
   assert.match(html, /<title>Champions Lab/);
+  assert.match(html, /<html[^>]+data-theme="dark"/);
   assert.match(html, /CHAMPIONS LAB/);
+  assert.match(html, />BD<\/button>/);
   assert.match(html, /Pokémon DB/);
   assert.match(html, /Battle data provided by/);
   assert.match(html, /inspect move priority and type matchups/);
