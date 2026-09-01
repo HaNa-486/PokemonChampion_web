@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 33
-- Updated: 2026-09-01T18:40:16+08:00
+- State revision: 35
+- Updated: 2026-09-02T00:02:36+08:00
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: Scrapbook correction candidate locally verified; commit and replacement Dev deployment pending
+- Phase: Scrapbook UAT correction locally verified; commit and replacement Dev deployment pending
 
 ## Repository identity
 
 - Branch: codex/scrapbook
-- Observed commit: 604ed4ec14ed191f144f8cd42225ce66de7c1a52
+- Observed commit: 4b6c05e0d4f8dc6d650c84c7c9469017abf861d2
 
 ## Product anchors
 
@@ -22,21 +22,21 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Current work
 
-- Current slice: Replace the prior scrapbook data model and comparison UX with configurable build cards, cross-tag actions, direct tag/book management, and persisted page state.
+- Current slice: Fix five UAT findings covering inline detail density, Workbench/team action separation, AP/nature visibility, and quick-finder localization.
 - Active workstreams: `workstreams/2026-08-31-scrapbook.md`
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
-- Blocking dependencies: replacement candidate must pass exact-source checks and owner-only Dev deployment; then explicit product-owner Dev UAT approval is required before push or pull request.
+- Blocking dependencies: corrected exact candidate must pass checks and replace Dev version 34; explicit product-owner UAT approval is then required before push or pull request.
 - Consequential open decisions: Production remains separately approval-gated after PR checks, independent review, and merge.
 
 ## Handoff
 
-- What changed: In-progress replacement adds neutral initial builds, multiple named configurations per Pokémon, shared versus independent copies, cross-tag moves, direct tag management, whole-book duplication, auto-saved Workbench edits, richer comparison rows, deterministic book preselection, and persisted finder/expansion/toggle state.
-- Verification evidence: `pnpm verify:deploy` passes on the replacement source: lint 0 errors/15 warnings, TypeScript, 358-form and Traditional Chinese audits, 18 Vitest files/142 tests, Vinext build, and 13 built-output/API tests. The focused scrapbook suite has 9 passing tests including auto-save through the real Workbench. Browser automation is temporarily blocked by the Codex Node REPL kernel-assets path error; no browser result is claimed.
+- What changed: In-progress UAT corrections remove duplicate inline base stats, constrain the move list to internal scrolling, separate scrapbook save from explicit team addition, show per-stat AP/nature effects, and localize quick-finder type/form options.
+- Verification evidence: `pnpm verify:deploy` passes on the correction source: lint 0 errors/15 warnings, TypeScript, 358-form and Traditional Chinese audits, 18 Vitest files/144 tests, Vinext build, and 13 built-output/API tests. The focused scrapbook suite passes 11 tests, including save-without-team-mutation, explicit team addition, inline base-stat omission, AP/nature visibility, and Chinese quick-finder labels.
 - Release: Not released. Branch is local and no pull request is open. Production remains untouched.
-- Dev UAT: Version 33 is superseded for acceptance by the clarified requirements and must not be approved. A replacement owner-only Dev version is pending.
+- Dev UAT: Version 34 is superseded by the five reported UAT findings and must not be approved. A corrected owner-only Dev version is pending.
 - Residual risks: Scrapbooks intentionally remain device-local IndexedDB state; no account sync/export is included. Existing unrelated PDOS F-006 artifacts still fail strict state validation.
-- Next safe action: Commit the exact locally verified candidate, run `verify:dev`, and deploy the replacement exact commit to owner-only Champions Lab Dev; use focused owner UAT to cover the browser journeys that the broken local automation kernel could not execute. No pull request or production action before new UAT approval.
+- Next safe action: Commit the exact locally verified correction, run `verify:dev`, and deploy a corrected owner-only Dev version. No pull request or production action before explicit approval.
 
 ## Read next
 

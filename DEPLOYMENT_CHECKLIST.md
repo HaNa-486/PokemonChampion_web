@@ -132,9 +132,11 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] A whole scrapbook can be duplicated under a user-supplied name with tag/build ordering, shared relationships, saved configurations, and per-book UI state intact.
 - [ ] The collapsible scrapbook quick finder exposes Pokémon DB-equivalent conditions and shows no candidates until at least one condition is active.
 - [ ] Tag groups and Pokémon can be reordered by drag and accessible move controls; groups support independent and expand/collapse-all controls, with sprite previews while collapsed.
-- [ ] Expanded comparison rows omit TOT and show current-ruleset final stats from the card’s saved AP/nature plus the saved nature/effect, ability or explicit unselected prompt, item or explicit unselected prompt, four move slots, and defensive matchups.
-- [ ] Editing AP, nature, ability, item, or moves in the inline Build Workbench auto-saves and immediately updates the comparison row; existing recommendation choices and Detailed/Compact selector modes remain available without silently applying recommendations.
-- [ ] Inline scrapbook detail keeps the complete Pokémon intelligence and Build Workbench action, lists own-type moves first then canonical types and Physical/Special/Status, and independently toggles six battle-data categories.
+- [ ] Expanded comparison rows omit TOT and show current-ruleset final stats from the card’s saved AP/nature, per-stat AP additions, nature-raised/lowered arrows, saved nature/effect, ability or explicit unselected prompt, item or explicit unselected prompt, four move slots, and defensive matchups.
+- [ ] Editing AP, nature, ability, item, or moves in the inline Build Workbench auto-saves and immediately updates the comparison row; saving/closing the scrapbook build never changes the selected team, while a separate explicit button adds it after normal legality validation.
+- [ ] Existing recommendation choices and Detailed/Compact selector modes remain available without silently applying recommendations.
+- [ ] Inline scrapbook detail omits the duplicate base-stat strip, keeps Pokémon intelligence and the Build Workbench action, and presents every own-type-first/canonical-type/Physical-Special-Status move inside a height-bounded vertically scrollable list.
+- [ ] Quick-finder type and form option labels switch with the active locale while retaining stable filter semantics; six battle-data categories remain independently toggleable.
 - [ ] Active book, expanded tags/cards, finder visibility/query/conditions, and six battle toggles survive navigation/refresh; add dialogs prefer current book, then last successful add target, then first book.
 
 ## 6. Browser and responsive QA

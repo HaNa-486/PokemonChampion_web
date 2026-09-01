@@ -7,11 +7,13 @@ import { ScrapbookView } from "../components/ScrapbookView";
 import { compareScrapbookLearnableMoves } from "../components/PokemonDetailDialog";
 import { moveById, pokemon } from "../lib/catalog";
 import { migrateSavedScrapbooks, UNTAGGED_GROUP_ID, useScrapbookStore } from "../lib/scrapbook-store";
+import { useTeamStore } from "../lib/team-store";
 
 const firstPokemon = pokemon[0];
 
 beforeEach(() => {
   useScrapbookStore.setState({ books: [], activeBookId: "", lastAddBookId: "", uiByBook: {}, hydrated: true });
+  useTeamStore.setState({ teams: { singles: [], doubles: [] }, hydrated: true });
   vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline fixture")));
 });
 
@@ -137,7 +139,18 @@ describe("scrapbook user journey", () => {
     expect(within(group).getByRole("button", { expanded: false })).toHaveClass("scrapbook-pokemon-main");
   });
 
-  it("auto-saves scrapbook Workbench changes back to the comparison build", async () => {
+  it("localizes quick-find type and form choices in Traditional Chinese", async () => {
+    const user = userEvent.setup();
+    useScrapbookStore.getState().createBook("中文畫本");
+    render(<ScrapbookView locale="zh-Hant" format="doubles" onEditEntry={vi.fn()} onAddToScrapbook={vi.fn()} />);
+    await user.click(screen.getByRole("button", { name: /快速找寶可夢加入/ }));
+    expect(screen.getByRole("button", { name: "水" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Water" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "全部" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "一般" })).toHaveLength(2);
+  });
+
+  it("auto-saves scrapbook Workbench changes without adding a team member unless explicitly requested", async () => {
     const user = userEvent.setup();
     const bookId = useScrapbookStore.getState().createBook("Editable");
     const entryId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [])!;
@@ -149,5 +162,25 @@ describe("scrapbook user journey", () => {
     await user.selectOptions(screen.getByLabelText("Nature"), "Adamant");
     await waitFor(() => expect(useScrapbookStore.getState().books.find((book) => book.id === bookId)?.entries.find((entry) => entry.id === entryId)?.nature.name).toBe("Adamant"));
     expect(useScrapbookStore.getState().books[0].entries[0].abilityId).toBeNull();
+    await user.click(screen.getByRole("button", { name: "Save scrapbook build" }));
+    expect(useTeamStore.getState().teams.doubles).toHaveLength(0);
+    await user.click(screen.getByRole("button", { name: "Edit scrapbook build" }));
+    await user.click(screen.getByRole("button", { name: "Add to selected team" }));
+    expect(useTeamStore.getState().teams.doubles).toHaveLength(1);
+  });
+
+  it("shows saved AP and nature directions while omitting duplicate base stats from inline detail", async () => {
+    const user = userEvent.setup();
+    const bookId = useScrapbookStore.getState().createBook("Visible build");
+    const entryId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [])!;
+    const saved = useScrapbookStore.getState().books[0].entries[0];
+    useScrapbookStore.getState().updateEntry(bookId, entryId, { ...saved, ap: { hp: 2, attack: 32, defense: 0, specialAttack: 0, specialDefense: 0, speed: 32 }, nature: { name: "Adamant", nameZh: "固執", up: "attack", down: "specialAttack" } });
+    render(<ScrapbookView locale="en" format="doubles" onEditEntry={vi.fn()} onAddToScrapbook={vi.fn()} />);
+    await user.click(screen.getByRole("button", { name: "Expand all tags" }));
+    expect(screen.getAllByText("AP +32")).toHaveLength(2);
+    expect(document.querySelector(".scrapbook-final-stats .nature-up")).toHaveTextContent("↑");
+    expect(document.querySelector(".scrapbook-final-stats .nature-down")).toHaveTextContent("↓");
+    await user.click(screen.getByRole("button", { name: new RegExp(firstPokemon.name) }));
+    expect(document.querySelector(".scrapbook-inline-detail .detail-stats")).not.toBeInTheDocument();
   });
 });
