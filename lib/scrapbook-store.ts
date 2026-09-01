@@ -2,160 +2,172 @@
 
 import { get, set as setValue } from "idb-keyval";
 import { create } from "zustand";
-import { pokemonById } from "./catalog";
+import { abilityById, itemById, moveById, pokemonById } from "./catalog";
+import { NATURES, NEUTRAL_NATURE, ZERO_STATS, apTotal } from "./domain";
+import { ALL_TYPES } from "./type-chart";
+import type { Nature, Stats, TeamMember } from "./types";
 
 const STORAGE_KEY = "champions-lab-scrapbooks-v1";
 export const UNTAGGED_GROUP_ID = "__untagged__";
+export const SCRAPBOOK_BATTLE_CATEGORIES = ["move", "held_item", "ability", "stat_alignment", "stat_points", "teammate"] as const;
 
 export type ScrapbookTag = { id: string; name: string };
-export type ScrapbookEntry = { pokemonId: string; tagIds: string[] };
-export type Scrapbook = {
-  id: string;
-  name: string;
-  tags: ScrapbookTag[];
-  entries: ScrapbookEntry[];
-  groupOrder: string[];
-  pokemonOrderByGroup: Record<string, string[]>;
-};
-
-type SavedScrapbooks = { version: 1; books: Scrapbook[] };
-
-type ScrapbookState = {
-  books: Scrapbook[];
+export type ScrapbookEntry = TeamMember & { customName: string | null; ordinal: number; tagIds: string[] };
+export type Scrapbook = { id: string; name: string; tags: ScrapbookTag[]; entries: ScrapbookEntry[]; groupOrder: string[]; pokemonOrderByGroup: Record<string, string[]> };
+export type ScrapbookFinderState = { query: string; selectedTypes: string[]; typeMode: "or" | "and"; form: "all" | "regular" | "mega"; abilityId: string; knownMoveIds: string[]; moveInput: string; minimums: Stats; totalMinimum: number };
+export type ScrapbookBookUi = { filtersOpen: boolean; expandedGroupIds: string[]; openEntryIds: string[]; visibleBattleCategories: string[]; finder: ScrapbookFinderState };
+type PersistedState = { books: Scrapbook[]; activeBookId: string; lastAddBookId: string; uiByBook: Record<string, ScrapbookBookUi> };
+type ScrapbookState = PersistedState & {
   hydrated: boolean;
   hydrate: () => Promise<void>;
   createBook: (name: string) => string;
+  duplicateBook: (bookId: string, name: string) => string | null;
   renameBook: (bookId: string, name: string) => void;
   deleteBook: (bookId: string) => void;
+  setActiveBook: (bookId: string) => void;
+  markLastAddBook: (bookId: string) => void;
+  updateBookUi: (bookId: string, patch: Partial<ScrapbookBookUi>) => void;
   createTag: (bookId: string, name: string) => string | null;
-  addPokemon: (bookId: string, pokemonId: string, tagIds: string[]) => void;
-  removePokemon: (bookId: string, pokemonId: string) => void;
+  renameTag: (bookId: string, tagId: string, name: string) => void;
+  deleteTag: (bookId: string, tagId: string) => void;
+  addPokemon: (bookId: string, pokemonId: string, tagIds: string[]) => string | null;
+  updateEntry: (bookId: string, entryId: string, member: Omit<TeamMember, "id">) => void;
+  renameEntry: (bookId: string, entryId: string, name: string) => void;
+  removeEntry: (bookId: string, entryId: string) => void;
+  addEntryToTag: (bookId: string, entryId: string, tagId: string) => void;
+  moveEntryToTag: (bookId: string, entryId: string, sourceGroupId: string, targetGroupId: string) => void;
+  duplicateEntry: (bookId: string, entryId: string, targetGroupId: string) => string | null;
   moveGroup: (bookId: string, groupId: string, direction: -1 | 1) => void;
-  movePokemon: (bookId: string, groupId: string, pokemonId: string, direction: -1 | 1) => void;
+  movePokemon: (bookId: string, groupId: string, entryId: string, direction: -1 | 1) => void;
 };
 
 const createId = () => globalThis.crypto?.randomUUID?.() ?? `local-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-const normalizedName = (name: unknown) => typeof name === "string" ? name.trim().slice(0, 60) : "";
+const cleanName = (value: unknown) => typeof value === "string" ? value.trim().slice(0, 60) : "";
 const unique = (values: string[]) => [...new Set(values)];
+const statKeys = ["hp", "attack", "defense", "specialAttack", "specialDefense", "speed"] as const;
+export const defaultFinderState = (): ScrapbookFinderState => ({ query: "", selectedTypes: [], typeMode: "or", form: "all", abilityId: "", knownMoveIds: [], moveInput: "", minimums: { ...ZERO_STATS }, totalMinimum: 0 });
+export const defaultBookUi = (): ScrapbookBookUi => ({ filtersOpen: false, expandedGroupIds: [], openEntryIds: [], visibleBattleCategories: [...SCRAPBOOK_BATTLE_CATEGORIES], finder: defaultFinderState() });
 
-function sanitizeBook(value: unknown): Scrapbook | null {
+function cleanStats(value: unknown): Stats {
+  const source = value && typeof value === "object" ? value as Partial<Record<keyof Stats, unknown>> : {};
+  const stats = Object.fromEntries(statKeys.map((key) => [key, Math.min(32, Math.max(0, Number.isInteger(Number(source[key])) ? Number(source[key]) : 0))])) as Stats;
+  return apTotal(stats) <= 66 ? stats : { ...ZERO_STATS };
+}
+function cleanMinimums(value: unknown): Stats {
+  const source = value && typeof value === "object" ? value as Partial<Record<keyof Stats, unknown>> : {};
+  return Object.fromEntries(statKeys.map((key) => [key, Math.min(255, Math.max(0, Number.isFinite(Number(source[key])) ? Math.round(Number(source[key])) : 0))])) as Stats;
+}
+function cleanNature(value: unknown): Nature { return NATURES.find((entry) => entry.name === (value as Partial<Nature> | null)?.name) ?? NEUTRAL_NATURE; }
+function nextOrdinal(entries: ScrapbookEntry[], pokemonId: string) { return Math.max(0, ...entries.filter((entry) => entry.pokemonId === pokemonId).map((entry) => entry.ordinal)) + 1; }
+
+function cleanBook(value: unknown, legacy: boolean): Scrapbook | null {
   if (!value || typeof value !== "object") return null;
-  const candidate = value as Partial<Scrapbook>;
-  const name = normalizedName(candidate.name);
-  if (typeof candidate.id !== "string" || !candidate.id || !name) return null;
-  const tags = Array.isArray(candidate.tags) ? candidate.tags.flatMap((tag) => {
-    if (!tag || typeof tag !== "object") return [];
-    const typed = tag as Partial<ScrapbookTag>;
-    const tagName = normalizedName(typed.name);
-    return typeof typed.id === "string" && typed.id && tagName ? [{ id: typed.id, name: tagName }] : [];
-  }).filter((tag, index, all) => all.findIndex((other) => other.id === tag.id) === index) : [];
-  const tagIds = new Set(tags.map((tag) => tag.id));
-  const entries = Array.isArray(candidate.entries) ? candidate.entries.flatMap((entry) => {
-    if (!entry || typeof entry !== "object") return [];
-    const typed = entry as Partial<ScrapbookEntry>;
-    if (typeof typed.pokemonId !== "string" || !pokemonById.has(typed.pokemonId)) return [];
-    const entryTags = Array.isArray(typed.tagIds) ? unique(typed.tagIds.filter((id): id is string => typeof id === "string" && tagIds.has(id))) : [];
-    return [{ pokemonId: typed.pokemonId, tagIds: entryTags }];
-  }).filter((entry, index, all) => all.findIndex((other) => other.pokemonId === entry.pokemonId) === index) : [];
-  const validGroups = [UNTAGGED_GROUP_ID, ...tags.map((tag) => tag.id)];
-  const requestedGroupOrder = Array.isArray(candidate.groupOrder) ? candidate.groupOrder.filter((id): id is string => typeof id === "string" && validGroups.includes(id)) : [];
-  const groupOrder = unique([...requestedGroupOrder, ...validGroups]);
-  const pokemonOrderByGroup = Object.fromEntries(validGroups.map((groupId) => {
-    const members = entries.filter((entry) => groupId === UNTAGGED_GROUP_ID ? entry.tagIds.length === 0 : entry.tagIds.includes(groupId)).map((entry) => entry.pokemonId);
-    const requested = candidate.pokemonOrderByGroup && Array.isArray(candidate.pokemonOrderByGroup[groupId]) ? candidate.pokemonOrderByGroup[groupId].filter((id) => members.includes(id)) : [];
-    return [groupId, unique([...requested, ...members])];
+  const raw = value as Partial<Scrapbook>;
+  const name = cleanName(raw.name);
+  if (!raw.id || typeof raw.id !== "string" || !name) return null;
+  const tags = Array.isArray(raw.tags) ? raw.tags.flatMap((tag) => tag && typeof tag.id === "string" && cleanName(tag.name) ? [{ id: tag.id, name: cleanName(tag.name) }] : []).filter((tag, index, all) => all.findIndex((other) => other.id === tag.id) === index) : [];
+  const tagSet = new Set(tags.map((tag) => tag.id));
+  const counts = new Map<string, number>();
+  const entries = (Array.isArray(raw.entries) ? raw.entries : []).flatMap((candidate, index) => {
+    if (!candidate || typeof candidate !== "object" || typeof candidate.pokemonId !== "string") return [];
+    const pokemon = pokemonById.get(candidate.pokemonId);
+    if (!pokemon) return [];
+    const ordinal = (counts.get(pokemon.id) ?? 0) + 1;
+    counts.set(pokemon.id, ordinal);
+    return [{
+      id: typeof candidate.id === "string" && candidate.id ? candidate.id : `migrated-${raw.id}-${pokemon.id}-${index}`,
+      pokemonId: pokemon.id,
+      customName: cleanName(candidate.customName) || null,
+      ordinal: Number.isInteger(candidate.ordinal) && Number(candidate.ordinal) > 0 ? Number(candidate.ordinal) : ordinal,
+      tagIds: Array.isArray(candidate.tagIds) ? unique(candidate.tagIds.filter((id): id is string => typeof id === "string" && tagSet.has(id))) : [],
+      moveIds: Array.isArray(candidate.moveIds) ? unique(candidate.moveIds.filter((id): id is string => typeof id === "string" && pokemon.moveIds.includes(id) && moveById.has(id))).slice(0, 4) : [],
+      abilityId: typeof candidate.abilityId === "string" && pokemon.abilityIds.includes(candidate.abilityId) ? candidate.abilityId : null,
+      itemId: typeof candidate.itemId === "string" && itemById.has(candidate.itemId) ? candidate.itemId : null,
+      ap: cleanStats(candidate.ap), nature: cleanNature(candidate.nature),
+    } satisfies ScrapbookEntry];
+  }).filter((entry, index, all) => all.findIndex((other) => other.id === entry.id) === index);
+  const groups = [UNTAGGED_GROUP_ID, ...tags.map((tag) => tag.id)];
+  const groupOrder = unique([...(Array.isArray(raw.groupOrder) ? raw.groupOrder.filter((id): id is string => typeof id === "string" && groups.includes(id)) : []), ...groups]);
+  const pokemonOrderByGroup = Object.fromEntries(groups.map((groupId) => {
+    const members = entries.filter((entry) => groupId === UNTAGGED_GROUP_ID ? !entry.tagIds.length : entry.tagIds.includes(groupId));
+    const requested = raw.pokemonOrderByGroup?.[groupId] ?? [];
+    const mapped = requested.flatMap((id) => {
+      if (!legacy) return members.some((entry) => entry.id === id) ? [id] : [];
+      const match = members.find((entry) => entry.pokemonId === id);
+      return match ? [match.id] : [];
+    });
+    return [groupId, unique([...mapped, ...members.map((entry) => entry.id)])];
   }));
-  return { id: candidate.id, name, tags, entries, groupOrder, pokemonOrderByGroup };
+  return { id: raw.id, name, tags, entries, groupOrder, pokemonOrderByGroup };
 }
 
-export function migrateSavedScrapbooks(saved: unknown): Scrapbook[] {
-  if (!saved || typeof saved !== "object") return [];
-  const value = saved as Partial<SavedScrapbooks>;
-  if (value.version !== 1 || !Array.isArray(value.books)) return [];
-  return value.books.map(sanitizeBook).filter((book): book is Scrapbook => Boolean(book));
+function cleanUi(value: unknown, book: Scrapbook): ScrapbookBookUi {
+  const raw = value && typeof value === "object" ? value as Partial<ScrapbookBookUi> : {};
+  const finder = raw.finder && typeof raw.finder === "object" ? raw.finder as Partial<ScrapbookFinderState> : {};
+  return {
+    filtersOpen: Boolean(raw.filtersOpen),
+    expandedGroupIds: Array.isArray(raw.expandedGroupIds) ? unique(raw.expandedGroupIds.filter((id) => book.groupOrder.includes(id))) : [],
+    openEntryIds: Array.isArray(raw.openEntryIds) ? unique(raw.openEntryIds.filter((id) => book.entries.some((entry) => entry.id === id))) : [],
+    visibleBattleCategories: Array.isArray(raw.visibleBattleCategories) ? unique(raw.visibleBattleCategories.filter((id) => SCRAPBOOK_BATTLE_CATEGORIES.includes(id as typeof SCRAPBOOK_BATTLE_CATEGORIES[number]))) : [...SCRAPBOOK_BATTLE_CATEGORIES],
+    finder: {
+      query: typeof finder.query === "string" ? finder.query.slice(0, 120) : "",
+      selectedTypes: Array.isArray(finder.selectedTypes) ? unique(finder.selectedTypes.filter((id): id is string => typeof id === "string" && ALL_TYPES.includes(id as typeof ALL_TYPES[number]))) : [],
+      typeMode: finder.typeMode === "and" ? "and" : "or",
+      form: finder.form === "regular" || finder.form === "mega" ? finder.form : "all",
+      abilityId: typeof finder.abilityId === "string" && abilityById.has(finder.abilityId) ? finder.abilityId : "",
+      knownMoveIds: Array.isArray(finder.knownMoveIds) ? unique(finder.knownMoveIds.filter((id): id is string => typeof id === "string" && moveById.has(id))) : [],
+      moveInput: typeof finder.moveInput === "string" ? finder.moveInput.slice(0, 120) : "",
+      minimums: cleanMinimums(finder.minimums),
+      totalMinimum: Math.min(1530, Math.max(0, Number.isFinite(Number(finder.totalMinimum)) ? Math.round(Number(finder.totalMinimum)) : 0)),
+    },
+  };
 }
 
-const persist = (books: Scrapbook[]) => {
-  if (typeof indexedDB !== "undefined") void setValue(STORAGE_KEY, { version: 1, books } satisfies SavedScrapbooks);
-};
+export function migrateSavedScrapbookState(saved: unknown): PersistedState {
+  if (!saved || typeof saved !== "object") return { books: [], activeBookId: "", lastAddBookId: "", uiByBook: {} };
+  const raw = saved as { version?: number; books?: unknown[]; activeBookId?: unknown; lastAddBookId?: unknown; uiByBook?: Record<string, unknown> };
+  if (raw.version !== 1 && raw.version !== 2) return { books: [], activeBookId: "", lastAddBookId: "", uiByBook: {} };
+  const books = (raw.books ?? []).map((book) => cleanBook(book, raw.version === 1)).filter((book): book is Scrapbook => Boolean(book));
+  const valid = new Set(books.map((book) => book.id));
+  const activeBookId = typeof raw.activeBookId === "string" && valid.has(raw.activeBookId) ? raw.activeBookId : books[0]?.id ?? "";
+  const lastAddBookId = typeof raw.lastAddBookId === "string" && valid.has(raw.lastAddBookId) ? raw.lastAddBookId : activeBookId;
+  return { books, activeBookId, lastAddBookId, uiByBook: Object.fromEntries(books.map((book) => [book.id, cleanUi(raw.uiByBook?.[book.id], book)])) };
+}
+export function migrateSavedScrapbooks(saved: unknown) { return migrateSavedScrapbookState(saved).books; }
 
-const move = <T,>(values: T[], index: number, direction: -1 | 1) => {
-  const target = index + direction;
-  if (index < 0 || target < 0 || target >= values.length) return values;
-  const next = [...values];
-  [next[index], next[target]] = [next[target], next[index]];
-  return next;
-};
+const persist = (state: PersistedState) => { if (typeof indexedDB !== "undefined") void setValue(STORAGE_KEY, { version: 2, ...state }); };
+const moved = <T,>(values: T[], index: number, direction: -1 | 1) => { const target = index + direction; if (index < 0 || target < 0 || target >= values.length) return values; const next = [...values]; [next[index], next[target]] = [next[target], next[index]]; return next; };
 
 export const useScrapbookStore = create<ScrapbookState>((set, getState) => {
-  const updateBooks = (updater: (books: Scrapbook[]) => Scrapbook[]) => {
-    const books = updater(getState().books);
-    set({ books });
-    persist(books);
-  };
+  const update = (fn: (state: PersistedState) => PersistedState) => { const state = getState(); const next = fn({ books: state.books, activeBookId: state.activeBookId, lastAddBookId: state.lastAddBookId, uiByBook: state.uiByBook }); set(next); persist(next); };
+  const updateBook = (bookId: string, fn: (book: Scrapbook) => Scrapbook) => update((state) => ({ ...state, books: state.books.map((book) => book.id === bookId ? fn(book) : book) }));
   return {
-    books: [],
-    hydrated: false,
-    hydrate: async () => {
-      if (getState().hydrated) return;
-      try {
-        const saved = await get<unknown>(STORAGE_KEY);
-        set({ books: migrateSavedScrapbooks(saved), hydrated: true });
-      } catch {
-        set({ books: [], hydrated: true });
-      }
+    books: [], activeBookId: "", lastAddBookId: "", uiByBook: {}, hydrated: false,
+    hydrate: async () => { if (getState().hydrated) return; try { const next = migrateSavedScrapbookState(await get(STORAGE_KEY)); set({ ...next, hydrated: true }); persist(next); } catch { set({ books: [], activeBookId: "", lastAddBookId: "", uiByBook: {}, hydrated: true }); } },
+    createBook: (name) => { const id = createId(); const book: Scrapbook = { id, name: cleanName(name) || "Untitled", tags: [], entries: [], groupOrder: [UNTAGGED_GROUP_ID], pokemonOrderByGroup: { [UNTAGGED_GROUP_ID]: [] } }; update((state) => ({ ...state, books: [...state.books, book], activeBookId: id, uiByBook: { ...state.uiByBook, [id]: defaultBookUi() } })); return id; },
+    duplicateBook: (bookId, name) => {
+      const source = getState().books.find((book) => book.id === bookId); const clean = cleanName(name); if (!source || !clean) return null;
+      const id = createId(); const tagMap = new Map(source.tags.map((tag) => [tag.id, createId()])); const entryMap = new Map(source.entries.map((entry) => [entry.id, createId()]));
+      const book: Scrapbook = { id, name: clean, tags: source.tags.map((tag) => ({ id: tagMap.get(tag.id)!, name: tag.name })), entries: source.entries.map((entry) => ({ ...entry, id: entryMap.get(entry.id)!, tagIds: entry.tagIds.map((tagId) => tagMap.get(tagId)!), moveIds: [...entry.moveIds], ap: { ...entry.ap }, nature: { ...entry.nature } })), groupOrder: source.groupOrder.map((groupId) => groupId === UNTAGGED_GROUP_ID ? groupId : tagMap.get(groupId)!), pokemonOrderByGroup: Object.fromEntries(source.groupOrder.map((groupId) => [groupId === UNTAGGED_GROUP_ID ? groupId : tagMap.get(groupId)!, (source.pokemonOrderByGroup[groupId] ?? []).map((entryId) => entryMap.get(entryId)!)])) };
+      const sourceUi = getState().uiByBook[bookId] ?? defaultBookUi(); const ui = cleanUi({ ...sourceUi, expandedGroupIds: sourceUi.expandedGroupIds.map((groupId) => groupId === UNTAGGED_GROUP_ID ? groupId : tagMap.get(groupId)!), openEntryIds: sourceUi.openEntryIds.map((entryId) => entryMap.get(entryId)!) }, book);
+      update((state) => ({ ...state, books: [...state.books, book], activeBookId: id, uiByBook: { ...state.uiByBook, [id]: ui } })); return id;
     },
-    createBook: (name) => {
-      const id = createId();
-      const book: Scrapbook = { id, name: normalizedName(name) || "Untitled", tags: [], entries: [], groupOrder: [UNTAGGED_GROUP_ID], pokemonOrderByGroup: { [UNTAGGED_GROUP_ID]: [] } };
-      updateBooks((books) => [...books, book]);
-      return id;
-    },
-    renameBook: (bookId, name) => {
-      const nextName = normalizedName(name);
-      if (!nextName) return;
-      updateBooks((books) => books.map((book) => book.id === bookId ? { ...book, name: nextName } : book));
-    },
-    deleteBook: (bookId) => updateBooks((books) => books.filter((book) => book.id !== bookId)),
-    createTag: (bookId, name) => {
-      const nextName = normalizedName(name);
-      const book = getState().books.find((entry) => entry.id === bookId);
-      if (!book || !nextName) return null;
-      const existing = book.tags.find((tag) => tag.name.toLocaleLowerCase() === nextName.toLocaleLowerCase());
-      if (existing) return existing.id;
-      const id = createId();
-      updateBooks((books) => books.map((entry) => entry.id === bookId ? {
-        ...entry,
-        tags: [...entry.tags, { id, name: nextName }],
-        groupOrder: [...entry.groupOrder, id],
-        pokemonOrderByGroup: { ...entry.pokemonOrderByGroup, [id]: [] },
-      } : entry));
-      return id;
-    },
-    addPokemon: (bookId, pokemonId, requestedTagIds) => updateBooks((books) => books.map((book) => {
-      if (book.id !== bookId || !pokemonById.has(pokemonId)) return book;
-      const validTagIds = new Set(book.tags.map((tag) => tag.id));
-      const tagIds = unique(requestedTagIds.filter((id) => validTagIds.has(id)));
-      const current = book.entries.find((entry) => entry.pokemonId === pokemonId);
-      const entries = current
-        ? book.entries.map((entry) => entry.pokemonId === pokemonId ? { ...entry, tagIds: unique([...entry.tagIds, ...tagIds]) } : entry)
-        : [...book.entries, { pokemonId, tagIds }];
-      const effectiveTags = current ? unique([...current.tagIds, ...tagIds]) : tagIds;
-      const groupIds = effectiveTags.length ? effectiveTags : [UNTAGGED_GROUP_ID];
-      const pokemonOrderByGroup = { ...book.pokemonOrderByGroup };
-      for (const groupId of groupIds) pokemonOrderByGroup[groupId] = unique([...(pokemonOrderByGroup[groupId] ?? []), pokemonId]);
-      if (effectiveTags.length) pokemonOrderByGroup[UNTAGGED_GROUP_ID] = (pokemonOrderByGroup[UNTAGGED_GROUP_ID] ?? []).filter((id) => id !== pokemonId);
-      return { ...book, entries, pokemonOrderByGroup };
-    })),
-    removePokemon: (bookId, pokemonId) => updateBooks((books) => books.map((book) => book.id === bookId ? {
-      ...book,
-      entries: book.entries.filter((entry) => entry.pokemonId !== pokemonId),
-      pokemonOrderByGroup: Object.fromEntries(Object.entries(book.pokemonOrderByGroup).map(([groupId, ids]) => [groupId, ids.filter((id) => id !== pokemonId)])),
-    } : book)),
-    moveGroup: (bookId, groupId, direction) => updateBooks((books) => books.map((book) => book.id === bookId ? { ...book, groupOrder: move(book.groupOrder, book.groupOrder.indexOf(groupId), direction) } : book)),
-    movePokemon: (bookId, groupId, pokemonId, direction) => updateBooks((books) => books.map((book) => book.id === bookId ? {
-      ...book,
-      pokemonOrderByGroup: { ...book.pokemonOrderByGroup, [groupId]: move(book.pokemonOrderByGroup[groupId] ?? [], (book.pokemonOrderByGroup[groupId] ?? []).indexOf(pokemonId), direction) },
-    } : book)),
+    renameBook: (bookId, name) => { const clean = cleanName(name); if (clean) updateBook(bookId, (book) => ({ ...book, name: clean })); },
+    deleteBook: (bookId) => update((state) => { const books = state.books.filter((book) => book.id !== bookId); const uiByBook = { ...state.uiByBook }; delete uiByBook[bookId]; return { books, uiByBook, activeBookId: state.activeBookId === bookId ? books[0]?.id ?? "" : state.activeBookId, lastAddBookId: state.lastAddBookId === bookId ? books[0]?.id ?? "" : state.lastAddBookId }; }),
+    setActiveBook: (bookId) => { if (getState().books.some((book) => book.id === bookId)) update((state) => ({ ...state, activeBookId: bookId })); },
+    markLastAddBook: (bookId) => update((state) => ({ ...state, lastAddBookId: state.books.some((book) => book.id === bookId) ? bookId : state.lastAddBookId })),
+    updateBookUi: (bookId, patch) => update((state) => { const book = state.books.find((entry) => entry.id === bookId); if (!book) return state; const previous = state.uiByBook[bookId] ?? defaultBookUi(); return { ...state, uiByBook: { ...state.uiByBook, [bookId]: cleanUi({ ...previous, ...patch, finder: patch.finder ? { ...previous.finder, ...patch.finder } : previous.finder }, book) } }; }),
+    createTag: (bookId, name) => { const book = getState().books.find((entry) => entry.id === bookId); const clean = cleanName(name); if (!book || !clean) return null; const existing = book.tags.find((tag) => tag.name.toLocaleLowerCase() === clean.toLocaleLowerCase()); if (existing) return existing.id; const id = createId(); updateBook(bookId, (entry) => ({ ...entry, tags: [...entry.tags, { id, name: clean }], groupOrder: [...entry.groupOrder, id], pokemonOrderByGroup: { ...entry.pokemonOrderByGroup, [id]: [] } })); return id; },
+    renameTag: (bookId, tagId, name) => { const clean = cleanName(name); if (clean) updateBook(bookId, (book) => ({ ...book, tags: book.tags.map((tag) => tag.id === tagId ? { ...tag, name: clean } : tag) })); },
+    deleteTag: (bookId, tagId) => update((state) => ({ ...state, books: state.books.map((book) => { if (book.id !== bookId) return book; const entries = book.entries.map((entry) => ({ ...entry, tagIds: entry.tagIds.filter((id) => id !== tagId) })); const orders = { ...book.pokemonOrderByGroup }; delete orders[tagId]; orders[UNTAGGED_GROUP_ID] = unique([...(orders[UNTAGGED_GROUP_ID] ?? []), ...entries.filter((entry) => !entry.tagIds.length).map((entry) => entry.id)]); return { ...book, tags: book.tags.filter((tag) => tag.id !== tagId), entries, groupOrder: book.groupOrder.filter((id) => id !== tagId), pokemonOrderByGroup: orders }; }), uiByBook: { ...state.uiByBook, [bookId]: { ...(state.uiByBook[bookId] ?? defaultBookUi()), expandedGroupIds: (state.uiByBook[bookId]?.expandedGroupIds ?? []).filter((id) => id !== tagId) } } })),
+    addPokemon: (bookId, pokemonId, tagIds) => { const book = getState().books.find((entry) => entry.id === bookId); if (!book || !pokemonById.has(pokemonId)) return null; const id = createId(); const valid = new Set(book.tags.map((tag) => tag.id)); const tags = unique(tagIds.filter((tagId) => valid.has(tagId))); const entry: ScrapbookEntry = { id, pokemonId, customName: null, ordinal: nextOrdinal(book.entries, pokemonId), tagIds: tags, moveIds: [], abilityId: null, itemId: null, ap: { ...ZERO_STATS }, nature: NEUTRAL_NATURE }; updateBook(bookId, (current) => { const orders = { ...current.pokemonOrderByGroup }; for (const groupId of tags.length ? tags : [UNTAGGED_GROUP_ID]) orders[groupId] = unique([...(orders[groupId] ?? []), id]); return { ...current, entries: [...current.entries, entry], pokemonOrderByGroup: orders }; }); return id; },
+    updateEntry: (bookId, entryId, member) => updateBook(bookId, (book) => ({ ...book, entries: book.entries.map((entry) => entry.id === entryId ? { ...entry, ...member, id: entry.id, customName: entry.customName, ordinal: entry.ordinal, tagIds: entry.tagIds, moveIds: [...member.moveIds], ap: { ...member.ap }, nature: { ...member.nature } } : entry) })),
+    renameEntry: (bookId, entryId, name) => updateBook(bookId, (book) => ({ ...book, entries: book.entries.map((entry) => entry.id === entryId ? { ...entry, customName: cleanName(name) || null } : entry) })),
+    removeEntry: (bookId, entryId) => update((state) => ({ ...state, books: state.books.map((book) => book.id === bookId ? { ...book, entries: book.entries.filter((entry) => entry.id !== entryId), pokemonOrderByGroup: Object.fromEntries(Object.entries(book.pokemonOrderByGroup).map(([groupId, ids]) => [groupId, ids.filter((id) => id !== entryId)])) } : book), uiByBook: { ...state.uiByBook, [bookId]: { ...(state.uiByBook[bookId] ?? defaultBookUi()), openEntryIds: (state.uiByBook[bookId]?.openEntryIds ?? []).filter((id) => id !== entryId) } } })),
+    addEntryToTag: (bookId, entryId, tagId) => updateBook(bookId, (book) => book.tags.some((tag) => tag.id === tagId) ? { ...book, entries: book.entries.map((entry) => entry.id === entryId ? { ...entry, tagIds: unique([...entry.tagIds, tagId]) } : entry), pokemonOrderByGroup: { ...book.pokemonOrderByGroup, [tagId]: unique([...(book.pokemonOrderByGroup[tagId] ?? []), entryId]), [UNTAGGED_GROUP_ID]: (book.pokemonOrderByGroup[UNTAGGED_GROUP_ID] ?? []).filter((id) => id !== entryId) } } : book),
+    moveEntryToTag: (bookId, entryId, sourceGroupId, targetGroupId) => updateBook(bookId, (book) => { if (sourceGroupId === targetGroupId) return book; const entries = book.entries.map((entry) => entry.id !== entryId ? entry : { ...entry, tagIds: targetGroupId === UNTAGGED_GROUP_ID ? [] : unique([...(sourceGroupId === UNTAGGED_GROUP_ID ? entry.tagIds : entry.tagIds.filter((id) => id !== sourceGroupId)), targetGroupId]) }); const orders = { ...book.pokemonOrderByGroup, [sourceGroupId]: (book.pokemonOrderByGroup[sourceGroupId] ?? []).filter((id) => id !== entryId), [targetGroupId]: unique([...(book.pokemonOrderByGroup[targetGroupId] ?? []), entryId]) }; if (targetGroupId !== UNTAGGED_GROUP_ID) orders[UNTAGGED_GROUP_ID] = (orders[UNTAGGED_GROUP_ID] ?? []).filter((id) => id !== entryId); return { ...book, entries, pokemonOrderByGroup: orders }; }),
+    duplicateEntry: (bookId, entryId, targetGroupId) => { const book = getState().books.find((entry) => entry.id === bookId); const source = book?.entries.find((entry) => entry.id === entryId); if (!book || !source) return null; const id = createId(); const clone: ScrapbookEntry = { ...source, id, customName: null, ordinal: nextOrdinal(book.entries, source.pokemonId), tagIds: targetGroupId === UNTAGGED_GROUP_ID ? [] : [targetGroupId], moveIds: [...source.moveIds], ap: { ...source.ap }, nature: { ...source.nature } }; updateBook(bookId, (current) => ({ ...current, entries: [...current.entries, clone], pokemonOrderByGroup: { ...current.pokemonOrderByGroup, [targetGroupId]: unique([...(current.pokemonOrderByGroup[targetGroupId] ?? []), id]) } })); return id; },
+    moveGroup: (bookId, groupId, direction) => updateBook(bookId, (book) => ({ ...book, groupOrder: moved(book.groupOrder, book.groupOrder.indexOf(groupId), direction) })),
+    movePokemon: (bookId, groupId, entryId, direction) => updateBook(bookId, (book) => ({ ...book, pokemonOrderByGroup: { ...book.pokemonOrderByGroup, [groupId]: moved(book.pokemonOrderByGroup[groupId] ?? [], (book.pokemonOrderByGroup[groupId] ?? []).indexOf(entryId), direction) } })),
   };
 });

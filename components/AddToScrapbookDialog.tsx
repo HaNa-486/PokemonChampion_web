@@ -13,8 +13,12 @@ export function AddToScrapbookDialog({ pokemon, locale, onClose }: { pokemon: Po
   const createBook = useScrapbookStore((state) => state.createBook);
   const createTag = useScrapbookStore((state) => state.createTag);
   const addPokemon = useScrapbookStore((state) => state.addPokemon);
+  const activeBookId = useScrapbookStore((state) => state.activeBookId);
+  const lastAddBookId = useScrapbookStore((state) => state.lastAddBookId);
+  const markLastAddBook = useScrapbookStore((state) => state.markLastAddBook);
+  const preferredBookId = [activeBookId, lastAddBookId, books[0]?.id].find((id) => id && books.some((book) => book.id === id)) ?? "";
   const [bookMode, setBookMode] = useState<"existing" | "new">(books.length ? "existing" : "new");
-  const [bookId, setBookId] = useState(books[0]?.id ?? "");
+  const [bookId, setBookId] = useState(preferredBookId);
   const [bookName, setBookName] = useState("");
   const [tagIds, setTagIds] = useState<string[]>([]);
   const [newTags, setNewTags] = useState<string[]>([]);
@@ -22,7 +26,7 @@ export function AddToScrapbookDialog({ pokemon, locale, onClose }: { pokemon: Po
   const [error, setError] = useState("");
   useDialogEscape(onClose);
   if (!pokemon) return null;
-  const effectiveBookId = books.some((book) => book.id === bookId) ? bookId : books[0]?.id ?? "";
+  const effectiveBookId = books.some((book) => book.id === bookId) ? bookId : preferredBookId;
   const selectedBook = books.find((book) => book.id === effectiveBookId) ?? null;
   const copy = locale === "zh-Hant"
     ? { title: "加入畫本", existing: "既有畫本", create: "新建畫本", book: "選擇畫本", bookName: "畫本名稱", tags: "標籤（可複選）", newTag: "新增標籤", addTag: "加入標籤", save: "加入畫本", close: "關閉", unnamed: "請輸入畫本名稱。" }
@@ -45,6 +49,7 @@ export function AddToScrapbookDialog({ pokemon, locale, onClose }: { pokemon: Po
       return id ? [id] : [];
     });
     addPokemon(targetBookId, pokemon.id, [...tagIds, ...createdTagIds]);
+    markLastAddBook(targetBookId);
     onClose();
   };
   return <div className="scrapbook-dialog-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose(); }}>

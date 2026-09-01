@@ -6,5 +6,5 @@ import { useScrapbookStore } from "../lib/scrapbook-store";
 
 afterEach(() => {
   cleanup();
-  useScrapbookStore.setState({ books: [], hydrated: true });
+  useScrapbookStore.setState({ books: [], activeBookId: "", lastAddBookId: "", uiByBook: {}, hydrated: true });
 });

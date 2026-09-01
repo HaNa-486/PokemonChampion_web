@@ -124,13 +124,18 @@ The live probe depends on a third party. A network outage blocks data-related pr
 - [ ] Builder ability and item fields support name/effect search, localized rich descriptions, keyboard/mouse/touch selection, and independent Detailed/Compact preferences that default to Detailed and persist.
 - [ ] Held-item options are grouped by effect class, expose Other, and place the selected family’s dedicated stone first in the Mega Stone group.
 - [ ] Learnable move cards show Power, Accuracy, and PP without requiring hover.
-- [ ] Scrapbooks appear between Pokémon DB and Move DB, persist locally, and support multiple books with per-book reusable multi-select tags.
+- [ ] Scrapbooks appear between Pokémon DB and Move DB, persist locally, and support create/rename/delete/duplicate for multiple independently stored books with per-book reusable multi-select tags.
 - [ ] Pokémon DB rows, Pokémon detail, move reverse lookup, and ability reverse lookup all open the same add-to-scrapbook flow.
-- [ ] Duplicate scrapbook adds merge tag membership; untagged Pokémon appear only under Untagged; multi-tag Pokémon appear in every selected group without duplicate saved entries.
+- [ ] Each add creates a neutral named build card (zero AP, Serious nature, no ability/item, four empty moves); the same Pokémon may have multiple independent cards in one book.
+- [ ] “Add to another tag” shares one build card and synchronizes edits across appearances; “Duplicate configuration” creates an independent copy; cross-tag drag moves membership without resetting the build.
+- [ ] Tags can be created, renamed, and deleted on the scrapbook page; deleting a tag preserves its build cards and cards without another tag appear under Untagged.
+- [ ] A whole scrapbook can be duplicated under a user-supplied name with tag/build ordering, shared relationships, saved configurations, and per-book UI state intact.
 - [ ] The collapsible scrapbook quick finder exposes Pokémon DB-equivalent conditions and shows no candidates until at least one condition is active.
 - [ ] Tag groups and Pokémon can be reordered by drag and accessible move controls; groups support independent and expand/collapse-all controls, with sprite previews while collapsed.
-- [ ] Expanded comparison rows omit TOT and show current-format final stats plus defensive matchups; unavailable usage safely uses the versioned zero-AP neutral fallback.
+- [ ] Expanded comparison rows omit TOT and show current-ruleset final stats from the card’s saved AP/nature plus the saved nature/effect, ability or explicit unselected prompt, item or explicit unselected prompt, four move slots, and defensive matchups.
+- [ ] Editing AP, nature, ability, item, or moves in the inline Build Workbench auto-saves and immediately updates the comparison row; existing recommendation choices and Detailed/Compact selector modes remain available without silently applying recommendations.
 - [ ] Inline scrapbook detail keeps the complete Pokémon intelligence and Build Workbench action, lists own-type moves first then canonical types and Physical/Special/Status, and independently toggles six battle-data categories.
+- [ ] Active book, expanded tags/cards, finder visibility/query/conditions, and six battle toggles survive navigation/refresh; add dialogs prefer current book, then last successful add target, then first book.
 
 ## 6. Browser and responsive QA
 
@@ -161,7 +166,7 @@ Required for interaction, layout, responsive, or CSS changes. Check at 390, 768,
 - [ ] Type badges use readable high-contrast text.
 - [ ] Mobile exposes the Type Chart tab without a floating control.
 - [ ] No tooltip, menu, or dialog is clipped behind a table or floating tray.
-- [ ] Scrapbook creation, collapsed previews, comparison rows, inline details, move lists, and action controls remain usable at 390, 768, and 1440 px.
+- [ ] Scrapbook/book/tag creation and duplication, collapsed previews, build summaries, cross-tag drag, action menus, inline details, and move lists remain usable at 390, 768, and 1440 px.
 
 ## 7. Security, accessibility, and performance
 

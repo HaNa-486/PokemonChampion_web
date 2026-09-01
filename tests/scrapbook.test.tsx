@@ -1,7 +1,8 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AddToScrapbookDialog } from "../components/AddToScrapbookDialog";
+import { ChampionsApp } from "../components/ChampionsApp";
 import { ScrapbookView } from "../components/ScrapbookView";
 import { compareScrapbookLearnableMoves } from "../components/PokemonDetailDialog";
 import { moveById, pokemon } from "../lib/catalog";
@@ -10,7 +11,7 @@ import { migrateSavedScrapbooks, UNTAGGED_GROUP_ID, useScrapbookStore } from "..
 const firstPokemon = pokemon[0];
 
 beforeEach(() => {
-  useScrapbookStore.setState({ books: [], hydrated: true });
+  useScrapbookStore.setState({ books: [], activeBookId: "", lastAddBookId: "", uiByBook: {}, hydrated: true });
   vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline fixture")));
 });
 
@@ -40,22 +41,57 @@ describe("scrapbook persistence model", () => {
       }],
     });
     expect(saved).toHaveLength(1);
-    expect(saved[0]).toMatchObject({ name: "Drafts", tags: [{ id: "tag-1", name: "Core" }], entries: [{ pokemonId: firstPokemon.id, tagIds: ["tag-1"] }] });
+    expect(saved[0]).toMatchObject({ name: "Drafts", tags: [{ id: "tag-1", name: "Core" }], entries: [{ pokemonId: firstPokemon.id, tagIds: ["tag-1"], moveIds: [], abilityId: null, itemId: null, ordinal: 1 }] });
     expect(saved[0].groupOrder).toEqual(["tag-1", UNTAGGED_GROUP_ID]);
-    expect(saved[0].pokemonOrderByGroup["tag-1"]).toEqual([firstPokemon.id]);
+    expect(saved[0].pokemonOrderByGroup["tag-1"]).toEqual([saved[0].entries[0].id]);
   });
 
-  it("creates a book, reuses a same-name tag, and merges tags on duplicate adds", () => {
+  it("creates independent neutral build cards and supports shared and copied tag membership", () => {
     const state = useScrapbookStore.getState();
     const bookId = state.createBook("Candidates");
     const offenseId = useScrapbookStore.getState().createTag(bookId, "Offense")!;
     expect(useScrapbookStore.getState().createTag(bookId, "offense")).toBe(offenseId);
-    useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, []);
-    useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [offenseId]);
+    const firstId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [])!;
+    const secondId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [offenseId])!;
     const book = useScrapbookStore.getState().books[0];
-    expect(book.entries).toEqual([{ pokemonId: firstPokemon.id, tagIds: [offenseId] }]);
-    expect(book.pokemonOrderByGroup[offenseId]).toEqual([firstPokemon.id]);
-    expect(book.pokemonOrderByGroup[UNTAGGED_GROUP_ID]).toEqual([]);
+    expect(book.entries).toHaveLength(2);
+    expect(book.entries.map((entry) => entry.ordinal)).toEqual([1, 2]);
+    expect(book.entries[0]).toMatchObject({ id: firstId, moveIds: [], abilityId: null, itemId: null, ap: { hp: 0 }, nature: { name: "Serious" } });
+    expect(secondId).not.toBe(firstId);
+    useScrapbookStore.getState().addEntryToTag(bookId, firstId, offenseId);
+    expect(useScrapbookStore.getState().books[0].entries.find((entry) => entry.id === firstId)?.tagIds).toEqual([offenseId]);
+    const copyId = useScrapbookStore.getState().duplicateEntry(bookId, firstId, offenseId)!;
+    expect(copyId).not.toBe(firstId);
+    expect(useScrapbookStore.getState().books[0].entries).toHaveLength(3);
+  });
+
+  it("moves builds across tags, duplicates a complete book, and retains remembered UI", () => {
+    const state = useScrapbookStore.getState();
+    const bookId = state.createBook("Plans");
+    const special = useScrapbookStore.getState().createTag(bookId, "Special")!;
+    const physical = useScrapbookStore.getState().createTag(bookId, "Physical")!;
+    const entryId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [special])!;
+    useScrapbookStore.getState().moveEntryToTag(bookId, entryId, special, physical);
+    useScrapbookStore.getState().updateBookUi(bookId, { filtersOpen: true, expandedGroupIds: [physical], openEntryIds: [entryId], finder: { ...useScrapbookStore.getState().uiByBook[bookId].finder, query: firstPokemon.name } });
+    const copiedId = useScrapbookStore.getState().duplicateBook(bookId, "Plans copy")!;
+    const original = useScrapbookStore.getState().books.find((book) => book.id === bookId)!;
+    const copied = useScrapbookStore.getState().books.find((book) => book.id === copiedId)!;
+    expect(original.entries[0].tagIds).toEqual([physical]);
+    expect(copied.entries[0].pokemonId).toBe(firstPokemon.id);
+    expect(copied.entries[0].id).not.toBe(entryId);
+    expect(useScrapbookStore.getState().uiByBook[copiedId]).toMatchObject({ filtersOpen: true, finder: { query: firstPokemon.name } });
+  });
+
+  it("keeps builds when deleting a tag and falls back to Untagged", () => {
+    const bookId = useScrapbookStore.getState().createBook("Tag cleanup");
+    const tagId = useScrapbookStore.getState().createTag(bookId, "Temporary")!;
+    const entryId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [tagId])!;
+    useScrapbookStore.getState().deleteTag(bookId, tagId);
+    const book = useScrapbookStore.getState().books.find((candidate) => candidate.id === bookId)!;
+    expect(book.tags).toHaveLength(0);
+    expect(book.entries).toHaveLength(1);
+    expect(book.entries[0].tagIds).toEqual([]);
+    expect(book.pokemonOrderByGroup[UNTAGGED_GROUP_ID]).toContain(entryId);
   });
 });
 
@@ -71,8 +107,18 @@ describe("scrapbook user journey", () => {
     const book = useScrapbookStore.getState().books[0];
     expect(book.name).toBe("Tournament ideas");
     expect(book.tags[0].name).toBe("Lead");
-    expect(book.entries[0]).toEqual({ pokemonId: firstPokemon.id, tagIds: [book.tags[0].id] });
+    expect(book.entries[0]).toMatchObject({ pokemonId: firstPokemon.id, tagIds: [book.tags[0].id], moveIds: [], abilityId: null, itemId: null, ordinal: 1 });
+    expect(useScrapbookStore.getState().lastAddBookId).toBe(book.id);
     expect(onClose).toHaveBeenCalledOnce();
+  });
+
+  it("preselects the active scrapbook ahead of the last add target", () => {
+    const firstBookId = useScrapbookStore.getState().createBook("First");
+    const activeBookId = useScrapbookStore.getState().createBook("Currently viewing");
+    useScrapbookStore.getState().markLastAddBook(firstBookId);
+    useScrapbookStore.getState().setActiveBook(activeBookId);
+    render(<AddToScrapbookDialog pokemon={firstPokemon} locale="en" onClose={vi.fn()} />);
+    expect(screen.getByLabelText("Choose scrapbook")).toHaveValue(activeBookId);
   });
 
   it("keeps quick-find empty until a condition is supplied and expands saved groups", async () => {
@@ -80,7 +126,7 @@ describe("scrapbook user journey", () => {
     const state = useScrapbookStore.getState();
     const bookId = state.createBook("Compare");
     useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, []);
-    render(<ScrapbookView locale="en" format="doubles" onBuild={vi.fn()} onAddToScrapbook={vi.fn()} />);
+    render(<ScrapbookView locale="en" format="doubles" onEditEntry={vi.fn()} onAddToScrapbook={vi.fn()} />);
     await user.click(screen.getByRole("button", { name: /Quick-find Pokémon to add/ }));
     expect(screen.getByText("Add at least one condition before candidate Pokémon appear.")).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: new RegExp(firstPokemon.name) })).not.toBeInTheDocument();
@@ -89,5 +135,19 @@ describe("scrapbook user journey", () => {
     await user.click(screen.getByRole("button", { name: "Expand all tags" }));
     const group = document.querySelector(".scrapbook-group-toggle")!.closest("section")!;
     expect(within(group).getByRole("button", { expanded: false })).toHaveClass("scrapbook-pokemon-main");
+  });
+
+  it("auto-saves scrapbook Workbench changes back to the comparison build", async () => {
+    const user = userEvent.setup();
+    const bookId = useScrapbookStore.getState().createBook("Editable");
+    const entryId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [])!;
+    render(<ChampionsApp />);
+    await user.click(screen.getByRole("button", { name: "Scrapbooks" }));
+    await user.click(screen.getByRole("button", { name: "Expand all tags" }));
+    await user.click(screen.getByRole("button", { name: new RegExp(firstPokemon.name) }));
+    await user.click(await screen.findByRole("button", { name: "Edit scrapbook build" }));
+    await user.selectOptions(screen.getByLabelText("Nature"), "Adamant");
+    await waitFor(() => expect(useScrapbookStore.getState().books.find((book) => book.id === bookId)?.entries.find((entry) => entry.id === entryId)?.nature.name).toBe("Adamant"));
+    expect(useScrapbookStore.getState().books[0].entries[0].abilityId).toBeNull();
   });
 });

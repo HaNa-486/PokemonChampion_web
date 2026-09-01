@@ -551,6 +551,30 @@ footer a { color: var(--mint-dark); }
 .battle-category-toggles { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0; padding: 12px; border: 1px solid var(--line); border-radius: 12px; }
 .battle-category-toggles legend { padding: 0 6px; color: var(--muted); font-size: .76rem; font-weight: 850; }
 .scrapbook-empty { padding: 50px 24px; color: var(--muted); text-align: center; }
+.scrapbook-panel > .panel-head { border-bottom: 1px solid var(--line); }
+.scrapbook-tag-creator { display: flex; align-items: end; gap: 10px; padding: 14px 28px; border-bottom: 1px solid var(--line); background: var(--surface-soft); }
+.scrapbook-tag-creator label { display: grid; flex: 1; gap: 5px; color: var(--muted); font-size: .75rem; font-weight: 850; }
+.scrapbook-tag-creator input, .scrapbook-entry-actions input, .scrapbook-entry-actions select, .scrapbook-tag-edit input { min-height: 38px; border: 1px solid var(--line); border-radius: 9px; padding: 7px 10px; color: var(--ink); background: var(--control); font: inherit; }
+.scrapbook-expand-actions { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 18px 6px; }
+.scrapbook-expand-actions button, .scrapbook-tag-actions button, .scrapbook-tag-edit button, .scrapbook-entry-actions button { border: 1px solid var(--line); border-radius: 8px; padding: 7px 10px; color: var(--ink); background: var(--control); font-weight: 800; cursor: pointer; }
+.scrapbook-panel > .scrapbook-group { margin: 12px 18px; }
+.scrapbook-tag-actions, .scrapbook-tag-edit { display: inline-flex; align-items: center; gap: 6px; }
+.scrapbook-tag-edit input { width: 150px; }
+.scrapbook-build-title { display: grid; gap: 3px; }
+.scrapbook-build-title small { color: var(--muted); font-weight: 750; }
+.scrapbook-build-summary { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(180px, .55fr)) minmax(420px, 1.5fr); gap: 8px; padding: 10px 12px; border-top: 1px dashed var(--line); border-bottom: 1px dashed var(--line); background: color-mix(in srgb, var(--surface-soft) 72%, transparent); }
+.scrapbook-build-summary > span { display: grid; align-content: start; gap: 4px; color: var(--ink); font-size: .8rem; }
+.scrapbook-build-summary b { color: var(--muted); font-size: .68rem; text-transform: uppercase; letter-spacing: .05em; }
+.scrapbook-move-summary { grid-template-columns: repeat(2, minmax(160px,1fr)); }
+.scrapbook-move-summary i { min-height: 28px; display: flex; align-items: center; gap: 5px; border: 1px solid var(--line); border-radius: 8px; padding: 4px 7px; color: var(--muted); font-style: normal; }
+.scrapbook-entry-actions { grid-column: 1 / -1; }
+.scrapbook-entry-actions summary { width: max-content; cursor: pointer; color: var(--mint-dark); font-size: .78rem; font-weight: 850; }
+.scrapbook-entry-actions > div { display: grid; grid-template-columns: minmax(180px, .8fr) minmax(180px, .8fr) minmax(360px, 1.4fr); align-items: end; gap: 9px; padding-top: 9px; }
+.scrapbook-entry-actions label { display: grid; gap: 4px; color: var(--muted); font-size: .72rem; font-weight: 800; }
+.scrapbook-entry-actions label > span { display: flex; gap: 5px; }
+.scrapbook-entry-actions input { min-width: 0; width: 100%; }
+.scrapbook-entry-action-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+.scrapbook-entry-actions .danger-button { color: var(--danger); border-color: color-mix(in srgb, var(--danger) 55%, var(--line)); }
 
 .standalone-type-chart { max-width: 1680px; min-height: 100vh; }
 .standalone-chart-actions, .standalone-preferences { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
@@ -605,6 +629,11 @@ footer a { color: var(--mint-dark); }
   .scrapbook-pokemon-row { grid-template-columns: minmax(0,1fr) auto; gap: 8px; }
   .scrapbook-pokemon-row > .compact-matchups { grid-column: 1 / -1; }
   .scrapbook-pokemon-row > .scrapbook-row-actions { grid-column: 2; grid-row: 1; align-self: start; }
+  .scrapbook-build-summary, .scrapbook-entry-actions { grid-column: 1 / -1; }
+  .scrapbook-build-summary { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .scrapbook-move-summary { grid-column: 1 / -1; }
+  .scrapbook-entry-actions > div { grid-template-columns: 1fr 1fr; }
+  .scrapbook-entry-action-buttons { grid-column: 1 / -1; }
   .scrapbook-pokemon-main { grid-template-columns: 18px 52px minmax(105px,.75fr) minmax(90px,.45fr) minmax(330px,1.8fr); overflow-x: auto; }
   .scrapbook-inline-detail { margin: 0 8px 12px; }
 }
@@ -696,6 +725,7 @@ footer a { color: var(--mint-dark); }
   .scrapbook-toolbar { padding: 14px 16px; }
   .scrapbook-toolbar label { width: 100%; }
   .scrapbook-toolbar input, .scrapbook-toolbar select { width: 100%; }
+  .scrapbook-tag-creator { align-items: stretch; flex-direction: column; padding: 12px 16px; }
   .scrapbook-filter-toggle { padding: 13px 16px; }
   .scrapbook-candidates { grid-template-columns: 1fr; padding-left: 0; }
   .scrapbook-content { padding: 10px; }
@@ -706,6 +736,11 @@ footer a { color: var(--mint-dark); }
   .scrapbook-pokemon-main { grid-template-columns: 14px 48px minmax(0,1fr); }
   .scrapbook-pokemon-main > .badge-row, .scrapbook-final-stats { grid-column: 2 / -1; }
   .scrapbook-final-stats { grid-template-columns: repeat(6, minmax(40px,1fr)); width: 100%; }
+  .scrapbook-build-summary { grid-template-columns: 1fr; padding: 9px 4px; }
+  .scrapbook-move-summary { grid-template-columns: 1fr; }
+  .scrapbook-entry-actions > div { grid-template-columns: 1fr; }
+  .scrapbook-entry-action-buttons { grid-column: 1; }
+  .scrapbook-tag-actions { width: 100%; order: 4; }
   .scrapbook-inline-detail { margin: 0 6px 10px; padding: 15px 10px; }
   .scrapbook-inline-detail .detail-actions { grid-column: 1 / -1; width: 100%; display: grid; grid-template-columns: 1fr; }
   .scrapbook-inline-detail .detail-actions button { width: 100%; }

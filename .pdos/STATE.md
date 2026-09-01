@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 31
-- Updated: 2026-08-31T17:38:58Z
+- State revision: 33
+- Updated: 2026-09-01T18:40:16+08:00
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: Scrapbook feature candidate validated locally; Dev/UAT deployment pending
+- Phase: Scrapbook correction candidate locally verified; commit and replacement Dev deployment pending
 
 ## Repository identity
 
 - Branch: codex/scrapbook
-- Observed commit: working candidate based on 0537cd498ef603960cb513f79ecb58af3d598bfd; candidate commit pending
+- Observed commit: 604ed4ec14ed191f144f8cd42225ce66de7c1a52
 
 ## Product anchors
 
@@ -22,21 +22,21 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Current work
 
-- Current slice: Exact candidate is locally verified; commit, Dev build, and owner-only Dev deployment remain.
+- Current slice: Replace the prior scrapbook data model and comparison UX with configurable build cards, cross-tag actions, direct tag/book management, and persisted page state.
 - Active workstreams: `workstreams/2026-08-31-scrapbook.md`
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
-- Blocking dependencies: none before Dev deployment.
-- Consequential open decisions: Product-owner Dev UAT is required before any push or pull request; production remains separately approval-gated.
+- Blocking dependencies: replacement candidate must pass exact-source checks and owner-only Dev deployment; then explicit product-owner Dev UAT approval is required before push or pull request.
+- Consequential open decisions: Production remains separately approval-gated after PR checks, independent review, and merge.
 
 ## Handoff
 
-- What changed: Added the Scrapbooks tab between Pokémon and Moves; multi-book, multi-tag local persistence; four requested add entry points; collapsible/reorderable tag groups and Pokémon; actual-stat and defensive comparison rows; inline intelligence/build details; type-aware move ordering; and six optional season-data categories.
-- Verification evidence: Exact working candidate passed `pnpm verify:deploy` with lint 0 errors, TypeScript, both repository data audits, 18 Vitest files/138 tests, Vinext production build, and all 13 built-output/API tests. Browser QA covered all add entry points and responsive 390/768/1440 layouts.
+- What changed: In-progress replacement adds neutral initial builds, multiple named configurations per Pokémon, shared versus independent copies, cross-tag moves, direct tag management, whole-book duplication, auto-saved Workbench edits, richer comparison rows, deterministic book preselection, and persisted finder/expansion/toggle state.
+- Verification evidence: `pnpm verify:deploy` passes on the replacement source: lint 0 errors/15 warnings, TypeScript, 358-form and Traditional Chinese audits, 18 Vitest files/142 tests, Vinext build, and 13 built-output/API tests. The focused scrapbook suite has 9 passing tests including auto-save through the real Workbench. Browser automation is temporarily blocked by the Codex Node REPL kernel-assets path error; no browser result is claimed.
 - Release: Not released. Branch is local and no pull request is open. Production remains untouched.
-- Dev UAT: Pending exact committed candidate deployment to the owner-only Champions Lab Dev project.
-- Residual risks: Scrapbooks intentionally remain device-local IndexedDB state; no account sync/export is included. Local browser QA exercised the safe neutral zero-AP stat fallback because hosted battle context was unavailable. Existing unrelated PDOS F-006 artifacts still fail strict state validation.
-- Next safe action: Commit the exact candidate, run `pnpm verify:dev`, deploy the exact commit to Champions Lab Dev, and provide focused UAT notes.
+- Dev UAT: Version 33 is superseded for acceptance by the clarified requirements and must not be approved. A replacement owner-only Dev version is pending.
+- Residual risks: Scrapbooks intentionally remain device-local IndexedDB state; no account sync/export is included. Existing unrelated PDOS F-006 artifacts still fail strict state validation.
+- Next safe action: Commit the exact locally verified candidate, run `verify:dev`, and deploy the replacement exact commit to owner-only Champions Lab Dev; use focused owner UAT to cover the browser journeys that the broken local automation kernel could not execute. No pull request or production action before new UAT approval.
 
 ## Read next
 
