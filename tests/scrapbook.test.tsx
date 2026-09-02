@@ -178,9 +178,29 @@ describe("scrapbook user journey", () => {
     render(<ScrapbookView locale="en" format="doubles" onEditEntry={vi.fn()} onAddToScrapbook={vi.fn()} />);
     await user.click(screen.getByRole("button", { name: "Expand all tags" }));
     expect(screen.getAllByText("AP +32")).toHaveLength(2);
+    expect(screen.getAllByText("AP +32").every((entry) => entry.classList.contains("ap-invested"))).toBe(true);
+    expect(screen.getAllByText("AP +0").every((entry) => entry.classList.contains("ap-zero"))).toBe(true);
     expect(document.querySelector(".scrapbook-final-stats .nature-up")).toHaveTextContent("↑");
     expect(document.querySelector(".scrapbook-final-stats .nature-down")).toHaveTextContent("↓");
+    expect(document.querySelector(".scrapbook-final-stats .nature-raised")).toBeInTheDocument();
+    expect(document.querySelector(".scrapbook-final-stats .nature-lowered")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: new RegExp(firstPokemon.name) }));
     expect(document.querySelector(".scrapbook-inline-detail .detail-stats")).not.toBeInTheDocument();
+  });
+
+  it("uses the sortable move-database columns for inline learnable moves without the properties column", async () => {
+    const user = userEvent.setup();
+    const bookId = useScrapbookStore.getState().createBook("Move comparison");
+    useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, []);
+    render(<ScrapbookView locale="en" format="doubles" onEditEntry={vi.fn()} onAddToScrapbook={vi.fn()} />);
+    await user.click(screen.getByRole("button", { name: "Expand all tags" }));
+    await user.click(screen.getByRole("button", { name: new RegExp(firstPokemon.name) }));
+    const table = document.querySelector(".scrapbook-inline-detail .learnable-move-table")!;
+    expect(within(table as HTMLElement).getByRole("columnheader", { name: /Usable Pokémon/ })).toBeInTheDocument();
+    expect(within(table as HTMLElement).queryByRole("columnheader", { name: /Properties/ })).not.toBeInTheDocument();
+    await user.click(within(table as HTMLElement).getByRole("button", { name: /^Power/ }));
+    expect(within(table as HTMLElement).getByRole("columnheader", { name: /Power/ })).toHaveAttribute("aria-sort", "descending");
+    const powers = [...table.querySelectorAll("tbody tr")].map((row) => row.children[3]?.textContent).filter((value) => value && value !== "—").map(Number);
+    expect(powers).toEqual([...powers].sort((left, right) => right - left));
   });
 });

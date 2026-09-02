@@ -541,13 +541,19 @@ footer a { color: var(--mint-dark); }
 .scrapbook-final-stats { display: grid; grid-template-columns: repeat(6, minmax(48px, 1fr)); gap: 5px; }
 .scrapbook-final-stats > span { display: grid; gap: 2px; text-align: center; }
 .scrapbook-final-stats small { color: var(--muted); font-size: .61rem; }
-.scrapbook-final-stats b { color: var(--mint-dark); font-size: .92rem; }
+.scrapbook-final-stats b { color: var(--ink); font-size: .92rem; }
+.scrapbook-final-stats .nature-raised b { color: var(--mint-dark); }
+.scrapbook-final-stats .nature-lowered b { color: var(--danger-ink); }
 .scrapbook-row-actions { justify-content: flex-end; }
 .scrapbook-inline-detail { max-width: none; max-height: none; margin: 0 12px 14px; overflow: visible; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-soft); box-shadow: none; }
 .scrapbook-inline-detail .detail-actions { margin-left: auto; }
 .scrapbook-inline-detail .detail-actions .primary-button { width: auto; margin: 0; }
-.learnable-list { display: grid; gap: 5px; max-height: min(520px, 58vh); overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; }
-.learnable-list-row { min-width: 1050px; display: grid; grid-template-columns: 62px 190px 80px 58px 58px 65px 60px 110px minmax(280px, 1fr); align-items: center; gap: 8px; padding: 9px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); font-size: .78rem; }
+.learnable-table-scroll { max-height: min(520px, 58vh); overflow: auto; overscroll-behavior: contain; scrollbar-gutter: stable; border: 1px solid var(--line); border-radius: 11px; }
+.learnable-move-table { min-width: 1120px; }
+.learnable-move-table thead { position: sticky; z-index: 2; top: 0; }
+.learnable-move-table th, .learnable-move-table td { padding: 10px 11px; }
+.learnable-move-table tbody tr:last-child td { border-bottom: 0; }
+.learnable-user-count { display: inline-flex; justify-content: center; }
 .battle-category-toggles { display: flex; flex-wrap: wrap; gap: 7px; margin: 12px 0; padding: 12px; border: 1px solid var(--line); border-radius: 12px; }
 .battle-category-toggles legend { padding: 0 6px; color: var(--muted); font-size: .76rem; font-weight: 850; }
 .scrapbook-empty { padding: 50px 24px; color: var(--muted); text-align: center; }
@@ -565,7 +571,10 @@ footer a { color: var(--mint-dark); }
 .scrapbook-build-summary { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(180px, .55fr)) minmax(420px, 1.5fr); gap: 8px; padding: 10px 12px; border-top: 1px dashed var(--line); border-bottom: 1px dashed var(--line); background: color-mix(in srgb, var(--surface-soft) 72%, transparent); }
 .scrapbook-build-summary > span { display: grid; align-content: start; gap: 4px; color: var(--ink); font-size: .8rem; }
 .scrapbook-build-summary b { color: var(--muted); font-size: .68rem; text-transform: uppercase; letter-spacing: .05em; }
-.scrapbook-final-stats em { color: var(--mint-dark); font-size: .63rem; font-style: normal; font-weight: 850; }
+.scrapbook-final-stats em { justify-self: center; border-radius: 999px; padding: 2px 5px; font-size: .63rem; font-style: normal; font-weight: 900; line-height: 1.2; }
+.scrapbook-final-stats .ap-invested { color: var(--mint-dark); background: var(--surface-selected); }
+.scrapbook-final-stats .ap-zero { color: var(--muted); background: transparent; font-weight: 700; opacity: .64; }
+.scrapbook-final-stats .nature-up, .scrapbook-final-stats .nature-down { display: inline-block; margin-left: 4px; font-size: 1rem; font-weight: 1000; line-height: .6; transform: translateY(1px); }
 .scrapbook-final-stats .nature-up { color: var(--mint-dark); }
 .scrapbook-final-stats .nature-down { color: var(--danger-ink); }
 .builder-submit-actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 18px; }

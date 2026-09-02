@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 35
-- Updated: 2026-09-02T00:02:36+08:00
+- State revision: 37
+- Updated: 2026-09-02T23:05:02+08:00
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: Scrapbook UAT correction locally verified; commit and replacement Dev deployment pending
+- Phase: Scrapbook learnable-move-table and stat-legibility UAT correction in verification
 
 ## Repository identity
 
 - Branch: codex/scrapbook
-- Observed commit: 4b6c05e0d4f8dc6d650c84c7c9469017abf861d2
+- Observed commit: 3a0b97dd90f60d11c73981603456047f993a04c8
 
 ## Product anchors
 
@@ -22,21 +22,21 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Current work
 
-- Current slice: Fix five UAT findings covering inline detail density, Workbench/team action separation, AP/nature visibility, and quick-finder localization.
+- Current slice: Replace Pokémon detail and scrapbook learnable-move layouts with the Move DB table language and clarify scrapbook AP/nature effects.
 - Active workstreams: `workstreams/2026-08-31-scrapbook.md`
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
-- Blocking dependencies: corrected exact candidate must pass checks and replace Dev version 34; explicit product-owner UAT approval is then required before push or pull request.
+- Blocking dependencies: explicit product-owner Dev UAT approval before push or pull request.
 - Consequential open decisions: Production remains separately approval-gated after PR checks, independent review, and merge.
 
 ## Handoff
 
-- What changed: In-progress UAT corrections remove duplicate inline base stats, constrain the move list to internal scrolling, separate scrapbook save from explicit team addition, show per-stat AP/nature effects, and localize quick-finder type/form options.
-- Verification evidence: `pnpm verify:deploy` passes on the correction source: lint 0 errors/15 warnings, TypeScript, 358-form and Traditional Chinese audits, 18 Vitest files/144 tests, Vinext build, and 13 built-output/API tests. The focused scrapbook suite passes 11 tests, including save-without-team-mutation, explicit team addition, inline base-stat omission, AP/nature visibility, and Chinese quick-finder labels.
+- What changed: In-progress UAT corrections give Pokémon detail and scrapbook inline intelligence the same sortable learnable-move columns as Move DB except the Move-DB-only Properties column, add usable-Pokémon counts, preserve contextual scrapbook default ordering, and make invested/zero AP plus raised/lowered nature effects visually distinct.
+- Verification evidence: `pnpm verify:deploy` passes: lint 0 errors/15 existing warnings, TypeScript, 358-form integrity audit, Traditional Chinese audit for 539 moves/200 abilities/148 items, 18 Vitest files/145 tests, Vinext build, and 13 built-output/API tests. The focused scrapbook suite passes 12 tests, including first-click descending Power sort, usable-Pokémon count, absence of the Properties column, and distinct AP/nature semantics. The focused Pokémon-detail journey passes with the shared table and first-click descending Accuracy sort.
 - Release: Not released. Branch is local and no pull request is open. Production remains untouched.
-- Dev UAT: Version 34 is superseded by the five reported UAT findings and must not be approved. A corrected owner-only Dev version is pending.
+- Dev UAT: Owner-only version 35 remains live at `https://champions-lab-dev.eddy8613.chatgpt.site` but is invalidated by the latest product-owner findings. A replacement exact candidate must be verified and deployed before UAT resumes.
 - Residual risks: Scrapbooks intentionally remain device-local IndexedDB state; no account sync/export is included. Existing unrelated PDOS F-006 artifacts still fail strict state validation.
-- Next safe action: Commit the exact locally verified correction, run `verify:dev`, and deploy a corrected owner-only Dev version. No pull request or production action before explicit approval.
+- Next safe action: Complete full verification, commit the exact candidate, verify the Dev manifest, and deploy a replacement owner-only Dev version. No pull request or production action before explicit approval.
 
 ## Read next
 
