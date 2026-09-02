@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 37
-- Updated: 2026-09-02T23:05:02+08:00
+- State revision: 39
+- Updated: 2026-09-03T00:30:53+08:00
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: Scrapbook learnable-move-table and stat-legibility UAT correction in verification
+- Phase: Follow-up learnable-move sorting and reverse-lookup correction implemented; exact-candidate verification pending
 
 ## Repository identity
 
 - Branch: codex/scrapbook
-- Observed commit: 3a0b97dd90f60d11c73981603456047f993a04c8
+- Observed commit: 84f3a995e4b9cc9d133e2c4a74d09cee83c7e144
 
 ## Product anchors
 
@@ -22,7 +22,7 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Current work
 
-- Current slice: Replace Pokémon detail and scrapbook learnable-move layouts with the Move DB table language and clarify scrapbook AP/nature effects.
+- Current slice: Restore contextual ordering on the third learnable-table header activation and open the complete shared Reverse Lookup from compatible-Pokémon counts.
 - Active workstreams: `workstreams/2026-08-31-scrapbook.md`
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
@@ -31,12 +31,12 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Handoff
 
-- What changed: In-progress UAT corrections give Pokémon detail and scrapbook inline intelligence the same sortable learnable-move columns as Move DB except the Move-DB-only Properties column, add usable-Pokémon counts, preserve contextual scrapbook default ordering, and make invested/zero AP plus raised/lowered nature effects visually distinct.
-- Verification evidence: `pnpm verify:deploy` passes: lint 0 errors/15 existing warnings, TypeScript, 358-form integrity audit, Traditional Chinese audit for 539 moves/200 abilities/148 items, 18 Vitest files/145 tests, Vinext build, and 13 built-output/API tests. The focused scrapbook suite passes 12 tests, including first-click descending Power sort, usable-Pokémon count, absence of the Properties column, and distinct AP/nature semantics. The focused Pokémon-detail journey passes with the shared table and first-click descending Accuracy sort.
+- What changed: Follow-up UAT remediation makes each learnable-move header cycle contextual default → initial direction → opposite direction → contextual default. The compatible-Pokémon count in both Pokémon detail and scrapbook inline intelligence now opens the exact shared Move DB Reverse Lookup instead of remaining a display-only count.
+- Verification evidence: TypeScript and the focused Pokémon-detail/scrapbook suites pass (2 files, 61 tests), including third-click default restoration, full Reverse Lookup launch from both entry points, nested-dialog close behavior, and add-to-scrapbook availability. Exact-candidate deployment verification remains pending.
 - Release: Not released. Branch is local and no pull request is open. Production remains untouched.
-- Dev UAT: Owner-only version 35 remains live at `https://champions-lab-dev.eddy8613.chatgpt.site` but is invalidated by the latest product-owner findings. A replacement exact candidate must be verified and deployed before UAT resumes.
+- Dev UAT: Owner-only version 36 remains live at `https://champions-lab-dev.eddy8613.chatgpt.site`, but the new findings invalidate it as the current candidate. A replacement exact candidate must pass release checks and be deployed before UAT resumes.
 - Residual risks: Scrapbooks intentionally remain device-local IndexedDB state; no account sync/export is included. Existing unrelated PDOS F-006 artifacts still fail strict state validation.
-- Next safe action: Complete full verification, commit the exact candidate, verify the Dev manifest, and deploy a replacement owner-only Dev version. No pull request or production action before explicit approval.
+- Next safe action: Run exact-candidate verification, commit, run Dev verification, and deploy a replacement owner-only Dev version. No pull request or production action before explicit UAT approval.
 
 ## Read next
 
