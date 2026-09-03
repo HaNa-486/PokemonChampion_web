@@ -834,6 +834,37 @@ describe("ChampionsApp", () => {
     expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
   });
 
+  it("closes only the topmost dialog across detail, reverse lookup, and scrapbook layers", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: /^Absol$/ }));
+    const detail = screen.getByRole("dialog", { name: "Absol" });
+
+    await user.click(within(detail).getByRole("button", { name: "Add to another scrapbook" }));
+    expect(screen.getByRole("dialog", { name: /Add to scrapbook · Absol/ })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: /Add to scrapbook · Absol/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+
+    const learnableTable = within(detail).getByRole("button", { name: "Sucker Punch" }).closest("table")!;
+    await user.click(within(learnableTable).getByRole("button", { name: /^View \d+ Pokémon that can use Sucker Punch$/ }));
+    const reverse = screen.getByRole("dialog", { name: "Sucker Punch" });
+    await user.click(within(reverse).getByRole("button", { name: "Add to scrapbook Absol" }));
+    expect(screen.getByRole("dialog", { name: /Add to scrapbook · Absol/ })).toBeInTheDocument();
+
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: /Add to scrapbook · Absol/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Sucker Punch" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Sucker Punch" })).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
+  });
+
   it("opens searchable ability and item reference views", async () => {
     const user = userEvent.setup();
     render(<ChampionsApp />);

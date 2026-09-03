@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 41
-- Updated: 2026-09-03T09:32:00+08:00
+- State revision: 42
+- Updated: 2026-09-03T10:12:00+08:00
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: Release-council Escape finding corrected locally; replacement candidate verification and Dev UAT pending
+- Phase: General topmost-dialog Escape correction implemented locally; replacement candidate verification and Dev UAT pending
 
 ## Repository identity
 
 - Branch: codex/scrapbook
-- Observed commit: 5478d176b6f01af2bcda41c4ebaac3352904c6b9
+- Observed commit: a0a2163aa94ade5eb1b8da773eb95c19af36ac7e
 
 ## Product anchors
 
@@ -22,7 +22,7 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Current work
 
-- Current slice: Ensure Escape closes only the topmost Reverse Lookup when opened over a Pokémon detail modal, then replace the invalidated Dev candidate.
+- Current slice: Ensure Escape closes only the topmost dialog across Pokémon detail, Reverse Lookup, and Add-to-Scrapbook nesting, then replace the invalidated Dev candidate.
 - Active workstreams: `workstreams/2026-08-31-scrapbook.md`
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
@@ -31,10 +31,10 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Handoff
 
-- What changed: The release council requested changes before PR because nested Reverse Lookup Escape was intercepted by the underlying Pokémon detail listener. Escape handling now allows an unhandled outer listener to pass the event to the topmost dialog; focused modal and inline tests assert topmost-only dismissal. The release plan now covers the full branch diff, rollback, environment identity, merged-source verification, and the Autopilot production boundary.
-- Verification evidence: TypeScript and focused Pokémon-detail/scrapbook suites pass (2 files, 61 tests), including nested Escape closing Reverse Lookup while preserving its parent modal. Full exact-candidate verification remains pending.
+- What changed: A second artifact review showed the selector-specific Reverse Lookup fix did not cover Add-to-Scrapbook nesting. Escape handling now uses a shared mount-order stack so only the topmost registered dialog closes, without selector exceptions; the Reverse Lookup section-level duplicate handler was removed. A regression covers Detail -> Add and Detail -> Reverse Lookup -> Add with successive Escapes.
+- Verification evidence: TypeScript passes and focused Pokémon-detail/scrapbook suites pass (2 files, 62 tests), including each nested layer closing in topmost order. Full exact-candidate verification remains pending.
 - Release: Not released. Branch is local and no pull request is open. Production remains untouched.
-- Dev UAT: Owner-only version 37 remains live, but the Escape correction changes the candidate and invalidates its UAT result for release. A replacement exact commit must be verified, deployed, and explicitly accepted.
+- Dev UAT: Owner-only version 37 remains live, but both Escape corrections change the candidate and invalidate its UAT result for release. A replacement exact commit must be verified, deployed, and explicitly accepted.
 - Residual risks: Scrapbooks intentionally remain device-local IndexedDB state; no account sync/export is included. Existing unrelated PDOS F-006 artifacts still fail strict state validation.
 - Next safe action: Run full checks, commit the replacement candidate, deploy it to owner-only Dev, and request focused Escape UAT. No pull request before that new pass.
 
@@ -58,7 +58,7 @@ Keep this concise. Every fresh PDOS context reads it first.
 <!-- PDOS-AUTOPILOT:START -->
 ## PDOS Autopilot continuity
 
-- Active runs: `scrapbook-release-20260903-v4` (plan_approved, revision 5)
+- Active runs: `scrapbook-release-20260903-v5` (plan_approved, revision 5)
 - Resume source: `.pdos/autopilot/active.json` and the referenced run ledger; validate before acting.
 - External status: ledger gates are governance eligibility only, never provider authorization or execution proof.
 <!-- PDOS-AUTOPILOT:END -->
