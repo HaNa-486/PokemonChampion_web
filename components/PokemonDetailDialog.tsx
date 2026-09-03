@@ -113,7 +113,8 @@ function BattlePanel({ usage, locale, visibleCategories = categoryOrder }: { usa
 
 export function PokemonDetailDialog({ pokemon, locale, initialFormat, onClose, onBuild, onScrapbook }: { pokemon: Pokemon; locale: Locale; initialFormat: "singles" | "doubles"; onClose: () => void; onBuild: () => void; onScrapbook?: () => void }) {
   useDialogEscape(() => {
-    if (!document.querySelector(".reverse-dialog")) onClose();
+    if (document.querySelector(".reverse-dialog")) return false;
+    onClose();
   });
   return <PokemonDetailPanel pokemon={pokemon} locale={locale} initialFormat={initialFormat} onClose={onClose} onBuild={onBuild} onScrapbook={onScrapbook} />;
 }

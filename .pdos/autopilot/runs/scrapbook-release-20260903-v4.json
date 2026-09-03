@@ -1,0 +1,117 @@
+{
+  "approvals": [],
+  "artifact_hash": null,
+  "audit": [
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:49:11Z",
+      "details": {},
+      "entry_hash": "ba7554eecf8be4cc713307a722ba949af4fedba82cda261c15b176f1f6e1c7e2",
+      "event": "run_created",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:49:11Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "8cc42b04e224900a3384900486614ce7ea394a8c3094e55966fcc1fcf30ec8e9",
+      "event": "item_added",
+      "previous_hash": "ba7554eecf8be4cc713307a722ba949af4fedba82cda261c15b176f1f6e1c7e2"
+    },
+    {
+      "actor": "release-council-root-release_council",
+      "at": "2026-09-03T01:49:11Z",
+      "details": {
+        "decision": "approve",
+        "subject": "d9ae6e18a883b97b529d2572bdc4483a2c9e4b675e6425249abb2a93f998914d"
+      },
+      "entry_hash": "c125039ad5dd27962e50361b754dd47cf06e6d4097f4b10fd26a962113e48877",
+      "event": "plan_reviewed",
+      "previous_hash": "8cc42b04e224900a3384900486614ce7ea394a8c3094e55966fcc1fcf30ec8e9"
+    },
+    {
+      "actor": "release-executor-root-release_executor",
+      "at": "2026-09-03T01:49:11Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "00723dce22bdb3811919c3b758cfc5659446ab0b4a8141d4befb030bb1e3e2b1",
+      "event": "item_started",
+      "previous_hash": "c125039ad5dd27962e50361b754dd47cf06e6d4097f4b10fd26a962113e48877"
+    },
+    {
+      "actor": "release-executor-root-release_executor",
+      "at": "2026-09-03T01:50:56Z",
+      "details": {
+        "item_id": "FIX-001",
+        "status": "completed"
+      },
+      "entry_hash": "2237c20fa7f5dc5f1968c1ebd2c839a4eb465e42bc76a181e00f39c658548fca",
+      "event": "item_finished",
+      "previous_hash": "00723dce22bdb3811919c3b758cfc5659446ab0b4a8141d4befb030bb1e3e2b1"
+    }
+  ],
+  "authorizations": [],
+  "autopilot_version": "0.1.0-alpha.1",
+  "blockers": [],
+  "closed": false,
+  "created_at": "2026-09-03T01:49:11Z",
+  "evidence": {},
+  "items": [
+    {
+      "acceptance": "One Escape closes nested Reverse Lookup while preserving Pok\u00e9mon detail; inline Reverse Lookup Escape closes; typecheck, focused tests, diff check, and verify:deploy pass with no material findings.",
+      "depends_on": [],
+      "executor": "release-executor-root-release_executor",
+      "handoff": "Read-only verification found no material code issue: diff check, typecheck, 61 focused tests, full verify:deploy (145 Vitest plus 13 render/API) all passed. Nested and inline Escape behavior and three-state sort cycle confirmed. Existing 15 lint warnings and large-chunk warning are non-blocking.",
+      "id": "FIX-001",
+      "resource_locks": [
+        "dialog:escape"
+      ],
+      "risk": "medium",
+      "scopes": [
+        "DEPLOYMENT_CHECKLIST.md",
+        "PROJECT_SPEC.md",
+        "app/globals.css",
+        "components/AddToScrapbookDialog.tsx",
+        "components/ChampionsApp.tsx",
+        "components/DatabaseViews.tsx",
+        "components/PokemonDetailDialog.tsx",
+        "components/PokemonUsersDialog.tsx",
+        "components/ScrapbookView.tsx",
+        "lib/scrapbook-store.ts",
+        "lib/use-dialog-escape.ts",
+        "tests/components.test.tsx",
+        "tests/scrapbook.test.tsx",
+        "tests/setup.ts"
+      ],
+      "status": "completed",
+      "title": "Correct topmost-only nested Reverse Lookup Escape and verify branch artifact"
+    }
+  ],
+  "objective": "Govern the replacement scrapbook artifact through fresh Dev UAT, PR, CI, independent review, and non-forced merge; close before separately authorized production promotion.",
+  "phase": "plan_approved",
+  "plan_hash": "d9ae6e18a883b97b529d2572bdc4483a2c9e4b675e6425249abb2a93f998914d",
+  "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
+  "plan_reviews": [
+    {
+      "actor": "release-council-root-release_council",
+      "at": "2026-09-03T01:49:11Z",
+      "decision": "approve",
+      "notes": "Independent council approved this exact unchanged plan hash after scope, Escape, rollback, environment, and Autopilot-boundary corrections; approval remains plan-only.",
+      "role": "council",
+      "subject": "d9ae6e18a883b97b529d2572bdc4483a2c9e4b675e6425249abb2a93f998914d"
+    }
+  ],
+  "pr": {},
+  "revision": 5,
+  "run_id": "scrapbook-release-20260903-v4",
+  "schema_version": 1,
+  "source_findings": [
+    "COUNCIL-20260903-NESTED-ESCAPE",
+    "UAT-20260903-REVERSE-LOOKUP",
+    "UAT-20260903-SORT-CYCLE"
+  ],
+  "updated_at": "2026-09-03T01:50:56Z"
+}

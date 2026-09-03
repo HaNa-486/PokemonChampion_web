@@ -558,7 +558,7 @@ Support `en` and `zh-Hant`. On first visit, choose Traditional Chinese when any 
 
 Traditional Chinese localization preserves provenance per record. Move names must match the pinned Traditional Chinese game strings mirrored by PKHeX; PokeAPI `zh-Hant` values are community-maintained candidates and must never be trusted solely because of their locale label. Reviewed mappings cover Champions-only resources and form composition. Names are never machine translated. Descriptions are machine translations of the complete effective Pokémon Showdown Champions English mechanics, normalized to Taiwan Traditional Chinese, with reviewed semantic overrides for entries that fail parity. The localization audit must compare against the exact current English source, preserve all numbers, fractions, percentages, multipliers, rounding rules, trigger thresholds, and single-use conditions, reject Simplified Chinese, broken placeholders, and unapproved English residue, and record whether each result is raw machine translation or a reviewed semantic override.
 
-Meet WCAG 2.2 AA: keyboard operation, visible focus, semantic headings/tables/forms/dialogs, tooltip focus support, document-level Escape dismissal for every modal, focus trap/restoration, 200% zoom, reduced motion, compliant contrast, no color-only meaning, and screen-reader labels such as “Priority plus one.”
+Meet WCAG 2.2 AA: keyboard operation, visible focus, semantic headings/tables/forms/dialogs, tooltip focus support, document-level Escape dismissal for every modal, topmost-only Escape dismissal when dialogs are nested, focus trap/restoration, 200% zoom, reduced motion, compliant contrast, no color-only meaning, and screen-reader labels such as “Priority plus one.”
 
 ## 9. Public API
 

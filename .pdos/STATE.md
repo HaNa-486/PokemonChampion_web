@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 39
-- Updated: 2026-09-03T00:30:53+08:00
+- State revision: 41
+- Updated: 2026-09-03T09:32:00+08:00
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: Follow-up learnable-move sorting and reverse-lookup correction implemented; exact-candidate verification pending
+- Phase: Release-council Escape finding corrected locally; replacement candidate verification and Dev UAT pending
 
 ## Repository identity
 
 - Branch: codex/scrapbook
-- Observed commit: 84f3a995e4b9cc9d133e2c4a74d09cee83c7e144
+- Observed commit: 5478d176b6f01af2bcda41c4ebaac3352904c6b9
 
 ## Product anchors
 
@@ -22,7 +22,7 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Current work
 
-- Current slice: Restore contextual ordering on the third learnable-table header activation and open the complete shared Reverse Lookup from compatible-Pokémon counts.
+- Current slice: Ensure Escape closes only the topmost Reverse Lookup when opened over a Pokémon detail modal, then replace the invalidated Dev candidate.
 - Active workstreams: `workstreams/2026-08-31-scrapbook.md`
 - Active review: `reviews/REV-20260820-team-builder-ux.md`
 - Active remediations: `remediations/REM-20260820-team-builder-ux-F001.md`, `remediations/REM-20260820-team-builder-ux-F002.md`, `remediations/REM-20260820-team-builder-ux-F003.md`, `remediations/REM-20260825-team-builder-ux-F004.md`, `remediations/REM-20260825-team-builder-ux-F005.md`, `remediations/REM-20260825-team-builder-ux-F006.md`
@@ -31,12 +31,12 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Handoff
 
-- What changed: Follow-up UAT remediation makes each learnable-move header cycle contextual default → initial direction → opposite direction → contextual default. The compatible-Pokémon count in both Pokémon detail and scrapbook inline intelligence now opens the exact shared Move DB Reverse Lookup instead of remaining a display-only count.
-- Verification evidence: TypeScript and the focused Pokémon-detail/scrapbook suites pass (2 files, 61 tests), including third-click default restoration, full Reverse Lookup launch from both entry points, nested-dialog close behavior, and add-to-scrapbook availability. Exact-candidate deployment verification remains pending.
+- What changed: The release council requested changes before PR because nested Reverse Lookup Escape was intercepted by the underlying Pokémon detail listener. Escape handling now allows an unhandled outer listener to pass the event to the topmost dialog; focused modal and inline tests assert topmost-only dismissal. The release plan now covers the full branch diff, rollback, environment identity, merged-source verification, and the Autopilot production boundary.
+- Verification evidence: TypeScript and focused Pokémon-detail/scrapbook suites pass (2 files, 61 tests), including nested Escape closing Reverse Lookup while preserving its parent modal. Full exact-candidate verification remains pending.
 - Release: Not released. Branch is local and no pull request is open. Production remains untouched.
-- Dev UAT: Owner-only version 36 remains live at `https://champions-lab-dev.eddy8613.chatgpt.site`, but the new findings invalidate it as the current candidate. A replacement exact candidate must pass release checks and be deployed before UAT resumes.
+- Dev UAT: Owner-only version 37 remains live, but the Escape correction changes the candidate and invalidates its UAT result for release. A replacement exact commit must be verified, deployed, and explicitly accepted.
 - Residual risks: Scrapbooks intentionally remain device-local IndexedDB state; no account sync/export is included. Existing unrelated PDOS F-006 artifacts still fail strict state validation.
-- Next safe action: Run exact-candidate verification, commit, run Dev verification, and deploy a replacement owner-only Dev version. No pull request or production action before explicit UAT approval.
+- Next safe action: Run full checks, commit the replacement candidate, deploy it to owner-only Dev, and request focused Escape UAT. No pull request before that new pass.
 
 ## Read next
 
@@ -54,3 +54,11 @@ Keep this concise. Every fresh PDOS context reads it first.
 - `remediations/REM-20260825-team-builder-ux-F006.md`
 - `../PROJECT_SPEC.md`
 - `../DEPLOYMENT_CHECKLIST.md`
+
+<!-- PDOS-AUTOPILOT:START -->
+## PDOS Autopilot continuity
+
+- Active runs: `scrapbook-release-20260903-v4` (plan_approved, revision 5)
+- Resume source: `.pdos/autopilot/active.json` and the referenced run ledger; validate before acting.
+- External status: ledger gates are governance eligibility only, never provider authorization or execution proof.
+<!-- PDOS-AUTOPILOT:END -->

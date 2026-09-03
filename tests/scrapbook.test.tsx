@@ -214,5 +214,7 @@ describe("scrapbook user journey", () => {
     const reverseDialog = screen.getByRole("dialog");
     expect(within(reverseDialog).getByRole("textbox", { name: "Search Pokémon in reverse lookup" })).toBeInTheDocument();
     expect(within(reverseDialog).getByRole("button", { name: new RegExp(`Add to scrapbook ${firstPokemon.name}`) })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 });

@@ -441,7 +441,7 @@ describe("ChampionsApp", () => {
     const reverseDialog = screen.getByRole("dialog", { name: "Sucker Punch" });
     expect(within(reverseDialog).getByRole("textbox", { name: "Search Pokémon in reverse lookup" })).toBeInTheDocument();
     expect(within(reverseDialog).getByRole("button", { name: "Add to scrapbook Absol" })).toBeInTheDocument();
-    await user.click(within(reverseDialog).getByRole("button", { name: "Close" }));
+    await user.keyboard("{Escape}");
     expect(screen.queryByRole("dialog", { name: "Sucker Punch" })).not.toBeInTheDocument();
     expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
     expect(within(dialog).queryByRole("button", { name: "Calm Mind" })).not.toBeInTheDocument();

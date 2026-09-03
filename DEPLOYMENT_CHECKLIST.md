@@ -143,7 +143,7 @@ The live probe depends on a third party. A network outage blocks data-related pr
 
 Required for interaction, layout, responsive, or CSS changes. Check at 390, 768, and 1440 CSS pixels; commercial release candidates also run Chromium, Firefox, and WebKit.
 
-- [ ] Keyboard focus, document-level Escape, mouse, and touch behavior work for tooltips and every modal dialog.
+- [ ] Keyboard focus, document-level Escape, mouse, and touch behavior work for tooltips and every modal dialog; when dialogs are nested, one Escape closes only the topmost dialog and leaves its parent open.
 - [ ] English and Traditional Chinese critical flows do not clip or lose state.
 - [ ] A first visit follows the browser language (`zh*` → Traditional Chinese, otherwise English), and an explicit language choice survives refresh/remount.
 - [ ] In `zh-Hant`, every listed Pokémon/form name is the official Traditional Chinese name; no Pokémon name is machine translated or left in English.

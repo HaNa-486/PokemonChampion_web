@@ -1,0 +1,133 @@
+{
+  "approvals": [],
+  "artifact_hash": null,
+  "audit": [
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:35:26Z",
+      "details": {},
+      "entry_hash": "69cc131b8af80de5edc83bea0672b84244f7872621bb6e54fde8ebc04785f879",
+      "event": "run_created",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:35:26Z",
+      "details": {
+        "item_id": "REL-001"
+      },
+      "entry_hash": "1fcda5f5a000c2c680998fc62f132b888cade2f23d37113a6fe489c7ea3dd67c",
+      "event": "item_added",
+      "previous_hash": "69cc131b8af80de5edc83bea0672b84244f7872621bb6e54fde8ebc04785f879"
+    },
+    {
+      "actor": "release-council-root-release_council",
+      "at": "2026-09-03T01:40:33Z",
+      "details": {
+        "decision": "approve",
+        "subject": "d9ae6e18a883b97b529d2572bdc4483a2c9e4b675e6425249abb2a93f998914d"
+      },
+      "entry_hash": "8e97c17a30592012c11d812c83123dbd9bec1afd4c88c47440c0aafe15a83996",
+      "event": "plan_reviewed",
+      "previous_hash": "1fcda5f5a000c2c680998fc62f132b888cade2f23d37113a6fe489c7ea3dd67c"
+    },
+    {
+      "actor": "release-executor-root-release_executor",
+      "at": "2026-09-03T01:40:58Z",
+      "details": {
+        "item_id": "REL-001"
+      },
+      "entry_hash": "c8b771ccb03daac3ad04c7ba7f1bb183685c1d4e8aa8ad0c4c8ed4ac2f0be9e1",
+      "event": "item_started",
+      "previous_hash": "8e97c17a30592012c11d812c83123dbd9bec1afd4c88c47440c0aafe15a83996"
+    },
+    {
+      "actor": "release-executor-root-release_executor",
+      "at": "2026-09-03T01:50:56Z",
+      "details": {
+        "item_id": "REL-001",
+        "status": "blocked"
+      },
+      "entry_hash": "5e33a1beb910934b01188ad77056f755538e98739911a6fad262f2e7a5b4ca81",
+      "event": "item_finished",
+      "previous_hash": "c8b771ccb03daac3ad04c7ba7f1bb183685c1d4e8aa8ad0c4c8ed4ac2f0be9e1"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:50:56Z",
+      "details": {},
+      "entry_hash": "1a058b59732ca111eb7cb84a37e24bdde7ab1cb617db6f1f659f7249f81b3909",
+      "event": "run_closed",
+      "previous_hash": "5e33a1beb910934b01188ad77056f755538e98739911a6fad262f2e7a5b4ca81"
+    }
+  ],
+  "authorizations": [],
+  "autopilot_version": "0.1.0-alpha.1",
+  "blockers": [],
+  "closed": true,
+  "closed_outcome": "cancelled",
+  "created_at": "2026-09-03T01:35:26Z",
+  "evidence": {},
+  "handoff": {
+    "next_safe_action": "Continue scrapbook-release-20260903-v4.",
+    "residual_risks": [
+      "None from this superseded ledger; v4 governs the active release."
+    ],
+    "summary": "Cancelled superseded run; no release action taken from it."
+  },
+  "items": [
+    {
+      "acceptance": "Replacement exact commit passes verify:deploy and verify:dev; owner-only Dev deployment and fresh UAT pass bind to that artifact; PR head equals artifact; Deployment verification passes; distinct independent PR review has no material findings; provider state permits a non-forced merge; Autopilot closes before production.",
+      "depends_on": [],
+      "executor": "release-executor-root-release_executor",
+      "handoff": "Superseded by v4 because this item acceptance incorrectly bundled later external Dev UAT, PR, CI, review, and merge gates into executor completion.",
+      "id": "REL-001",
+      "resource_locks": [
+        "release:scrapbook"
+      ],
+      "risk": "high",
+      "scopes": [
+        "DEPLOYMENT_CHECKLIST.md",
+        "PROJECT_SPEC.md",
+        "app/globals.css",
+        "components/AddToScrapbookDialog.tsx",
+        "components/ChampionsApp.tsx",
+        "components/DatabaseViews.tsx",
+        "components/PokemonDetailDialog.tsx",
+        "components/PokemonUsersDialog.tsx",
+        "components/ScrapbookView.tsx",
+        "lib/scrapbook-store.ts",
+        "lib/use-dialog-escape.ts",
+        "tests/components.test.tsx",
+        "tests/scrapbook.test.tsx",
+        "tests/setup.ts"
+      ],
+      "status": "blocked",
+      "title": "Verify and release complete scrapbook branch artifact through merge"
+    }
+  ],
+  "objective": "Govern the replacement scrapbook artifact through fresh Dev UAT, PR, CI, independent review, and non-forced merge; close before separately authorized production promotion.",
+  "phase": "cancelled",
+  "plan_hash": "d9ae6e18a883b97b529d2572bdc4483a2c9e4b675e6425249abb2a93f998914d",
+  "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
+  "plan_reviews": [
+    {
+      "actor": "release-council-root-release_council",
+      "at": "2026-09-03T01:40:33Z",
+      "decision": "approve",
+      "notes": "Revised plan covers complete product/test/spec diff, fresh Dev/UAT requirement, PR/CI/distinct reviewer/non-forced merge gates, Autopilot boundary, and separate production identity/rollback/smoke procedure. TypeScript and focused 61 tests independently reproduced.",
+      "role": "council",
+      "subject": "d9ae6e18a883b97b529d2572bdc4483a2c9e4b675e6425249abb2a93f998914d"
+    }
+  ],
+  "pr": {},
+  "revision": 6,
+  "run_id": "scrapbook-release-20260903-v3",
+  "schema_version": 1,
+  "source_findings": [
+    "COUNCIL-20260903-NESTED-ESCAPE",
+    "UAT-20260903-REVERSE-LOOKUP",
+    "UAT-20260903-SORT-CYCLE"
+  ],
+  "updated_at": "2026-09-03T01:50:56Z"
+}
