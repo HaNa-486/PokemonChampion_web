@@ -1,6 +1,15 @@
 {
   "approvals": [],
-  "artifact_hash": null,
+  "artifact_binding": {
+    "method": "git-head",
+    "scopes": [
+      "components/DatabaseViews.tsx",
+      "components/PokemonDetailDialog.tsx",
+      "components/ScrapbookView.tsx",
+      "tests/scrapbook.test.tsx"
+    ]
+  },
+  "artifact_hash": "21bd24655f0bf54c176adc5da0848438385faa0f",
   "audit": [
     {
       "actor": "parent-01a058b0",
@@ -51,14 +60,68 @@
       "entry_hash": "8aab507c54e5cfc6f8102599f1c2bbcd5f9c98cc49372988f0b885fd61192b7f",
       "event": "item_finished",
       "previous_hash": "12323ae608d167adf4bcfc6473a8f01a21dd14d87e8ca7709341ed77f9cf4f53"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T02:55:59Z",
+      "details": {
+        "method": "git-head",
+        "old_subject": null,
+        "subject": "21bd24655f0bf54c176adc5da0848438385faa0f"
+      },
+      "entry_hash": "82467f615b0de48b4afec0aac6ad293b600a4a4e77db6176b26abeae1bf0988d",
+      "event": "artifact_recorded",
+      "previous_hash": "8aab507c54e5cfc6f8102599f1c2bbcd5f9c98cc49372988f0b885fd61192b7f"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T03:00:03Z",
+      "details": {
+        "exit_code": 0,
+        "status": "pass",
+        "subject": "21bd24655f0bf54c176adc5da0848438385faa0f"
+      },
+      "entry_hash": "8224c282434ac2e0507e7505a8315a299dde96982a282c2acc798736fce44df0",
+      "event": "tests_executed",
+      "previous_hash": "82467f615b0de48b4afec0aac6ad293b600a4a4e77db6176b26abeae1bf0988d"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T03:04:50Z",
+      "details": {},
+      "entry_hash": "2d4ea7ad6a0c8a8a7cecfaaa21ecee491dbbb38a229a769cbf917bc3ccab46cc",
+      "event": "run_closed",
+      "previous_hash": "8224c282434ac2e0507e7505a8315a299dde96982a282c2acc798736fce44df0"
     }
   ],
   "authorizations": [],
   "autopilot_version": "0.1.0-alpha.1",
   "blockers": [],
-  "closed": false,
+  "closed": true,
+  "closed_outcome": "cancelled",
   "created_at": "2026-09-04T02:53:02Z",
-  "evidence": {},
+  "evidence": {
+    "tests": {
+      "artifact_changed": false,
+      "at": "2026-09-04T03:00:03Z",
+      "command": [
+        "cmd",
+        "/c",
+        ".pdos\\local\\run-verify-dev.cmd"
+      ],
+      "exit_code": 0,
+      "source": "executed_command",
+      "status": "pass",
+      "subject": "21bd24655f0bf54c176adc5da0848438385faa0f",
+      "summary": "Exact committed verify:dev includes full verify:deploy and Dev environment assertion.",
+      "transcript_sha256": "62f2669ae4969fe7fdb6047e1667971843aa1c1d750a3c1c3b786d726c228260"
+    }
+  },
+  "handoff": {
+    "next_safe_action": "Complete reviewed batch in v9",
+    "residual_risks": [],
+    "summary": "Complete review found three additional P2 scrapbook edge cases; batch supersedes artifact before deployment."
+  },
   "items": [
     {
       "acceptance": "Database and inline reverse lookup select distinct B: modal and saved pokemonId B; header remains A; Escape and full checks pass.",
@@ -79,7 +142,7 @@
     }
   ],
   "objective": "Correct nested reverse lookup selected Pokemon identity, verify exact candidate, deploy Dev and require fresh UAT before PR review and merge.",
-  "phase": "plan_approved",
+  "phase": "cancelled",
   "plan_hash": "8aba7408d981af35bd280ae9c46988cddc6be590facf95079d17f594d64f1871",
   "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
   "plan_reviews": [
@@ -93,11 +156,11 @@
     }
   ],
   "pr": {},
-  "revision": 5,
+  "revision": 8,
   "run_id": "scrapbook-release-20260904-v8",
   "schema_version": 1,
   "source_findings": [
     "COUNCIL-20260904-REVERSE-SELECTED-POKEMON"
   ],
-  "updated_at": "2026-09-04T02:55:33Z"
+  "updated_at": "2026-09-04T03:04:50Z"
 }

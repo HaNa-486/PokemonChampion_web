@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 46
-- Updated: 2026-09-04T10:56:00+08:00
+- State revision: 47
+- Updated: 2026-09-04T11:14:00+08:00
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: Nested reverse lookup selected-Pokemon callback corrected; exact replacement verification and Dev UAT pending
+- Phase: Complete-review batch repaired and locally reviewed; exact replacement verification and Dev UAT pending
 
 ## Repository identity
 
 - Branch: codex/scrapbook
-- Observed commit: 083a3adf2c2fbbbf8127687138c89cdce83dca4f
+- Observed commit: 21bd24655f0bf54c176adc5da0848438385faa0f
 
 ## Product anchors
 
@@ -32,7 +32,7 @@ Keep this concise. Every fresh PDOS context reads it first.
 ## Handoff
 
 - What changed: Artifact review found one remaining bubbling Escape handler on the Detail section, which is removed so all four modal surfaces use only the shared stack. Executor review then found closed BuildEditor pickers still consumed Escape; ResourcePicker and MovePicker now consume Escape only while open, so the first key closes an open picker and the second closes the editor. Regressions cover the existing-book nested-dialog focus path and the two-step picker/editor sequence.
-- Verification evidence: Escape candidate passed local verify:deploy (147 tests, build, 13 rendered/API checks), but exact review found reverse lookup ignored the clicked Pokemon. The callback now forwards selected Pokemon through both parents, with explicit source only on the header. Two new database/inline regressions verify modal identity and persisted selected Pokemon, followed by original header action; both tests and typecheck pass. Full replacement verification remains required. Superseded v7 verify:dev exited zero but correctly failed artifact binding because the reviewed source changed; never deployed.
+- Verification evidence: Superseded `21bd246` passed exact verify:dev but complete review found stale deleted tag targets, compacted move slots, and hydration-write races. The batch now falls back to valid Untagged targets and rejects invalid duplicates; preserves positional scrapbook moves and compacts only explicit team submission; blocks mutations during single-flight hydration with loading/retry and failed-read preservation. Five targeted regressions and typecheck pass. Independent whole-local review found no remaining material issues. Final committed full verification still required; no replacement candidate deployed.
 - Release: Not released. Branch is local and no pull request is open. Production remains untouched.
 - Dev UAT: Owner-only version 37 remains live. Superseded `ea1502b` was pushed only to the Dev source repository, never saved or deployed. The final replacement exact commit must be verified, deployed, and explicitly accepted.
 - Residual risks: Scrapbooks intentionally remain device-local IndexedDB state; no account sync/export is included. Existing unrelated PDOS F-006 artifacts still fail strict state validation.
@@ -58,7 +58,7 @@ Keep this concise. Every fresh PDOS context reads it first.
 <!-- PDOS-AUTOPILOT:START -->
 ## PDOS Autopilot continuity
 
-- Active runs: `scrapbook-release-20260904-v8` (plan_approved, revision 5)
+- Active runs: `scrapbook-release-20260904-v9` (plan_approved, revision 5)
 - Resume source: `.pdos/autopilot/active.json` and the referenced run ledger; validate before acting.
 - External status: ledger gates are governance eligibility only, never provider authorization or execution proof.
 <!-- PDOS-AUTOPILOT:END -->

@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AddToScrapbookDialog } from "../components/AddToScrapbookDialog";
@@ -12,7 +12,7 @@ import { useTeamStore } from "../lib/team-store";
 const firstPokemon = pokemon[0];
 
 beforeEach(() => {
-  useScrapbookStore.setState({ books: [], activeBookId: "", lastAddBookId: "", uiByBook: {}, hydrated: true });
+  useScrapbookStore.setState({ books: [], activeBookId: "", lastAddBookId: "", uiByBook: {}, hydrated: true, hydrationError: false });
   useTeamStore.setState({ teams: { singles: [], doubles: [] }, hydrated: true });
   vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("offline fixture")));
 });
@@ -98,6 +98,73 @@ describe("scrapbook persistence model", () => {
 });
 
 describe("scrapbook user journey", () => {
+  it("rejects an invalid duplicate target without changing the book", () => {
+    const bookId = useScrapbookStore.getState().createBook("Invalid target");
+    const entryId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [])!;
+    const before = structuredClone(useScrapbookStore.getState().books);
+    expect(useScrapbookStore.getState().duplicateEntry(bookId, entryId, "deleted-tag")).toBeNull();
+    expect(useScrapbookStore.getState().books).toEqual(before);
+  });
+
+  it("falls back to Untagged when the mounted build-action target is deleted", async () => {
+    const user = userEvent.setup();
+    const bookId = useScrapbookStore.getState().createBook("Mounted target");
+    const source = useScrapbookStore.getState().createTag(bookId, "Source")!;
+    const target = useScrapbookStore.getState().createTag(bookId, "Target")!;
+    const entryId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [source])!;
+    render(<ScrapbookView locale="en" format="doubles" onEditEntry={vi.fn()} onAddToScrapbook={vi.fn()} />);
+    await user.click(screen.getByRole("button", { name: "Expand all tags" }));
+    await user.click(screen.getByText("Build actions"));
+    expect(screen.getByLabelText("Target tag")).toHaveValue(target);
+    act(() => useScrapbookStore.getState().deleteTag(bookId, target));
+    expect(screen.getByLabelText("Target tag")).toHaveValue(UNTAGGED_GROUP_ID);
+    expect(screen.getByRole("button", { name: "Add to another tag (shared)" })).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: "Duplicate independent build" }));
+    const book = useScrapbookStore.getState().books[0];
+    const copied = book.entries.find((entry) => entry.id !== entryId)!;
+    expect(book.entries).toHaveLength(2);
+    expect(copied.tagIds).toEqual([]);
+    expect(book.pokemonOrderByGroup[UNTAGGED_GROUP_ID]).toContain(copied.id);
+    expect(book.pokemonOrderByGroup[target]).toBeUndefined();
+    expect(screen.getByRole("button", { name: /Untagged/ })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Expand all tags" }));
+    expect(document.querySelectorAll(".scrapbook-pokemon-main")).toHaveLength(2);
+  });
+
+  it("preserves empty move slots through editing, migration, and compact team submission", async () => {
+    const user = userEvent.setup();
+    const bookId = useScrapbookStore.getState().createBook("Move slots");
+    const entryId = useScrapbookStore.getState().addPokemon(bookId, firstPokemon.id, [])!;
+    const [fourth, second] = firstPokemon.moveIds.map((id) => moveById.get(id)!).slice(0, 2);
+    const savedMoves = () => useScrapbookStore.getState().books[0].entries.find((entry) => entry.id === entryId)!.moveIds;
+    render(<ChampionsApp />);
+    await user.click(screen.getByRole("button", { name: "Scrapbooks" }));
+    await user.click(screen.getByRole("button", { name: "Expand all tags" }));
+    await user.click(screen.getByRole("button", { name: new RegExp(firstPokemon.name) }));
+    await user.click(screen.getByRole("button", { name: "Edit scrapbook build" }));
+    await user.click(screen.getByRole("combobox", { name: "Move 4" }));
+    await user.click(within(screen.getByRole("listbox", { name: "Move 4 options" })).getByText(fourth.name, { selector: "strong" }).closest('[role="option"]')!);
+    await waitFor(() => expect(savedMoves()).toEqual(["", "", "", fourth.id]));
+    await user.click(screen.getByRole("combobox", { name: "Move 2" }));
+    await user.click(within(screen.getByRole("listbox", { name: "Move 2 options" })).getByText(second.name, { selector: "strong" }).closest('[role="option"]')!);
+    await waitFor(() => expect(savedMoves()).toEqual(["", second.id, "", fourth.id]));
+    const secondSlot = screen.getByRole("combobox", { name: "Move 2" });
+    await user.click(secondSlot);
+    if (secondSlot.getAttribute("aria-expanded") === "false") await user.keyboard("{ArrowDown}");
+    await user.click(within(screen.getByRole("listbox", { name: "Move 2 options" })).getByRole("option", { name: "— Clear this slot" }));
+    await waitFor(() => expect(savedMoves()).toEqual(["", "", "", fourth.id]));
+    await user.click(screen.getByRole("button", { name: "Save scrapbook build" }));
+    const reloaded = migrateSavedScrapbooks(JSON.parse(JSON.stringify({ version: 2, books: useScrapbookStore.getState().books })));
+    expect(reloaded[0].entries[0].moveIds).toEqual(["", "", "", fourth.id]);
+    act(() => useScrapbookStore.setState({ books: reloaded }));
+    await user.click(screen.getByRole("button", { name: "Edit scrapbook build" }));
+    expect(screen.getByRole("combobox", { name: "Move 4" })).toHaveAttribute("data-move-id", fourth.id);
+    expect(screen.getByRole("combobox", { name: "Move 1" })).toHaveAttribute("data-move-id", "");
+    await user.click(screen.getByRole("button", { name: "Add to selected team" }));
+    expect(useTeamStore.getState().teams.doubles[0].moveIds).toEqual([fourth.id]);
+    expect(savedMoves()).toEqual(["", "", "", fourth.id]);
+  });
+
   it.each(["database", "scrapbook"] as const)("adds the clicked reverse-lookup Pokémon from %s while preserving the source header action", async (context) => {
     const user = userEvent.setup();
     const source = pokemon.find((entry) => entry.id === "absol")!;

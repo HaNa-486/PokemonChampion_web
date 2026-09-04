@@ -368,6 +368,12 @@ function BuildEditorContent({ selected, editingMember, mode, locale, format, onF
     if (nextSelected.id === effectiveSelected.id) return;
     const nextUsage = battleData?.[format] ?? null;
     const legalMoves = new Set(nextSelected.moveIds);
+    if (mode === "scrapbook") {
+      setMoveIds((current) => current.map((id) => legalMoves.has(id) ? id : ""));
+      if (abilityId && !nextSelected.abilityIds.includes(abilityId)) setAbilityId(null);
+      pendingFormHydrationRef.current = null;
+      return;
+    }
     const retainedMoves = moveIds.filter((id) => legalMoves.has(id));
     const replaceAbility = !abilityId || !nextSelected.abilityIds.includes(abilityId);
     const nextBattleDataKey = battleDataKeyForPokemon(nextSelected);
@@ -473,7 +479,7 @@ function BuildEditorContent({ selected, editingMember, mode, locale, format, onF
   }, [abilityId, ap, editingMember, effectiveSelected.id, itemId, mode, moveIds, nature, onDraftChange]);
   const submitTeam = () => {
     if (!isEditingTeam && members.length >= 6) { setError(locale === "zh-Hant" ? "隊伍已滿，請先移除一名成員。" : "Team is full. Remove a member first."); return; }
-    const candidate: TeamMember = { id: isEditingTeam ? editingMember!.id : crypto.randomUUID(), pokemonId: effectiveSelected.id, moveIds, abilityId, itemId, ap, nature };
+    const candidate: TeamMember = { id: isEditingTeam ? editingMember!.id : crypto.randomUUID(), pokemonId: effectiveSelected.id, moveIds: mode === "scrapbook" ? moveIds.filter(Boolean) : moveIds, abilityId, itemId, ap, nature };
     const nextMembers = isEditingTeam ? members.map((member) => member.id === candidate.id ? candidate : member) : [...members, candidate];
     const issues = validateTeam(nextMembers, pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
     const candidateIssue = issues[0];
@@ -494,7 +500,7 @@ function BuildEditorContent({ selected, editingMember, mode, locale, format, onF
         <ResourcePicker label={locale === "zh-Hant" ? "特性" : "Ability"} value={abilityId} options={abilityOptions} locale={locale} detailed={displayModes.ability === "detailed"} onChange={setAbilityId} />
         <ResourcePicker label={locale === "zh-Hant" ? "持有物" : "Held item"} value={itemId} options={itemOptions} locale={locale} detailed={displayModes.item === "detailed"} onChange={setItemId} />
       </div>
-      <div className="move-slots">{[0,1,2,3].map((slot) => <MovePicker key={slot} slot={slot} value={moveIds[slot] ?? null} legalMoveIds={effectiveSelected.moveIds} selectedMoveIds={moveIds} commonMoves={commonMoves} locale={locale} detailed={displayModes.move === "detailed"} onChange={(moveId) => setMoveIds((current) => { const next = [...current]; if (moveId) next[slot] = moveId; else next.splice(slot, 1); return next.filter(Boolean).slice(0, 4); })} />)}</div>
+      <div className="move-slots">{[0,1,2,3].map((slot) => <MovePicker key={slot} slot={slot} value={moveIds[slot] ?? null} legalMoveIds={effectiveSelected.moveIds} selectedMoveIds={moveIds} commonMoves={commonMoves} locale={locale} detailed={displayModes.move === "detailed"} onChange={(moveId) => setMoveIds((current) => { if (mode === "scrapbook") return Array.from({ length: 4 }, (_, index) => index === slot ? moveId ?? "" : current[index] ?? ""); const next = [...current]; if (moveId) next[slot] = moveId; else next.splice(slot, 1); return next.filter(Boolean).slice(0, 4); })} />)}</div>
       <div className="ap-head"><h3>{locale === "zh-Hant" ? "能力值與 AP" : "Stats & AP"}</h3><label className="ap-preset-field"><span>{locale === "zh-Hant" ? "AP 配置" : "AP spread"}</span><select aria-label={locale === "zh-Hant" ? "AP 配置" : "AP spread"} value={apPresetRank === null ? "custom" : String(apPresetRank)} onChange={(event) => {
         if (event.target.value === "custom") { setApPresetRank(null); return; }
         const choice = commonApChoices.find((entry) => entry.rank === Number(event.target.value));
