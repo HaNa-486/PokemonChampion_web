@@ -1,0 +1,129 @@
+{
+  "approvals": [],
+  "artifact_hash": null,
+  "audit": [
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T06:28:52Z",
+      "details": {},
+      "entry_hash": "284725945f1b81cf08a25d960c1f646add1e74a01cba4bd5dc85bae5575daaf8",
+      "event": "run_created",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T06:28:53Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "4fba3de312593d3c89980d7b8c378b7706760d51f03cb6b6717c1c64c30cc165",
+      "event": "item_added",
+      "previous_hash": "284725945f1b81cf08a25d960c1f646add1e74a01cba4bd5dc85bae5575daaf8"
+    },
+    {
+      "actor": "artifact-council-root-artifact_council_v5",
+      "at": "2026-09-03T06:32:14Z",
+      "details": {
+        "decision": "approve",
+        "subject": "cb9b992088be1c98e51a968f1fec8cdcc0782d3d6d2f0b510e4cfd4c6b4f2148"
+      },
+      "entry_hash": "653ae26514bcd278be878a78826ff1343ddb6ac1a9c0fe98393a31ba087fb9bc",
+      "event": "plan_reviewed",
+      "previous_hash": "4fba3de312593d3c89980d7b8c378b7706760d51f03cb6b6717c1c64c30cc165"
+    },
+    {
+      "actor": "release-executor-root-release_executor",
+      "at": "2026-09-03T06:32:14Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "66db9616dd5210cde318f679b7ea3fc709f5cad7420f34d1ddb40ea59c513d37",
+      "event": "item_started",
+      "previous_hash": "653ae26514bcd278be878a78826ff1343ddb6ac1a9c0fe98393a31ba087fb9bc"
+    },
+    {
+      "actor": "release-executor-root-release_executor",
+      "at": "2026-09-04T02:43:35Z",
+      "details": {
+        "item_id": "FIX-001",
+        "status": "blocked"
+      },
+      "entry_hash": "eea1ddfad9fd42ab1c893bc0200f833a1c912224c62d7be047c4fc365b9059a8",
+      "event": "item_finished",
+      "previous_hash": "66db9616dd5210cde318f679b7ea3fc709f5cad7420f34d1ddb40ea59c513d37"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T02:43:35Z",
+      "details": {},
+      "entry_hash": "011acf3ea60db280d5242944ccb38cbb359481103f97e706525cac53e28f6d58",
+      "event": "run_closed",
+      "previous_hash": "eea1ddfad9fd42ab1c893bc0200f833a1c912224c62d7be047c4fc365b9059a8"
+    }
+  ],
+  "authorizations": [],
+  "autopilot_version": "0.1.0-alpha.1",
+  "blockers": [],
+  "closed": true,
+  "closed_outcome": "cancelled",
+  "created_at": "2026-09-03T06:28:52Z",
+  "evidence": {},
+  "handoff": {
+    "next_safe_action": "Continue v7",
+    "residual_risks": [],
+    "summary": "Superseded by picker correction and newly reviewed plan"
+  },
+  "items": [
+    {
+      "acceptance": "With an existing scrapbook, Detail to Add and Detail to Reverse Lookup to Add close exactly one topmost layer per Escape; no local competing Escape handlers remain; typecheck, focused tests, diff check, and verify:deploy pass.",
+      "depends_on": [],
+      "executor": "release-executor-root-release_executor",
+      "handoff": "Executor found closed picker consuming Escape; subsequent recheck ended at usage limit. Replacement plan reviewed in v7.",
+      "id": "FIX-001",
+      "resource_locks": [
+        "dialog:escape-stack"
+      ],
+      "risk": "medium",
+      "scopes": [
+        "DEPLOYMENT_CHECKLIST.md",
+        "PROJECT_SPEC.md",
+        "app/globals.css",
+        "components/AddToScrapbookDialog.tsx",
+        "components/ChampionsApp.tsx",
+        "components/DatabaseViews.tsx",
+        "components/PokemonDetailDialog.tsx",
+        "components/PokemonUsersDialog.tsx",
+        "components/ScrapbookView.tsx",
+        "lib/scrapbook-store.ts",
+        "lib/use-dialog-escape.ts",
+        "tests/components.test.tsx",
+        "tests/scrapbook.test.tsx",
+        "tests/setup.ts"
+      ],
+      "status": "blocked",
+      "title": "Remove final local Escape handler and verify existing-book focus"
+    }
+  ],
+  "objective": "Govern the final single-handler topmost Escape artifact through fresh Dev UAT, PR, CI, independent review, and non-forced merge; close before separate production promotion.",
+  "phase": "cancelled",
+  "plan_hash": "cb9b992088be1c98e51a968f1fec8cdcc0782d3d6d2f0b510e4cfd4c6b4f2148",
+  "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
+  "plan_reviews": [
+    {
+      "actor": "artifact-council-root-artifact_council_v5",
+      "at": "2026-09-03T06:32:14Z",
+      "decision": "approve",
+      "notes": "Council confirms all four modal surfaces rely exclusively on shared stack; existing-book regression covers retained-focus path; typecheck and 62 focused tests pass with no material finding.",
+      "role": "council",
+      "subject": "cb9b992088be1c98e51a968f1fec8cdcc0782d3d6d2f0b510e4cfd4c6b4f2148"
+    }
+  ],
+  "pr": {},
+  "revision": 6,
+  "run_id": "scrapbook-release-20260903-v6",
+  "schema_version": 1,
+  "source_findings": [
+    "COUNCIL-20260903-DETAIL-LOCAL-ESCAPE"
+  ],
+  "updated_at": "2026-09-04T02:43:35Z"
+}

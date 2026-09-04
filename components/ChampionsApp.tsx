@@ -123,7 +123,7 @@ function ResourcePicker({ label, value, options, locale, detailed, onChange }: {
     <div className={`resource-combobox ${open ? "open" : ""}`}>
       {!open && current?.icon}
       <input id={`${listId}-input`} ref={inputRef} role="combobox" aria-label={label} aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-option-${activeValue}` : undefined} aria-autocomplete="list" autoComplete="off" value={open ? query : current?.name ?? ""} placeholder={locale === "zh-Hant" ? "輸入名稱或效果搜尋…" : "Search name or effect…"} onFocus={() => { openMenu(); setQuery(""); }} onChange={(event) => { setOpen(true); setQuery(event.target.value); setActiveValue("__clear__"); }} onKeyDown={(event) => {
-        if (event.key === "Escape") { event.preventDefault(); close(); }
+        if (event.key === "Escape" && open) { event.preventDefault(); close(); }
         else if (event.key === "ArrowDown") { event.preventDefault(); if (open) moveActive(1); else openMenu(); }
         else if (event.key === "ArrowUp") { event.preventDefault(); if (open) moveActive(-1); else openMenu(); }
         else if (event.key === "Home" && open) { event.preventDefault(); setActiveValue(navigableValues[0] ?? "__clear__"); }
@@ -216,7 +216,7 @@ function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, commonMoves, l
         onFocus={() => { openMenu(); setQuery(""); }}
         onChange={(event) => { setOpen(true); setQuery(event.target.value); setActiveValue("__clear__"); }}
         onKeyDown={(event) => {
-          if (event.key === "Escape") { event.preventDefault(); close(); }
+          if (event.key === "Escape" && open) { event.preventDefault(); close(); }
           else if (event.key === "ArrowDown") { event.preventDefault(); if (open) moveActive(1); else openMenu(); }
           else if (event.key === "ArrowUp") { event.preventDefault(); if (open) moveActive(-1); else openMenu(); }
           else if (event.key === "Home" && open) { event.preventDefault(); setActiveValue(navigableValues[0] ?? "__clear__"); }

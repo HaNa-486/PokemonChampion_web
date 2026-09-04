@@ -1,0 +1,103 @@
+{
+  "approvals": [],
+  "artifact_hash": null,
+  "audit": [
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T02:42:53Z",
+      "details": {},
+      "entry_hash": "c8e60e72613543caa6fa481d93024bf2664d38a3fddab1b9f2dc0fa3aacd1e6a",
+      "event": "run_created",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T02:42:54Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "5481261be4cb6af6d4a60925c504e5678d1959e4886150fe34b63a0e82085e4d",
+      "event": "item_added",
+      "previous_hash": "c8e60e72613543caa6fa481d93024bf2664d38a3fddab1b9f2dc0fa3aacd1e6a"
+    },
+    {
+      "actor": "council-root-final_escape_review",
+      "at": "2026-09-04T02:42:54Z",
+      "details": {
+        "decision": "approve",
+        "subject": "dc72a791fe20e9eafe23e2ff224c1893b22529131908deafaf435b898c2f6788"
+      },
+      "entry_hash": "e96f921d5f9a8a3691af95d727764c4097b145c5c55607ce0721aa6f5cba20a7",
+      "event": "plan_reviewed",
+      "previous_hash": "5481261be4cb6af6d4a60925c504e5678d1959e4886150fe34b63a0e82085e4d"
+    },
+    {
+      "actor": "executor-root-escape_executor_v7",
+      "at": "2026-09-04T02:43:36Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "b6cc8c2000968786bb811b08b39e5b79459e2116eee0e8488f36f10cec66af6d",
+      "event": "item_started",
+      "previous_hash": "e96f921d5f9a8a3691af95d727764c4097b145c5c55607ce0721aa6f5cba20a7"
+    },
+    {
+      "actor": "executor-root-escape_executor_v7",
+      "at": "2026-09-04T02:46:13Z",
+      "details": {
+        "item_id": "FIX-001",
+        "status": "completed"
+      },
+      "entry_hash": "c5cc0cc5ce945ca49d62bf6915b8274efc1016a03a7975c84a60718210778618",
+      "event": "item_finished",
+      "previous_hash": "b6cc8c2000968786bb811b08b39e5b79459e2116eee0e8488f36f10cec66af6d"
+    }
+  ],
+  "authorizations": [],
+  "autopilot_version": "0.1.0-alpha.1",
+  "blockers": [],
+  "closed": false,
+  "created_at": "2026-09-04T02:42:53Z",
+  "evidence": {},
+  "items": [
+    {
+      "acceptance": "Open picker consumes first Escape; closed picker allows editor dismissal; nested dialogs close one at a time; full deployment verification passes.",
+      "depends_on": [],
+      "executor": "executor-root-escape_executor_v7",
+      "handoff": "Finalized regression coverage for MovePicker retained focus, ResourcePicker two-Escape, and three nested modal layers. Three targeted tests pass; full artifact verification remains required.",
+      "id": "FIX-001",
+      "resource_locks": [],
+      "risk": "medium",
+      "scopes": [
+        "components/ChampionsApp.tsx",
+        "components/PokemonDetailDialog.tsx",
+        "lib/use-dialog-escape.ts",
+        "tests/components.test.tsx"
+      ],
+      "status": "completed",
+      "title": "Finalize nested dialog and picker Escape correction"
+    }
+  ],
+  "objective": "Verify final nested-dialog and picker Escape correction, deploy exact Dev candidate, obtain fresh UAT, then PR CI review and approved merge; production remains separate.",
+  "phase": "plan_approved",
+  "plan_hash": "dc72a791fe20e9eafe23e2ff224c1893b22529131908deafaf435b898c2f6788",
+  "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
+  "plan_reviews": [
+    {
+      "actor": "council-root-final_escape_review",
+      "at": "2026-09-04T02:42:54Z",
+      "decision": "approve",
+      "notes": "Independent current diff and release plan review found no material issue; exact artifact and full validation pending.",
+      "role": "council",
+      "subject": "dc72a791fe20e9eafe23e2ff224c1893b22529131908deafaf435b898c2f6788"
+    }
+  ],
+  "pr": {},
+  "revision": 5,
+  "run_id": "scrapbook-release-20260904-v7",
+  "schema_version": 1,
+  "source_findings": [
+    "COUNCIL-20260903-PICKER-ESCAPE"
+  ],
+  "updated_at": "2026-09-04T02:46:13Z"
+}

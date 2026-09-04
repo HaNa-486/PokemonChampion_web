@@ -2,7 +2,7 @@
 
 - Status: active
 - Started: 2026-08-31T16:42:56Z
-- Updated: 2026-09-03T10:12:00+08:00
+- Updated: 2026-09-03T14:41:00+08:00
 - Branch: codex/scrapbook
 - Base commit: 0537cd498ef603960cb513f79ecb58af3d598bfd
 - Scope: 新增可建立多本畫本、替寶可夢套用多標籤、由資料庫與關聯視窗加入，並在畫本分頁比較完整資料與可選當季對戰資訊的本機持久化功能。
@@ -16,8 +16,8 @@
 
 ## Handoff
 
-- What changed: Product owner explicitly passed Dev UAT for commit `5478d176b6f01af2bcda41c4ebaac3352904c6b9` and authorized PR, automatic review, non-forced merge, and post-merge production promotion. Two independent artifact reviews then exposed selector-specific nested-dialog Escape defects. The current local correction uses a general dialog stack and covers Add-to-Scrapbook over Detail and over Reverse Lookup. Because the artifact changed, Dev version 37 and its UAT result cannot authorize the replacement candidate.
-- Verification: Commit `5478d176b6f01af2bcda41c4ebaac3352904c6b9` passed all recorded checks and owner Dev UAT. The current local correction passes TypeScript and 62 focused tests; full exact-candidate verification and Dev deployment remain pending.
+- What changed: Product owner explicitly passed Dev UAT for commit `5478d176b6f01af2bcda41c4ebaac3352904c6b9` and authorized PR, automatic review, non-forced merge, and post-merge production promotion. Artifact review of `ea1502b` found the final old Detail section Escape handler, which is now removed. Executor review then found closed BuildEditor pickers consumed later Escape keys; both picker types now consume Escape only while open, preserving the intended first-Escape-closes-picker, second-Escape-closes-editor sequence. Neither superseded replacement candidate was deployed.
+- Verification: The final local correction passes TypeScript and 62 focused tests, including existing-book nested dialogs and the two-step picker/editor Escape sequence. Superseded `ea1502b` passed 146 tests, full build, and 13 render/API checks, but the new exact candidate must repeat full verification and Dev deployment.
 - Residual risks: Scrapbooks remain intentionally device-local IndexedDB state with no account sync/export. Existing unrelated PDOS F-006 artifacts may still fail strict state validation.
 - Next safe action: Verify and deploy the replacement exact commit to owner-only Dev, then obtain a new product-owner UAT pass before any PR action.
 

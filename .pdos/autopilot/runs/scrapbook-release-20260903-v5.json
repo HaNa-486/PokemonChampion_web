@@ -1,6 +1,44 @@
 {
-  "approvals": [],
-  "artifact_hash": null,
+  "approvals": [
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T06:18:13Z",
+      "decision": "approve",
+      "gate": "dev",
+      "notes": "Exact candidate passes Autopilot-bound full verify:deploy: 146 tests, build, and 13 render/API checks; executor-focused review is clean. Approval limited through Dev/PR/merge governance.",
+      "role": "parent",
+      "subject": "ea1502babb3f44f710577f82cdb325aeb3ebb35e"
+    },
+    {
+      "actor": "artifact-council-root-artifact_council_v5",
+      "at": "2026-09-03T06:28:08Z",
+      "decision": "request_changes",
+      "gate": "dev",
+      "notes": "P2: PokemonDetailPanel retained a bubbling local Escape handler; with an existing scrapbook and focus on Detail, one Escape could close both Detail and Add-to-Scrapbook. Remove the local handler and test existing-book focus.",
+      "role": "council",
+      "subject": "ea1502babb3f44f710577f82cdb325aeb3ebb35e"
+    }
+  ],
+  "artifact_binding": {
+    "method": "git-head",
+    "scopes": [
+      "DEPLOYMENT_CHECKLIST.md",
+      "PROJECT_SPEC.md",
+      "app/globals.css",
+      "components/AddToScrapbookDialog.tsx",
+      "components/ChampionsApp.tsx",
+      "components/DatabaseViews.tsx",
+      "components/PokemonDetailDialog.tsx",
+      "components/PokemonUsersDialog.tsx",
+      "components/ScrapbookView.tsx",
+      "lib/scrapbook-store.ts",
+      "lib/use-dialog-escape.ts",
+      "tests/components.test.tsx",
+      "tests/scrapbook.test.tsx",
+      "tests/setup.ts"
+    ]
+  },
+  "artifact_hash": "ea1502babb3f44f710577f82cdb325aeb3ebb35e",
   "audit": [
     {
       "actor": "parent-01a058b0",
@@ -51,14 +89,92 @@
       "entry_hash": "32226a1ddd387fbe7b9bf5b4dff829f520ec9c46ffe52f8301dfa2bf00e06f13",
       "event": "item_finished",
       "previous_hash": "4c9a0bc54b68a63b7967ef0c0e544edcade2f9fb29fb99ed99795b7b91019281"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T06:13:57Z",
+      "details": {
+        "method": "git-head",
+        "old_subject": null,
+        "subject": "ea1502babb3f44f710577f82cdb325aeb3ebb35e"
+      },
+      "entry_hash": "8ecb8198bbb6f6eda76fdb6dab18e2f9d192a6eb4f6d349f33a5e9f53df451b1",
+      "event": "artifact_recorded",
+      "previous_hash": "32226a1ddd387fbe7b9bf5b4dff829f520ec9c46ffe52f8301dfa2bf00e06f13"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T06:17:53Z",
+      "details": {
+        "exit_code": 0,
+        "status": "pass",
+        "subject": "ea1502babb3f44f710577f82cdb325aeb3ebb35e"
+      },
+      "entry_hash": "bc4da96cf16a0b17955869ec3e1ec1989e3870a2ae66d420d314d0f5ff87f34d",
+      "event": "tests_executed",
+      "previous_hash": "8ecb8198bbb6f6eda76fdb6dab18e2f9d192a6eb4f6d349f33a5e9f53df451b1"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T06:18:13Z",
+      "details": {
+        "decision": "approve",
+        "role": "parent",
+        "subject": "ea1502babb3f44f710577f82cdb325aeb3ebb35e"
+      },
+      "entry_hash": "38c99e5c85ba0d12fd36523642a43f9fa9b5f67eeca663be38e6ab7ef36c24a7",
+      "event": "artifact_reviewed",
+      "previous_hash": "bc4da96cf16a0b17955869ec3e1ec1989e3870a2ae66d420d314d0f5ff87f34d"
+    },
+    {
+      "actor": "artifact-council-root-artifact_council_v5",
+      "at": "2026-09-03T06:28:08Z",
+      "details": {
+        "decision": "request_changes",
+        "role": "council",
+        "subject": "ea1502babb3f44f710577f82cdb325aeb3ebb35e"
+      },
+      "entry_hash": "7354eede004e9bd2f4e332d389a353ec7a39dd5e0fb79ce5eba242c4ba6b9a5b",
+      "event": "artifact_reviewed",
+      "previous_hash": "38c99e5c85ba0d12fd36523642a43f9fa9b5f67eeca663be38e6ab7ef36c24a7"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T06:28:09Z",
+      "details": {},
+      "entry_hash": "92beb4160a7a3efb481582c51a1563a47df48d36f70033cc68b3b883e2c7c624",
+      "event": "run_closed",
+      "previous_hash": "7354eede004e9bd2f4e332d389a353ec7a39dd5e0fb79ce5eba242c4ba6b9a5b"
     }
   ],
   "authorizations": [],
   "autopilot_version": "0.1.0-alpha.1",
   "blockers": [],
-  "closed": false,
+  "closed": true,
+  "closed_outcome": "cancelled",
   "created_at": "2026-09-03T02:13:17Z",
-  "evidence": {},
+  "evidence": {
+    "tests": {
+      "artifact_changed": false,
+      "at": "2026-09-03T06:17:53Z",
+      "command": [
+        "C:\\Users\\091\\codex_workspace\\BDWP\\PokemonChampion\\.pdos\\local\\run-verify-deploy.cmd"
+      ],
+      "exit_code": 0,
+      "source": "executed_command",
+      "status": "pass",
+      "subject": "ea1502babb3f44f710577f82cdb325aeb3ebb35e",
+      "summary": "Exact stack-aware candidate full deploy verification",
+      "transcript_sha256": "a535cd1325a64dd32582d3caba34cb423ac3058b24f1f540842fa3390c525b51"
+    }
+  },
+  "handoff": {
+    "next_safe_action": "Govern the final corrected candidate in a new run.",
+    "residual_risks": [
+      "Final handler removal and existing-scrapbook regression require a new exact artifact, verification, and Dev UAT."
+    ],
+    "summary": "Cancelled ea1502b before Dev deployment after artifact council found the remaining Detail local Escape handler."
+  },
   "items": [
     {
       "acceptance": "Detail to Add and Detail to Reverse Lookup to Add close exactly one topmost layer per Escape; typecheck, focused tests, diff check, and verify:deploy pass with no material findings.",
@@ -91,7 +207,7 @@
     }
   ],
   "objective": "Govern the stack-aware replacement scrapbook artifact through fresh Dev UAT, PR, CI, independent review, and non-forced merge; close before separately authorized production promotion.",
-  "phase": "plan_approved",
+  "phase": "cancelled",
   "plan_hash": "1ebf49bf98fe6d1f8da6106c30c6e5b764a1b15d9cf479fdaf9e5a209daff512",
   "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
   "plan_reviews": [
@@ -105,11 +221,11 @@
     }
   ],
   "pr": {},
-  "revision": 5,
+  "revision": 10,
   "run_id": "scrapbook-release-20260903-v5",
   "schema_version": 1,
   "source_findings": [
     "COUNCIL-20260903-DIALOG-STACK"
   ],
-  "updated_at": "2026-09-03T06:13:35Z"
+  "updated_at": "2026-09-03T06:28:09Z"
 }

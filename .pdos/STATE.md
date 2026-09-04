@@ -3,15 +3,15 @@
 Keep this concise. Every fresh PDOS context reads it first.
 
 - Protocol version: 0.4.0-alpha.1
-- State revision: 42
-- Updated: 2026-09-03T10:12:00+08:00
+- State revision: 45
+- Updated: 2026-09-04T10:48:00+08:00
 - State confidence: reconciled with current branch, user request, repository evidence, and tests
-- Phase: General topmost-dialog Escape correction implemented locally; replacement candidate verification and Dev UAT pending
+- Phase: Picker Escape propagation corrected locally; replacement candidate verification and Dev UAT pending
 
 ## Repository identity
 
 - Branch: codex/scrapbook
-- Observed commit: a0a2163aa94ade5eb1b8da773eb95c19af36ac7e
+- Observed commit: ea1502babb3f44f710577f82cdb325aeb3ebb35e
 
 ## Product anchors
 
@@ -31,10 +31,10 @@ Keep this concise. Every fresh PDOS context reads it first.
 
 ## Handoff
 
-- What changed: A second artifact review showed the selector-specific Reverse Lookup fix did not cover Add-to-Scrapbook nesting. Escape handling now uses a shared mount-order stack so only the topmost registered dialog closes, without selector exceptions; the Reverse Lookup section-level duplicate handler was removed. A regression covers Detail -> Add and Detail -> Reverse Lookup -> Add with successive Escapes.
-- Verification evidence: TypeScript passes and focused Pokémon-detail/scrapbook suites pass (2 files, 62 tests), including each nested layer closing in topmost order. Full exact-candidate verification remains pending.
+- What changed: Artifact review found one remaining bubbling Escape handler on the Detail section, which is removed so all four modal surfaces use only the shared stack. Executor review then found closed BuildEditor pickers still consumed Escape; ResourcePicker and MovePicker now consume Escape only while open, so the first key closes an open picker and the second closes the editor. Regressions cover the existing-book nested-dialog focus path and the two-step picker/editor sequence.
+- Verification evidence: Final local verify:deploy passes: lint (15 existing warnings, no errors), TypeScript, data/localization audits, 18 files / 147 tests, production build, and 13 rendered/API checks. Independent council found no material issue; executor added ResourcePicker and retained-focus coverage, with 3 focused Escape tests passing. Exact committed verify:dev and artifact approvals remain required.
 - Release: Not released. Branch is local and no pull request is open. Production remains untouched.
-- Dev UAT: Owner-only version 37 remains live, but both Escape corrections change the candidate and invalidate its UAT result for release. A replacement exact commit must be verified, deployed, and explicitly accepted.
+- Dev UAT: Owner-only version 37 remains live. Superseded `ea1502b` was pushed only to the Dev source repository, never saved or deployed. The final replacement exact commit must be verified, deployed, and explicitly accepted.
 - Residual risks: Scrapbooks intentionally remain device-local IndexedDB state; no account sync/export is included. Existing unrelated PDOS F-006 artifacts still fail strict state validation.
 - Next safe action: Run full checks, commit the replacement candidate, deploy it to owner-only Dev, and request focused Escape UAT. No pull request before that new pass.
 
@@ -58,7 +58,7 @@ Keep this concise. Every fresh PDOS context reads it first.
 <!-- PDOS-AUTOPILOT:START -->
 ## PDOS Autopilot continuity
 
-- Active runs: `scrapbook-release-20260903-v5` (plan_approved, revision 5)
+- Active runs: `scrapbook-release-20260904-v7` (plan_approved, revision 5)
 - Resume source: `.pdos/autopilot/active.json` and the referenced run ledger; validate before acting.
 - External status: ledger gates are governance eligibility only, never provider authorization or execution proof.
 <!-- PDOS-AUTOPILOT:END -->
