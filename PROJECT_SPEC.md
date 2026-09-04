@@ -45,6 +45,7 @@ GameWith may inspire interaction patterns only. **Do not copy** its CSS, layout,
 | AP | Total maximum 66; maximum 32 per stat |
 | Nature | One non-HP stat may receive +10%, another -10%; neutral nature changes none |
 | Anonymous users | Team stored locally in versioned IndexedDB |
+| Anonymous scrapbooks | Multiple scrapbooks, per-book tags, ordering, and Pokémon membership stored locally in versioned IndexedDB |
 | Accounts | Cloud sync/cross-device teams are phase 2, not v1 |
 | Images | Champions Battle Data for Pokémon/form assets; pinned PokeAPI sprites for locally bundled held-item thumbnails |
 | Included | Complete paginated catalogs, details, tooltips, reverse lookup, advanced filters, type chart, usage-based build defaults, builder/tray, admin overrides |
@@ -59,15 +60,16 @@ Required pages:
 
 1. Home/current Regulation overview
 2. Pokémon database
-3. Pokémon detail
-4. Move database
-5. Ability database
-6. Held item database
-7. Team builder
-8. Full 18×18 type matchup chart
-9. Data sources, attribution, and data date
-10. Privacy, terms, cookie settings, and unofficial-project notice
-11. Protected admin override interface
+3. Pokémon comparison scrapbooks
+4. Pokémon detail
+5. Move database
+6. Ability database
+7. Held item database
+8. Team builder
+9. Full 18×18 type matchup chart
+10. Data sources, attribution, and data date
+11. Privacy, terms, cookie settings, and unofficial-project notice
+12. Protected admin override interface
 
 Non-goals: damage calculation, AI/strategy recommendations, team synergy analysis, tier lists, user comments/voting, public raw-data mirror, bulk-data download, competing general-purpose data API, and native apps.
 
@@ -540,13 +542,23 @@ Provide a complete 18×18 attack-versus-defense matrix as a standalone page. Att
 
 The primary application navigation exposes the chart as a first-class tab alongside the databases. The tab must remain accessible on mobile without adding a floating control. The chart prioritizes the complete relationship matrix over explanatory framing: spacing, labels, multiplier text, and row height adapt to the viewport so all 18×18 relationships are visible together and make useful use of each cell. Color remains a secondary cue; multiplier text and accessible type names must remain available. The standalone `/type-chart` page remains available as a direct route. Verify behavior at 390, 768, and 1440 CSS pixels.
 
-### 8.9 i18n/accessibility
+### 8.9 Pokémon comparison scrapbooks
+
+The primary navigation exposes Scrapbooks directly between Pokémon DB and Move DB. Anonymous users may create, rename, delete, and duplicate multiple locally persisted scrapbooks. A duplicated scrapbook receives a user-supplied name and copies tag/configuration ordering, shared tag relationships, saved builds, expanded/collapsed state, finder state, and battle-section visibility. Each scrapbook owns reusable tags that can be created, renamed, and deleted directly on the scrapbook page. Deleting a tag never deletes a saved build; a build with no remaining tag appears under a generated Untagged group. Adding a Pokémon from the Pokémon DB row, Pokémon detail, move reverse lookup, or ability reverse lookup opens one consistent flow that can select or create a scrapbook and select or create multiple tags. The add flow preselects the currently viewed scrapbook, then the last successfully used scrapbook, then the first scrapbook.
+
+The scrapbook page includes a collapsible Pokémon DB-equivalent quick finder. It shows no candidate Pokémon until at least one search/filter condition is present, while already saved scrapbook contents remain visible. The active scrapbook, finder open state, finder query/conditions, expanded tags and build cards, and six battle-section visibility switches persist across navigation and refresh. Tag groups can be expanded independently, expanded or collapsed all at once, and reordered by pointer drag or accessible move controls. A collapsed group shows member sprites. Build cards within a group can likewise be reordered and dragged across tags. Moving a card replaces its source-tag membership while preserving the build. “Add to another tag” shares one stable build card across tags so edits synchronize in every appearance. “Duplicate configuration” creates an independent build card in a chosen tag. The same Pokémon may therefore have multiple independently named builds in one scrapbook; default names are numbered and may be renamed, and comparison rows identify the Pokémon plus build name.
+
+An expanded group displays localized identity, types, deterministic final stats, per-stat AP additions, nature-raised/lowered arrows, saved nature and its stat effects, ability, held item, four move slots, and defensive type matchups directly in the comparison row; TOT is omitted. The six-stat overview visually distinguishes invested AP from zero AP, enlarges the nature direction cue, and applies distinct raised/lowered stat treatments so the meaning is not dependent on reading tiny same-colored text. A newly added build starts with zero AP in all stats, Serious nature, no ability (“尚未選擇特性”), no held item, and four empty move slots. Its final stats use the current ruleset level and formula with those neutral values rather than displaying base stats or applying usage recommendations. Editing any AP, nature, ability, item, or move in the expanded Build Workbench auto-saves immediately and synchronizes every shared appearance. The Workbench's primary scrapbook action saves/closes the scrapbook configuration and never mutates the selected team; a separate explicit action adds the current configuration to the selected Singles/Doubles team after normal legality validation. Recommended nature, ability, item, moves, and AP spreads remain available through the existing Detailed/Compact Workbench selectors but are never silently applied to a newly saved scrapbook build.
+
+Selecting a comparison row expands Pokémon intelligence inline without repeating the Pokémon's base-stat strip already superseded by the configured final-stat comparison above. Both this inline view and the Pokémon DB detail modal present learnable moves through the Move DB table language: sortable Move, Type, Class, Power, Accuracy, PP, Priority, Target, Effect, and usable-Pokémon-count columns. Properties/feature tags and their filter remain exclusive to Move DB. A sortable header cycles from the contextual default to its initial direction, then the opposite direction, then back to the contextual default; numeric columns use descending as their initial direction. Before a user activates a column sort, scrapbook moves retain own-type-first order, remaining types use canonical catalog order, and each type uses Physical → Special → Status order. Activating a usable-Pokémon count opens the same complete reverse-lookup dialog as Move DB, including filters, sorting, every eligible form, and add-to-scrapbook controls. The table is height-bounded with vertical and horizontal scrolling. The current-season move, held-item, ability, nature, AP-spread, and teammate sections each have an independent visibility toggle. Quick-finder type and form option labels follow the active locale without changing their stored/filter values. The page must remain operable and unclipped at 390, 768, and 1440 CSS pixels.
+
+### 8.10 i18n/accessibility
 
 Support `en` and `zh-Hant`. On first visit, choose Traditional Chinese when any browser-preferred language begins with `zh`; otherwise choose English. Persist the user's explicit choice locally and restore it on refresh and future visits. Every legal Pokémon form, move, ability, and held item has a non-empty Traditional Chinese display name; every move, ability, and item has a non-English Traditional Chinese description. Pokémon species names must come from official Traditional Chinese data and must never be machine translated. Fixed taxonomy and interface labels—including types, move categories, targets, properties, ability categories, and item/effect categories—also follow the active locale. Locale changes preserve team/filters/format/page. Search accepts localized names/aliases. Identifiers never use translated names. Missing required Chinese catalog content fails the generated-data build instead of falling back silently to English.
 
 Traditional Chinese localization preserves provenance per record. Move names must match the pinned Traditional Chinese game strings mirrored by PKHeX; PokeAPI `zh-Hant` values are community-maintained candidates and must never be trusted solely because of their locale label. Reviewed mappings cover Champions-only resources and form composition. Names are never machine translated. Descriptions are machine translations of the complete effective Pokémon Showdown Champions English mechanics, normalized to Taiwan Traditional Chinese, with reviewed semantic overrides for entries that fail parity. The localization audit must compare against the exact current English source, preserve all numbers, fractions, percentages, multipliers, rounding rules, trigger thresholds, and single-use conditions, reject Simplified Chinese, broken placeholders, and unapproved English residue, and record whether each result is raw machine translation or a reviewed semantic override.
 
-Meet WCAG 2.2 AA: keyboard operation, visible focus, semantic headings/tables/forms/dialogs, tooltip focus support, document-level Escape dismissal for every modal, focus trap/restoration, 200% zoom, reduced motion, compliant contrast, no color-only meaning, and screen-reader labels such as “Priority plus one.”
+Meet WCAG 2.2 AA: keyboard operation, visible focus, semantic headings/tables/forms/dialogs, tooltip focus support, document-level Escape dismissal for every modal, topmost-only Escape dismissal when dialogs are nested, focus trap/restoration, 200% zoom, reduced motion, compliant contrast, no color-only meaning, and screen-reader labels such as “Priority plus one.”
 
 ## 9. Public API
 
@@ -716,6 +728,8 @@ Reverse lookup: move/ability eligible-form counts, numeric sorting, complete acc
 
 Team tray: add/edit/remove, independent Singles/Doubles groups, format-aware usage defaults, incomplete marker, six-member cap/replacement, duplicate-family/item errors, final stats with per-stat AP and nature direction, all displayed fields and matchups, six full cards reachable through internal scrolling, desktop collapse, mobile focus behavior, refresh/navigation persistence, IndexedDB migration/corrupt quarantine.
 
+Scrapbooks: versioned IndexedDB migration/corrupt-record quarantine, multiple independently persisted/duplicable books, direct tag create/rename/delete, Untagged fallback, shared and independently duplicated named build cards, cross-tag moves, tag/build ordering, collapse/expand-all, persisted finder/query/UI state, empty quick finder without criteria, all four add entry points with current/last-used book precedence, neutral zero-AP Serious defaults, auto-saved Workbench edits, visible nature/ability/item/four moves and current-ruleset final stats, defensive matchups, own-type-first learnable-move ordering, six persisted battle-category toggles, keyboard controls, and 390/768/1440 responsive layout.
+
 Builder selectors: Mega-to-regular and regular-to-Mega transitions, dedicated-stone-first item grouping, item effect groups including Other, localized name/effect search, Detailed/Compact preference persistence, visible learnable-move Power/Accuracy/PP, and document-level Escape dismissal. Locale tests cover browser-language inference, explicit-choice persistence, and localized battle-usage nature/AP/teammate values.
 
 Type chart: first-class application tab, all 18×18 cells visible together without internal scrolling at 390/768/1440, dual-type multiplication, high-contrast full or abbreviated type codes with accessible names, standalone page, and no floating control.
@@ -778,6 +792,7 @@ The current release has no Speed Compare UI. Keep the dormant domain and `/api/v
 15. Use mobile bottom sheet at 360/390 px.
 16. Admin previews/publishes/audits/reverts override.
 17. Stale upstream simulation shows last valid snapshot.
+18. Add Pokémon from the database row, detail, move reverse lookup, and ability reverse lookup; verify current/last-used book preselection and neutral new-build values; create/rename/delete tags; move, share, independently duplicate, rename, and edit build cards; duplicate a whole scrapbook; navigate away/return and refresh to verify configuration and UI-state persistence.
 
 Run Chromium, Firefox, WebKit. Required relevant widths: 360, 390, 768, 1024, 1440 px.
 
@@ -864,7 +879,7 @@ known limitations
 product-owner UAT checklist
 ```
 
-UAT checklist must cover language/navigation, catalog accuracy, formats/Regulation, priority filter, tooltip interactions, team fields/rules, six/seventh-member flows, persistence, final stats/speed against known game examples, responsive/theme UX, attribution/privacy/consent, and admin publish/revert.
+UAT checklist must cover language/navigation, catalog accuracy, formats/Regulation, priority filter, tooltip interactions, scrapbook creation/tagging/comparison/reordering/persistence, team fields/rules, six/seventh-member flows, final stats/speed against known game examples, responsive/theme UX, attribution/privacy/consent, and admin publish/revert.
 
 ## 18. Final guardrails
 

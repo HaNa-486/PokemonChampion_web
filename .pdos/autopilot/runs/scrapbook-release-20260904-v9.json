@@ -1,0 +1,107 @@
+{
+  "approvals": [],
+  "artifact_hash": null,
+  "audit": [
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T03:04:51Z",
+      "details": {},
+      "entry_hash": "d31d6d113d183e00af9f48c8de715b2b387cb7e035c79ad5e06ababce52f7263",
+      "event": "run_created",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T03:04:51Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "acefa12bd7b2284de05255c71970ae511bc2ee51342ed663e338bf4504975300",
+      "event": "item_added",
+      "previous_hash": "d31d6d113d183e00af9f48c8de715b2b387cb7e035c79ad5e06ababce52f7263"
+    },
+    {
+      "actor": "council-root-final_escape_review",
+      "at": "2026-09-04T03:04:51Z",
+      "details": {
+        "decision": "approve",
+        "subject": "c43a907f98c7cdd080a043cb974cf374c2870ad26c822077f90f2a7d666746ec"
+      },
+      "entry_hash": "88047f60695f04935bd895c4743bdd80f952d8687280bfdceed2d6d4221cd25d",
+      "event": "plan_reviewed",
+      "previous_hash": "acefa12bd7b2284de05255c71970ae511bc2ee51342ed663e338bf4504975300"
+    },
+    {
+      "actor": "executor-root-batch_regression_executor",
+      "at": "2026-09-04T03:04:51Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "e083fd5562427fd4738ba5da0af4076e09688323d12fe6713bb4f2e9857ec814",
+      "event": "item_started",
+      "previous_hash": "88047f60695f04935bd895c4743bdd80f952d8687280bfdceed2d6d4221cd25d"
+    },
+    {
+      "actor": "executor-root-batch_regression_executor",
+      "at": "2026-09-04T03:10:40Z",
+      "details": {
+        "item_id": "FIX-001",
+        "status": "completed"
+      },
+      "entry_hash": "53a37c45d3247f41fb737a1cee5ed88fb386c0a836f9bf2f4905789f9fb587b9",
+      "event": "item_finished",
+      "previous_hash": "e083fd5562427fd4738ba5da0af4076e09688323d12fe6713bb4f2e9857ec814"
+    }
+  ],
+  "authorizations": [],
+  "autopilot_version": "0.1.0-alpha.1",
+  "blockers": [],
+  "closed": false,
+  "created_at": "2026-09-04T03:04:51Z",
+  "evidence": {},
+  "items": [
+    {
+      "acceptance": "Deleted target falls back visibly and invalid duplicate rejects; positional move slots survive editing and migration with compact team conversion; hydration blocks writes until successful single-flight read with retry; all exact checks pass.",
+      "depends_on": [],
+      "executor": "executor-root-batch_regression_executor",
+      "handoff": "Parent applied proposed test and implementation changes; executor reproduced five targeted regressions and latest typecheck, all pass. Council whole-local review reports no remaining material finding. Full exact checks pending.",
+      "id": "FIX-001",
+      "resource_locks": [],
+      "risk": "medium",
+      "scopes": [
+        "components/AddToScrapbookDialog.tsx",
+        "components/ChampionsApp.tsx",
+        "components/ScrapbookLoading.tsx",
+        "components/ScrapbookView.tsx",
+        "lib/scrapbook-store.ts",
+        "tests/scrapbook-hydration.test.tsx",
+        "tests/scrapbook.test.tsx",
+        "tests/setup.ts"
+      ],
+      "status": "completed",
+      "title": "Resolve complete-review scrapbook correctness batch"
+    }
+  ],
+  "objective": "Resolve complete-review tag target, positional moves and hydration race batch, then exact Dev validation and fresh UAT before PR gates.",
+  "phase": "plan_approved",
+  "plan_hash": "c43a907f98c7cdd080a043cb974cf374c2870ad26c822077f90f2a7d666746ec",
+  "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
+  "plan_reviews": [
+    {
+      "actor": "council-root-final_escape_review",
+      "at": "2026-09-04T03:04:51Z",
+      "decision": "approve",
+      "notes": "",
+      "role": "council",
+      "subject": "c43a907f98c7cdd080a043cb974cf374c2870ad26c822077f90f2a7d666746ec"
+    }
+  ],
+  "pr": {},
+  "revision": 5,
+  "run_id": "scrapbook-release-20260904-v9",
+  "schema_version": 1,
+  "source_findings": [
+    "COUNCIL-20260904-SCRAPBOOK-BATCH"
+  ],
+  "updated_at": "2026-09-04T03:10:40Z"
+}

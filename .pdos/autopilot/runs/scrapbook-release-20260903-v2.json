@@ -1,0 +1,103 @@
+{
+  "approvals": [],
+  "artifact_hash": null,
+  "audit": [
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:25:16Z",
+      "details": {},
+      "entry_hash": "a47c90a6b83e307a18b59ceb39039b77e5b052c28fbf7a3846987d77e8be7970",
+      "event": "run_created",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:25:16Z",
+      "details": {
+        "item_id": "REL-001"
+      },
+      "entry_hash": "1bda4cbb5bd65ce445236b430984fe3a52f77b00cf277b19015b378ca717dfef",
+      "event": "item_added",
+      "previous_hash": "a47c90a6b83e307a18b59ceb39039b77e5b052c28fbf7a3846987d77e8be7970"
+    },
+    {
+      "actor": "release-council-root-release_council",
+      "at": "2026-09-03T01:28:21Z",
+      "details": {
+        "decision": "request_changes",
+        "subject": "026cab2fd322e448bbe44dc5678a4517b2faecd8dbb31780e5b1d61885e55c16"
+      },
+      "entry_hash": "5303c871d9c1b46ff49e98d115460eba745198bbdeb2ab1f97684b2def52ed3e",
+      "event": "plan_reviewed",
+      "previous_hash": "1bda4cbb5bd65ce445236b430984fe3a52f77b00cf277b19015b378ca717dfef"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:35:26Z",
+      "details": {},
+      "entry_hash": "9d3f5d7662c29dd80ee65a205d735ec097b759c0dfef1607dfd6e94e2298babe",
+      "event": "run_closed",
+      "previous_hash": "5303c871d9c1b46ff49e98d115460eba745198bbdeb2ab1f97684b2def52ed3e"
+    }
+  ],
+  "authorizations": [],
+  "autopilot_version": "0.1.0-alpha.1",
+  "blockers": [],
+  "closed": true,
+  "closed_outcome": "cancelled",
+  "created_at": "2026-09-03T01:25:16Z",
+  "evidence": {},
+  "handoff": {
+    "next_safe_action": "Review revised release plan and replacement artifact under v3.",
+    "residual_risks": [
+      "Replacement candidate requires fresh Dev UAT before PR."
+    ],
+    "summary": "Council requested material corrections to scope, plan, rollback details, and nested Escape behavior; superseded by revised run."
+  },
+  "items": [
+    {
+      "acceptance": "PR head equals 5478d176b6f01af2bcda41c4ebaac3352904c6b9; Deployment verification passes; independent PR review has no material findings; merge is non-forced; production package uses production manifest and exact merged source; production smoke tests pass.",
+      "depends_on": [],
+      "executor": null,
+      "id": "REL-001",
+      "resource_locks": [
+        "release:scrapbook"
+      ],
+      "risk": "high",
+      "scopes": [
+        "DEPLOYMENT_CHECKLIST.md",
+        "PROJECT_SPEC.md",
+        "components/DatabaseViews.tsx",
+        "components/PokemonDetailDialog.tsx",
+        "components/PokemonUsersDialog.tsx",
+        "tests/components.test.tsx",
+        "tests/scrapbook.test.tsx"
+      ],
+      "status": "pending",
+      "title": "Release exact Dev-UAT-approved artifact through PR gates"
+    }
+  ],
+  "objective": "Govern PR, independent review, merge, and separately authorized production promotion of the exact Dev-UAT-approved scrapbook artifact.",
+  "phase": "cancelled",
+  "plan_hash": "026cab2fd322e448bbe44dc5678a4517b2faecd8dbb31780e5b1d61885e55c16",
+  "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
+  "plan_reviews": [
+    {
+      "actor": "release-council-root-release_council",
+      "at": "2026-09-03T01:28:21Z",
+      "decision": "request_changes",
+      "notes": "Incomplete artifact scope; stale plan lacked current UAT/authority and rollback; production must remain outside Autopilot; nested Reverse Lookup Escape regression requires correction and test.",
+      "role": "council",
+      "subject": "026cab2fd322e448bbe44dc5678a4517b2faecd8dbb31780e5b1d61885e55c16"
+    }
+  ],
+  "pr": {},
+  "revision": 4,
+  "run_id": "scrapbook-release-20260903-v2",
+  "schema_version": 1,
+  "source_findings": [
+    "UAT-20260903-REVERSE-LOOKUP",
+    "UAT-20260903-SORT-CYCLE"
+  ],
+  "updated_at": "2026-09-03T01:35:26Z"
+}

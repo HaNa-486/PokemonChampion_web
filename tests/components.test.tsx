@@ -8,6 +8,7 @@ import { compareLearnableMoves } from "../components/PokemonDetailDialog";
 import { ZERO_STATS } from "../lib/domain";
 import { moves, pokemon } from "../lib/catalog";
 import { useTeamStore } from "../lib/team-store";
+import { useScrapbookStore } from "../lib/scrapbook-store";
 import { ALL_TYPES } from "../lib/type-chart";
 import type { TeamMember } from "../lib/types";
 
@@ -422,11 +423,30 @@ describe("ChampionsApp", () => {
     await user.click(within(moveFilters).getByRole("button", { name: "Dark" }));
     await user.click(within(moveFilters).getByRole("button", { name: "Physical" }));
     await user.click(within(moveFilters).getByRole("button", { name: "1 target" }));
-    await user.click(within(moveFilters).getByRole("button", { name: "Contact" }));
-    expect(within(dialog).getByRole("button", { name: "Sucker Punch" })).toBeInTheDocument();
-    expect(within(dialog).getByText(/Power 70 · Acc\. 100 · PP 8/)).toBeInTheDocument();
+    expect(within(moveFilters).queryByText(/^Properties$/)).not.toBeInTheDocument();
+    const suckerPunchRow = within(dialog).getByRole("button", { name: "Sucker Punch" }).closest("tr")!;
+    expect(suckerPunchRow).toHaveTextContent("70");
+    expect(suckerPunchRow).toHaveTextContent("100");
+    expect(suckerPunchRow).toHaveTextContent("8");
+    const learnableTable = suckerPunchRow.closest("table")!;
+    expect(within(learnableTable).getByRole("columnheader", { name: /Usable Pokémon/ })).toBeInTheDocument();
+    expect(within(learnableTable).queryByRole("columnheader", { name: /Properties/ })).not.toBeInTheDocument();
+    const accuracySort = () => within(learnableTable).getByRole("button", { name: /^Acc\./ });
+    await user.click(accuracySort());
+    expect(within(learnableTable).getByRole("columnheader", { name: /Acc\./ })).toHaveAttribute("aria-sort", "descending");
+    await user.click(accuracySort());
+    expect(within(learnableTable).getByRole("columnheader", { name: /Acc\./ })).toHaveAttribute("aria-sort", "ascending");
+    await user.click(accuracySort());
+    expect(within(learnableTable).getByRole("columnheader", { name: /Acc\./ })).toHaveAttribute("aria-sort", "none");
+    await user.click(within(learnableTable).getByRole("button", { name: /^View \d+ Pokémon that can use Sucker Punch$/ }));
+    const reverseDialog = screen.getByRole("dialog", { name: "Sucker Punch" });
+    expect(within(reverseDialog).getByRole("textbox", { name: "Search Pokémon in reverse lookup" })).toBeInTheDocument();
+    expect(within(reverseDialog).getByRole("button", { name: "Add to scrapbook Absol" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Sucker Punch" })).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
     expect(within(dialog).queryByRole("button", { name: "Calm Mind" })).not.toBeInTheDocument();
-    const mobileFilterToggle = within(dialog).getByRole("button", { name: "Move filters (5)" });
+    const mobileFilterToggle = within(dialog).getByRole("button", { name: "Move filters (4)" });
     expect(mobileFilterToggle).toHaveAttribute("aria-expanded", "false");
     await user.click(mobileFilterToggle);
     expect(mobileFilterToggle).toHaveAttribute("aria-expanded", "true");
@@ -703,7 +723,24 @@ describe("ChampionsApp", () => {
     expect(saved.abilityId).toBe("super-luck");
   });
 
-  it("searches learnable moves by effect, shows useful mechanics, and prevents duplicate selections", async () => {
+  it("closes a resource picker before closing the editor without moving focus", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: "Configure Absol" }));
+    const item = screen.getByRole("combobox", { name: /Held item/ });
+    await user.click(item);
+    expect(item).toHaveAttribute("aria-expanded", "true");
+    await user.keyboard("{Escape}");
+    expect(item).toHaveAttribute("aria-expanded", "false");
+    expect(item).toHaveFocus();
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
+  });
+
+  it("searches learnable moves, prevents duplicates, and lets a second Escape close the editor", async () => {
     vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
     const user = userEvent.setup();
     render(<ChampionsApp />);
@@ -725,6 +762,10 @@ describe("ChampionsApp", () => {
     expect(screen.getByText("Already selected")).toBeInTheDocument();
     await user.keyboard("{Escape}");
     expect(secondMove).toHaveAttribute("aria-expanded", "false");
+    expect(secondMove).toHaveFocus();
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
   });
 
   it("selects a searched move with arrow keys and Enter while skipping disabled duplicates", async () => {
@@ -812,6 +853,38 @@ describe("ChampionsApp", () => {
     await user.click(screen.getByRole("button", { name: "Configure Absol" }));
     expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
     fireEvent.keyDown(document, { key: "Escape" });
+    expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
+  });
+
+  it("closes only the topmost dialog across detail, reverse lookup, and scrapbook layers", async () => {
+    vi.stubGlobal("fetch", vi.fn(async () => Promise.reject(new Error("offline"))));
+    useScrapbookStore.getState().createBook("Existing scrapbook");
+    const user = userEvent.setup();
+    render(<ChampionsApp />);
+    await user.type(screen.getByPlaceholderText("Search Pokémon name…"), "Absol");
+    await user.click(screen.getByRole("button", { name: /^Absol$/ }));
+    const detail = screen.getByRole("dialog", { name: "Absol" });
+
+    await user.click(within(detail).getByRole("button", { name: "Add to another scrapbook" }));
+    expect(screen.getByRole("dialog", { name: /Add to scrapbook · Absol/ })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: /Add to scrapbook · Absol/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+
+    const learnableTable = within(detail).getByRole("button", { name: "Sucker Punch" }).closest("table")!;
+    await user.click(within(learnableTable).getByRole("button", { name: /^View \d+ Pokémon that can use Sucker Punch$/ }));
+    const reverse = screen.getByRole("dialog", { name: "Sucker Punch" });
+    await user.click(within(reverse).getByRole("button", { name: "Add to scrapbook Absol" }));
+    expect(screen.getByRole("dialog", { name: /Add to scrapbook · Absol/ })).toBeInTheDocument();
+
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: /Add to scrapbook · Absol/ })).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Sucker Punch" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: "Sucker Punch" })).not.toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Absol" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
     expect(screen.queryByRole("dialog", { name: "Absol" })).not.toBeInTheDocument();
   });
 

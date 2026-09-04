@@ -1,0 +1,12 @@
+{
+  "allow_dev_deploy": true,
+  "allow_merge": true,
+  "allow_pr": true,
+  "allow_production": false,
+  "autonomy_sha256": "7ad3c3bb6097865925e023ffcd517b94d4daabbf712a18e369b3149013f2cbc0",
+  "basis": "AUTONOMY.md requires human-only merge/production; current owner explicitly authorized PR, auto merge, and post-merge production deployment on 2026-09-03.",
+  "notes": "Governance eligibility only; provider identity and authority remain external. Production is denied in v0.1.",
+  "schema_version": 1,
+  "updated_at": "2026-09-03T01:24:17Z",
+  "updated_by": "parent-01a058b0"
+}

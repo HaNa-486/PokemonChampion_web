@@ -1,0 +1,77 @@
+{
+  "approvals": [],
+  "artifact_hash": null,
+  "audit": [
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:24:42Z",
+      "details": {},
+      "entry_hash": "67e3a29bc75dc260a6be0150c535f69ff91419aab7dfada188d2212070a3edb9",
+      "event": "run_created",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:24:42Z",
+      "details": {
+        "item_id": "REL-001"
+      },
+      "entry_hash": "b3cea884b2cbd87b9b6661ac3f03203c4ea870216db7719f9c49a08c1e5a889c",
+      "event": "item_added",
+      "previous_hash": "67e3a29bc75dc260a6be0150c535f69ff91419aab7dfada188d2212070a3edb9"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-03T01:25:15Z",
+      "details": {},
+      "entry_hash": "cb35b45dd762a25c992d1638a313929d9bd16c144fb81fbcef57a75121c2c5d0",
+      "event": "run_closed",
+      "previous_hash": "b3cea884b2cbd87b9b6661ac3f03203c4ea870216db7719f9c49a08c1e5a889c"
+    }
+  ],
+  "authorizations": [],
+  "autopilot_version": "0.1.0-alpha.1",
+  "blockers": [],
+  "closed": true,
+  "closed_outcome": "cancelled",
+  "created_at": "2026-09-03T01:24:42Z",
+  "evidence": {},
+  "handoff": {
+    "next_safe_action": "Create corrected run with repeated bounded scope arguments.",
+    "residual_risks": [
+      "None; no external action was taken under this run."
+    ],
+    "summary": "Superseded before any gate because the item scope was encoded as one comma-delimited path."
+  },
+  "items": [
+    {
+      "acceptance": "PR head equals 5478d176b6f01af2bcda41c4ebaac3352904c6b9; Deployment verification passes; independent PR review has no material findings; merge is non-forced; production package uses production manifest and exact merged source; production smoke tests pass.",
+      "depends_on": [],
+      "executor": null,
+      "id": "REL-001",
+      "resource_locks": [
+        "release:scrapbook"
+      ],
+      "risk": "high",
+      "scopes": [
+        "PROJECT_SPEC.md,DEPLOYMENT_CHECKLIST.md,components/DatabaseViews.tsx,components/PokemonDetailDialog.tsx,components/PokemonUsersDialog.tsx,tests/components.test.tsx,tests/scrapbook.test.tsx"
+      ],
+      "status": "pending",
+      "title": "Release exact Dev-UAT-approved artifact through PR gates"
+    }
+  ],
+  "objective": "Govern PR, independent review, merge, and separately authorized production promotion of the exact Dev-UAT-approved scrapbook artifact.",
+  "phase": "cancelled",
+  "plan_hash": "026cab2fd322e448bbe44dc5678a4517b2faecd8dbb31780e5b1d61885e55c16",
+  "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
+  "plan_reviews": [],
+  "pr": {},
+  "revision": 3,
+  "run_id": "scrapbook-release-20260903",
+  "schema_version": 1,
+  "source_findings": [
+    "UAT-20260903-REVERSE-LOOKUP",
+    "UAT-20260903-SORT-CYCLE"
+  ],
+  "updated_at": "2026-09-03T01:25:15Z"
+}

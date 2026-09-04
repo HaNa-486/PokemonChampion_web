@@ -5,20 +5,23 @@ import { abilities, abilityById, battleDataKeyForPokemon, battleDataSourcePokemo
 import { rankedAbilityChoices, rankedApChoices, rankedItemChoices, rankedMoveChoices, rankedNatureChoices, recommendedAbilityId, recommendedAp, recommendedItemId, recommendedMoveIds, recommendedNature, type RankedChoice } from "../lib/battle-recommendations";
 import { apTotal, calculateFinalStats, formatPriority, NATURES, NEUTRAL_NATURE, priorityMatches, validateTeam, ZERO_STATS } from "../lib/domain";
 import { useTeamStore } from "../lib/team-store";
+import { useScrapbookStore, type ScrapbookEntry } from "../lib/scrapbook-store";
 import { localizedTerm, localizedTerms } from "../lib/localization";
 import { itemEffectCategories } from "../lib/filtering";
 import { useDialogEscape } from "../lib/use-dialog-escape";
 import type { BattleFormat, BattleUsage, Move, Nature, Pokemon, Stats, TeamMember } from "../lib/types";
 import { MoveDatabaseV2, PokemonTableV2, ResourceDatabaseV2 } from "./DatabaseViews";
+import { AddToScrapbookDialog } from "./AddToScrapbookDialog";
 import { InfoTooltip } from "./InfoTooltip";
 import { ItemDisplay, ItemTooltip } from "./ItemDisplay";
 import { TypeBadge } from "./TypeBadge";
 import { TypeChart } from "./TypeChartView";
 import { TypeMatchups } from "./TypeMatchups";
 import { ThemeToggle, useThemePreference } from "./ThemeToggle";
+import { ScrapbookView } from "./ScrapbookView";
 
 type Locale = "en" | "zh-Hant";
-type View = "pokemon" | "moves" | "abilities" | "items" | "types";
+type View = "pokemon" | "scrapbook" | "moves" | "abilities" | "items" | "types";
 type PriorityClass = "positive" | "zero" | "negative";
 type DisplayMode = "detailed" | "compact";
 type BuilderDisplayModes = Record<"move" | "ability" | "item", DisplayMode>;
@@ -29,8 +32,8 @@ const ITEM_GROUP_ORDER = ["Common", "Mega Stone", "HP Recovery", "Status Cure", 
 const defaultDisplayModes: BuilderDisplayModes = { move: "detailed", ability: "detailed", item: "detailed" };
 
 const labels = {
-  en: { pokemon: "Pokémon DB", moves: "Move DB", abilities: "Ability DB", items: "Held Item DB", types: "Type Chart", search: "Search Pokémon or type…", current: "Regulation M-4 · Current", add: "Build & add", save: "Save changes", edit: "Edit", team: "Selected team", empty: "Choose a Pokémon to start building.", data: "Battle data updated", stale: "cached snapshot", doubles: "Doubles", singles: "Singles" },
-  "zh-Hant": { pokemon: "寶可夢資料庫", moves: "招式資料庫", abilities: "特性資料庫", items: "持有物資料庫", types: "屬性相剋", search: "搜尋寶可夢或屬性…", current: "規則 M-4 · 當前", add: "配置並加入", save: "儲存變更", edit: "編輯", team: "已選隊伍", empty: "選擇一隻寶可夢開始配置。", data: "對戰資料更新", stale: "快取資料", doubles: "雙打", singles: "單打" },
+  en: { pokemon: "Pokémon DB", scrapbook: "Scrapbooks", moves: "Move DB", abilities: "Ability DB", items: "Held Item DB", types: "Type Chart", search: "Search Pokémon or type…", current: "Regulation M-4 · Current", add: "Build & add", save: "Save changes", edit: "Edit", team: "Selected team", empty: "Choose a Pokémon to start building.", data: "Battle data updated", stale: "cached snapshot", doubles: "Doubles", singles: "Singles" },
+  "zh-Hant": { pokemon: "寶可夢資料庫", scrapbook: "畫本", moves: "招式資料庫", abilities: "特性資料庫", items: "持有物資料庫", types: "屬性相剋", search: "搜尋寶可夢或屬性…", current: "規則 M-4 · 當前", add: "配置並加入", save: "儲存變更", edit: "編輯", team: "已選隊伍", empty: "選擇一隻寶可夢開始配置。", data: "對戰資料更新", stale: "快取資料", doubles: "雙打", singles: "單打" },
 };
 
 type DataStatusResponse = { data?: { snapshotDate?: string; stale?: boolean } };
@@ -120,7 +123,7 @@ function ResourcePicker({ label, value, options, locale, detailed, onChange }: {
     <div className={`resource-combobox ${open ? "open" : ""}`}>
       {!open && current?.icon}
       <input id={`${listId}-input`} ref={inputRef} role="combobox" aria-label={label} aria-expanded={open} aria-controls={listId} aria-activedescendant={open ? `${listId}-option-${activeValue}` : undefined} aria-autocomplete="list" autoComplete="off" value={open ? query : current?.name ?? ""} placeholder={locale === "zh-Hant" ? "輸入名稱或效果搜尋…" : "Search name or effect…"} onFocus={() => { openMenu(); setQuery(""); }} onChange={(event) => { setOpen(true); setQuery(event.target.value); setActiveValue("__clear__"); }} onKeyDown={(event) => {
-        if (event.key === "Escape") { event.preventDefault(); close(); }
+        if (event.key === "Escape" && open) { event.preventDefault(); close(); }
         else if (event.key === "ArrowDown") { event.preventDefault(); if (open) moveActive(1); else openMenu(); }
         else if (event.key === "ArrowUp") { event.preventDefault(); if (open) moveActive(-1); else openMenu(); }
         else if (event.key === "Home" && open) { event.preventDefault(); setActiveValue(navigableValues[0] ?? "__clear__"); }
@@ -213,7 +216,7 @@ function MovePicker({ slot, value, legalMoveIds, selectedMoveIds, commonMoves, l
         onFocus={() => { openMenu(); setQuery(""); }}
         onChange={(event) => { setOpen(true); setQuery(event.target.value); setActiveValue("__clear__"); }}
         onKeyDown={(event) => {
-          if (event.key === "Escape") { event.preventDefault(); close(); }
+          if (event.key === "Escape" && open) { event.preventDefault(); close(); }
           else if (event.key === "ArrowDown") { event.preventDefault(); if (open) moveActive(1); else openMenu(); }
           else if (event.key === "ArrowUp") { event.preventDefault(); if (open) moveActive(-1); else openMenu(); }
           else if (event.key === "Home" && open) { event.preventDefault(); setActiveValue(navigableValues[0] ?? "__clear__"); }
@@ -267,8 +270,8 @@ function ResourceDatabase({ kind, locale }: { kind: "abilities" | "items"; local
   return <section className="panel resource-panel"><div className="panel-head"><div><p className="eyebrow">REFERENCE LIBRARY</p><h1>{labels[locale][kind]}</h1><p>{filtered.length} {kind}</p></div><input className="move-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={locale === "zh-Hant" ? `搜尋${kind === "abilities" ? "特性" : "持有物"}…` : `Search ${kind}…`} /></div><div className="resource-grid">{filtered.map((entry) => <article className="resource-card" key={entry.id}><div><span className="resource-kind">{"category" in entry && typeof entry.category === "string" ? entry.category : "Ability"}</span><h2>{kind === "abilities" ? <AbilityTooltip id={entry.id} locale={locale} /> : <ItemTooltip item={itemById.get(entry.id)} locale={locale} />}</h2></div><p>{locale === "zh-Hant" ? entry.descriptionZh : entry.description}</p></article>)}</div></section>;
 }
 
-function BuildEditor({ selected, editingMember, locale, format, onFormatChange, onClose }: { selected: Pokemon | null; editingMember: TeamMember | null; locale: Locale; format: BattleFormat; onFormatChange: (format: BattleFormat) => void; onClose: () => void }) {
-  return selected ? <BuildEditorContent key={`${selected.id}:${editingMember?.id ?? "new"}`} selected={selected} editingMember={editingMember} locale={locale} format={format} onFormatChange={onFormatChange} onClose={onClose} /> : null;
+function BuildEditor({ selected, editingMember, mode, locale, format, onFormatChange, onClose, onDraftChange }: { selected: Pokemon | null; editingMember: TeamMember | null; mode: "team" | "scrapbook"; locale: Locale; format: BattleFormat; onFormatChange: (format: BattleFormat) => void; onClose: () => void; onDraftChange?: (member: Omit<TeamMember, "id">) => void }) {
+  return selected ? <BuildEditorContent key={`${mode}:${selected.id}:${editingMember?.id ?? "new"}`} selected={selected} editingMember={editingMember} mode={mode} locale={locale} format={format} onFormatChange={onFormatChange} onClose={onClose} onDraftChange={onDraftChange} /> : null;
 }
 
 type BattleApiResponse = { data: { singles: BattleUsage | null; doubles: BattleUsage | null } };
@@ -281,20 +284,20 @@ const apChoiceLabel = (choice: ReturnType<typeof rankedApChoices>[number], local
   return `${locale === "zh-Hant" ? "常用" : "Common"} #${choice.rank} · ${stats.map(([label, value]) => `${label} ${value}`).join(" / ")} · ${choice.percentage || "—"}`;
 };
 
-function BuildEditorContent({ selected, editingMember, locale, format, onFormatChange: setAppFormat, onClose }: { selected: Pokemon; editingMember: TeamMember | null; locale: Locale; format: BattleFormat; onFormatChange: (format: BattleFormat) => void; onClose: () => void }) {
+function BuildEditorContent({ selected, editingMember, mode, locale, format, onFormatChange: setAppFormat, onClose, onDraftChange }: { selected: Pokemon; editingMember: TeamMember | null; mode: "team" | "scrapbook"; locale: Locale; format: BattleFormat; onFormatChange: (format: BattleFormat) => void; onClose: () => void; onDraftChange?: (member: Omit<TeamMember, "id">) => void }) {
   useDialogEscape(onClose);
   const members = useTeamStore((state) => state.teams[format]);
   const add = useTeamStore((state) => state.add);
   const update = useTeamStore((state) => state.update);
-  const isEditing = Boolean(editingMember);
-  const [moveIds, setMoveIds] = useState<string[]>(editingMember?.moveIds.slice(0, 4) ?? selected.moveIds.slice(0, 4));
-  const [abilityId, setAbilityId] = useState<string | null>(editingMember?.abilityId ?? selected.abilityIds[0] ?? null);
+  const isEditingTeam = mode === "team" && Boolean(editingMember);
+  const [moveIds, setMoveIds] = useState<string[]>(editingMember ? editingMember.moveIds.slice(0, 4) : selected.moveIds.slice(0, 4));
+  const [abilityId, setAbilityId] = useState<string | null>(editingMember ? editingMember.abilityId : selected.abilityIds[0] ?? null);
   const requiredMegaStoneId = megaStoneIdByPokemonId.get(selected.id) ?? null;
   const baseSelected = useMemo(() => {
     if (!selected.isMega || !requiredMegaStoneId) return selected;
     return pokemonById.get(megaBasePokemonIdByStoneId.get(requiredMegaStoneId) ?? "") ?? selected;
   }, [requiredMegaStoneId, selected]);
-  const [itemId, rawSetItemId] = useState<string | null>(editingMember?.itemId ?? requiredMegaStoneId ?? null);
+  const [itemId, rawSetItemId] = useState<string | null>(editingMember ? editingMember.itemId : requiredMegaStoneId ?? null);
   const [battleDataByKey, setBattleDataByKey] = useState<Record<string, BattleApiResponse["data"]>>({});
   const battleDataCacheRef = useRef(new Map<string, BattleApiResponse["data"]>());
   const [recommendationsLoading, setRecommendationsLoading] = useState(true);
@@ -322,9 +325,10 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     return next;
   });
   const effectiveSelected = useMemo(() => {
+    if (mode === "scrapbook" && selected.isMega && itemId === null) return selected;
     const mega = itemId ? megaPokemonByStoneId.get(itemId) : null;
     return mega && megaStoneMatchesPokemon(itemId!, baseSelected.id) ? mega : baseSelected;
-  }, [baseSelected, itemId]);
+  }, [baseSelected, itemId, mode, selected]);
   const battleDataKey = battleDataKeyForPokemon(effectiveSelected);
   const battleData = battleDataByKey[battleDataKey] ?? null;
   const initialRecommendationAppliedRef = useRef(Boolean(editingMember));
@@ -354,6 +358,7 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
   };
   const changeFormat = (nextFormat: BattleFormat) => {
     setAppFormat(nextFormat);
+    if (mode === "scrapbook") return;
     applyRecommendations(nextFormat, battleData);
   };
   const changeItem = (nextItem: string | null) => {
@@ -363,6 +368,12 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     if (nextSelected.id === effectiveSelected.id) return;
     const nextUsage = battleData?.[format] ?? null;
     const legalMoves = new Set(nextSelected.moveIds);
+    if (mode === "scrapbook") {
+      setMoveIds((current) => current.map((id) => legalMoves.has(id) ? id : ""));
+      if (abilityId && !nextSelected.abilityIds.includes(abilityId)) setAbilityId(null);
+      pendingFormHydrationRef.current = null;
+      return;
+    }
     const retainedMoves = moveIds.filter((id) => legalMoves.has(id));
     const replaceAbility = !abilityId || !nextSelected.abilityIds.includes(abilityId);
     const nextBattleDataKey = battleDataKeyForPokemon(nextSelected);
@@ -463,14 +474,17 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     // Battle recommendations are keyed by the upstream source, so shared base/Mega data is reused.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [battleDataKey, editingMember]);
-  const submit = () => {
-    if (!isEditing && members.length >= 6) { setError(locale === "zh-Hant" ? "隊伍已滿，請先移除一名成員。" : "Team is full. Remove a member first."); return; }
-    const candidate: TeamMember = { id: editingMember?.id ?? crypto.randomUUID(), pokemonId: effectiveSelected.id, moveIds, abilityId, itemId, ap, nature };
-    const nextMembers = isEditing ? members.map((member) => member.id === candidate.id ? candidate : member) : [...members, candidate];
+  useEffect(() => {
+    if (mode === "scrapbook" && editingMember && onDraftChange) onDraftChange({ pokemonId: effectiveSelected.id, moveIds, abilityId, itemId, ap, nature });
+  }, [abilityId, ap, editingMember, effectiveSelected.id, itemId, mode, moveIds, nature, onDraftChange]);
+  const submitTeam = () => {
+    if (!isEditingTeam && members.length >= 6) { setError(locale === "zh-Hant" ? "隊伍已滿，請先移除一名成員。" : "Team is full. Remove a member first."); return; }
+    const candidate: TeamMember = { id: isEditingTeam ? editingMember!.id : crypto.randomUUID(), pokemonId: effectiveSelected.id, moveIds: mode === "scrapbook" ? moveIds.filter(Boolean) : moveIds, abilityId, itemId, ap, nature };
+    const nextMembers = isEditingTeam ? members.map((member) => member.id === candidate.id ? candidate : member) : [...members, candidate];
     const issues = validateTeam(nextMembers, pokemonById, new Set(items.map((item) => item.id)), megaStoneIdByPokemonId);
     const candidateIssue = issues[0];
     if (candidateIssue) { setError(candidateIssue.message); return; }
-    if (isEditing) update(format, candidate); else add(format, candidate);
+    if (isEditingTeam) update(format, candidate); else add(format, candidate);
     onClose();
   };
   const selectedItem = itemId ? itemById.get(itemId) ?? null : null;
@@ -478,7 +492,7 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
     <section className="build-editor" role="dialog" aria-modal="true" aria-labelledby="builder-title">
       <button className="close-button" onClick={onClose} aria-label={locale === "zh-Hant" ? "關閉" : "Close"}>×</button>
       <div className="builder-identity"><img src={effectiveSelected.imageUrl} alt="" width="92" height="92" /><div><p className="eyebrow">BUILD WORKBENCH</p><h2 id="builder-title">{localName(effectiveSelected, locale)}</h2><div className="badge-row">{effectiveSelected.types.map((type) => <TypeBadge key={type} type={type} locale={locale} />)}</div></div></div>
-      <div className="build-format-selector"><span>{locale === "zh-Hant" ? "隊伍模式" : "Team mode"}</span><div className="segmented" role="group" aria-label="Team mode"><button disabled={isEditing} className={format === "singles" ? "active" : ""} onClick={() => onFormatChange("singles")}>{labels[locale].singles}</button><button disabled={isEditing} className={format === "doubles" ? "active" : ""} onClick={() => onFormatChange("doubles")}>{labels[locale].doubles}</button></div><small>{isEditing ? (locale === "zh-Hant" ? "正在編輯隊伍中的既有配置；儲存後位置不會改變。" : "Editing this team member in place; its team position will be preserved.") : recommendationsLoading ? (locale === "zh-Hant" ? "正在讀取當前使用率…" : "Loading current usage…") : usage ? (locale === "zh-Hant" ? "已套用此模式使用率最高的持有物、招式與特性" : "Top current-format item, moves, and ability applied") : (locale === "zh-Hant" ? "使用率暫時無法取得，已使用預設配置" : "Usage unavailable; catalog defaults applied")}</small></div>
+      <div className="build-format-selector"><span>{locale === "zh-Hant" ? "隊伍模式" : "Team mode"}</span><div className="segmented" role="group" aria-label="Team mode"><button disabled={isEditingTeam} className={format === "singles" ? "active" : ""} onClick={() => onFormatChange("singles")}>{labels[locale].singles}</button><button disabled={isEditingTeam} className={format === "doubles" ? "active" : ""} onClick={() => onFormatChange("doubles")}>{labels[locale].doubles}</button></div><small>{mode === "scrapbook" ? (locale === "zh-Hant" ? "每次調整都會立即儲存到畫本；只有按下「加入已選隊伍」才會新增隊伍成員。" : "Every change is saved to the scrapbook; a team member is added only through “Add to selected team”.") : isEditingTeam ? (locale === "zh-Hant" ? "正在編輯隊伍中的既有配置；儲存後位置不會改變。" : "Editing this team member in place; its team position will be preserved.") : recommendationsLoading ? (locale === "zh-Hant" ? "正在讀取當前使用率…" : "Loading current usage…") : usage ? (locale === "zh-Hant" ? "已套用此模式使用率最高的持有物、招式與特性" : "Top current-format item, moves, and ability applied") : (locale === "zh-Hant" ? "使用率暫時無法取得，已使用預設配置" : "Usage unavailable; catalog defaults applied")}</small></div>
       <div className="builder-display-preferences" aria-label={locale === "zh-Hant" ? "選單顯示方式" : "Picker display modes"}>{(["move", "ability", "item"] as const).map((kind) => <div key={kind}><span>{locale === "zh-Hant" ? kind === "move" ? "招式" : kind === "ability" ? "特性" : "持有物" : kind}</span><div className="segmented"><button className={displayModes[kind] === "detailed" ? "active" : ""} onClick={() => changeDisplayMode(kind, "detailed")}>{locale === "zh-Hant" ? "詳細" : "Detailed"}</button><button className={displayModes[kind] === "compact" ? "active" : ""} onClick={() => changeDisplayMode(kind, "compact")}>{locale === "zh-Hant" ? "精簡" : "Compact"}</button></div></div>)}</div>
       {effectiveSelected.id !== selected.id && <p className="mega-transform-note">{locale === "zh-Hant" ? <>{selectedItem ? <>選擇 <ItemDisplay item={selectedItem} locale={locale} size={22} /> 後</> : "移除專屬超級石後"}，目前型態為 {localName(effectiveSelected, locale)}。</> : <>{selectedItem ? <><ItemDisplay item={selectedItem} locale={locale} size={22} /> selected; </> : "Dedicated Mega Stone removed; "}current form is {localName(effectiveSelected, locale)}.</>}</p>}
       <div className="builder-grid">
@@ -486,14 +500,14 @@ function BuildEditorContent({ selected, editingMember, locale, format, onFormatC
         <ResourcePicker label={locale === "zh-Hant" ? "特性" : "Ability"} value={abilityId} options={abilityOptions} locale={locale} detailed={displayModes.ability === "detailed"} onChange={setAbilityId} />
         <ResourcePicker label={locale === "zh-Hant" ? "持有物" : "Held item"} value={itemId} options={itemOptions} locale={locale} detailed={displayModes.item === "detailed"} onChange={setItemId} />
       </div>
-      <div className="move-slots">{[0,1,2,3].map((slot) => <MovePicker key={slot} slot={slot} value={moveIds[slot] ?? null} legalMoveIds={effectiveSelected.moveIds} selectedMoveIds={moveIds} commonMoves={commonMoves} locale={locale} detailed={displayModes.move === "detailed"} onChange={(moveId) => setMoveIds((current) => { const next = [...current]; if (moveId) next[slot] = moveId; else next.splice(slot, 1); return next.filter(Boolean).slice(0, 4); })} />)}</div>
+      <div className="move-slots">{[0,1,2,3].map((slot) => <MovePicker key={slot} slot={slot} value={moveIds[slot] ?? null} legalMoveIds={effectiveSelected.moveIds} selectedMoveIds={moveIds} commonMoves={commonMoves} locale={locale} detailed={displayModes.move === "detailed"} onChange={(moveId) => setMoveIds((current) => { if (mode === "scrapbook") return Array.from({ length: 4 }, (_, index) => index === slot ? moveId ?? "" : current[index] ?? ""); const next = [...current]; if (moveId) next[slot] = moveId; else next.splice(slot, 1); return next.filter(Boolean).slice(0, 4); })} />)}</div>
       <div className="ap-head"><h3>{locale === "zh-Hant" ? "能力值與 AP" : "Stats & AP"}</h3><label className="ap-preset-field"><span>{locale === "zh-Hant" ? "AP 配置" : "AP spread"}</span><select aria-label={locale === "zh-Hant" ? "AP 配置" : "AP spread"} value={apPresetRank === null ? "custom" : String(apPresetRank)} onChange={(event) => {
         if (event.target.value === "custom") { setApPresetRank(null); return; }
         const choice = commonApChoices.find((entry) => entry.rank === Number(event.target.value));
         if (choice) { setAp({ ...choice.ap }); setApPresetRank(choice.rank); }
       }}><option value="custom">{locale === "zh-Hant" ? "客製化" : "Custom"}</option>{commonApChoices.map((choice) => <option key={choice.rank} value={choice.rank}>{apChoiceLabel(choice, locale)}</option>)}</select></label><span className={remaining < 0 ? "remaining bad" : "remaining"}>{remaining} / 66 {locale === "zh-Hant" ? "剩餘" : "remaining"}</span></div>
       <div className="stat-editor">{(Object.keys(statLabels) as Array<keyof Stats>).map((stat) => <label key={stat}><span>{statLabels[stat]}{nature.up === stat && <em className="nature-up" title="+10%">↑</em>}{nature.down === stat && <em className="nature-down" title="−10%">↓</em>} <b>{finalStats[stat]}</b></span><input type="range" min="0" max="32" value={ap[stat]} onChange={(event) => { const next = { ...ap, [stat]: Number(event.target.value) }; if (apTotal(next) <= 66) { setAp(next); setApPresetRank(null); } }} /><output>{ap[stat]}</output></label>)}</div>
-      {error && <p className="form-error" role="alert">{error}</p>}<button className="primary-button" onClick={submit}>{isEditing ? labels[locale].save : labels[locale].add}</button>
+      {error && <p className="form-error" role="alert">{error}</p>}{mode === "scrapbook" ? <div className="builder-submit-actions"><button className="primary-button" onClick={onClose}>{locale === "zh-Hant" ? "儲存畫本配置" : "Save scrapbook build"}</button><button className="secondary-button" onClick={submitTeam}>{locale === "zh-Hant" ? "加入已選隊伍" : "Add to selected team"}</button></div> : <button className="primary-button" onClick={submitTeam}>{isEditingTeam ? labels[locale].save : labels[locale].add}</button>}
     </section>
   </div>;
 }
@@ -531,9 +545,15 @@ export function ChampionsApp() {
   const [view, setView] = useState<View>("pokemon");
   const [format, setFormat] = useState<BattleFormat>("doubles");
   const [selected, setSelected] = useState<Pokemon | null>(null);
+  const [scrapbookCandidate, setScrapbookCandidate] = useState<Pokemon | null>(null);
   const [editingMember, setEditingMember] = useState<TeamMember | null>(null);
+  const [editorMode, setEditorMode] = useState<"team" | "scrapbook">("team");
+  const [scrapbookEditTarget, setScrapbookEditTarget] = useState<{ bookId: string; entryId: string } | null>(null);
+  const updateScrapbookEntry = useScrapbookStore((state) => state.updateEntry);
   const hydrate = useTeamStore((state) => state.hydrate);
+  const hydrateScrapbooks = useScrapbookStore((state) => state.hydrate);
   useEffect(() => { void hydrate(); }, [hydrate]);
+  useEffect(() => { void hydrateScrapbooks(); }, [hydrateScrapbooks]);
   useEffect(() => {
     const saved = localStorage.getItem(LOCALE_STORAGE_KEY);
     const preferred = saved === "en" || saved === "zh-Hant"
@@ -551,14 +571,27 @@ export function ChampionsApp() {
     delete root.dataset.localePending;
   }, [locale]);
   const copy = labels[locale];
-  const closeEditor = useCallback(() => { setSelected(null); setEditingMember(null); }, []);
-  const startNewBuild = (entry: Pokemon) => { setEditingMember(null); setSelected(entry); };
+  const closeEditor = useCallback(() => { setSelected(null); setEditingMember(null); setScrapbookEditTarget(null); }, []);
+  const startNewBuild = (entry: Pokemon) => { setEditorMode("team"); setScrapbookEditTarget(null); setEditingMember(null); setSelected(entry); };
   const editTeamMember = (member: TeamMember, memberFormat: BattleFormat) => {
     const entry = pokemonById.get(member.pokemonId);
     if (!entry) return;
+    setEditorMode("team");
+    setScrapbookEditTarget(null);
     setFormat(memberFormat);
     setEditingMember(member);
     setSelected(entry);
   };
-  return <div className={`app-shell ${view === "types" ? "type-chart-active" : ""}`}><header className="topbar"><a className="brand" href="#top" aria-label="Champions Lab home"><span className="brand-mark">CL</span><span><b>CHAMPIONS LAB</b><small>Battle intelligence, built clearly.</small></span></a><nav>{(["pokemon","moves","abilities","items","types"] as View[]).map((entry) => <button key={entry} className={view === entry ? "active" : ""} onClick={() => setView(entry)}>{copy[entry]}</button>)}</nav><div className="header-actions"><span className="regulation-dot">● {copy.current}</span><div className="segmented" role="group" aria-label="Team mode"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{copy.singles}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{copy.doubles}</button></div><ThemeToggle theme={theme} locale={locale} onChange={setTheme} /><button className="locale-button" onClick={() => setLocale(locale === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></header><main id="top"><PokemonTableV2 active={view === "pokemon"} locale={locale} format={format} onSelect={startNewBuild} /><MoveDatabaseV2 active={view === "moves"} locale={locale} /><ResourceDatabaseV2 active={view === "abilities"} kind="abilities" locale={locale} /><ResourceDatabaseV2 active={view === "items"} kind="items" locale={locale} />{view === "types" && <TypeChart locale={locale} />}</main><footer><span>Unofficial community tool.</span><a href="https://championsbattledata.com/">Battle data provided by Pokémon Champions Battle Data</a><a href="https://github.com/smogon/pokemon-showdown">Move mechanics provided by Pokémon Showdown</a><a href="https://github.com/PokeAPI/sprites">Held-item sprites provided by PokeAPI sprites</a><DataFreshness locale={locale} /></footer><TeamTray locale={locale} format={format} onFormatChange={setFormat} onEdit={editTeamMember} /><BuildEditor selected={selected} editingMember={editingMember} locale={locale} format={format} onFormatChange={setFormat} onClose={closeEditor} /></div>;
+  const editScrapbookEntry = (bookId: string, saved: ScrapbookEntry) => {
+    const entry = pokemonById.get(saved.pokemonId);
+    if (!entry) return;
+    setEditorMode("scrapbook");
+    setScrapbookEditTarget({ bookId, entryId: saved.id });
+    setEditingMember(saved);
+    setSelected(entry);
+  };
+  const persistScrapbookDraft = useCallback((member: Omit<TeamMember, "id">) => {
+    if (scrapbookEditTarget) updateScrapbookEntry(scrapbookEditTarget.bookId, scrapbookEditTarget.entryId, member);
+  }, [scrapbookEditTarget, updateScrapbookEntry]);
+  return <div className={`app-shell ${view === "types" ? "type-chart-active" : ""}`}><header className="topbar"><a className="brand" href="#top" aria-label="Champions Lab home"><span className="brand-mark">CL</span><span><b>CHAMPIONS LAB</b><small>Battle intelligence, built clearly.</small></span></a><nav>{(["pokemon","scrapbook","moves","abilities","items","types"] as View[]).map((entry) => <button key={entry} className={view === entry ? "active" : ""} onClick={() => setView(entry)}>{copy[entry]}</button>)}</nav><div className="header-actions"><span className="regulation-dot">● {copy.current}</span><div className="segmented" role="group" aria-label="Team mode"><button className={format === "singles" ? "active" : ""} onClick={() => setFormat("singles")}>{copy.singles}</button><button className={format === "doubles" ? "active" : ""} onClick={() => setFormat("doubles")}>{copy.doubles}</button></div><ThemeToggle theme={theme} locale={locale} onChange={setTheme} /><button className="locale-button" onClick={() => setLocale(locale === "en" ? "zh-Hant" : "en")}>{locale === "en" ? "繁中" : "EN"}</button></div></header><main id="top"><PokemonTableV2 active={view === "pokemon"} locale={locale} format={format} onSelect={startNewBuild} onScrapbook={setScrapbookCandidate} />{view === "scrapbook" && <ScrapbookView locale={locale} format={format} onEditEntry={editScrapbookEntry} onAddToScrapbook={setScrapbookCandidate} />}<MoveDatabaseV2 active={view === "moves"} locale={locale} onScrapbook={setScrapbookCandidate} /><ResourceDatabaseV2 active={view === "abilities"} kind="abilities" locale={locale} onScrapbook={setScrapbookCandidate} /><ResourceDatabaseV2 active={view === "items"} kind="items" locale={locale} />{view === "types" && <TypeChart locale={locale} />}</main><footer><span>Unofficial community tool.</span><a href="https://championsbattledata.com/">Battle data provided by Pokémon Champions Battle Data</a><a href="https://github.com/smogon/pokemon-showdown">Move mechanics provided by Pokémon Showdown</a><a href="https://github.com/PokeAPI/sprites">Held-item sprites provided by PokeAPI sprites</a><DataFreshness locale={locale} /></footer><TeamTray locale={locale} format={format} onFormatChange={setFormat} onEdit={editTeamMember} /><BuildEditor selected={selected} editingMember={editingMember} mode={editorMode} locale={locale} format={format} onFormatChange={setFormat} onClose={closeEditor} onDraftChange={editorMode === "scrapbook" ? persistScrapbookDraft : undefined} />{scrapbookCandidate && <AddToScrapbookDialog pokemon={scrapbookCandidate} locale={locale} onClose={() => setScrapbookCandidate(null)} />}</div>;
 }
