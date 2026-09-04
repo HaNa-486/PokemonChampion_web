@@ -98,6 +98,43 @@ describe("scrapbook persistence model", () => {
 });
 
 describe("scrapbook user journey", () => {
+  it.each(["database", "scrapbook"] as const)("adds the clicked reverse-lookup Pokémon from %s while preserving the source header action", async (context) => {
+    const user = userEvent.setup();
+    const source = pokemon.find((entry) => entry.id === "absol")!;
+    const sharedMove = source.moveIds.map((id) => moveById.get(id)!).find((move) => move.name === "Sucker Punch")!;
+    const target = pokemon.find((entry) => entry.id !== source.id && entry.moveIds.includes(sharedMove.id))!;
+    expect(target.id).not.toBe(source.id);
+    const bookId = useScrapbookStore.getState().createBook("Reverse lookup selection");
+    if (context === "scrapbook") useScrapbookStore.getState().addPokemon(bookId, source.id, []);
+    render(<ChampionsApp />);
+    let detail: HTMLElement;
+    if (context === "scrapbook") {
+      await user.click(screen.getByRole("button", { name: "Scrapbooks" }));
+      await user.click(screen.getByRole("button", { name: "Expand all tags" }));
+      await user.click(screen.getByRole("button", { name: new RegExp(source.name) }));
+      detail = document.querySelector<HTMLElement>(".scrapbook-inline-detail")!;
+    } else {
+      await user.type(screen.getByPlaceholderText("Search Pokémon name…"), source.name);
+      await user.click(screen.getByRole("button", { name: source.name }));
+      detail = screen.getByRole("dialog", { name: source.name });
+    }
+    const row = within(detail).getByRole("button", { name: sharedMove.name }).closest("tr")!;
+    await user.click(within(row).getByRole("button", { name: /^View \d+ Pokémon that can use/ }));
+    const reverse = screen.getByRole("dialog", { name: sharedMove.name });
+    await user.click(within(reverse).getByRole("button", { name: `Add to scrapbook ${target.name}` }));
+    const addTarget = screen.getByRole("dialog", { name: `Add to scrapbook · ${target.name}` });
+    expect(screen.queryByRole("dialog", { name: `Add to scrapbook · ${source.name}` })).not.toBeInTheDocument();
+    await user.click(within(addTarget).getByRole("button", { name: "Add to scrapbook" }));
+    const savedIds = () => useScrapbookStore.getState().books.find((book) => book.id === bookId)!.entries.map((entry) => entry.pokemonId);
+    expect(savedIds()).toEqual(context === "scrapbook" ? [source.id, target.id] : [target.id]);
+    await user.keyboard("{Escape}");
+    expect(screen.queryByRole("dialog", { name: sharedMove.name })).not.toBeInTheDocument();
+    await user.click(within(detail).getByRole("button", { name: "Add to another scrapbook" }));
+    const addSource = screen.getByRole("dialog", { name: `Add to scrapbook · ${source.name}` });
+    await user.click(within(addSource).getByRole("button", { name: "Add to scrapbook" }));
+    expect(savedIds()).toEqual(context === "scrapbook" ? [source.id, target.id, source.id] : [target.id, source.id]);
+  });
+
   it("creates a new scrapbook and tag while adding a Pokémon", async () => {
     const user = userEvent.setup();
     const onClose = vi.fn();

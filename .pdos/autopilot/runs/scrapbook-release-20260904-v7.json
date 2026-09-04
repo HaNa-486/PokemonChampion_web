@@ -1,6 +1,15 @@
 {
   "approvals": [],
-  "artifact_hash": null,
+  "artifact_binding": {
+    "method": "git-head",
+    "scopes": [
+      "components/ChampionsApp.tsx",
+      "components/PokemonDetailDialog.tsx",
+      "lib/use-dialog-escape.ts",
+      "tests/components.test.tsx"
+    ]
+  },
+  "artifact_hash": "083a3adf2c2fbbbf8127687138c89cdce83dca4f",
   "audit": [
     {
       "actor": "parent-01a058b0",
@@ -51,14 +60,66 @@
       "entry_hash": "c5cc0cc5ce945ca49d62bf6915b8274efc1016a03a7975c84a60718210778618",
       "event": "item_finished",
       "previous_hash": "b6cc8c2000968786bb811b08b39e5b79459e2116eee0e8488f36f10cec66af6d"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T02:48:43Z",
+      "details": {
+        "method": "git-head",
+        "old_subject": null,
+        "subject": "083a3adf2c2fbbbf8127687138c89cdce83dca4f"
+      },
+      "entry_hash": "4238434e56aced4597f0617e402e0c4f086a5781ec337f2966f4651a1adb7b3f",
+      "event": "artifact_recorded",
+      "previous_hash": "c5cc0cc5ce945ca49d62bf6915b8274efc1016a03a7975c84a60718210778618"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T02:52:58Z",
+      "details": {
+        "exit_code": 0,
+        "status": "fail",
+        "subject": "083a3adf2c2fbbbf8127687138c89cdce83dca4f"
+      },
+      "entry_hash": "b14a31750be5b493a2d56bf6826489cf716753fb33e3a17bdc9b4e3851656214",
+      "event": "tests_executed",
+      "previous_hash": "4238434e56aced4597f0617e402e0c4f086a5781ec337f2966f4651a1adb7b3f"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T02:54:17Z",
+      "details": {},
+      "entry_hash": "bf225e50b13ec5d7a67f4ad50cfd3b0128704e0c45f4e00ceb811ebba04f5230",
+      "event": "run_closed",
+      "previous_hash": "b14a31750be5b493a2d56bf6826489cf716753fb33e3a17bdc9b4e3851656214"
     }
   ],
   "authorizations": [],
   "autopilot_version": "0.1.0-alpha.1",
   "blockers": [],
-  "closed": false,
+  "closed": true,
+  "closed_outcome": "cancelled",
   "created_at": "2026-09-04T02:42:53Z",
-  "evidence": {},
+  "evidence": {
+    "tests": {
+      "artifact_changed": true,
+      "at": "2026-09-04T02:52:58Z",
+      "command": [
+        "C:\\Users\\091\\codex_workspace\\BDWP\\PokemonChampion\\.pdos\\local\\run-verify-dev.cmd"
+      ],
+      "exit_code": 0,
+      "source": "executed_command",
+      "status": "fail",
+      "subject": "083a3adf2c2fbbbf8127687138c89cdce83dca4f",
+      "summary": "Exact committed verify:dev includes verify:deploy, Dev build and environment manifest assertion.",
+      "transcript_sha256": "44794daeb90145d9923094ce3297f8f43d66dde800999194a1f64f86bddc513b"
+    }
+  },
+  "handoff": {
+    "next_safe_action": "Finish selected-row callback correction and exact v8 checks",
+    "residual_risks": [],
+    "summary": "Exact candidate review found nested reverse lookup adds original Pokemon instead of selected result; superseded by v8. Never deployed."
+  },
   "items": [
     {
       "acceptance": "Open picker consumes first Escape; closed picker allows editor dismissal; nested dialogs close one at a time; full deployment verification passes.",
@@ -79,7 +140,7 @@
     }
   ],
   "objective": "Verify final nested-dialog and picker Escape correction, deploy exact Dev candidate, obtain fresh UAT, then PR CI review and approved merge; production remains separate.",
-  "phase": "plan_approved",
+  "phase": "cancelled",
   "plan_hash": "dc72a791fe20e9eafe23e2ff224c1893b22529131908deafaf435b898c2f6788",
   "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
   "plan_reviews": [
@@ -93,11 +154,11 @@
     }
   ],
   "pr": {},
-  "revision": 5,
+  "revision": 8,
   "run_id": "scrapbook-release-20260904-v7",
   "schema_version": 1,
   "source_findings": [
     "COUNCIL-20260903-PICKER-ESCAPE"
   ],
-  "updated_at": "2026-09-04T02:46:13Z"
+  "updated_at": "2026-09-04T02:54:17Z"
 }

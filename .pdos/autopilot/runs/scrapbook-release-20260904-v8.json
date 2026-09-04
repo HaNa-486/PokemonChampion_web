@@ -1,0 +1,103 @@
+{
+  "approvals": [],
+  "artifact_hash": null,
+  "audit": [
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T02:53:02Z",
+      "details": {},
+      "entry_hash": "20f46f398f74f99f4c15f0300662ef583ba08f90a75db7521b9e21c3e98a8d90",
+      "event": "run_created",
+      "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    {
+      "actor": "parent-01a058b0",
+      "at": "2026-09-04T02:53:02Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "8259a1c9644f14467ed8ece3d03105d1736f1a45a5f0b3bce2754dfd359497a3",
+      "event": "item_added",
+      "previous_hash": "20f46f398f74f99f4c15f0300662ef583ba08f90a75db7521b9e21c3e98a8d90"
+    },
+    {
+      "actor": "council-root-final_escape_review",
+      "at": "2026-09-04T02:53:02Z",
+      "details": {
+        "decision": "approve",
+        "subject": "8aba7408d981af35bd280ae9c46988cddc6be590facf95079d17f594d64f1871"
+      },
+      "entry_hash": "92714c00c9cf5f5fc408b867ec8e661a2e589bfe7ca050cb3c11e4bfd2e24854",
+      "event": "plan_reviewed",
+      "previous_hash": "8259a1c9644f14467ed8ece3d03105d1736f1a45a5f0b3bce2754dfd359497a3"
+    },
+    {
+      "actor": "executor-root-reverse_selection_executor",
+      "at": "2026-09-04T02:53:02Z",
+      "details": {
+        "item_id": "FIX-001"
+      },
+      "entry_hash": "12323ae608d167adf4bcfc6473a8f01a21dd14d87e8ca7709341ed77f9cf4f53",
+      "event": "item_started",
+      "previous_hash": "92714c00c9cf5f5fc408b867ec8e661a2e589bfe7ca050cb3c11e4bfd2e24854"
+    },
+    {
+      "actor": "executor-root-reverse_selection_executor",
+      "at": "2026-09-04T02:55:33Z",
+      "details": {
+        "item_id": "FIX-001",
+        "status": "completed"
+      },
+      "entry_hash": "8aab507c54e5cfc6f8102599f1c2bbcd5f9c98cc49372988f0b885fd61192b7f",
+      "event": "item_finished",
+      "previous_hash": "12323ae608d167adf4bcfc6473a8f01a21dd14d87e8ca7709341ed77f9cf4f53"
+    }
+  ],
+  "authorizations": [],
+  "autopilot_version": "0.1.0-alpha.1",
+  "blockers": [],
+  "closed": false,
+  "created_at": "2026-09-04T02:53:02Z",
+  "evidence": {},
+  "items": [
+    {
+      "acceptance": "Database and inline reverse lookup select distinct B: modal and saved pokemonId B; header remains A; Escape and full checks pass.",
+      "depends_on": [],
+      "executor": "executor-root-reverse_selection_executor",
+      "handoff": "Both end-to-end component regressions pass: database detail and inline scrapbook select and store B, header still adds A. Typecheck passes. Parent applied proposed patch; no external actions.",
+      "id": "FIX-001",
+      "resource_locks": [],
+      "risk": "medium",
+      "scopes": [
+        "components/DatabaseViews.tsx",
+        "components/PokemonDetailDialog.tsx",
+        "components/ScrapbookView.tsx",
+        "tests/scrapbook.test.tsx"
+      ],
+      "status": "completed",
+      "title": "Preserve selected reverse lookup Pokemon identity"
+    }
+  ],
+  "objective": "Correct nested reverse lookup selected Pokemon identity, verify exact candidate, deploy Dev and require fresh UAT before PR review and merge.",
+  "phase": "plan_approved",
+  "plan_hash": "8aba7408d981af35bd280ae9c46988cddc6be590facf95079d17f594d64f1871",
+  "plan_path": ".pdos/workstreams/2026-08-31-scrapbook.md",
+  "plan_reviews": [
+    {
+      "actor": "council-root-final_escape_review",
+      "at": "2026-09-04T02:53:02Z",
+      "decision": "approve",
+      "notes": "",
+      "role": "council",
+      "subject": "8aba7408d981af35bd280ae9c46988cddc6be590facf95079d17f594d64f1871"
+    }
+  ],
+  "pr": {},
+  "revision": 5,
+  "run_id": "scrapbook-release-20260904-v8",
+  "schema_version": 1,
+  "source_findings": [
+    "COUNCIL-20260904-REVERSE-SELECTED-POKEMON"
+  ],
+  "updated_at": "2026-09-04T02:55:33Z"
+}
